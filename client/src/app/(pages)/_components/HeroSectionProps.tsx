@@ -110,8 +110,8 @@ export function HeroSection({
               className={cn(
                 "w-full relative",
                 variant === "home"
-                  ? "lg:w-1/2 h-[500px] lg:h-[600px] -mb-16"
-                  : "lg:w-2/5 h-[300px] lg:h-[350px]",
+                  ? "lg:w-1/2 h-[500px] lg:h-[600px] -mb-24 ml-0 lg:ml-24"
+                  : "lg:w-2/5 h-[300px] lg:h-[400px] -mb-24 ml-0 lg:ml-24",
                 "flex items-end justify-center lg:justify-end"
               )}
               onMouseMove={handleMouseMove}

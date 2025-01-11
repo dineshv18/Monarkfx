@@ -50,3 +50,19 @@ export interface MobileMenuProps {
   menuItems: { name: string; href: string }[];
   onClose: () => void;
 }
+
+//  course cards component
+export interface Course {
+  id: string;
+  title: string;
+  category: "DEVELOPMENT" | "DESIGN" | "CLOUD";
+  instructor: string;
+  price: number;
+  image: string;
+  rating: number;
+  reviews: number;
+  lessons: number;
+  students: number;
+}
+
+export type Category = "All" | "DEVELOPMENT" | "DESIGN" | "CLOUD";
