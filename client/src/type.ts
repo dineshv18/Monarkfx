@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 // Dashboard Sidebar
 export interface NavItem {
   title: string;
@@ -66,3 +68,29 @@ export interface Course {
 }
 
 export type Category = "All" | "DEVELOPMENT" | "DESIGN" | "CLOUD";
+
+//  accordion item component
+export interface AccordionItemProps {
+  title: string;
+  content: string;
+  icon: ReactNode;
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+export interface AccordionProps {
+  items: {
+    id: string;
+    title: string;
+    content: string;
+    icon: ReactNode;
+  }[];
+  defaultOpenId?: string;
+}
+
+// infinite text scroll component
+export interface InfiniteTextScrollProps {
+  text: string;
+  speed?: number;
+  content?: string;
+}

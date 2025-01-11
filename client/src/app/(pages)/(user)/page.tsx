@@ -4,6 +4,7 @@ import { HeroSection } from "../_components/HeroSectionProps";
 import Link from "next/link";
 import LearningLanding from "../_components/LearningLanding";
 import CourseListing from "../_components/courses/course-list";
+import CourseHero from "../_components/CourseHero";
 
 export default function Home() {
   return (
@@ -49,6 +50,7 @@ export default function Home() {
       <main className="min-h-screen bg-[#F3F8F8] px-5 py-10">
         <CourseListing />
       </main>
+      <CourseHero />
     </>
   );
 }
