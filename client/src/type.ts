@@ -94,3 +94,18 @@ export interface InfiniteTextScrollProps {
   speed?: number;
   content?: string;
 }
+
+//  testimonial component
+export interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  image: string;
+  content: string;
+  rating: number;
+}
+
+export interface CompanyLogo {
+  name: string;
+  image: string;
+}

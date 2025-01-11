@@ -5,6 +5,7 @@ import Link from "next/link";
 import LearningLanding from "../_components/LearningLanding";
 import CourseListing from "../_components/courses/course-list";
 import CourseHero from "../_components/CourseHero";
+import TestimonialsSection from "../_components/testimonial/testimonial-section";
 
 export default function Home() {
   return (
@@ -51,6 +52,7 @@ export default function Home() {
         <CourseListing />
       </main>
       <CourseHero />
+      <TestimonialsSection />
     </>
   );
 }
