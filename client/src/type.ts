@@ -88,13 +88,6 @@ export interface AccordionProps {
   defaultOpenId?: string;
 }
 
-// infinite text scroll component
-export interface InfiniteTextScrollProps {
-  text: string;
-  speed?: number;
-  content?: string;
-}
-
 //  testimonial component
 export interface Testimonial {
   id: number;
@@ -108,4 +101,11 @@ export interface Testimonial {
 export interface CompanyLogo {
   name: string;
   image: string;
+}
+
+// infinite text scroll component
+export interface InfiniteTextScrollProps {
+  text: string;
+  content: string;
+  speed?: number;
 }

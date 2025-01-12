@@ -15,7 +15,6 @@ const menuItems = [
   { name: "Courses", href: "/courses" },
   { name: "Instructors", href: "/instructors" },
   { name: "Testimonial", href: "/testimonial" },
-  { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];
 

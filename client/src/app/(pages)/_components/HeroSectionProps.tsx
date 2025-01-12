@@ -53,16 +53,18 @@ export function HeroSection({
       <div className="container relative mx-auto px-4 h-full max-w-7xl">
         <div
           className={cn(
-            "flex flex-col lg:flex-row h-full",
-            variant === "home" ? "pt-20" : "py-8",
-            variant === "page" ? "items-center" : "items-end"
+            "flex flex-col lg:flex-row h-full px-3  md:px-10",
+            variant === "home"
+              ? "pt-16 md:pt-20 lg:pt-16 pb-8 md:pb-12"
+              : "pt-16 md:pt-20 pb-8",
+            "items-center justify-center lg:items-end lg:pb-16"
           )}
         >
           <div
             className={cn(
-              "w-full lg:w-1/2",
-              variant === "home" ? "lg:max-w-3xl lg:pb-20" : "lg:max-w-2xl",
-              variant === "home" ? "text-center lg:text-left" : "text-left"
+              "w-full lg:w-1/2 space-y-4 md:space-y-6",
+              variant === "home" ? "lg:max-w-3xl" : "lg:max-w-2xl",
+              "text-center lg:text-left mb-8 lg:mb-0"
             )}
           >
             {smallText && (
@@ -72,7 +74,7 @@ export function HeroSection({
             )}
             <h1
               className={cn(
-                "font-bold text-white leading-tight",
+                "font-bold text-white leading-tight mt-10 md:mt-20",
                 variant === "home"
                   ? "text-5xl md:text-6xl lg:text-7xl"
                   : "text-3xl md:text-5xl lg:text-6xl"
@@ -111,7 +113,7 @@ export function HeroSection({
                 "w-full relative",
                 variant === "home"
                   ? "lg:w-1/2 h-[500px] lg:h-[600px] -mb-24 ml-0 lg:ml-24"
-                  : "lg:w-2/5 h-[300px] lg:h-[400px] -mb-24 ml-0 lg:ml-24",
+                  : "lg:w-2/5 h-[300px] lg:h-[400px] -mb-36 ml-0 lg:ml-24",
                 "flex items-end justify-center lg:justify-end"
               )}
               onMouseMove={handleMouseMove}
@@ -156,15 +158,7 @@ export function HeroSection({
   );
 }
 
-function StatCounter({
-  number,
-  label,
-  endValue,
-}: {
-  number: string;
-  label: string;
-  endValue: number;
-}) {
+function StatCounter({ label, endValue }: { label: string; endValue: number }) {
   const count = useCountAnimation(endValue);
 
   return (

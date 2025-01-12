@@ -1,13 +1,8 @@
 "use client";
 
+import { InfiniteTextScrollProps } from "@/type";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-
-interface InfiniteTextScrollProps {
-  text: string;
-  content: string;
-  speed?: number;
-}
 
 export function InfiniteTextScroll({
   text,
@@ -65,14 +60,14 @@ export function InfiniteTextScroll({
         <motion.div
           variants={containerVariants}
           animate="animate"
-          className="inline-block text-[#f1f1f1] text-[9rem] font-bold"
+          className="inline-block text-[#e9e9e9] text-[9rem] font-bold"
         >
           {repeatedText}
         </motion.div>
         <motion.div
           variants={containerVariants}
           animate="animate"
-          className="inline-block text-[#f1f1f1] text-[9rem] font-bold"
+          className="inline-block text-[#e9e9e9] text-[9rem] font-bold"
         >
           {repeatedText}
         </motion.div>

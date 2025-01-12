@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { companyLogos, testimonials } from "./data";
@@ -19,8 +19,13 @@ export default function TestimonialsSection() {
     );
   };
 
+  useEffect(() => {
+    const interval = setInterval(next, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#2A3630] px-4 py-20 md:py-40 overflow-hidden">
+    <div className="min-h-screen bg-[#2A3630] px-4 py-20 md:py-40 overflow-hidden border-b-4 border-[#e9ec3b]">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-start mb-32">
           {/* Left Content */}
@@ -168,7 +173,7 @@ export default function TestimonialsSection() {
                   src={logo.image}
                   alt={logo.name}
                   fill
-                  className="object-contain brightness-0 invert opacity-70 group-hover:opacity-90  transition-all duration-300"
+                  className="object-contain brightness-0 invert opacity-70 group-hover:opacity-100 transition-all duration-300"
                   sizes="(max-width: 768px) 100px, 150px"
                 />
               </div>
