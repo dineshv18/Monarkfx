@@ -13,6 +13,7 @@ import { useState } from "react";
 import Image from "next/image";
 import CustomButton from "./CustomButton";
 import { InfiniteTextScroll } from "@/components/infinite-text-scroll";
+import { AnimatedText } from "./AnimatedText";
 
 export default function CourseHero() {
   const [openId, setOpenId] = useState<string | null>("1");
@@ -89,19 +90,16 @@ export default function CourseHero() {
               <div className="bg-[#e9ec3b] p-4 rounded-full">
                 <Briefcase className="w-6 h-6 text-gray-700" />
               </div>
-              <span className="text-lg text-gray-700">
-                Premium learning experience
-              </span>
-            </div>
 
-            <motion.h1
+              <AnimatedText
+                text="Premium learning experience"
+                className="text-lg text-gray-700"
+              />
+            </div>
+            <AnimatedText
+              text="Providing amazing online courses."
               className="text-4xl md:text-5xl font-bold text-gray-800 leading-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              Providing amazing online courses.
-            </motion.h1>
+            />
 
             <motion.div
               className="space-y-6"
@@ -154,7 +152,7 @@ const accordionItems = [
     content: "Web-based training you can consume at your own pace.",
     icon: (
       <div className="p-2 rounded-lg bg-gray-100">
-        <BookOpen />
+        <BookOpen size={70} />
       </div>
     ),
   },
@@ -165,7 +163,7 @@ const accordionItems = [
       "Web-based training you can consume at your own pace. Courses are interactive.",
     icon: (
       <div className="p-2 rounded-lg bg-gray-100">
-        <Users />
+        <Users size={70} />
       </div>
     ),
   },
@@ -175,7 +173,7 @@ const accordionItems = [
     content: "Develop your expertise through structured learning paths.",
     icon: (
       <div className="p-2 rounded-lg bg-gray-100">
-        <GraduationCap />
+        <GraduationCap size={70} />
       </div>
     ),
   },

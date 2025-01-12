@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { Award } from "lucide-react";
 import CustomButton from "./CustomButton";
+import { motion } from "framer-motion";
+import { AnimatedText } from "./AnimatedText";
 
 export default function LearningLanding() {
   return (
@@ -22,14 +24,17 @@ export default function LearningLanding() {
               <div className="flex p-4 items-center justify-center rounded-full bg-[#D5D52C]">
                 <Award size={24} color="#107D6C" />
               </div>
-              <span className="text-lg font-medium text-[#107D6C]">
-                Guaranteed and certified
-              </span>
+              <AnimatedText
+                text="Guaranteed and certified"
+                className="text-lg font-medium text-[#107D6C]"
+                delay={0.5}
+              />
             </div>
 
-            <h1 className="text-4xl font-semibold leading-tight text-[var(--custom-green-11)] lg:text-6xl">
-              Online learning wherever and whenever.
-            </h1>
+            <AnimatedText
+              text="Online learning wherever and whenever."
+              className="text-4xl font-semibold leading-tight text-[var(--custom-green-11)] lg:text-6xl"
+            />
             <CustomButton
               primaryText="Learn more"
               secondaryText="Learn more"
@@ -92,14 +97,16 @@ export default function LearningLanding() {
                     01
                   </div>
                   <div className="relative z-10">
-                    <h3 className="text-xl font-semibold text-[var(--custom-green-11)]">
-                      Flexible schedule
-                    </h3>
+                    <AnimatedText
+                      text="Flexible schedule"
+                      className="text-xl font-semibold text-[var(--custom-green-11)]"
+                    />
                     <div className="mt-2 h-1 w-12 bg-[#FFD700]" />
-                    <p className="mt-4 text-[#4B5563]">
-                      eLearning allows learners to quickly and more easily
-                      complete their training.
-                    </p>
+                    <AnimatedText
+                      text="eLearning allows learners to quickly and more easily complete their training."
+                      className="mt-4 text-[#4B5563]"
+                      delay={0.3}
+                    />
                   </div>
                 </div>
               </div>
@@ -120,14 +127,17 @@ export default function LearningLanding() {
                     02
                   </div>
                   <div className="relative z-10">
-                    <h3 className="text-xl font-semibold text-[var(--custom-green-11)]">
-                      Pocket friendly
-                    </h3>
+                    <AnimatedText
+                      text="Pocket friendly"
+                      className="text-xl font-semibold text-[var(--custom-green-11)]"
+                    />
+
                     <div className="mt-2 h-1 w-12 bg-[#FFD700]" />
-                    <p className="mt-4 text-[#4B5563]">
-                      eLearning allows learners to quickly and more easily
-                      complete their training.
-                    </p>
+                    <AnimatedText
+                      text="eLearning allows learners to quickly and more easily complete their training."
+                      className="mt-4 text-[#4B5563]"
+                      delay={0.3}
+                    />
                   </div>
                 </div>
               </div>
@@ -147,14 +157,17 @@ export default function LearningLanding() {
                     03
                   </div>
                   <div className="relative z-10">
-                    <h3 className="text-xl font-semibold text-[var(--custom-green-11)]">
-                      Expert Instructor
-                    </h3>
+                    <AnimatedText
+                      text="Expert Instructor"
+                      className="text-xl font-semibold text-[var(--custom-green-11)]"
+                    />
+
                     <div className="mt-2 h-1 w-12 bg-[#FFD700]" />
-                    <p className="mt-4 text-[#4B5563]">
-                      eLearning allows learners to quickly and more easily
-                      complete their training.
-                    </p>
+                    <AnimatedText
+                      text="eLearning allows learners to quickly and more easily complete their training."
+                      className="mt-4 text-[#4B5563]"
+                      delay={0.3}
+                    />
                   </div>
                 </div>
               </div>

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import CustomButton from "./CustomButton";
 import Link from "next/link";
+import { AnimatedText } from "./AnimatedText";
 
 const socialLinks = [
   { icon: Facebook, href: "/facebook" },
@@ -42,9 +43,11 @@ function Footer() {
         <div className="mx-auto md:max-w-6xl md:px-4 ">
           <div className="md:rounded-lg bg-[#e8eb20] shadow-lg">
             <div className="flex flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row">
-              <h2 className="text-xl font-semibold text-[#2A3342]">
-                Admission is open for the next year batch
-              </h2>
+              <AnimatedText
+                text="Admission is open for the next year batch"
+                className="text-xl font-semibold text-[#2A3342]"
+              />
+
               <div className="flex flex-col items-center gap-4 sm:flex-row">
                 <CustomButton
                   primaryText="Get started now"

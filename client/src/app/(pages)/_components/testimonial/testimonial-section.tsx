@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { companyLogos, testimonials } from "./data";
 import Image from "next/image";
+import { AnimatedText } from "../AnimatedText";
 
 export default function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -25,7 +26,16 @@ export default function TestimonialsSection() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#2A3630] px-4 py-20 md:py-40 overflow-hidden border-b-4 border-[#e9ec3b]">
+    <div className="min-h-screen bg-[#2A3630] px-4 py-20 md:py-40 overflow-hidden border-b-4 border-[#e9ec3b] relative">
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(232,235,32,0.05) 1px, transparent 1px)
+          `,
+          backgroundSize: "80px 80px",
+        }}
+      />
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-start mb-32">
           {/* Left Content */}
@@ -38,11 +48,11 @@ export default function TestimonialsSection() {
             </div>
 
             <div className="space-y-6">
-              <h2 className="text-5xl md:text-6xl font-bold text-white">
-                Trusted by
-                <br />
-                genius people.
-              </h2>
+              <AnimatedText
+                text="Trusted by genius people."
+                className="text-5xl md:text-6xl font-bold text-white"
+              />
+
               <p className="text-gray-400 text-lg">
                 Lorem ipsum dolor sit amet consectetur adipiscing elit
                 venentatis dictum nec.
@@ -62,8 +72,7 @@ export default function TestimonialsSection() {
 
           {/* Right Testimonial Carousel */}
           <div className="relative mr-3">
-            {/* Navigation Buttons - Large Screens */}
-            <div className="hidden md:block">
+            <div className="hidden md:block z-10">
               <button
                 onClick={prev}
                 className="absolute -left-6 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white text-gray-800 hover:bg-gray-100 transition-all shadow-md "
@@ -85,7 +94,7 @@ export default function TestimonialsSection() {
                 initial={{ opacity: 0, x: 100 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -100 }}
-                className="bg-white rounded overflow-hidden shadow-xl"
+                className="bg-white rounded overflow-hidden shadow-xl z-1"
               >
                 <div className="flex flex-col md:flex-row">
                   {/* Image Section */}

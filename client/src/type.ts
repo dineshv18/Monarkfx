@@ -109,3 +109,10 @@ export interface InfiniteTextScrollProps {
   content: string;
   speed?: number;
 }
+
+// Animated Text
+export interface AnimatedTextProps {
+  text: string;
+  className?: string;
+  delay?: number;
+}

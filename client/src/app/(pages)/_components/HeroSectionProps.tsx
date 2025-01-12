@@ -7,6 +7,7 @@ import { useCountAnimation } from "./useCountAnimation";
 import { HeroSectionProps } from "@/type";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { AnimatedText } from "./AnimatedText";
 
 export function HeroSection({
   smallText,
@@ -59,10 +60,7 @@ export function HeroSection({
             "items-center justify-center lg:items-end lg:pb-16"
           )}
         >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+          <div
             className={cn(
               "w-full lg:w-1/2 space-y-4 md:space-y-6",
               variant === "home" ? "lg:max-w-3xl" : "lg:max-w-2xl",
@@ -70,43 +68,34 @@ export function HeroSection({
             )}
           >
             {smallText && (
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+              <AnimatedText
+                text={smallText}
                 className="text-lg md:text-xl text-[#C5E82C] font-medium mb-4"
-              >
-                {smallText}
-              </motion.p>
+                delay={0}
+              />
             )}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+            <AnimatedText
+              text={title}
               className={cn(
                 "font-bold text-white leading-tight mt-10 md:mt-20",
                 variant === "home"
                   ? "text-5xl md:text-6xl lg:text-7xl"
                   : "text-3xl md:text-5xl lg:text-6xl"
               )}
-            >
-              {title}
-            </motion.h1>
+              delay={0.2}
+            />
             {description && (
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
+              <AnimatedText
+                text={description}
                 className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl mx-auto lg:mx-0"
-              >
-                {description}
-              </motion.p>
+                delay={0.4}
+              />
             )}
             {buttons && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
+                transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
                 className={cn(
                   "mt-8 flex flex-wrap gap-5",
                   variant === "home"
@@ -121,7 +110,7 @@ export function HeroSection({
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1 }}
+                transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
                 className="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto lg:mx-0"
               >
                 {stats.map((stat) => (
@@ -129,12 +118,12 @@ export function HeroSection({
                 ))}
               </motion.div>
             )}
-          </motion.div>
+          </div>
           {image && (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
               className={cn(
                 "w-full relative",
                 variant === "home"
@@ -145,7 +134,7 @@ export function HeroSection({
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
-              <motion.div
+              <div
                 className={cn(
                   "relative w-full h-full",
                   variant === "home" && "hover:scale-110"
@@ -167,7 +156,14 @@ export function HeroSection({
                   )}
                   priority
                 />
-              </motion.div>
+                <Image
+                  src="/bs.webp"
+                  alt="Hero image"
+                  width={800}
+                  height={800}
+                  className="absolute bottom-0 left-0 object-contain w-full h-full transition-all duration-300 smooth-move"
+                />
+              </div>
             </motion.div>
           )}
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatedText } from "@/app/(pages)/_components/AnimatedText";
 import { InfiniteTextScrollProps } from "@/type";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -74,9 +75,10 @@ export function InfiniteTextScroll({
       </div>
 
       {/* Foreground static text */}
-      <div className="absolute inset-0 flex items-center justify-center text-center text-[#1a1a1a] text-3xl text-wrap md:text-5xl  font-semibold">
-        {text}
-      </div>
+      <AnimatedText
+        text={text}
+        className="absolute inset-0 flex items-center justify-center text-center text-[#1a1a1a] text-3xl text-wrap md:text-5xl  font-semibold"
+      />
     </div>
   );
 }
