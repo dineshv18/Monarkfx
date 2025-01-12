@@ -1,17 +1,20 @@
+import React from "react";
 import { HeroSection } from "../../_components/HeroSectionProps";
 
-export default function AboutPage() {
+const Course = () => {
   return (
     <>
       <HeroSection
-        smallText="About Us"
-        title="Know more about us."
+        smallText="All Courses"
+        title="Explore our courses."
         variant="page"
         image={{
           src: "/b1.png",
-          alt: "About us",
+          alt: "Courses",
         }}
       />
     </>
   );
-}
+};
+
+export default Course;

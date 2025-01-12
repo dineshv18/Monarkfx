@@ -1,17 +1,20 @@
+import React from "react";
 import { HeroSection } from "../../_components/HeroSectionProps";
 
-export default function AboutPage() {
+const Contact = () => {
   return (
     <>
       <HeroSection
-        smallText="About Us"
-        title="Know more about us."
+        smallText="Contact Us"
+        title="Get in touch with us."
         variant="page"
         image={{
           src: "/b1.png",
-          alt: "About us",
+          alt: "Contact us",
         }}
       />
     </>
   );
-}
+};
+
+export default Contact;
