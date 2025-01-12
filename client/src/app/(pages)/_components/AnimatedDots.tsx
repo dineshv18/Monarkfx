@@ -11,7 +11,7 @@ export function AnimatedDots() {
     const generateDots = () => {
       const newDots: Dot[] = [];
       const numDots = Math.floor(
-        (window.innerWidth * window.innerHeight) / 40000
+        (window.innerWidth * window.innerHeight) / 80000
       );
 
       for (let i = 0; i < numDots; i++) {
@@ -30,28 +30,30 @@ export function AnimatedDots() {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {dots.map((dot) => (
         <motion.div
           key={dot.id}
-          className="absolute w-2 h-2 bg-white/50 rounded-full"
+          className="absolute w-1.5 h-1.5 bg-[#e8eb20]/30 rounded-full"
           style={{
             left: `${dot.x}%`,
             top: `${dot.y}%`,
           }}
           animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.4, 0.2],
+            x: [20, -20],
+            scale: [1, 1.5],
+            opacity: [0.2, 0.4],
           }}
           transition={{
             duration: 3,
             repeat: Infinity,
             repeatType: "reverse",
+            ease: "linear",
             delay: Math.random() * 2,
           }}
         />
       ))}
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:80px_80px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(232,235,32,0.03)_1px,transparent_1px)] bg-[size:80px_80px]" />
     </div>
   );
 }

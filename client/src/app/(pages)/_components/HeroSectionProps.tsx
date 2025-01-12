@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useCountAnimation } from "./useCountAnimation";
 import { HeroSectionProps } from "@/type";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export function HeroSection({
   smallText,
@@ -22,11 +23,9 @@ export function HeroSection({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (variant !== "home") return;
-
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
-
     setMousePosition({ x, y });
   };
 
@@ -53,14 +52,17 @@ export function HeroSection({
       <div className="container relative mx-auto px-4 h-full max-w-7xl">
         <div
           className={cn(
-            "flex flex-col lg:flex-row h-full px-3  md:px-10",
+            "flex flex-col lg:flex-row h-full px-3 md:px-10",
             variant === "home"
               ? "pt-16 md:pt-20 lg:pt-16 pb-8 md:pb-12"
               : "pt-16 md:pt-20 pb-8",
             "items-center justify-center lg:items-end lg:pb-16"
           )}
         >
-          <div
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
             className={cn(
               "w-full lg:w-1/2 space-y-4 md:space-y-6",
               variant === "home" ? "lg:max-w-3xl" : "lg:max-w-2xl",
@@ -68,11 +70,19 @@ export function HeroSection({
             )}
           >
             {smallText && (
-              <p className="text-lg md:text-xl text-[#C5E82C] font-medium mb-4">
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-lg md:text-xl text-[#C5E82C] font-medium mb-4"
+              >
                 {smallText}
-              </p>
+              </motion.p>
             )}
-            <h1
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
               className={cn(
                 "font-bold text-white leading-tight mt-10 md:mt-20",
                 variant === "home"
@@ -81,14 +91,22 @@ export function HeroSection({
               )}
             >
               {title}
-            </h1>
+            </motion.h1>
             {description && (
-              <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl mx-auto lg:mx-0">
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl mx-auto lg:mx-0"
+              >
                 {description}
-              </p>
+              </motion.p>
             )}
             {buttons && (
-              <div
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
                 className={cn(
                   "mt-8 flex flex-wrap gap-5",
                   variant === "home"
@@ -97,18 +115,26 @@ export function HeroSection({
                 )}
               >
                 {buttons}
-              </div>
+              </motion.div>
             )}
             {stats && variant === "home" && (
-              <div className="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto lg:mx-0">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                className="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto lg:mx-0"
+              >
                 {stats.map((stat) => (
                   <StatCounter key={stat.label} {...stat} />
                 ))}
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
           {image && (
-            <div
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
               className={cn(
                 "w-full relative",
                 variant === "home"
@@ -119,7 +145,7 @@ export function HeroSection({
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
-              <div
+              <motion.div
                 className={cn(
                   "relative w-full h-full",
                   variant === "home" && "hover:scale-110"
@@ -141,16 +167,8 @@ export function HeroSection({
                   )}
                   priority
                 />
-
-                <Image
-                  src="/bs.webp"
-                  alt="Hero image"
-                  width={800}
-                  height={800}
-                  className="absolute bottom-0 left-0 object-contain w-full h-full transition-all duration-300 smooth-move"
-                />
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           )}
         </div>
       </div>
@@ -160,7 +178,6 @@ export function HeroSection({
 
 function StatCounter({ label, endValue }: { label: string; endValue: number }) {
   const count = useCountAnimation(endValue);
-
   return (
     <div className="text-center">
       <div className="text-4xl font-bold text-white">{count}+</div>

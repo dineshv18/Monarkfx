@@ -7,7 +7,7 @@ import {
   Facebook,
   Instagram,
   Twitter,
-  Figma,
+  Youtube,
 } from "lucide-react";
 import CustomButton from "./CustomButton";
 import Link from "next/link";
@@ -16,7 +16,7 @@ const socialLinks = [
   { icon: Facebook, href: "/facebook" },
   { icon: Instagram, href: "/instagram" },
   { icon: Twitter, href: "/twitter" },
-  { icon: Figma, href: "/behance" },
+  { icon: Youtube, href: "/youtube" },
 ];
 
 const navLinks = [
@@ -25,23 +25,22 @@ const navLinks = [
   { name: "Courses", href: "/courses" },
   { name: "Instructors", href: "/instructors" },
   { name: "Testimonial", href: "/testimonial" },
-  { name: "Contact", href: "/contact" },
 ];
 
 const popularCourses = [
-  { name: "Business finance", href: "/courses/business-finance" },
-  { name: "Advanced design", href: "/courses/advanced-design" },
-  { name: "Web development", href: "/courses/web-development" },
-  { name: "Data visualization", href: "/courses/data-visualization" },
+  { name: "Refund", href: "/refund" },
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Support", href: "/support" },
+  { name: "Contact", href: "/contact" },
 ];
 
 function Footer() {
   return (
     <div className="relative">
       {/* Top Banner Section */}
-      <div className="absolute inset-x-0 -top-24 z-10">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="rounded-lg bg-[#e8eb20] shadow-lg">
+      <div className="md:absolute md:inset-x-0 md:-top-24 z-10">
+        <div className="mx-auto md:max-w-6xl md:px-4 ">
+          <div className="md:rounded-lg bg-[#e8eb20] shadow-lg">
             <div className="flex flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row">
               <h2 className="text-xl font-semibold text-[#2A3342]">
                 Admission is open for the next year batch
@@ -69,9 +68,9 @@ function Footer() {
       </div>
 
       {/* Main Footer */}
-      <footer className="mt-32 bg-[#2A3630] pt-16">
+      <footer className="md:mt-32 bg-[#2A3630] pt-16">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
             {/* Brand Section */}
             <div className="space-y-6">
               <div className="flex items-center gap-3">
@@ -148,15 +147,15 @@ function Footer() {
               <h3 className="text-xl font-semibold text-white">
                 Subscribe our newsletter
               </h3>
-              <div className="flex gap-2">
+              <div className="relative w-full">
                 <Input
                   type="email"
                   placeholder="Enter your email..."
-                  className="flex-1 bg-transparent text-white placeholder:text-gray-400 border-gray-700 focus:border-[#e8eb20]"
+                  className="w-full bg-transparent text-white placeholder:text-gray-400 border-gray-700 focus:border-[#e8eb20] pr-12"
                 />
                 <Button
                   size="icon"
-                  className="bg-[#e8eb20] text-[#2A3342] hover:bg-[#e8eb20]/90"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-[#e8eb20] text-[#2A3342] hover:bg-[#e8eb20]/90 h-7 w-7"
                 >
                   <Send className="h-4 w-4" />
                 </Button>

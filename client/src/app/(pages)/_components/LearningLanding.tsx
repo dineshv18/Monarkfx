@@ -8,7 +8,7 @@ export default function LearningLanding() {
   return (
     <div className="relative overflow-hidden bg-white">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid gap-16 lg:grid-cols-2 px-20">
+        <div className="grid gap-16 lg:grid-cols-2 px-5 xl:px-20">
           {/* Left Column */}
           <div className="flex flex-col justify-center space-y-8">
             <Image
