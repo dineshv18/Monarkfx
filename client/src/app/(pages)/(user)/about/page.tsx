@@ -1,6 +1,7 @@
 import { HeroSection } from "../../_components/HeroSectionProps";
+import AboutPage from "./AboutPage";
 
-export default function AboutPage() {
+export default function About() {
   return (
     <>
       <HeroSection
@@ -12,6 +13,7 @@ export default function AboutPage() {
           alt: "About us",
         }}
       />
+      <AboutPage/>
     </>
   );
 }

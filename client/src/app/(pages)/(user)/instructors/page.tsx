@@ -1,5 +1,6 @@
 import React from "react";
 import { HeroSection } from "../../_components/HeroSectionProps";
+import InstructorSection from "./InstructorSection";
 
 const Instructors = () => {
   return (
@@ -13,6 +14,7 @@ const Instructors = () => {
           alt: "Instructor teaching",
         }}
       />
+      <InstructorSection />
     </>
   );
 };

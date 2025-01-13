@@ -116,3 +116,25 @@ export interface AnimatedTextProps {
   className?: string;
   delay?: number;
 }
+
+// instructor section component
+export interface InstructorData {
+  id: number;
+  name: string;
+  role: string;
+  image: string;
+  socials: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    dribbble?: string;
+    linkedin?: string;
+    github?: string;
+  };
+}
+
+// course Card component
+export interface CourseCardProps {
+  course: Course;
+  formatPrice: (price: number) => string;
+}

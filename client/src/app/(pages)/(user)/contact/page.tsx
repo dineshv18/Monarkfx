@@ -1,5 +1,6 @@
 import React from "react";
 import { HeroSection } from "../../_components/HeroSectionProps";
+import ContactPage from "./ContactPage";
 
 const Contact = () => {
   return (
@@ -13,6 +14,7 @@ const Contact = () => {
           alt: "Contact us",
         }}
       />
+      <ContactPage />
     </>
   );
 };
