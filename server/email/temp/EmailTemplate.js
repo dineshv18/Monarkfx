@@ -4,13 +4,13 @@ export const getVerificationTemplate = (verificationLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - Desire Div Learning Platform</title>
+    <title>Verify Your Email - MonarkFX Trading Platform</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            background-color: #f0f4f8;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
@@ -23,7 +23,7 @@ export const getVerificationTemplate = (verificationLink) => `
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: #ffffff;
             text-align: center;
             padding: 40px;
@@ -38,19 +38,19 @@ export const getVerificationTemplate = (verificationLink) => `
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         h2 {
-            color: #2c3e50;
+            color: #1a1a1a;
             font-size: 24px;
             margin-top: 0;
         }
         p {
             margin-bottom: 20px;
             font-size: 16px;
-            color: #34495e;
+            color: #333333;
         }
         .button {
             display: inline-block;
             padding: 15px 35px;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: #ffffff;
             text-decoration: none;
             border-radius: 50px;
@@ -80,50 +80,50 @@ export const getVerificationTemplate = (verificationLink) => `
             content: '✓';
             position: absolute;
             left: 0;
-            color: #6e8efb;
+            color: #ff0000;
             font-weight: bold;
         }
         .footer {
             text-align: center;
             padding: 20px;
             font-size: 14px;
-            color: #7f8c8d;
-            background-color: #ecf0f1;
+            color: #666666;
+            background-color: #f8f8f8;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Welcome to Desire Div!</h1>
+            <h1>Welcome to MonarkFX!</h1>
         </div>
         <div class="content">
-            <h2>Unlock Your Learning Potential</h2>
-            <p>Dear Aspiring Learner,</p>
-            <p>We're thrilled to welcome you to Desire Div, your gateway to a world of knowledge and skill development. To begin your exciting learning journey and ensure the security of your account, please verify your email address:</p>
-            <a href="${verificationLink}" class="button">Verify Email & Start Learning</a>
-            <p>Once verified, you'll unlock access to:</p>
+            <h2>Begin Your Trading Journey</h2>
+            <p>Dear Valued Trader,</p>
+            <p>Welcome to MonarkFX, your premier platform for stock market trading and financial success. To activate your trading account and ensure security, please verify your email address:</p>
+            <a href="${verificationLink}" class="button">Verify Email & Start Trading</a>
+            <p>Once verified, you'll gain access to:</p>
             <div class="features">
                 <div class="feature-item">
-                    A vast library of expert-curated courses
+                    Real-time market analysis and trading signals
                 </div>
                 <div class="feature-item">
-                    Interactive learning experiences
+                    Advanced trading tools and indicators
                 </div>
                 <div class="feature-item">
-                    Personalized learning paths
+                    Professional trading strategies
                 </div>
                 <div class="feature-item">
-                    Certificates to showcase your achievements
+                    Expert market insights and research
                 </div>
                 <div class="feature-item">
-                    A supportive global community of learners
+                    24/7 trading support and guidance
                 </div>
             </div>
-            <p>If you didn't create an account with Desire Div, please disregard this email.</p>
+            <p>If you didn't create an account with MonarkFX, please disregard this email.</p>
         </div>
         <div class="footer">
-            © 2024 Desire Div Learning Platform | Terms of Service | Privacy Policy<br>
+            © 2021 MonarkFX Trading Platform | Terms of Service | Privacy Policy<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>
@@ -137,13 +137,13 @@ export const getDeleteTemplate = (deletionLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Deletion Request - Desire Div Learning Platform</title>
+    <title>Account Deletion Request - MonarkFX Trading Platform</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            background-color: #f0f4f8;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
@@ -156,7 +156,7 @@ export const getDeleteTemplate = (deletionLink) => `
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: #ffffff;
             text-align: center;
             padding: 40px;
@@ -171,19 +171,19 @@ export const getDeleteTemplate = (deletionLink) => `
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         h2 {
-            color: #2c3e50;
+            color: #1a1a1a;
             font-size: 24px;
             margin-top: 0;
         }
         p {
             margin-bottom: 20px;
             font-size: 16px;
-            color: #34495e;
+            color: #333333;
         }
         .button {
             display: inline-block;
             padding: 15px 35px;
-            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: #ffffff;
             text-decoration: none;
             border-radius: 50px;
@@ -208,7 +208,7 @@ export const getDeleteTemplate = (deletionLink) => `
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .alternatives {
-            background-color: #e8f4fd;
+            background-color: #f8f9fa;
             padding: 30px;
             border-radius: 8px;
             margin-top: 30px;
@@ -223,69 +223,70 @@ export const getDeleteTemplate = (deletionLink) => `
             content: '➤';
             position: absolute;
             left: 0;
-            color: #ff6b6b;
+            color: #ff0000;
         }
         .footer {
             text-align: center;
             padding: 20px;
             font-size: 14px;
-            color: #7f8c8d;
-            background-color: #ecf0f1;
+            color: #666666;
+            background-color: #f8f8f8;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>We're Sad to See You Go</h1>
+            <h1>We Value Your Trading Journey</h1>
         </div>
         <div class="content">
             <h2>Account Deletion Request</h2>
-            <p>Dear Valued Learner,</p>
-            <p>We've received a request to delete your Desire Div account. We're sorry to see you consider leaving our learning community. Before you make your final decision, we want to ensure this is what you really want.</p>
+            <p>Dear Valued Trader,</p>
+            <p>We've received a request to delete your MonarkFX trading account. Before proceeding, we want to ensure this is your intended action, as it will affect your trading access and history.</p>
             <p>If you're certain about deleting your account, please click the button below:</p>
             <a href="${deletionLink}" class="button">Confirm Account Deletion</a>
             <div class="warning">
-                <strong>Warning:</strong> This action is irreversible. Once your account is deleted, all your progress, achievements, and personal data will be permanently removed from our systems.
+                <strong>Warning:</strong> This action is irreversible. Once deleted, all your trading history, analysis settings, and personal data will be permanently removed from our systems.
             </div>
             <div class="alternatives">
-                <h3>Before you go, consider these alternatives:</h3>
+                <h3>Consider these alternatives:</h3>
                 <div class="alternative-item">
-                    Pause your account temporarily
+                    Temporarily deactivate your trading account
                 </div>
                 <div class="alternative-item">
-                    Customize your learning preferences
+                    Adjust your trading preferences and alerts
                 </div>
                 <div class="alternative-item">
-                    Explore new courses or learning paths
+                    Consult with our trading experts
                 </div>
                 <div class="alternative-item">
-                    Reach out to our support team for assistance
+                    Contact our 24/7 support team
                 </div>
             </div>
-            <p>If you didn't request to delete your account, please ignore this email and contact our support team immediately at support@desirediv.com.</p>
+            <p>If you didn't request this deletion, please contact our support team immediately at support@monarkfx.com.</p>
         </div>
         <div class="footer">
-            © 2024 Desire Div Learning Platform | Terms of Service | Privacy Policy<br>
+            © 2021 MonarkFX Trading Platform | Terms of Service | Privacy Policy<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>
 </body>
 </html>
 `;
+
 export const getResetTemplate = (resetLink) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Your Password - Desire Div Learning Platform</title>
+    <title>Reset Your Password - MonarkFX Trading Platform</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
             color: #333;
-            background-color: #f0f4f8;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
@@ -298,7 +299,7 @@ export const getResetTemplate = (resetLink) => `
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: #ffffff;
             text-align: center;
             padding: 40px;
@@ -313,19 +314,19 @@ export const getResetTemplate = (resetLink) => `
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         h2 {
-            color: #2c3e50;
+            color: #1a1a1a;
             font-size: 24px;
             margin-top: 0;
         }
         p {
             margin-bottom: 20px;
             font-size: 16px;
-            color: #34495e;
+            color: #333333;
         }
         .button {
             display: inline-block;
             padding: 15px 35px;
-            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: #ffffff;
             text-decoration: none;
             border-radius: 50px;
@@ -343,25 +344,25 @@ export const getResetTemplate = (resetLink) => `
             text-align: center;
             padding: 20px;
             font-size: 14px;
-            color: #7f8c8d;
-            background-color: #ecf0f1;
+            color: #666666;
+            background-color: #f8f8f8;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Password Reset Request</h1>
+            <h1>Secure Your Trading Account</h1>
         </div>
         <div class="content">
             <h2>Reset Your Password</h2>
-            <p>Dear Valued Learner,</p>
-            <p>We received a request to reset your password for your Desire Div account. If you made this request, please click the button below to reset your password:</p>
+            <p>Dear Valued Trader,</p>
+            <p>We received a request to reset the password for your MonarkFX trading account. To ensure the security of your account and maintain uninterrupted access to your trading activities, please click the button below:</p>
             <a href="${resetLink}" class="button">Reset Password</a>
-            <p>If you did not request a password reset, please ignore this email or contact our support team immediately at support@desirediv.com.</p>
+            <p>If you didn't request this password reset, please contact our security team immediately at security@monarkfx.com.</p>
         </div>
         <div class="footer">
-            © 2024 Desire Div Learning Platform | Terms of Service | Privacy Policy<br>
+            © 2021 MonarkFX Trading Platform | Terms of Service | Privacy Policy<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>

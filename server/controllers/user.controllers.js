@@ -1,5 +1,4 @@
 import { prisma } from "../config/db.js";
-import { SendEmail } from "../email/SendEmail.js";
 import { validatePassword } from "../helper/validatePassword.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
@@ -10,6 +9,7 @@ import { generateAccessAndRefreshTokens } from "../helper/generateAccessAndRefre
 import jwt from "jsonwebtoken";
 import { createSlug } from "../helper/Slug.js";
 import axios from "axios";
+import { SendEmail } from "../email/SendEmail.js";
 
 const SALT_ROUNDS = 12;
 const TOKEN_EXPIRY = 2 * 60 * 60 * 1000; // 2 hours

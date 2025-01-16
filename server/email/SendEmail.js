@@ -1,9 +1,8 @@
 import nodemailer from "nodemailer";
-import {
-  getDeleteTemplate,
+import { getDeleteTemplate,
   getResetTemplate,
-  getVerificationTemplate,
-} from "./temp/EmailTemplate.js";
+  getVerificationTemplate, } from "./temp/EmailTemplate.js";
+
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMPT_HOST,
