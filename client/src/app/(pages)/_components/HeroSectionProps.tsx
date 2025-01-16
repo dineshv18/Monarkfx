@@ -14,7 +14,7 @@ export function HeroSection({
   title,
   description,
   image,
-  backgroundColor = "var(--custom-green-1)",
+  backgroundColor = "#590406",
   buttons,
   stats,
   className,

@@ -93,15 +93,15 @@ export default function ContactPage() {
         </div>
 
         {/* Map Section */}
-        <motion.div 
+            <motion.div 
           className="relative rounded-2xl overflow-hidden mb-16 max-w-6xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <div className="aspect-[16/9] md:aspect-[21/9] w-full relative  rounded-2xl overflow-hidden">
+          <div className="aspect-[16/9] md:aspect-[21/9] w-full relative rounded-2xl overflow-hidden">
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14013.255277853348!2d77.04031040582618!3d28.590360911001277!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1bd8f405bcf1%3A0x9e601372145832d0!2sDesire%20Div%20-%20Website%20Designing%20Company%20in%20Dwarka!5e0!3m2!1sen!2sin!4v1736687419817!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.7837997936613!2d77.05616367528806!3d28.606262075679115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d05de8d29cab9%3A0x2d77bb4a1742f15c!2sEquity%20Tank%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1736783993706!5m2!1sen!2sin"
               className="absolute inset-0 w-full h-full"
               style={{ border: 0 }}
               allowFullScreen
@@ -111,21 +111,21 @@ export default function ContactPage() {
           </div>
           
           <div className="absolute bottom-0 right-0 p-6 md:p-8 bg-white rounded-tl-2xl max-w-md">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Desire Div - Dwarka</h2>
-            <p className="text-gray-600 mb-1">Website Designing Company</p>
-            <p className="text-gray-600 mb-4">Dwarka, New Delhi, India</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Monark FX</h2>
+            <p className="text-gray-600 mb-1">Stock Market Institute</p>
+            <p className="text-gray-600 mb-4">Dwarka Sector 7, New Delhi, India</p>
             
             <div className="space-y-2">
               <p className="text-gray-600">
-                <span className="font-semibold">T:</span> +91 123 456 7890
+                <span className="font-semibold">T:</span> +91 981 180 8558
               </p>
               <p className="text-gray-600">
-                <span className="font-semibold">E:</span> info@desirediv.com
+                <span className="font-semibold">E:</span> info@monarkfx.com
               </p>
             </div>
             
-                        <motion.a
-              href="https://www.google.com/maps?q=Desire+Div+-+Website+Designing+Company+in+Dwarka,+New+Delhi,+India"
+            <motion.a
+              href="https://goo.gl/maps/YqL8YZ9Z9Z2Q9Z9Z9"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-full mt-6 hover:bg-gray-700 transition-colors"

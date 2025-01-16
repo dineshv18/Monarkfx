@@ -53,7 +53,7 @@ export default function Header() {
       <div className="container mx-auto px-10">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="text-2xl font-bold">
-            <Image src="/logo.png" alt="logo" width={100} height={100} />
+            <Image src={"/logo-dark.png"} alt="logo" width={200} height={200} />
           </Link>
 
           <nav className="hidden lg:flex space-x-8">

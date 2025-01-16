@@ -26,12 +26,12 @@ export default function TestimonialsSection() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#2A3630] px-4 py-20 md:py-40 overflow-hidden border-b-4 border-[#e9ec3b] relative">
+    <div className="min-h-screen bg-[#a31c30] px-4 py-20 md:py-40 overflow-hidden border-b-4 border-[#e9ec3b] relative">
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(232,235,32,0.05) 1px, transparent 1px)
+            linear-gradient(90deg, rgba(255,255,255,0.10) 1px, transparent 1px)
           `,
           backgroundSize: "80px 80px",
         }}
@@ -42,7 +42,7 @@ export default function TestimonialsSection() {
           <div className="space-y-8">
             <div className="flex items-center gap-3">
               <div className="bg-[#e9ec3b] p-3 rounded-full">
-                <MessageCircle className="w-6 h-6 text-[#2A3630]" />
+                <MessageCircle className="w-6 h-6 text-[#a31c30]" />
               </div>
               <span className="text-white text-lg">Students feedback</span>
             </div>
