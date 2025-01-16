@@ -2,6 +2,18 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import Razorpay from "razorpay";
+import userRoutes from "./routes/user.routes.js";
+import courseRoutes from "./routes/course.routes.js";
+import chapterRoutes from "./routes/chapter.routes.js";
+import enrollmentRoutes from "./routes/enrollment.routes.js";
+import userProgressRoutes from "./routes/userProgress.routes.js";
+import purchaseRoutes from "./routes/purchase.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
+import billingDetailsRoutes from "./routes/billingDetails.routes.js";
+import cartRoutes from "./routes/cart.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
+import couponRoutes from "./routes/coupon.routes.js";
+import sectionRoutes from "./routes/section.routes.js";
 
 const app = express();
 
@@ -56,6 +68,20 @@ export const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
+
+// API Routes
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/course", courseRoutes);
+app.use("/api/v1/chapter", chapterRoutes);
+app.use("/api/v1/enrollment", enrollmentRoutes);
+app.use("/api/v1/user-progress", userProgressRoutes);
+app.use("/api/v1/purchase", purchaseRoutes);
+app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/billing", billingDetailsRoutes);
+app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/review", reviewRoutes);
+app.use("/api/v1/coupon", couponRoutes);
+app.use("/api/v1/section", sectionRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
