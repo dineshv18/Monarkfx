@@ -61,7 +61,7 @@ const sendResetPasswordEmail = async (user, token) => {
 const generateToken = () => crypto.randomBytes(32).toString("hex");
 
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, role, provider, slug } = req.body;
+  const { name, email, password, role, provider, slug , usertype} = req.body;
 
   if (!name || !email || !password) {
     throw new ApiError(
@@ -101,6 +101,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     password: hashedPassword,
     role,
     provider,
+    usertype,
     slug: uniqueSlug,
     verificationToken,
     verificationTokenExpiry: new Date(Date.now() + TOKEN_EXPIRY),
@@ -472,6 +473,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
       name: true,
       email: true,
       role: true,
+      usertype: true,
       isVerified: true,
       provider: true,
       slug: true,
@@ -579,6 +581,7 @@ export const getUserBySlug = asyncHandler(async (req, res) => {
       email: true,
       role: true,
       isVerified: true,
+      usertype: true,
       slug: true,
       Purchase: {
         select: {
@@ -719,6 +722,7 @@ export const AdminGetUserBySlug = asyncHandler(async (req, res) => {
       role: true,
       isVerified: true,
       slug: true,
+      usertype: true,
     },
   });
 
@@ -784,6 +788,11 @@ export const AdminUpdateUser = asyncHandler(async (req, res) => {
     cleanedUpdateData.verificationTokenExpiry = null;
   }
 
+  if(cleanedUpdateData.password){
+    const hashedPassword = await bcrypt.hash(cleanedUpdateData.password, SALT_ROUNDS);
+    cleanedUpdateData.password = hashedPassword;
+  }
+
   const updatedUser = await prisma.user.update({
     where: { slug },
     data: cleanedUpdateData,
@@ -794,6 +803,7 @@ export const AdminUpdateUser = asyncHandler(async (req, res) => {
       role: true,
       isVerified: true,
       slug: true,
+      usertype: true,
     },
   });
 
