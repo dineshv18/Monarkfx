@@ -1,183 +1,73 @@
-"use client";
+'use client';
+import { SliderBtnGroup, ProgressSlider, SliderBtn, SliderContent, SliderWrapper } from '@/components/progress-slider';
+import Image from 'next/image';
 
-import { AnimatedDots } from "./AnimatedDots";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { useCountAnimation } from "./useCountAnimation";
-import { HeroSectionProps } from "@/type";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { AnimatedText } from "./AnimatedText";
+const items = [
+  {
+    img: '/banner/banner1.jpg', 
+    title: 'Expert Trading Education',
+    desc: 'Comprehensive courses and live trading sessions designed to transform beginners into professional traders.',
+    sliderName: 'education',
+  },
+  {
+    img: '/banner/banner2.jpg', 
+    title: 'Advanced Market Analysis',
+    desc: 'Master technical and fundamental analysis across stocks, forex, and cryptocurrency markets.',
+    sliderName: 'analysis',
+  },
+  {
+    img: '/banner/banner3.jpg', 
+    title: 'Personal Mentorship',
+    desc: 'One-on-one guidance from experienced traders to accelerate your trading journey and avoid common pitfalls.',
+    sliderName: 'mentorship',
+  },
+  {
+    img: '/banner/banner1.jpg', 
+    title: 'ISO-Certified Programs',
+    desc: 'Internationally recognized certification programs ensuring the highest standards in trading education.',
+    sliderName: 'certification',
+  },
+];
 
-export function HeroSection({
-  smallText,
-  title,
-  description,
-  image,
-  backgroundColor = "#590406",
-  buttons,
-  stats,
-  className,
-  variant = "page",
-}: HeroSectionProps) {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (variant !== "home") return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    setMousePosition({ x, y });
-  };
-
-  const calculateTilt = () => {
-    const tiltX = (mousePosition.y - 0.5) * 20;
-    const tiltY = (mousePosition.x - 0.5) * -20;
-    return `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-  };
-
-  const handleMouseLeave = () => {
-    setMousePosition({ x: 0, y: 0 });
-  };
-
+export default function HeroSection() {
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden w-full",
-        variant === "home" ? "min-h-screen" : "h-[400px] md:h-[450px]",
-        className
-      )}
-      style={{ backgroundColor }}
-    >
-      <AnimatedDots />
-      <div className="container relative mx-auto px-4 h-full max-w-7xl">
-        <div
-          className={cn(
-            "flex flex-col lg:flex-row h-full px-3 md:px-10",
-            variant === "home"
-              ? "pt-16 md:pt-20 lg:pt-16 pb-8 md:pb-12"
-              : "pt-16 md:pt-20 pb-8",
-            "items-center justify-center lg:items-end lg:pb-16"
-          )}
-        >
-          <div
-            className={cn(
-              "w-full lg:w-1/2 space-y-4 md:space-y-6",
-              variant === "home" ? "lg:max-w-3xl" : "lg:max-w-2xl",
-              "text-center lg:text-left mb-8 lg:mb-0"
-            )}
-          >
-            {smallText && (
-              <AnimatedText
-                text={smallText}
-                className="text-lg md:text-xl text-[#C5E82C] font-medium mb-4"
-                delay={0}
-              />
-            )}
-            <AnimatedText
-              text={title}
-              className={cn(
-                "font-bold text-white leading-tight mt-10 md:mt-20",
-                variant === "home"
-                  ? "text-5xl md:text-6xl lg:text-7xl"
-                  : "text-3xl md:text-5xl lg:text-6xl"
-              )}
-              delay={0.2}
-            />
-            {description && (
-              <AnimatedText
-                text={description}
-                className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl mx-auto lg:mx-0"
-                delay={0.4}
-              />
-            )}
-            {buttons && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-                className={cn(
-                  "mt-8 flex flex-wrap gap-5",
-                  variant === "home"
-                    ? "justify-center lg:justify-start"
-                    : "justify-start"
-                )}
-              >
-                {buttons}
-              </motion.div>
-            )}
-            {stats && variant === "home" && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8, ease: "easeOut" }}
-                className="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto lg:mx-0"
-              >
-                {stats.map((stat) => (
-                  <StatCounter key={stat.label} {...stat} />
-                ))}
-              </motion.div>
-            )}
-          </div>
-          {image && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-              className={cn(
-                "w-full relative",
-                variant === "home"
-                  ? "lg:w-1/2 h-[500px] lg:h-[600px] -mb-24 ml-0 lg:ml-24"
-                  : "lg:w-2/5 h-[300px] lg:h-[400px] -mb-36 ml-0 lg:ml-24",
-                "flex items-end justify-center lg:justify-end"
-              )}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div
-                className={cn(
-                  "relative w-full h-full",
-                  variant === "home" && "hover:scale-110"
-                )}
-                style={{
-                  transform: variant === "home" ? calculateTilt() : undefined,
-                  transformStyle: "preserve-3d",
-                  transition: "all 0.3s ease-out",
-                }}
-              >
+    <div className="relative w-full max-w-[1900px] border mx-auto">
+      <ProgressSlider vertical={false} activeSlider='education'>
+        <SliderContent>
+          {items.map((item, index) => (
+            <SliderWrapper key={index} value={item?.sliderName}>
+              <div className="relative">
                 <Image
-                  src={image.src}
-                  alt={image.alt}
-                  width={800}
-                  height={800}
-                  className={cn(
-                    "object-contain w-full h-full",
-                    variant === "home" && "transition-all duration-300"
-                  )}
-                  priority
+                  className='w-full 2xl:h-[600px] h-[450px] object-cover brightness-75'
+                  src={item.img}
+                  width={1900}
+                  height={1080}
+                  alt={item.desc}
+                  priority={index === 0}
                 />
-                <Image
-                  src="/bs.webp"
-                  alt="Hero image"
-                  width={800}
-                  height={800}
-                  className="absolute bottom-0 left-0 object-contain w-full h-full transition-all duration-300 smooth-move"
-                />
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-white z-10">
+                  <h1 className="text-4xl md:text-6xl font-bold mb-4">{item.title}</h1>
+                  <p className="text-lg md:text-xl max-w-3xl mx-auto">{item.desc}</p>
+                </div>
               </div>
-            </motion.div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+            </SliderWrapper>
+          ))}
+        </SliderContent>
 
-function StatCounter({ label, endValue }: { label: string; endValue: number }) {
-  const count = useCountAnimation(endValue);
-  return (
-    <div className="text-center">
-      <div className="text-4xl font-bold text-white">{count}+</div>
-      <div className="text-white/60 mt-2">{label}</div>
+        <SliderBtnGroup className='absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full max-w-4xl h-fit text-white bg-black/60 backdrop-blur-md overflow-hidden grid grid-cols-2 md:grid-cols-4 rounded-lg'>
+        {items.map((item, index) => (
+            <SliderBtn
+              key={index}
+              value={item?.sliderName}
+              className='text-left p-3 border-r border-white/10 hover:bg-white/5 transition-colors'
+              progressBarClass='bg-red-600 h-full'
+            >
+              <h2 className='font-semibold mb-2 text-white text-sm'>{item.title}</h2>
+              <p className='text-xs text-gray-400 line-clamp-2 hidden md:flex'>{item.desc}</p>
+            </SliderBtn>
+          ))}
+        </SliderBtnGroup>
+      </ProgressSlider>
     </div>
   );
 }

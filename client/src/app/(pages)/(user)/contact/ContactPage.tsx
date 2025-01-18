@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { Smile, MapPin, Send } from 'lucide-react'
-import CustomButton from '../../_components/CustomButton'
 
 const greetings = [
   { text: "Hello!", lang: "English" },

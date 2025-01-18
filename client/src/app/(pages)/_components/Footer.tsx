@@ -1,208 +1,214 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Handshake,
-  Phone,
-  Send,
-  Facebook,
-  Instagram,
-  Twitter,
-  Youtube,
-} from "lucide-react";
-import CustomButton from "./CustomButton";
-import Link from "next/link";
-import { AnimatedText } from "./AnimatedText";
+'use client';
 
-const socialLinks = [
-  { icon: Facebook, href: "/facebook" },
-  { icon: Instagram, href: "/instagram" },
-  { icon: Twitter, href: "/twitter" },
-  { icon: Youtube, href: "/youtube" },
-];
+import React, { FormEvent, useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
-const navLinks = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Courses", href: "/courses" },
-  { name: "Instructors", href: "/instructors" },
-  { name: "Testimonial", href: "/testimonial" },
-];
+const Footer = () => {
+  const container = useRef<HTMLDivElement>(null);
+  const [openPopup, setOpenPopUp] = useState(false);
+  const svgRef = useRef(null);
+  const [isInView, setIsInView] = useState(false);
 
-const popularCourses = [
-  { name: "Refund", href: "/refund" },
-  { name: "Privacy Policy", href: "/privacy-policy" },
-  { name: "Support", href: "/support" },
-  { name: "Contact", href: "/contact" },
-];
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5,
+      }
+    );
 
-function Footer() {
+    if (svgRef.current) {
+      observer.observe(svgRef.current);
+    }
+
+    return () => {
+      if (svgRef.current) {
+        observer.unobserve(svgRef.current);
+      }
+    };
+  }, []);
+
+  const handleNewsLetterData = (e: FormEvent) => {
+    e.preventDefault();
+    const target = e.target as HTMLFormElement;
+    setOpenPopUp(true);
+    target.reset();
+    if (setOpenPopUp) {
+      setTimeout(() => setOpenPopUp(false), 2000);
+    }
+  };
+
+  // Updated path array with correct orientations
+  const pathArr = [
+    // M - Fixed orientation
+    'M20 100V0H40V60L60 20L80 60V0H100V100H80L60 30L40 100H20Z',
+    // O - Fixed circular path
+    'M150 90C120 90 105 75 105 50C105 25 120 10 150 10C180 10 195 25 195 50C195 75 180 90 150 90Z',
+    // N
+    'M220 0V100H240V30L280 100H300V0H280V70L240 0H220Z',
+    // A
+    'M320 100L340 0H360L380 100H360L355 70H325L320 100ZM330 50H350L340 20L330 50Z',
+    // R
+    'M400 0H440C460 0 470 15 470 30C470 45 460 55 445 55L470 100H450L425 55H420V100H400V0Z',
+    // K
+    'M490 0H510V45L550 0H575L535 50L575 100H550L510 60V100H490V0Z',
+    // F
+    'M600 0H670V20H620V45H660V65H620V100H600V0Z',
+    // X
+    'M690 0H715L740 45L765 0H790L755 50L790 100H765L740 60L715 100H690L725 50L690 0Z'
+  ];
+
+  const pathVariants = {
+    hidden: {
+      pathLength: 0,
+      opacity: 0
+    },
+    visible: {
+      pathLength: 1,
+      opacity: 1,
+      transition: {
+        duration: 2,
+        ease: "easeInOut",
+        delay: 0.2
+      }
+    }
+  };
+
   return (
-    <div className="relative">
-      {/* Top Banner Section */}
-      <div className="md:absolute md:inset-x-0 md:-top-24 z-10">
-        <div className="mx-auto md:max-w-6xl md:px-4 ">
-          <div className="md:rounded-lg bg-[#e8eb20] shadow-lg">
-            <div className="flex flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row">
-              <AnimatedText
-                text="Admission is open for the next year batch"
-                className="text-xl font-semibold text-[#2A3342]"
-              />
-
-              <div className="flex flex-col items-center gap-4 sm:flex-row">
-                <CustomButton
-                  primaryText="Get started now"
-                  secondaryText="Learn more"
-                  bgColor="#2A3342"
-                  hoverBgColor="#2A3342"
-                  hoverTextColor="#e8eb20"
-                  textColor="#e8eb20"
-                  className="w-48"
-                />
-                <div className="flex items-center gap-2">
-                  <Phone className="h-5 w-5 text-[#2A3342]" />
-                  <span className="text-base font-medium text-[#2A3342]">
-                    +1234 567 8910
-                  </span>
-                </div>
+    <div className='relative h-full sm:pt-14 pt-8 bg-black text-white' ref={container}>
+      <div className='sm:container px-4 mx-auto'>
+        {/* Newsletter Section */}
+        <div className='md:flex justify-between w-full'>
+          <div>
+            <h1 className='md:text-4xl text-2xl font-semibold'>
+              Let&apos;s start trading together
+            </h1>
+            <div className='pt-2 pb-6 md:w-99'>
+              <p className='md:text-2xl text-xl py-4'>
+                Sign up for our newsletter*
+              </p>
+              <div className='hover-button relative bg-red-600 flex justify-between items-center border-2 overflow-hidden border-red-600 rounded-full text-white hover:text-black md:text-2xl'>
+                <form onSubmit={handleNewsLetterData} className='relative z-2 grid grid-cols-6 w-full h-full'>
+                  <input
+                    type='email'
+                    name='newsletter_email'
+                    className='border-none bg-transparent py-3 px-6 col-span-5 placeholder-gray-300'
+                    placeholder='Your Email * '
+                    required
+                  />
+                  <button 
+                    type='submit' 
+                    className='cursor-pointer w-full hover:bg-white bg-black text-white hover:text-red-600 h-full cols-span-1 transition-colors duration-300'
+                  >
+                    <svg 
+                      width='15' 
+                      height='15' 
+                      viewBox='0 0 15 15' 
+                      fill='none' 
+                      className='w-full h-[80%]'
+                    >
+                      <path 
+                        d='M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z' 
+                        fill='currentColor' 
+                        fillRule='evenodd' 
+                        clipRule='evenodd'
+                      />
+                    </svg>
+                  </button>
+                </form>
               </div>
             </div>
           </div>
+          
+          {/* Navigation Links */}
+          <div className='flex gap-10'>
+            <ul>
+              <li className='text-2xl pb-2 text-red-600 font-semibold'>SITEMAP</li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <Link href='/'>Home</Link>
+              </li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <Link href='/about'>About us</Link>
+              </li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <Link href='/courses'>Courses</Link>
+              </li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <Link href='/mentorship'>Mentorship</Link>
+              </li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <Link href='/contact'>Contact</Link>
+              </li>
+            </ul>
+            <ul>
+              <li className='text-2xl pb-2 text-red-600 font-semibold'>SOCIAL</li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <a href='#' target='_blank' rel="noopener noreferrer" className='hover:underline'>LinkedIn</a>
+              </li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <a href='#' target='_blank' rel="noopener noreferrer" className='hover:underline'>Twitter</a>
+              </li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <a href='#' target='_blank' rel="noopener noreferrer" className='hover:underline'>Instagram</a>
+              </li>
+              <li className='text-xl font-medium hover:text-red-600 transition-colors duration-300'>
+                <a href='#' target='_blank' rel="noopener noreferrer" className='hover:underline'>Facebook</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Animated Logo Section */}
+        <div className='border-y-2 md:py-4 border-gray-800' ref={svgRef}>
+          <motion.svg
+            width="1000"
+            height="120"
+            viewBox="0 0 1000 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            {pathArr.map((path, index) => (
+              <motion.path
+                key={index}
+                d={path}
+                stroke="#FF0000"
+                strokeWidth="2"
+                fill="none"
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                variants={pathVariants}
+              />
+            ))}
+          </motion.svg>
+        </div>
+
+        {/* Copyright Section */}
+        <div className='flex md:flex-row flex-col-reverse gap-3 justify-between py-2'>
+          <span className='font-medium text-gray-400'>
+            &copy; 2021 Monark FX. All Rights Reserved.
+          </span>
+          <a 
+            href='#' 
+            className='font-semibold hover:text-red-600 transition-colors duration-300'
+          >
+            Privacy Policy
+          </a>
         </div>
       </div>
 
-      {/* Main Footer */}
-      <footer className="md:mt-32 bg-[#2A3630] pt-16">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Brand Section */}
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#e8eb20]">
-                  <div className="h-7 w-7 rounded-full bg-[#2A3630]" />
-                </div>
-                <span className="text-2xl font-bold text-white">Monark FX</span>
-              </div>
-              <p className="text-gray-400">
-                We are providing high-quality courses for about ten years.
-              </p>
-              <div className="flex gap-4">
-                {socialLinks.map((social) => {
-                  const Icon = social.icon;
-                  return (
-                    <Link
-                      key={social.href}
-                      href={social.href}
-                      className="text-white hover:text-[#e8eb20] transition-colors"
-                    >
-                      <Icon className="h-5 w-5" />
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Popular Courses */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-white">
-                Popular courses
-              </h3>
-              <ul className="space-y-4">
-                {popularCourses.map((course) => (
-                  <li key={course.name}>
-                    <Link
-                      href={course.href}
-                      className="text-gray-400 hover:text-[#e8eb20] transition-colors"
-                    >
-                      {course.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Need Help Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-white">Need help?</h3>
-              <div className="space-y-2">
-                <p className="text-gray-400">Call us directly?</p>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-white">
-                    +1 234 567 8910
-                  </span>
-                  <span className="rounded-full bg-[#e8eb20] px-2 py-0.5 text-xs font-medium text-[#2A3342]">
-                    FREE
-                  </span>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <p className="text-gray-400">Need support?</p>
-                <Link
-                  href="mailto:help@domain.com"
-                  className="text-white underline hover:text-[#e8eb20] transition-colors"
-                >
-                  help@domain.com
-                </Link>
-              </div>
-            </div>
-
-            {/* Newsletter Section */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-white">
-                Subscribe our newsletter
-              </h3>
-              <div className="relative w-full">
-                <Input
-                  type="email"
-                  placeholder="Enter your email..."
-                  className="w-full bg-transparent text-white placeholder:text-gray-400 border-gray-700 focus:border-[#e8eb20] pr-12"
-                />
-                <Button
-                  size="icon"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-[#e8eb20] text-[#2A3342] hover:bg-[#e8eb20]/90 h-7 w-7"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400">
-                <Handshake className="h-5 w-5" />
-                <span>Protecting your privacy</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Navigation */}
-          <div className="mt-16 border-t border-gray-700 py-8">
-            <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-              <nav>
-                <ul className="flex flex-wrap justify-center gap-6">
-                  {navLinks.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-gray-400 hover:text-[#e8eb20] transition-colors"
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-              <p className="text-gray-400 text-center md:text-left">
-                © 2021 Monark FX. All rights reserved. Designed by{" "}
-                <a
-                  href="https://my-portfolio-rk.vercel.app"
-                  target="_blank"
-                  className="text-white hover:text-[#e8eb20] transition-colors"
-                >
-                  Ritesh
-                </a>
-              </p>
-            </div>
-          </div>
+      {/* Newsletter Submission Popup */}
+      {openPopup && (
+        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-md shadow-lg">
+          Newsletter subscription successful!
         </div>
-      </footer>
+      )}
     </div>
   );
-}
+};
 
 export default Footer;

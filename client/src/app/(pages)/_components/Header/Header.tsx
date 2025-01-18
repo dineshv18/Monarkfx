@@ -7,7 +7,6 @@ import MobileMenu from "./MobileMenu";
 import { LogIn } from "lucide-react";
 import Image from "next/image";
 import { useScrollEffect } from "./useScrollEffect";
-import CustomButton from "../CustomButton";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -39,7 +38,7 @@ export default function Header() {
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 left-0 right-0 z-50 transition-all duration-300 ${
         headerState === "transparent"
           ? "bg-transparent text-white"
           : headerState === "visible"
@@ -68,14 +67,6 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="hidden lg:block">
-            <CustomButton
-              primaryText="Login"
-              secondaryText="Login"
-              icon={<LogIn className="h-5 w-5" />}
-              href="/login"
-            />
-          </div>
 
           <button
             className="lg:hidden text-2xl"

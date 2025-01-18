@@ -5,7 +5,6 @@ import { Facebook, Instagram, Twitter, Dribbble, Linkedin, Github } from 'lucide
 import { useState } from 'react'
 import { instructorsData } from './instructorsData'
 import Image from 'next/image'
-import { AnimatedText } from '../../_components/AnimatedText'
 
 const SocialIcons = ({ socials, isMobile = false }: { socials: any, isMobile?: boolean }) => (
   <motion.div 
@@ -150,25 +149,12 @@ export default function InstructorSection() {
               />
             </svg>
           </div>
-          <AnimatedText
-            text="Experienced instructors"
-            className="text-xl font-medium text-gray-900"
-            />
+         
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
           <div className="space-y-6">
-            <AnimatedText
-            text='We have amazing skills for teaching.'
-            className='text-5xl font-bold text-gray-900 leading-tight'
-            delay={0}
-            />
-         
-            <AnimatedText
-                text="Our instructors bring years of industry experience and expertise to help you succeed."
-                className="text-lg text-gray-500"
-                delay={0.5}
-                />
+           
           
           </div>
 

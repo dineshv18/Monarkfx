@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { LogIn } from "lucide-react";
-import CustomButton from "../CustomButton";
 import Image from "next/image";
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import { MobileMenuProps } from "@/type";
@@ -65,25 +64,7 @@ export default function MobileMenu({ menuItems, onClose }: MobileMenuProps) {
               </Link>
             </motion.div>
           ))}
-          <motion.div
-            custom={menuItems.length}
-            initial="hidden"
-            animate="visible"
-            variants={menuVariants}
-          >
-            <CustomButton
-              primaryText="Login"
-              secondaryText="Login"
-              icon={<LogIn className="h-5 w-5" />}
-              href="/login"
-              className="w-full shadow-lg shadow-[var(--custom-green-3)]"
-              variant="filled"
-              bgColor="var(--custom-green-7)"
-              textColor="white"
-              hoverBgColor="var(--custom-green-8)"
-              hoverTextColor="white"
-            />
-          </motion.div>
+      
         </nav>
 
         <div className="mt-auto pb-8">
