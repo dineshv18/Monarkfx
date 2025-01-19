@@ -112,9 +112,17 @@ export interface InfiniteTextScrollProps {
 
 // Animated Text
 export interface AnimatedTextProps {
-  text: string;
+  text?: string;
+  html?: React.ReactNode;
   className?: string;
   delay?: number;
+}
+
+// Animated Text 2
+export interface AnimatedTextProps2 {
+  text: string
+  className?: string
+  letterSpacing?: string
 }
 
 // instructor section component

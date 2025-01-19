@@ -20,10 +20,10 @@ const SpaceGrotesk = Space_Grotesk({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  title: "Monarkfx",
-  description: "Monarkfx - Share Market",
-};
+export const metadata : Metadata= {
+  title: 'MonarkFX - Global Trading Excellence',
+  description: 'Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.',
+}
 
 export default function RootLayout({
   children,

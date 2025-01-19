@@ -4,11 +4,33 @@ import React, { FormEvent, useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
+const useWindowSize = () => {
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 768,
+  });
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+      });
+    }
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      handleResize();
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  return windowSize;
+};
 const Footer = () => {
   const container = useRef<HTMLDivElement>(null);
   const [openPopup, setOpenPopUp] = useState(false);
   const svgRef = useRef(null);
   const [isInView, setIsInView] = useState(false);
+  const { width } = useWindowSize();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -78,6 +100,8 @@ const Footer = () => {
       }
     }
   };
+
+  
 
   return (
     <div className='relative h-full sm:pt-14 pt-8 bg-black text-white' ref={container}>
@@ -165,27 +189,29 @@ const Footer = () => {
 
         {/* Animated Logo Section */}
         <div className='border-y-2 md:py-4 border-gray-800' ref={svgRef}>
-          <motion.svg
-            width="1000"
-            height="120"
-            viewBox="0 0 1000 120"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {pathArr.map((path, index) => (
-              <motion.path
-                key={index}
-                d={path}
-                stroke="#FF0000"
-                strokeWidth="2"
-                fill="none"
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                variants={pathVariants}
-              />
-            ))}
-          </motion.svg>
-        </div>
+        <motion.svg
+    width="100%"
+    height="100%"
+    viewBox="0 0 800 120"
+    fill="none"
+    className="w-full md:h-[120px] h-[60px] max-w-[800px] mx-auto"
+    preserveAspectRatio="xMidYMid meet"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {pathArr.map((path, index) => (
+      <motion.path
+        key={index}
+        d={path}
+        stroke="#FF0000"
+        strokeWidth={width < 768 ? "3" : "2"}
+        fill="none"
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={pathVariants}
+      />
+    ))}
+  </motion.svg>
+</div>
 
         {/* Copyright Section */}
         <div className='flex md:flex-row flex-col-reverse gap-3 justify-between py-2'>
