@@ -1,99 +1,13 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ReactLenis } from 'lenis/react';
-import { EducationCards } from './EducationCards';
+import  EducationCards  from './EducationCards';
 import { AnimatedText } from '@/components/AnimatedText';
+import { MentorshipSection } from './mentorship-section';
 
-const statsData = [
-  { icon: "⭐", value: "4.7", label: "Rating (200+ reviews)" },
-  { icon: "👨‍🏫", value: "7+", label: "Dedicated Mentors" },
-  { icon: "🎓", value: "1000+", label: "Offline Sessions" },
-  { icon: "👥", value: "250+", label: "Students Trained" }
-];
 
-const imageData = [
-  {
-    src: '/card/c1.jpg',
-    alt: 'Live Trading Sessions',
-    title: 'Live Trading Sessions',
-    desc: 'Learn from expert traders'
-  },
-  {
-    src: '/card/c2.jpg',
-    alt: 'Technical Analysis',
-    title: 'Technical Analysis',
-    desc: 'Master chart patterns'
-  },
-  {
-    src: '/card/c3.jpg',
-    alt: 'Risk Management',
-    title: 'Risk Management',
-    desc: 'Build sustainable strategies'
-  }
-];
-
-const Counter = ({ value }: { value: string }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (inView) {
-      let start = 0;
-      const end = parseInt(value);
-      const duration = 2000;
-      const increment = (end / duration) * 10;
-
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= end) {
-          setCount(end);
-          clearInterval(timer);
-        } else {
-          setCount(Math.floor(start));
-        }
-      }, 10);
-
-      return () => clearInterval(timer);
-    }
-  }, [inView, value]);
-
-  return (
-    <span ref={ref}>
-      {count}
-      {value.includes('+') ? '+' : ''}
-    </span>
-  );
-};
-
-const StatsSection = () => (
-  <div className='grid sm:grid-cols-2 gap-6 max-w-2xl'>
-    {statsData.map((stat, index) => (
-      <motion.div
-        key={index}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.1 }}
-        className='bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-red-600/10 hover:border-red-600/30 group'
-      >
-        <div className='flex items-center gap-4'>
-          <span className='text-red-600 text-4xl group-hover:scale-110 transition-transform duration-300'>
-            {stat.icon}
-          </span>
-          <div>
-            <h3 className='text-3xl font-bold group-hover:text-red-600 transition-colors'>
-              <Counter value={stat.value} />
-            </h3>
-            <p className='text-gray-600'>{stat.label}</p>
-          </div>
-        </div>
-      </motion.div>
-    ))}
-  </div>
-);
 
 export default function Home(): JSX.Element {
   return (
@@ -101,7 +15,7 @@ export default function Home(): JSX.Element {
       <main className='bg-black'>
         <div className='wrapper'>
           {/* Hero Section */}
-          <section className='text-white min-h-screen w-full bg-black grid place-content-center sticky top-0 px-4 sm:px-6 lg:px-8'>
+          <section className='text-black min-h-screen w-full bg-white grid place-content-center sticky top-0 px-4 sm:px-6 lg:px-8'>
             <div className='absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]'></div>
                      
             <AnimatedText 
@@ -115,14 +29,7 @@ export default function Home(): JSX.Element {
             />
           </section>
 
-<section className="py-20 bg-white">
-  <div className="container mx-auto px-4">
-    <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-black">
-      Our <span className="text-red-600">Trading</span> Education
-    </h2>
-    <EducationCards />
-  </div>
-</section>
+     
 
           {/* Live Trading Section */}
           <section className='text-white min-h-screen w-full bg-black grid place-content-center sticky top-0 border-t border-red-600/20 p-4 sm:p-6 lg:p-10 overflow-x-hidden'>
@@ -188,62 +95,13 @@ export default function Home(): JSX.Element {
             </div>
           </section>
         </div>
+          <main className="bg-white">
+               <EducationCards />
+           </main>
               
-        <section className='text-black w-full bg-white border-t border-red-600/20 p-4 sm:p-6 lg:p-10'>
-          <div className='grid lg:grid-cols-2 gap-8'>
-            {/* Stats Section */}
-            <div className='lg:sticky lg:top-0 lg:h-screen flex flex-col items-center justify-center p-4 sm:p-8'>
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className='text-3xl sm:text-4xl lg:text-6xl font-semibold text-center tracking-tight leading-[120%] mb-12'
-              >
-                Personalized Mentorship<br />
-                <span className="text-red-600">For Trading Success</span>
-              </motion.h1>
-              
-              <StatsSection />
-            </div>
-        
-            {/* Image Grid */}
-            <div className='grid gap-6 p-4 sm:p-8'>
-              {imageData.map((image, index) => (
-                <motion.figure
-                  key={index}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                  className='relative overflow-hidden rounded-xl group'
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <Image
-                      src={image.src || "/placeholder.svg"}
-                      alt={image.alt}
-                      width={800}
-                      height={600}
-                      className='w-full h-[300px] object-cover rounded-xl shadow-lg'
-                    />
-                  </motion.div>
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                    className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent rounded-xl'
-                  >
-                    <div className='absolute bottom-6 left-6 text-white'>
-                      <h4 className='text-xl font-semibold mb-2'>{image.title}</h4>
-                      <p className='text-gray-200'>{image.desc}</p>
-                    </div>
-                  </motion.div>
-                </motion.figure>
-              ))}
-            </div>
-          </div>
-        </section>
+           <main className="bg-black">
+              <MentorshipSection />
+            </main>
 
         <section className='text-white w-full bg-black py-10 md:py-20'>
           <div className='container mx-auto px-4'>

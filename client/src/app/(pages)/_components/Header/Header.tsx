@@ -1,199 +1,205 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence, useTransform, useMotionValue } from "framer-motion"
+import { useState, useEffect, useRef } from "react"
+import { motion, AnimatePresence, useMotionValue, useTransform, useScroll } from "framer-motion"
 import Link from "next/link"
+import { ChevronDown, LogIn, LogOut, Menu, X } from 'lucide-react'
+import { cn } from "@/lib/utils"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
-import { ChevronDown, LogIn, LogOut, User, Menu, X } from "lucide-react"
 
-type MenuItem = {
-  name: string
-  href: string
-  subItems?: MenuItem[]
-}
-
-type User = {
-  name: string
-  isLoggedIn: boolean
-}
-
-const menuItems: MenuItem[] = [
+const menuItems = [
   { name: "Home", href: "/" },
   {
     name: "Courses",
-    href: "#",
-    subItems: [
-      { name: "All Courses", href: "/courses/all" },
-      { name: "Stocks", href: "/courses/stocks" },
-      { name: "Forex", href: "/courses/forex" },
-      { name: "Cryptocurrency", href: "/courses/crypto" },
-    ],
+    href: "/",
+    // subItems: [
+    //   { name: "All Courses", href: "/courses/all" },
+    //   { name: "Stocks", href: "/courses/stocks" },
+    //   { name: "Forex", href: "/courses/forex" },
+    //   { name: "Crypto", href: "/courses/crypto" },
+    // ],
   },
-  { name: "About Us", href: "/about" },
+  { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ]
 
-const Header: React.FC = () => {
+const Header = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [user, setUser] = useState<User>({ name: "John Doe", isLoggedIn: false })
-  const [isScrolled, setIsScrolled] = useState(false)
-  const pathname = usePathname()
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [user, setUser] = useState({ name: "John Doe", isLoggedIn: false })
+  const [mounted, setMounted] = useState(false)
+  const lastScrollY = useRef(0)
+  const { scrollY } = useScroll()
+  const headerRef = useRef<HTMLDivElement>(null)
 
-  const scrollY = useMotionValue(0)
-  const backgroundColor = useTransform(scrollY, [0, 50], ["rgba(255, 255, 255, 1)", "rgba(0, 0, 0, 0.8)"])
-  const backdropFilter = useTransform(scrollY, [0, 50], ["blur(0px)", "blur(10px)"])
-  const logoSize = useTransform(scrollY, [0, 50], [200, 150])
+  const headerWidth = useMotionValue("100%")
+  const headerMaxWidth = useMotionValue("600px")
+  const routesOpacity = useTransform(scrollY, [0, 300], [1, 0.5])
+  const bgOpacity = useTransform(scrollY, [0, 100], [0.5, 0.95])
+
+  useEffect(() => {
+    setMounted(true)
+    const updateHeaderWidth = () => {
+      if (headerRef.current) {
+        const viewportWidth = window.innerWidth
+        const maxWidth = Math.min(600, viewportWidth - 32)
+        headerMaxWidth.set(`${maxWidth}px`)
+      }
+    }
+    updateHeaderWidth()
+    window.addEventListener("resize", updateHeaderWidth)
+    return () => window.removeEventListener("resize", updateHeaderWidth)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
-      scrollY.set(window.scrollY)
-      setIsScrolled(window.scrollY > 50)
+      const currentScrollY = window.scrollY
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setIsCollapsed(true)
+        setActiveDropdown(null) 
+      } else {
+        setIsCollapsed(false)
+      }
+      lastScrollY.current = currentScrollY
     }
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [scrollY])
+  }, [])
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
-  const closeMobileMenu = () => setIsMobileMenuOpen(false)
+  const headerVariants = {
+    expanded: {
+      width: "100%",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 30,
+      },
+    },
+    collapsed: {
+      width: "65px",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 30,
+      },
+    },
+  }
+
+  const handleMouseEnter = (itemName: string) => {
+    if (!isCollapsed) {
+      setActiveDropdown(itemName)
+    }
+  }
+
+  const handleMouseLeave = () => {
+    if (!isCollapsed) {
+      setActiveDropdown(null)
+    }
+  }
+
+  if (!mounted) return null
 
   return (
     <motion.header
-      className="sticky top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{ backgroundColor, backdropFilter }}
+      ref={headerRef}
+      animate={isCollapsed ? "collapsed" : "expanded"}
+      variants={headerVariants}
+      whileHover="expanded"
+      initial="expanded"
+      className={cn(
+        "fixed z-50 top-4 left-0 right-0 mx-auto h-[65px] rounded-lg flex items-center justify-between overflow-hidden",
+        "backdrop-blur-md"
+      )}
+      style={{
+        maxWidth: headerMaxWidth,
+        backgroundColor: `rgba(0, 0, 0, ${bgOpacity.get()})`,
+      }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 sm:h-24">
-          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
-            <Link href="/" className="flex items-center">
-              <motion.div style={{ width: logoSize, height: logoSize }}>
-                <Image
-                  src={isScrolled ? "/logo-light.png" : "/logo-dark.png"}
-                  alt="logo"
-                  width={200}
-                  height={200}
-                  className="w-full h-full object-contain"
-                />
-              </motion.div>
-            </Link>
-          </motion.div>
+      <motion.div 
+        className="bg-red-600 rounded-lg w-[50px] h-[50px] flex items-center justify-center ml-2 shrink-0"
+        animate={{ 
+          scale: isCollapsed ? 0.8 : 1,
+          rotate: isCollapsed ? 360 : 0 
+        }}
+        transition={{ duration: 0.2 }}
+      >
+        <Link href="/">
+          <Image 
+            src="/logo.png" 
+            alt="Logo" 
+            width={40} 
+            height={40}
+            className="rounded-lg"
+          />
+        </Link>
+      </motion.div>
 
-          <nav className="hidden md:flex space-x-1 lg:space-x-4">
-            {menuItems.map((item, index) => (
-              <motion.div
-                key={item.name}
-                className="relative group"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+      <nav className={cn(
+        "hidden md:flex items-center space-x-6 mx-4 overflow-x-auto",
+        isCollapsed && "opacity-0 pointer-events-none"
+      )}>
+        <AnimatePresence>
+          {menuItems.map((item) => (
+            <motion.div 
+              key={item.name} 
+              className="relative"
+              onMouseEnter={() => handleMouseEnter(item.name)}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Link
+                href={item.href}
+                className="text-white text-base font-medium hover:text-red-500 transition-colors flex items-center whitespace-nowrap py-2"
               >
-                <Link
-                  href={item.href}
-                  className={`px-3 py-2 rounded-md text-lg font-medium transition-colors duration-200 flex items-center ${
-                    isScrolled ? "text-white" : "text-gray-800"
-                  } ${pathname === item.href ? "border-b-2 border-red-500" : ""}`}
-                >
-                  {item.name}
-                  {item.subItems && <ChevronDown className="ml-1 h-5 w-5" />}
-                </Link>
-                {item.subItems && (
-                  <motion.div
-                    className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                      {item.subItems.map((subItem) => (
-                        <Link
-                          key={subItem.name}
-                          href={subItem.href}
-                          className={`block px-4 py-2 text-base text-gray-700 hover:bg-gray-100 hover:text-gray-900`}
-                          role="menuitem"
-                        >
-                          {subItem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
-          </nav>
+                {item.name}
+                
+              </Link>
 
-          <motion.div
-            className="hidden md:flex items-center"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {user.isLoggedIn ? (
-              <div className="relative group">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-lg font-medium transition-colors duration-200 ${
-                    isScrolled ? "text-white" : "text-gray-800"
-                  }`}
-                >
-                  <User className="h-6 w-6" />
-                  <span>{user.name}</span>
-                  <ChevronDown className="h-5 w-5" />
-                </motion.button>
-                <motion.div
-                  className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2 text-base text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      role="menuitem"
-                    >
-                      Profile
-                    </Link>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setUser({ ...user, isLoggedIn: false })}
-                      className="block w-full text-left px-4 py-2 text-base text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      role="menuitem"
-                    >
-                      Logout
-                    </motion.button>
-                  </div>
-                </motion.div>
-              </div>
-            ) : (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setUser({ ...user, isLoggedIn: true })}
-                className="flex items-center space-x-2 px-4 py-2 rounded-md text-lg font-medium bg-red-600 text-white hover:bg-red-700 transition-colors duration-200"
-              >
-                <LogIn className="h-6 w-6" />
-                <span>Login</span>
-              </motion.button>
-            )}
-          </motion.div>
+             
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </nav>
 
+      <motion.div 
+        className={cn(
+          "hidden md:block mr-2 shrink-0", 
+          isCollapsed && "opacity-0 pointer-events-none"
+        )}
+        
+      >
+        {user.isLoggedIn ? (
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className={`md:hidden p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white ${
-              isScrolled ? "text-white" : "text-gray-800"
-            }`}
-            onClick={toggleMobileMenu}
-            aria-label="Toggle mobile menu"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm whitespace-nowrap"
+            onClick={() => setUser({ ...user, isLoggedIn: false })}
           >
-            {isMobileMenuOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
           </motion.button>
-        </div>
-      </div>
+        ) : (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm whitespace-nowrap"
+            onClick={() => setUser({ ...user, isLoggedIn: true })}
+          >
+            <LogIn className="h-4 w-4" />
+            <span>Login</span>
+          </motion.button>
+        )}
+      </motion.div>
+
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="md:hidden p-2 mr-2 text-white"
+      >
+        {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      </motion.button>
 
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -201,95 +207,37 @@ const Header: React.FC = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-white border-t border-gray-200"
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-lg rounded-b-lg border border-gray-800 max-h-[70vh] overflow-y-auto"
+            style={{ maxWidth: headerMaxWidth }}
           >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {menuItems.map((item, index) => (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  <Link
-                    href={item.href}
-                    className={`block px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900`}
-                    onClick={closeMobileMenu}
-                  >
-                    {item.name}
-                  </Link>
-                  {item.subItems && (
-                    <div className="pl-4 space-y-1">
-                      {item.subItems.map((subItem, subIndex) => (
-                        <motion.div
-                          key={subItem.name}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: (index + subIndex) * 0.1 }}
-                        >
-                          <Link
-                            href={subItem.href}
-                            className={`block px-3 py-2 rounded-md text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900`}
-                            onClick={closeMobileMenu}
-                          >
-                            {subItem.name}
-                          </Link>
-                        </motion.div>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: menuItems.length * 0.1 }}
-              >
+            <div className="px-4 py-2 space-y-2">
+          
+              <div className="pt-2">
                 {user.isLoggedIn ? (
-                  <>
-                    <Link
-                      href="/profile"
-                      className="block px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                      onClick={closeMobileMenu}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <User className="h-6 w-6" />
-                        <span>{user.name}</span>
-                      </div>
-                    </Link>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setUser({ ...user, isLoggedIn: false })
-                        closeMobileMenu()
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-md text-lg font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <LogOut className="h-6 w-6" />
-                        <span>Logout</span>
-                      </div>
-                    </motion.button>
-                  </>
+                  <button
+                    className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
+                    onClick={() => {
+                      setUser({ ...user, isLoggedIn: false })
+                      setIsMobileMenuOpen(false)
+                    }}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </button>
                 ) : (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <button
+                    className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
                     onClick={() => {
                       setUser({ ...user, isLoggedIn: true })
-                      closeMobileMenu()
+                      setIsMobileMenuOpen(false)
                     }}
-                    className="w-full px-3 py-2 rounded-md text-lg font-medium bg-red-600 text-white hover:bg-red-700"
                   >
-                    <div className="flex items-center space-x-2 justify-center">
-                      <LogIn className="h-6 w-6" />
-                      <span>Login</span>
-                    </div>
-                  </motion.button>
+                    <LogIn className="h-4 w-4" />
+                    <span>Login</span>
+                  </button>
                 )}
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
@@ -299,4 +247,3 @@ const Header: React.FC = () => {
 }
 
 export default Header
-

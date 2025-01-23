@@ -31,14 +31,14 @@ const Footer = () => {
   const { width } = useWindowSize()
 
   const pathArr = [
-     // M
-  "M40 100V0H60L80 40L100 0H120V100H100V30L80 70L60 30V100H40Z",
-  // O outer circle 
-  "M180 90C210 90 230 75 230 50C230 25 210 10 180 10C150 10 130 25 130 50C130 75 150 90 180 90Z",
-  // O inner circle 
-  "M180 70C195 70 210 62 210 50C210 38 195 30 180 30C165 30 150 38 150 50C150 62 165 70 180 70Z",
-    // N 
-   "M210 100V0H230L270 70V0H290V100H270L230 30V100H210Z",
+    // M
+    "M40 100V0H60L80 40L100 0H120V100H100V30L80 70L60 30V100H40Z",
+    // O outer circle
+    "M180 90C210 90 230 75 230 50C230 25 210 10 180 10C150 10 130 25 130 50C130 75 150 90 180 90Z",
+    // O inner circle
+    "M180 70C195 70 210 62 210 50C210 38 195 30 180 30C165 30 150 38 150 50C150 62 165 70 180 70Z",
+    // N
+    "M210 100V0H230L270 70V0H290V100H270L230 30V100H210Z",
     // A
     "M310 100L330 0H350L370 100H350L345 70H315L310 100ZM320 50H340L330 20L320 50Z",
     // R
@@ -84,10 +84,7 @@ const Footer = () => {
   }
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsInView(entry.isIntersecting),
-      { threshold: 0.5 }
-    )
+    const observer = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), { threshold: 0.5 })
     if (svgRef.current) {
       observer.observe(svgRef.current)
     }
@@ -105,13 +102,11 @@ const Footer = () => {
   }
 
   return (
-    <div className="relative h-full sm:pt-14 pt-8 bg-white text-black" ref={container}>
+    <div className="relative h-full sm:pt-14 pt-8 bg-gradient-to-b from-red-100 to-white text-black" ref={container}>
       <div className="sm:container px-4 mx-auto">
         <div className="md:flex justify-between w-full">
           <div>
-            <h1 className="md:text-4xl text-2xl font-semibold text-red-600">
-              Let&apos;s start trading together
-            </h1>
+            <h1 className="md:text-4xl text-2xl font-semibold text-red-600">Let&apos;s start trading together</h1>
             <div className="pt-2 pb-6 md:w-99">
               <p className="md:text-2xl text-xl py-4">Sign up for our newsletter*</p>
               <div className="hover-button relative bg-red-600 flex justify-between items-center border-2 overflow-hidden border-red-600 rounded-full text-white">
@@ -123,11 +118,17 @@ const Footer = () => {
                     className="border-none bg-transparent py-3 px-6 col-span-5 placeholder-gray-300"
                     placeholder="Your Email *"
                   />
-                  <button type="submit" 
-                    className="cursor-pointer w-full hover:bg-white bg-black text-white hover:text-red-600 h-full cols-span-1 transition-colors duration-300">
+                  <button
+                    type="submit"
+                    className="cursor-pointer w-full hover:bg-white bg-black text-white hover:text-red-600 h-full cols-span-1 transition-colors duration-300"
+                  >
                     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" className="w-full h-[80%]">
-                      <path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
-                        fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
+                      <path
+                        d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
+                        fill="currentColor"
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </button>
                 </form>
@@ -158,7 +159,7 @@ const Footer = () => {
         </div>
 
         <div className="border-y-2 md:py-4 border-red-200" ref={svgRef}>
-                  <motion.svg
+          <motion.svg
             width="100%"
             height="100%"
             viewBox="0 0 800 120"
@@ -168,22 +169,20 @@ const Footer = () => {
           >
             {pathArr.map((path, index) => (
               <motion.path
-              key={index}
-              d={path}
-              stroke={index === 2 ? "#000000" : "#000000"}
-              strokeWidth={width < 768 ? "2.5" : "2"}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
-              variants={index === 2 ? innerOVariant : pathVariants}
+                key={index}
+                d={path}
+                stroke={index === 2 ? "#000000" : "#000000"}
+                strokeWidth={width < 768 ? "2.5" : "2"}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                variants={index === 2 ? innerOVariant : pathVariants}
               />
             ))}
           </motion.svg>
-                  </div>
+        </div>
 
         <div className="flex md:flex-row flex-col-reverse gap-3 justify-between py-2">
-          <span className="font-medium text-gray-600">
-            &copy; 2024 Monark FX. All Rights Reserved.
-          </span>
+          <span className="font-medium text-gray-600">&copy; 2024 Monark FX. All Rights Reserved.</span>
           <a href="#" className="font-semibold hover:text-red-600 transition-colors duration-300">
             Privacy Policy
           </a>
@@ -200,3 +199,4 @@ const Footer = () => {
 }
 
 export default Footer
+
