@@ -11,7 +11,7 @@ const menuItems = [
   { name: "Home", href: "/" },
   {
     name: "Courses",
-    href: "/",
+    href: "/courses",
     // subItems: [
     //   { name: "All Courses", href: "/courses/all" },
     //   { name: "Stocks", href: "/courses/stocks" },

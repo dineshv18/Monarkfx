@@ -2,7 +2,8 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { Smile, MapPin, Send } from 'lucide-react'
+import { Smile, MapPin, Send, Phone, Mail, Clock } from 'lucide-react'
+import Background from '../../_components/Background'
 
 const greetings = [
   { text: "Hello!", lang: "English" },
@@ -16,9 +17,30 @@ const greetings = [
   { text: "Hallo!", lang: "German" },
   { text: "Olá!", lang: "Portuguese" }
 ]
+const contactInfo = [
+  {
+    icon: MapPin,
+    title: "Visit Us",
+    details: "Dwarka Sector 7, New Delhi, India"
+  },
+  {
+    icon: Phone,
+    title: "Call Us",
+    details: "+91 981 180 8558"
+  },
+  {
+    icon: Mail,
+    title: "Email Us",
+    details: "info@monarkfx.com"
+  },
+  {
+    icon: Clock,
+    title: "Working Hours",
+    details: "Mon - Sat: 9AM to 6PM"
+  }
+]
 
 export default function ContactPage() {
-  const [isHovered, setIsHovered] = useState(false); 
   const [currentGreeting, setCurrentGreeting] = useState(0)
   const [formData, setFormData] = useState({
     name: '',
@@ -41,229 +63,121 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <motion.section 
-        className="container mx-auto px-4 py-16 md:py-24"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-               <div className="max-w-7xl mx-auto px-4 mb-16">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            {/* Left Column */}
-            <motion.div 
-              className="flex items-center gap-4"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800">
-                Say
-              </span>
+    <>
+      <Background 
+        title="Get in"
+        highlightedText="Touch"
+        subtitle="We'd love to hear from you"
+      />
+
+      <div className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Animated Greeting */}
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4">
+              <span className="text-2xl md:text-3xl text-gray-600">Say</span>
               <AnimatePresence mode="wait">
-                <motion.h1
+                <motion.span
                   key={currentGreeting}
-                  className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 flex items-center gap-4"
+                  className="text-2xl md:text-3xl text-red-600 font-bold"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
                   {greetings[currentGreeting].text}
-                  <span className="text-base font-normal text-gray-500">
-                    ({greetings[currentGreeting].lang})
-                  </span>
-                </motion.h1>
+                </motion.span>
               </AnimatePresence>
-                  <Smile className="w-8 h-8 md:w-12 md:h-12 " />
+            </div>
+          </div>
+
+          {/* Contact Info Cards */}
+          <div className="grid md:grid-cols-4 gap-6 mb-16">
+            {contactInfo.map((info, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -5 }}
+                transition={{ duration: 0.3 }}
+                className="p-6 rounded-xl bg-white shadow-lg hover:shadow-xl border border-red-100 hover:border-red-200"
+              >
+                <info.icon className="w-8 h-8 text-red-600 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{info.title}</h3>
+                <p className="text-gray-600">{info.details}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Map and Form Container */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Map */}
+            <motion.div 
+              className="relative rounded-xl overflow-hidden h-[400px] lg:h-full shadow-lg"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.7837997936613!2d77.05616367528806!3d28.606262075679115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d05de8d29cab9%3A0x2d77bb4a1742f15c!2sEquity%20Tank%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1736783993706!5m2!1sen!2sin"
+                className="absolute inset-0 w-full h-full rounded-xl"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+              />
             </motion.div>
-        
-            {/* Right Column */}
+
+            {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.6 }}
+              className="bg-white p-8 rounded-xl shadow-lg border border-red-100"
             >
-              <p className="text-xs md:text-sm  text-gray-600">
-                We're here to help and answer any question you might have. we look forward to hearing from you. any need help you please contact us or meet to office with coffee.
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none"
+                    required
+                  />
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none"
+                    required
+                  />
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="Subject"
+                  className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none"
+                />
+
+                <textarea
+                  rows={6}
+                  placeholder="Your Message"
+                  className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-lg border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none resize-none"
+                  required
+                />
+
+                <motion.button
+                  type="submit"
+                  className="group flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-all"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Send Message
+                  <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              </form>
             </motion.div>
           </div>
         </div>
-
-        {/* Map Section */}
-            <motion.div 
-          className="relative rounded-2xl overflow-hidden mb-16 max-w-6xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <div className="aspect-[16/9] md:aspect-[21/9] w-full relative rounded-2xl overflow-hidden">
-            <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.7837997936613!2d77.05616367528806!3d28.606262075679115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d05de8d29cab9%3A0x2d77bb4a1742f15c!2sEquity%20Tank%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1736783993706!5m2!1sen!2sin"
-              className="absolute inset-0 w-full h-full"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-          
-          <div className="absolute bottom-0 right-0 p-6 md:p-8 bg-white rounded-tl-2xl max-w-md">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Monark FX</h2>
-            <p className="text-gray-600 mb-1">Stock Market Institute</p>
-            <p className="text-gray-600 mb-4">Dwarka Sector 7, New Delhi, India</p>
-            
-            <div className="space-y-2">
-              <p className="text-gray-600">
-                <span className="font-semibold">T:</span> +91 981 180 8558
-              </p>
-              <p className="text-gray-600">
-                <span className="font-semibold">E:</span> info@monarkfx.com
-              </p>
-            </div>
-            
-            <motion.a
-              href="https://goo.gl/maps/YqL8YZ9Z9Z2Q9Z9Z9"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gray-800 text-white px-6 py-3 rounded-full mt-6 hover:bg-gray-700 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <MapPin className="w-4 h-4" />
-              View on google map
-            </motion.a>
-          </div>
-        </motion.div>
-
-        {/* Contact Form */}
-        <motion.div 
-          className="max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 text-center mb-12">
-            How we can help you?
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  YOUR GOOD NAME*
-                </label>
-                <motion.input
-                  type="text"
-                  required
-                  placeholder="What's your good name?"
-                  className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all border-t-0 border-l-0 border-r-0"
-                  whileFocus={{ scale: 1.01 }}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  YOUR EMAIL ADDRESS*
-                </label>
-                <motion.input
-                  type="email"
-                  required
-                  placeholder="Enter your email address"
-                  className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all border-t-0 border-l-0 border-r-0"
-                  whileFocus={{ scale: 1.01 }}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                />
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  YOUR PHONE NUMBER*
-                </label>
-                <motion.input
-                  type="tel"
-                  required
-                  placeholder="Enter your phone number"
-                  className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all border-t-0 border-l-0 border-r-0"
-                  whileFocus={{ scale: 1.01 }}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  YOUR SUBJECT
-                </label>
-                <motion.input
-                  type="text"
-                  placeholder="How can we help you?"
-                  className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all border-t-0 border-l-0 border-r-0"
-                  whileFocus={{ scale: 1.01 }}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                YOUR MESSAGE
-              </label>
-              <motion.textarea
-                rows={6}
-                placeholder="Describe about your message"
-                className="w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all resize-none border-t-0 border-l-0 border-r-0"
-                whileFocus={{ scale: 1.01 }}
-                onChange={(e) => setFormData({...formData, message: e.target.value})}
-              />
-            </div>
-
-          <div className="flex items-center md:justify-between md:flex-row flex-col gap-4">
-          <p className="text-sm text-gray-500 w-full md:w-1/2">
-              We are committed to protecting your privacy. We will never collect information about you without your explicit consent.
-            </p>
-
-            <motion.button
-              type="submit"
-              className="inline-flex items-center gap-2 bg-gray-800 text-white px-8 py-4 rounded-full  transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onHoverStart={() => setIsHovered(true)}
-              onHoverEnd={() => setIsHovered(false)}
-            >
-              <Send className="w-4 h-4" />
-              <AnimatePresence mode="wait">
-                {isHovered ? (
-                  <motion.span
-                    key="lets-talk"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    Let's Talk
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="send-message"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    Send message
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </div>
-          </form>
-        </motion.div>
-      </motion.section>
-    </div>
+      </div>
+    </>
   )
 }
-
