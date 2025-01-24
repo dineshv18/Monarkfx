@@ -1,200 +1,191 @@
 "use client"
 
-import React, { type FormEvent, useRef, useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import type React from "react"
+import { useState, useRef, useEffect } from "react"
+import { motion, useAnimation, useInView } from "framer-motion"
 import Link from "next/link"
+import { ArrowRight, Instagram, Facebook, Linkedin, Twitter, Youtube } from "lucide-react"
 
-const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState({
-    width: typeof window !== "undefined" ? window.innerWidth : 768,
-  })
+const Footer: React.FC = () => {
+  const [email, setEmail] = useState("")
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [showThankYou, setShowThankYou] = useState(false)
+  const footerRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(footerRef, { once: true, amount: 0.3 })
+  const controls = useAnimation()
 
   useEffect(() => {
-    function handleResize() {
-      setWindowSize({ width: window.innerWidth })
+    if (isInView) {
+      controls.start("visible")
     }
-    if (typeof window !== "undefined") {
-      window.addEventListener("resize", handleResize)
-      handleResize()
-      return () => window.removeEventListener("resize", handleResize)
+  }, [isInView, controls])
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value)
+    setIsEmailValid(e.target.validity.valid)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (isEmailValid) {
+      setShowThankYou(true)
+      setEmail("")
+      setTimeout(() => setShowThankYou(false), 3000)
     }
-  }, [])
+  }
 
-  return windowSize
-}
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  }
 
-const Footer = () => {
-  const container = useRef<HTMLDivElement>(null)
-  const [openPopup, setOpenPopUp] = useState(false)
-  const svgRef = useRef(null)
-  const [isInView, setIsInView] = useState(false)
-  const { width } = useWindowSize()
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  }
 
-  const pathArr = [
-    // M
-    "M40 100V0H60L80 40L100 0H120V100H100V30L80 70L60 30V100H40Z",
-    // O outer circle
-    "M180 90C210 90 230 75 230 50C230 25 210 10 180 10C150 10 130 25 130 50C130 75 150 90 180 90Z",
-    // O inner circle
-    "M180 70C195 70 210 62 210 50C210 38 195 30 180 30C165 30 150 38 150 50C150 62 165 70 180 70Z",
-    // N
-    "M210 100V0H230L270 70V0H290V100H270L230 30V100H210Z",
-    // A
-    "M310 100L330 0H350L370 100H350L345 70H315L310 100ZM320 50H340L330 20L320 50Z",
-    // R
-    "M390 0H430C450 0 460 15 460 30C460 45 450 55 435 55L460 100H440L415 55H410V100H390V0Z",
-    // K
-    "M480 0H500V45L540 0H565L525 50L565 100H540L500 60V100H480V0Z",
-    // F
-    "M590 0H660V20H610V45H650V65H610V100H590V0Z",
-    // X
-    "M680 0H705L730 45L755 0H780L745 50L780 100H755L730 60L705 100H680L715 50L680 0Z",
+
+  const socialIcons = [
+    { Icon: Instagram, href: "https://www.instagram.com/monarkfx/" },
+    { Icon: Facebook, href: "https://www.facebook.com/monarkfx/" },
+    { Icon: Linkedin, href: "https://www.linkedin.com/company/monarkfx/posts/?feedView=all" },
+    { Icon: Twitter, href: "https://x.com/monarkfx" },
+    { Icon: Youtube, href: "https://www.youtube.com/@MonarkFX" },
   ]
 
-  const innerOVariant = {
-    hidden: {
-      pathLength: 0,
-      fill: "#ffffff",
-    },
-    visible: {
-      pathLength: 1,
-      fill: "#ffffff",
-      transition: {
-        pathLength: { duration: 2, ease: "easeInOut" },
-        fill: { duration: 0.1 },
-      },
-    },
-  }
-
-  const pathVariants = {
-    hidden: {
-      pathLength: 0,
-      opacity: 1,
-      fill: "rgba(255, 255, 255, 0)",
-    },
-    visible: {
-      pathLength: 1,
-      opacity: 1,
-      fill: "rgba(255, 0, 0, 0.9)",
-      transition: {
-        pathLength: { duration: 2, ease: "easeInOut" },
-        fill: { duration: 1, delay: 1.8 },
-      },
-    },
-  }
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), { threshold: 0.5 })
-    if (svgRef.current) {
-      observer.observe(svgRef.current)
-    }
-    return () => {
-      if (svgRef.current) observer.unobserve(svgRef.current)
-    }
-  }, [])
-
-  const handleNewsLetterData = (e: FormEvent) => {
-    e.preventDefault()
-    const target = e.target as HTMLFormElement
-    setOpenPopUp(true)
-    target.reset()
-    setTimeout(() => setOpenPopUp(false), 2000)
-  }
-
   return (
-    <div className="relative h-full sm:pt-14 pt-8 bg-gradient-to-b from-red-100 to-white text-black" ref={container}>
-      <div className="sm:container px-4 mx-auto">
-        <div className="md:flex justify-between w-full">
-          <div>
-            <h1 className="md:text-4xl text-2xl font-semibold text-red-600">Let&apos;s start trading together</h1>
-            <div className="pt-2 pb-6 md:w-99">
-              <p className="md:text-2xl text-xl py-4">Sign up for our newsletter*</p>
-              <div className="hover-button relative bg-red-600 flex justify-between items-center border-2 overflow-hidden border-red-600 rounded-full text-white">
-                <form onSubmit={handleNewsLetterData} className="relative z-2 grid grid-cols-6 w-full h-full">
-                  <input
-                    type="email"
-                    required
-                    name="newsletter_email"
-                    className="border-none bg-transparent py-3 px-6 col-span-5 placeholder-gray-300"
-                    placeholder="Your Email *"
-                  />
-                  <button
-                    type="submit"
-                    className="cursor-pointer w-full hover:bg-white bg-black text-white hover:text-red-600 h-full cols-span-1 transition-colors duration-300"
-                  >
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" className="w-full h-[80%]">
-                      <path
-                        d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
-                        fill="currentColor"
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-10">
-            <ul>
-              <li className="text-2xl pb-2 text-red-600 font-semibold">SITEMAP</li>
-              {["Home", "About us", "Courses", "Mentorship", "Contact"].map((item) => (
-                <li key={item} className="text-xl font-medium hover:text-red-600 transition-colors duration-300">
-                  <Link href={`/${item.toLowerCase().replace(" ", "")}`}>{item}</Link>
-                </li>
-              ))}
-            </ul>
-            <ul>
-              <li className="text-2xl pb-2 text-red-600 font-semibold">SOCIAL</li>
-              {["LinkedIn", "Twitter", "Instagram", "Facebook"].map((social) => (
-                <li key={social} className="text-xl font-medium hover:text-red-600 transition-colors duration-300">
-                  <a href="#" target="_blank" rel="noopener noreferrer" className="hover:underline">
-                    {social}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-y-2 md:py-4 border-red-200" ref={svgRef}>
-          <motion.svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 800 120"
-            fill="none"
-            className="w-full md:h-[120px] h-[60px] max-w-[800px] mx-auto"
-            preserveAspectRatio="xMidYMid meet"
+    <motion.footer
+      ref={footerRef}
+      initial="hidden"
+      animate={controls}
+      variants={containerVariants}
+      className="bg-gradient-to-b from-red-100 to-white text-black py-12 relative overflow-hidden"
+    >
+      {/* Animated Indian coin background */}
+      <div className="absolute inset-0 overflow-hidden">
+        {[...Array(10)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-gradient-to-r from-yellow-400 to-yellow-300 
+                       backdrop-blur-sm opacity-30 hover:opacity-50 transition-opacity"
+            style={{
+              width: Math.random() * 40 + 20,
+              height: Math.random() * 40 + 20,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              transformOrigin: 'center',
+              zIndex: 10,
+              translateZ: 0
+            }}
+            animate={{
+              x: Math.random() * 100 - 50,
+              y: Math.random() * 100 - 50,
+              rotate: 360,
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: Math.random() * 5 + 5,
+              repeat: Infinity,
+              repeatType: "mirror",
+              ease: "linear"
+            }}
           >
-            {pathArr.map((path, index) => (
-              <motion.path
-                key={index}
-                d={path}
-                stroke={index === 2 ? "#000000" : "#000000"}
-                strokeWidth={width < 768 ? "2.5" : "2"}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                variants={index === 2 ? innerOVariant : pathVariants}
-              />
-            ))}
-          </motion.svg>
-        </div>
-
-        <div className="flex md:flex-row flex-col-reverse gap-3 justify-between py-2">
-          <span className="font-medium text-gray-600">&copy; 2024 Monark FX. All Rights Reserved.</span>
-          <a href="#" className="font-semibold hover:text-red-600 transition-colors duration-300">
-            Privacy Policy
-          </a>
-        </div>
+            <div className="w-full h-full flex items-center justify-center text-red-600 font-bold text-2xl">₹</div>
+          </motion.div>
+        ))}
       </div>
 
-      {openPopup && (
-        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-md shadow-lg">
-          Newsletter subscription successful!
-        </div>
-      )}
-    </div>
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div variants={itemVariants} className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-red-600 mb-2">Join Our Trading Community</h2>
+          <p className="text-lg text-gray-700">Get exclusive insights and stay updated with Monark FX</p>
+        </motion.div>
+
+        <motion.form onSubmit={handleSubmit} className="max-w-md mx-auto mb-8" variants={itemVariants}>
+          <div className="relative">
+            <input
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              placeholder="Enter your email"
+              className="w-full px-6 py-3 rounded-full border-2 border-red-400 focus:border-red-600 focus:outline-none text-lg"
+              required
+            />
+            <motion.button
+              type="submit"
+              className={`absolute right-2 top-2 bg-red-600 text-white rounded-full p-2 ${isEmailValid ? "opacity-100" : "opacity-50 cursor-not-allowed"
+                }`}
+              whileHover={isEmailValid ? { scale: 1.1 } : {}}
+              whileTap={isEmailValid ? { scale: 0.95 } : {}}
+              disabled={!isEmailValid}
+            >
+              <ArrowRight size={24} />
+            </motion.button>
+          </div>
+          {showThankYou && (
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-green-600 mt-2"
+            >
+              Thank you for subscribing!
+            </motion.p>
+          )}
+        </motion.form>
+
+        <motion.div variants={containerVariants} className="flex flex-wrap justify-center gap-6 mb-8">
+          {socialIcons.map(({ Icon, href }, index) => (
+            <motion.a
+              key={index}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              variants={itemVariants}
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              className="text-red-600 hover:text-red-700"
+            >
+              <Icon size={28} />
+            </motion.a>
+          ))}
+        </motion.div>
+
+        <motion.div variants={containerVariants} className="flex flex-wrap justify-center gap-6 mb-8">
+          {["Home", "About Us", "Courses", "Business", "Contact"].map((item, index) => (
+            <motion.div key={index} variants={itemVariants}>
+              <Link
+                href={`/${item.toLowerCase().replace(" ", "")}`}
+                className="text-base text-gray-700 hover:text-red-600 transition-colors"
+              >
+                {item}
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="text-center text-gray-600 text-sm">
+          <p>&copy; 2024 Monark FX. All Rights Reserved.</p>
+          <Link href="/privacy" className="text-red-600 hover:underline ml-2">
+            Privacy Policy
+          </Link>
+        </motion.div>
+
+
+      </div>
+    </motion.footer>
   )
 }
 
