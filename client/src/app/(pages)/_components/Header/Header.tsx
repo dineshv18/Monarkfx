@@ -1,249 +1,188 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence, useMotionValue, useTransform, useScroll } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { ChevronDown, LogIn, LogOut, Menu, X } from 'lucide-react'
-import { cn } from "@/lib/utils"
+import { Menu, X, LogIn, LogOut } from "lucide-react"
 import Image from "next/image"
 
 const menuItems = [
   { name: "Home", href: "/" },
-  {
-    name: "Courses",
-    href: "/courses",
-    // subItems: [
-    //   { name: "All Courses", href: "/courses/all" },
-    //   { name: "Stocks", href: "/courses/stocks" },
-    //   { name: "Forex", href: "/courses/forex" },
-    //   { name: "Crypto", href: "/courses/crypto" },
-    // ],
-  },
+  { name: "Courses", href: "/courses" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
+  { name: "Business", href: "/business" },
 ]
 
 const Header = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [user, setUser] = useState({ name: "John Doe", isLoggedIn: false })
-  const [mounted, setMounted] = useState(false)
-  const lastScrollY = useRef(0)
-  const { scrollY } = useScroll()
-  const headerRef = useRef<HTMLDivElement>(null)
-
-  const headerWidth = useMotionValue("100%")
-  const headerMaxWidth = useMotionValue("600px")
-  const routesOpacity = useTransform(scrollY, [0, 300], [1, 0.5])
-  const bgOpacity = useTransform(scrollY, [0, 100], [0.5, 0.95])
-
-  useEffect(() => {
-    setMounted(true)
-    const updateHeaderWidth = () => {
-      if (headerRef.current) {
-        const viewportWidth = window.innerWidth
-        const maxWidth = Math.min(600, viewportWidth - 32)
-        headerMaxWidth.set(`${maxWidth}px`)
-      }
-    }
-    updateHeaderWidth()
-    window.addEventListener("resize", updateHeaderWidth)
-    return () => window.removeEventListener("resize", updateHeaderWidth)
-  }, [])
+  const [isHovered, setIsHovered] = useState(false)
+  const [user, setUser] = useState({ isLoggedIn: false })
+  const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
-        setIsCollapsed(true)
-        setActiveDropdown(null) 
+      if (window.scrollY > 50) {
+        setIsScrolled(true)
+        setIsMobileMenuOpen(false)
       } else {
-        setIsCollapsed(false)
+        setIsScrolled(false)
       }
-      lastScrollY.current = currentScrollY
     }
 
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const headerVariants = {
-    expanded: {
-      width: "100%",
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 30,
-      },
-    },
-    collapsed: {
-      width: "65px",
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 30,
-      },
-    },
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
-  const handleMouseEnter = (itemName: string) => {
-    if (!isCollapsed) {
-      setActiveDropdown(itemName)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    if (!isCollapsed) {
-      setActiveDropdown(null)
-    }
-  }
-
-  if (!mounted) return null
+  const shouldShowFullNavbar = !isScrolled || isHovered
 
   return (
-    <motion.header
-      ref={headerRef}
-      animate={isCollapsed ? "collapsed" : "expanded"}
-      variants={headerVariants}
-      whileHover="expanded"
-      initial="expanded"
-      className={cn(
-        "fixed z-50 top-4 left-0 right-0 mx-auto h-[65px] rounded-lg flex items-center justify-between overflow-hidden",
-        "backdrop-blur-md"
-      )}
-      style={{
-        maxWidth: headerMaxWidth,
-        backgroundColor: `rgba(0, 0, 0, ${bgOpacity.get()})`,
+    <motion.nav
+      ref={navRef}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      initial={false}
+      animate={{
+        width: shouldShowFullNavbar ? "90%" : "65px",
+        maxWidth: shouldShowFullNavbar ? "700px" : "65px",
+        backgroundColor: shouldShowFullNavbar ? "rgba(0,0,0,0.8)" : "rgba(0,0,0,0.2)",
       }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
+      className="fixed z-50 top-4 left-0 right-0 mx-auto h-[65px] rounded-lg flex items-center justify-between px-2 backdrop-blur-md"
     >
-      <motion.div 
-        className="bg-red-600 rounded-lg w-[50px] h-[50px] flex items-center justify-center ml-2 shrink-0"
-        animate={{ 
-          scale: isCollapsed ? 0.8 : 1,
-          rotate: isCollapsed ? 360 : 0 
-        }}
-        transition={{ duration: 0.2 }}
-      >
-        <Link href="/">
-          <Image 
-            src="/logo.png" 
-            alt="Logo" 
-            width={40} 
-            height={40}
-            className="rounded-lg"
-          />
-        </Link>
-      </motion.div>
+      {/* Logo */}
+      <Link href="/" onMouseEnter={() => setIsHovered(true)}
+        className="flex items-center bg-red-600 rounded-md">
+        <Image src="/logo.png" alt="Logo" width={50} height={50} className="rounded-lg" />
+      </Link>
 
-      <nav className={cn(
-        "hidden md:flex items-center space-x-6 mx-4 overflow-x-auto",
-        isCollapsed && "opacity-0 pointer-events-none"
-      )}>
-        <AnimatePresence>
+      {/* Desktop Navigation */}
+      {shouldShowFullNavbar && (
+        <div onMouseEnter={() => setIsHovered(true)} className="hidden md:flex items-center space-x-6">
           {menuItems.map((item) => (
-            <motion.div 
-              key={item.name} 
-              className="relative"
-              onMouseEnter={() => handleMouseEnter(item.name)}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Link
-                href={item.href}
-                className="text-white text-base font-medium hover:text-red-500 transition-colors flex items-center whitespace-nowrap py-2"
-              >
-                {item.name}
-                
-              </Link>
-
-             
-            </motion.div>
+            <Link key={item.name} href={item.href} onMouseEnter={() => setIsHovered(true)} className="text-white hover:text-red-500">
+              {item.name}
+            </Link>
           ))}
-        </AnimatePresence>
-      </nav>
+        </div>
+      )}
 
-      <motion.div 
-        className={cn(
-          "hidden md:block mr-2 shrink-0", 
-          isCollapsed && "opacity-0 pointer-events-none"
-        )}
-        
-      >
-        {user.isLoggedIn ? (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm whitespace-nowrap"
-            onClick={() => setUser({ ...user, isLoggedIn: false })}
-          >
-            <LogOut className="h-4 w-4" />
-            <span>Logout</span>
-          </motion.button>
-        ) : (
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm whitespace-nowrap"
-            onClick={() => setUser({ ...user, isLoggedIn: true })}
-          >
-            <LogIn className="h-4 w-4" />
-            <span>Login</span>
-          </motion.button>
-        )}
-      </motion.div>
+      {/* Login/Logout Button */}
+      {shouldShowFullNavbar && (
+        <div className="hidden md:block">
+          {user.isLoggedIn ? (
+            <button
+              className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
+              onClick={() => setUser({ isLoggedIn: false })}
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Logout</span>
+            </button>
+          ) : (
+            <button
+              className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
+              onClick={() => setUser({ isLoggedIn: true })}
+            >
+              <LogIn className="h-4 w-4" />
+              <span>Login</span>
+            </button>
+          )}
+        </div>
+      )}
 
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden p-2 mr-2 text-white"
-      >
-        {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-      </motion.button>
+      {/* Mobile Menu Toggle */}
+      {shouldShowFullNavbar && (
+        <button
+          onClick={toggleMobileMenu}
+          className="md:hidden text-white transition-opacity duration-300"
+        >
+          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      )}
 
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-lg rounded-b-lg border border-gray-800 max-h-[70vh] overflow-y-auto"
-            style={{ maxWidth: headerMaxWidth }}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden fixed inset-0 top-[65px] z-50 pt-4"
           >
-            <div className="px-4 py-2 space-y-2">
-          
-              <div className="pt-2">
-                {user.isLoggedIn ? (
-                  <button
-                    className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
-                    onClick={() => {
-                      setUser({ ...user, isLoggedIn: false })
-                      setIsMobileMenuOpen(false)
-                    }}
+            <div className="p-4 space-y-4 bg-black/95 rounded-lg">
+              <AnimatePresence>
+                {shouldShowFullNavbar && isMobileMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    transition={{ duration: 0.3 }}
+                    className="md:hidden fixed inset-0 top-[65px] z-50 pt-4"
                   >
-                    <LogOut className="h-4 w-4" />
-                    <span>Logout</span>
-                  </button>
-                ) : (
-                  <button
-                    className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
-                    onClick={() => {
-                      setUser({ ...user, isLoggedIn: true })
-                      setIsMobileMenuOpen(false)
-                    }}
-                  >
-                    <LogIn className="h-4 w-4" />
-                    <span>Login</span>
-                  </button>
+                    <div className="p-4 space-y-4 bg-black/95 rounded-lg">
+                      {shouldShowFullNavbar && menuItems.map((item, index) => (
+                        <motion.div
+                          key={item.name}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: shouldShowFullNavbar ? 1 : 0, x: 0 }}
+
+
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <Link
+                            href={item.href}
+                            className="block text-white text-lg hover:text-red-500 py-2"
+                            onClick={toggleMobileMenu}
+                          >
+                            {item.name}
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
                 )}
-              </div>
+              </AnimatePresence>
+
+              {user.isLoggedIn ? (
+                <button
+                  className="w-full mt-4 flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 text-white rounded-lg"
+                  onClick={() => {
+                    setUser({ isLoggedIn: false })
+                    toggleMobileMenu()
+                  }}
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span>Logout</span>
+                </button>
+              ) : (
+                <button
+                  className="w-full mt-4 flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 text-white rounded-lg"
+                  onClick={() => {
+                    setUser({ isLoggedIn: true })
+                    toggleMobileMenu()
+                  }}
+                >
+                  <LogIn className="h-5 w-5" />
+                  <span>Login</span>
+                </button>
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </motion.nav>
   )
 }
 
 export default Header
+
