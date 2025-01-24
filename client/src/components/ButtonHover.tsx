@@ -27,14 +27,14 @@ const ButtonHover = ({
   };
 
   const sharedClasses = cn(
-    'group relative rounded-full border-2 border-red-600 bg-transparent hover:bg-red-600 text-white transition-colors duration-300',
+    'group relative inline-flex items-center justify-center rounded-full border-2 border-red-600 bg-transparent hover:bg-red-600 text-white transition-colors duration-300 w-auto',
     sizes[variant],
     className
   );
 
   const content = (
-    <span className='relative inline-flex overflow-hidden'>
-      <div className='translate-y-0 skew-y-0 transition duration-500 group-hover:-translate-y-[110%] group-hover:skew-y-12'>
+    <span className='relative inline-flex items-center justify-center overflow-hidden'>
+      <div className='translate-y-0 skew-y-0 transition duration-500 group-hover:-translate-y-[130%] group-hover:skew-y-12'>
         {FirstText}
       </div>
       <div className='absolute translate-y-[114%] skew-y-12 transition duration-500 group-hover:translate-y-0 group-hover:skew-y-0'>
@@ -42,6 +42,7 @@ const ButtonHover = ({
       </div>
     </span>
   );
+
 
   if (href) {
     if (useExternalLink) {
