@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import {BookOpen, Users, BarChart2 } from 'lucide-react';
+import { BookOpen, Users, BarChart2 } from 'lucide-react';
 import Earth from '@/components/globe';
 import { AnimatedText } from '@/components/AnimatedText';
 import ButtonHover from '@/components/ButtonHover';
@@ -46,7 +46,7 @@ const HeroSection: React.FC = () => {
               text="Monark FX"
               className="text-5xl lg:text-6xl font-bold mb-4 text-red-500"
               delay={0.5}
-              />
+            />
             <motion.h2 variants={itemVariants} className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
               Your Gateway to Financial Markets
             </motion.h2>
@@ -55,13 +55,15 @@ const HeroSection: React.FC = () => {
               className="text-lg md:text-xl mb-8"
               letterSpacing='0.02rem'
             />
-            <ButtonHover 
-              FirstText="Get Started" 
+            <ButtonHover
+              FirstText="Get Started"
               SecondText="Learn More"
               variant="lg"
               className="font-semibold"
+              useExternalLink={true}
+              href="https://wa.me/919220797499?text=Hello%20Monark%20Fx%20Team%2C%20I%27m%20interested%20in%20learning%20more%20about%20your%20institute!"
             />
-           
+
           </motion.div>
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -69,7 +71,7 @@ const HeroSection: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-                      <div className="absolute inset-0 bg-red-500 opacity-20 blur-3xl rounded-full hidden lg:block"></div>
+            <div className="absolute inset-0 bg-red-500 opacity-20 blur-3xl rounded-full hidden lg:block"></div>
             <Earth className="w-full md:max-w-[600px] mx-auto relative z-10" />
           </motion.div>
         </div>

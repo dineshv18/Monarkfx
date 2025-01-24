@@ -559,3 +559,9 @@ export interface CourseSeo {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AnimatedTextProps2 {
+  text: string;
+  className?: string;
+  letterSpacing?: string;
+}

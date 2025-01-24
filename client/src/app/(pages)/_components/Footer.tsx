@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
         {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full bg-gradient-to-r from-yellow-400 to-yellow-300 
+            className="absolute rounded-full bg-gradient-to-r from-green-400 to-green-300 
                        backdrop-blur-sm opacity-30 hover:opacity-50 transition-opacity"
             style={{
               width: Math.random() * 40 + 20,

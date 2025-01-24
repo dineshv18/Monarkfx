@@ -4,9 +4,9 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { AnimatedTextProps2 } from '@/type'
 
-const AnimatedText2: React.FC<AnimatedTextProps2> = ({ 
-  text, 
-  className = '', 
+const AnimatedText2: React.FC<AnimatedTextProps2> = ({
+  text,
+  className = '',
   letterSpacing = '0.05em'
 }) => {
   return (

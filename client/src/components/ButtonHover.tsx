@@ -8,14 +8,16 @@ interface ButtonHoverProps {
   className?: string;
   href?: string;
   onClick?: () => void;
+  useExternalLink?: boolean;
 }
 
-const ButtonHover = ({ 
-  FirstText, 
-  SecondText, 
+const ButtonHover = ({
+  FirstText,
+  SecondText,
   variant = 'md',
   className,
   href,
+  useExternalLink,
   onClick
 }: ButtonHoverProps) => {
   const sizes = {
@@ -42,6 +44,19 @@ const ButtonHover = ({
   );
 
   if (href) {
+    if (useExternalLink) {
+      return (
+        <a
+          href={href}
+          className={sharedClasses}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {content}
+        </a>
+      );
+    }
+
     return (
       <Link href={href} className={sharedClasses}>
         {content}
@@ -50,7 +65,7 @@ const ButtonHover = ({
   }
 
   return (
-    <button 
+    <button
       onClick={onClick}
       className={sharedClasses}
     >
