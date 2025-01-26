@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Space_Grotesk } from "next/font/google";
 import CanvasCursor from "@/components/CanvasCursor";
+import ClientProviders from "@/helper/Providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,7 +22,7 @@ const SpaceGrotesk = Space_Grotesk({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-export const metadata : Metadata= {
+export const metadata: Metadata = {
   title: 'MonarkFX - Global Trading Excellence',
   description: 'Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.',
 }
@@ -36,7 +37,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk`}
       >
-        {children}
+        <ClientProviders>{children}</ClientProviders>
         <CanvasCursor />
       </body>
     </html>
