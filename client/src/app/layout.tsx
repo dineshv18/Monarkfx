@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Space_Grotesk } from "next/font/google";
-import CanvasCursor from "@/components/CanvasCursor";
 import ClientProviders from "@/helper/Providers";
 
 const geistSans = localFont({
@@ -38,7 +37,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk`}
       >
         <ClientProviders>{children}</ClientProviders>
-        <CanvasCursor />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../_components/Header/Header";
 import Footer from "../_components/Footer";
+import CanvasCursor from "@/components/CanvasCursor";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -8,6 +9,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
       <Header />
       {children}
       <Footer />
+      <CanvasCursor />
     </div>
   );
 };
