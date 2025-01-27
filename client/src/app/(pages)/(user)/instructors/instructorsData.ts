@@ -1,7 +1,7 @@
-import { InstructorData } from "@/type";
+// import { InstructorData } from "@/type";
 
 
-export const instructorsData: InstructorData[] = [
+export const instructorsData = [
   {
     id: 1,
     name: "John Doe",

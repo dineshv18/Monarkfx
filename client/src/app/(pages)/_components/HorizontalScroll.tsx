@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ReactLenis } from 'lenis/react';
-import  EducationCards  from './EducationCards';
+import EducationCards from './EducationCards';
 import { AnimatedText } from '@/components/AnimatedText';
 import { MentorshipSection } from './mentorship-section';
 
@@ -17,8 +17,8 @@ export default function Home(): JSX.Element {
           {/* Hero Section */}
           <section className='text-black min-h-screen w-full bg-white grid place-content-center sticky top-0 px-4 sm:px-6 lg:px-8'>
             <div className='absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]'></div>
-                     
-            <AnimatedText 
+
+            <AnimatedText
               html={
                 <h1 className='text-4xl sm:text-5xl lg:text-7xl font-semibold text-center tracking-tight leading-[120%]'>
                   Welcome to <span className="text-red-600">MonarkFX</span><br />
@@ -29,28 +29,28 @@ export default function Home(): JSX.Element {
             />
           </section>
 
-     
+
 
           {/* Live Trading Section */}
           <section className='text-white min-h-screen w-full bg-black grid place-content-center sticky top-0 border-t border-red-600/20 p-4 sm:p-6 lg:p-10 overflow-x-hidden'>
             <div className='container mx-auto '>
               <div className='grid lg:grid-cols-2 gap-8 items-center'>
                 {/* Text Content */}
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, x: -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                   className='space-y-6'
                 >
                   <h1 className='text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight'>
-                    Live Trading Sessions & <br/>
+                    Live Trading Sessions & <br />
                     <span className="text-red-600">Expert Mentorship</span>
                   </h1>
-                  
+
                   <p className='text-gray-400 text-base sm:text-lg lg:text-xl max-w-xl'>
                     Experience real-time market analysis, trade execution, and strategy implementation. Learn directly from professional traders who guide you through every step of your trading journey.
                   </p>
-          
+
                   <ul className='space-y-4 text-base sm:text-lg'>
                     <li className='flex items-center gap-3'>
                       <span className='text-red-600 text-2xl'>✓</span>
@@ -66,7 +66,7 @@ export default function Home(): JSX.Element {
                     </li>
                   </ul>
                 </motion.div>
-          
+
                 {/* Image */}
                 <motion.div
                   initial={{ opacity: 0, x: 50 }}
@@ -76,8 +76,8 @@ export default function Home(): JSX.Element {
                 >
                   <div className='absolute -inset-1 bg-gradient-to-r from-red-600 to-red-900 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000'></div>
                   <div className='relative'>
-                    <Image 
-                      src='/yoga.jpg'
+                    <Image
+                      src='/bg.jpeg'
                       alt='Live Trading Setup'
                       width={800}
                       height={600}
@@ -95,13 +95,13 @@ export default function Home(): JSX.Element {
             </div>
           </section>
         </div>
-          <main className="bg-white">
-               <EducationCards />
-           </main>
-              
-           <main className="bg-black">
-              <MentorshipSection />
-            </main>
+        <main className="bg-white">
+          <EducationCards />
+        </main>
+
+        <main className="bg-black">
+          <MentorshipSection />
+        </main>
 
         <section className='text-white w-full bg-black py-10 md:py-20'>
           <div className='container mx-auto px-4'>
@@ -112,7 +112,7 @@ export default function Home(): JSX.Element {
                 <h2 className='text-3xl md:text-5xl lg:text-6xl font-bold leading-tight'>
                   Transform Your <span className='text-red-600'>Trading Journey</span> With Our Expert Courses
                 </h2>
-                
+
                 <p className='text-gray-400 text-base md:text-xl max-w-xl'>
                   Expert-led courses covering technical analysis, market psychology, and risk management across stocks, forex, and cryptocurrency markets.
                 </p>
@@ -130,7 +130,7 @@ export default function Home(): JSX.Element {
                 {/* STP Course Card */}
                 <div className='group bg-black/90 relative overflow-hidden rounded-xl md:rounded-2xl border border-red-600/20 hover:border-red-600/50 transition-all duration-500'>
                   <div className='absolute inset-0 bg-gradient-to-b from-transparent via-black/70 to-black z-10'></div>
-                  
+
                   <Image
                     src='/card/c5.jpg'
                     alt='STP Course'
@@ -138,7 +138,7 @@ export default function Home(): JSX.Element {
                     height={600}
                     className='w-full h-[200px] md:h-[300px] object-cover group-hover:scale-110 transition-transform duration-700'
                   />
-                  
+
                   <div className='absolute inset-0 z-20 p-4 md:p-8 flex flex-col justify-end'>
                     <div className='bg-black/50 p-4 md:p-6 rounded-xl backdrop-blur-sm'>
                       <span className='text-red-600 font-semibold text-sm md:text-base mb-1 md:mb-2 block'>STP COURSE</span>
@@ -153,7 +153,7 @@ export default function Home(): JSX.Element {
                 {/* FCH Course Card */}
                 <div className='group bg-black/90 relative overflow-hidden rounded-xl md:rounded-2xl border border-red-600/20 hover:border-red-600/50 transition-all duration-500'>
                   <div className='absolute inset-0 bg-gradient-to-b from-transparent via-black/70 to-black z-10'></div>
-                  
+
                   <Image
                     src='/card/c6.jpg'
                     alt='FCH Course'
@@ -161,7 +161,7 @@ export default function Home(): JSX.Element {
                     height={600}
                     className='w-full h-[200px] md:h-[300px] object-cover group-hover:scale-110 transition-transform duration-700'
                   />
-                  
+
                   <div className='absolute inset-0 z-20 p-4 md:p-8 flex flex-col justify-end'>
                     <div className='bg-black/50 p-4 md:p-6 rounded-xl backdrop-blur-sm'>
                       <span className='text-red-600 font-semibold text-sm md:text-base mb-1 md:mb-2 block'>FCH COURSE</span>
