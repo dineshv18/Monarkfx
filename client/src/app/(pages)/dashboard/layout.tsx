@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import React from "react";
-import { Sidenav } from "./_components/Sidenav";
+import { Sidenav } from "./_components/SideNav";
+// import { Sidenav } from "./_components/Sidenav";
 
 export const metadata: Metadata = {
   title: "Dashboard | E-Learning Platform",
