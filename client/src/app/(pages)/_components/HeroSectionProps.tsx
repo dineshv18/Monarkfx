@@ -50,11 +50,12 @@ const HeroSection: React.FC = () => {
             <motion.h2 variants={itemVariants} className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
               Your Gateway to Financial Markets
             </motion.h2>
-            <AnimatedText2
+            <p className="text-lg md:text-xl mb-8">Monark FX is a financial market institute specializing in trading education across stocks, forex, and cryptocurrency. We offer comprehensive courses, live trading sessions, personalized mentorship, and ISO-certified programs designed to empower traders with the knowledge and practical skills needed for success in the financial markets.</p>
+            {/* <AnimatedText2
               text="Monark FX is a financial market institute specializing in trading education across stocks, forex, and cryptocurrency. We offer comprehensive courses, live trading sessions, personalized mentorship, and ISO-certified programs designed to empower traders with the knowledge and practical skills needed for success in the financial markets."
               className="text-lg md:text-xl mb-8"
               letterSpacing='0.02rem'
-            />
+            /> */}
             <ButtonHover
               FirstText="Get Started"
               SecondText="Learn More"

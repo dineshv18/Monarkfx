@@ -3,8 +3,20 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { Menu, X, LogIn, LogOut } from "lucide-react"
+import {
+  Menu,
+  X,
+  LogIn,
+  LogOut,
+  User,
+  ShoppingCart,
+  ChevronDown
+} from "lucide-react"
 import Image from "next/image"
+import { useAuth } from "@/helper/AuthContext"
+import axios from "axios"
+import Cookies from "js-cookie"
+import Cart from "../Cart"
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -18,10 +30,12 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
-  const [user, setUser] = useState({ isLoggedIn: false })
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
+  const { isAuthenticated, checkAuth } = useAuth()
 
   useEffect(() => {
+    checkAuth()
     const handleScroll = () => {
       if (window.scrollY > 50) {
         setIsScrolled(true)
@@ -33,148 +47,191 @@ const Header = () => {
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [checkAuth])
+
+  // Close mobile menu on route change or scroll
+  useEffect(() => {
+    const handleRouteChange = () => setIsMobileMenuOpen(false)
+    window.addEventListener('popstate', handleRouteChange)
+    return () => window.removeEventListener('popstate', handleRouteChange)
   }, [])
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
+  const handleLogout = async () => {
+    try {
+      const accessToken = Cookies.get("accessToken")
+      if (!accessToken) return
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
+        {},
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
+      Cookies.remove("accessToken")
+      window.location.href = "/auth"
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
   }
 
   const shouldShowFullNavbar = !isScrolled || isHovered
+
+  const logoSize = shouldShowFullNavbar ? 45 : 35
 
   return (
     <motion.nav
       ref={navRef}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        setIsHovered(false)
+        setIsProfileDropdownOpen(false)
+      }}
       initial={false}
       animate={{
         width: shouldShowFullNavbar ? "90%" : "65px",
-        maxWidth: shouldShowFullNavbar ? "700px" : "65px",
-        backgroundColor: shouldShowFullNavbar ? "rgba(0,0,0,0.8)" : "rgba(0,0,0,0.2)",
+        maxWidth: shouldShowFullNavbar ? "1200px" : "65px",
+        backgroundColor: shouldShowFullNavbar ? "rgba(0,0,0,0.9)" : "rgba(0,0,0,0.7)",
       }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      }}
-      className="fixed z-50 top-4 left-0 right-0 mx-auto h-[65px] rounded-lg flex items-center justify-between px-2 backdrop-blur-md"
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="fixed z-50 top-4 left-0 right-0 mx-auto h-[65px] rounded-lg flex items-center justify-between px-4"
     >
-      {/* Logo */}
-      <Link href="/" onMouseEnter={() => setIsHovered(true)}
-        className="flex items-center bg-red-600 rounded-md">
-        <Image src="/logo.png" alt="Logo" width={50} height={50} className="rounded-lg" />
+      {/* Logo with dynamic size */}
+      <Link href="/" className="flex items-center bg-red-600 rounded-md p-1">
+        <Image
+          src="/logo.png"
+          alt="Monark FX"
+          width={logoSize}
+          height={logoSize}
+          className="rounded-lg transition-all duration-300"
+        />
       </Link>
 
       {/* Desktop Navigation */}
       {shouldShowFullNavbar && (
-        <div onMouseEnter={() => setIsHovered(true)} className="hidden md:flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-8">
           {menuItems.map((item) => (
-            <Link key={item.name} href={item.href} onMouseEnter={() => setIsHovered(true)} className="text-white hover:text-red-500">
+            <Link
+              key={item.name}
+              href={item.href}
+              className="text-white hover:text-red-500 transition-colors duration-200"
+            >
               {item.name}
             </Link>
           ))}
         </div>
       )}
 
-      {/* Login/Logout Button */}
+      {/* Auth & Cart Section - Only visible on desktop when navbar is expanded */}
       {shouldShowFullNavbar && (
-        <div className="hidden md:block">
-          {user.isLoggedIn ? (
-            <button
-              className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
-              onClick={() => setUser({ isLoggedIn: false })}
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Logout</span>
-            </button>
+        <div className="hidden md:flex items-center space-x-4">
+          {isAuthenticated ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="flex items-center space-x-2 text-white hover:text-red-500"
+              >
+                <User className="h-5 w-5" />
+                <ChevronDown className="h-4 w-4" />
+              </button>
+
+              <AnimatePresence>
+                {isProfileDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2"
+                  >
+                    <Link
+                      href="/user-profile"
+                      className="block px-4 py-2 text-gray-800 hover:bg-red-50"
+                      onClick={() => setIsProfileDropdownOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout()
+                        setIsProfileDropdownOpen(false)
+                      }}
+                      className="w-full text-left px-4 py-2 text-gray-800 hover:bg-red-50"
+                    >
+                      Logout
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ) : (
-            <button
-              className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg"
-              onClick={() => setUser({ isLoggedIn: true })}
-            >
-              <LogIn className="h-4 w-4" />
-              <span>Login</span>
-            </button>
+            <Link href="/auth">
+              <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                <LogIn className="h-4 w-4" />
+                <span>Login</span>
+              </button>
+            </Link>
           )}
+
+          {/* Cart only visible in desktop mode when expanded */}
+          {shouldShowFullNavbar && <Cart />}
         </div>
       )}
 
-      {/* Mobile Menu Toggle */}
+      {/* Mobile Menu Toggle - Only visible when not expanded */}
       {shouldShowFullNavbar && (
         <button
-          onClick={toggleMobileMenu}
-          className="md:hidden text-white transition-opacity duration-300"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden text-white"
         >
           {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       )}
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu with improved animation and behavior */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -50 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden fixed inset-0 top-[65px] z-50 pt-4"
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 right-0 mt-2 bg-black/95 rounded-lg p-4 backdrop-blur-lg"
           >
-            <div className="p-4 space-y-4 bg-black/95 rounded-lg">
-              <AnimatePresence>
-                {shouldShowFullNavbar && isMobileMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -50 }}
-                    transition={{ duration: 0.3 }}
-                    className="md:hidden fixed inset-0 top-[65px] z-50 pt-4"
+            <div className="space-y-4">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block text-white hover:text-red-500 py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              {isAuthenticated ? (
+                <>
+                  <Link
+                    href="/user-profile"
+                    className="block text-white hover:text-red-500 py-2"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <div className="p-4 space-y-4 bg-black/95 rounded-lg">
-                      {shouldShowFullNavbar && menuItems.map((item, index) => (
-                        <motion.div
-                          key={item.name}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: shouldShowFullNavbar ? 1 : 0, x: 0 }}
-
-
-                          transition={{ delay: index * 0.1 }}
-                        >
-                          <Link
-                            href={item.href}
-                            className="block text-white text-lg hover:text-red-500 py-2"
-                            onClick={toggleMobileMenu}
-                          >
-                            {item.name}
-                          </Link>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {user.isLoggedIn ? (
-                <button
-                  className="w-full mt-4 flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 text-white rounded-lg"
-                  onClick={() => {
-                    setUser({ isLoggedIn: false })
-                    toggleMobileMenu()
-                  }}
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Logout</span>
-                </button>
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout()
+                      setIsMobileMenuOpen(false)
+                    }}
+                    className="w-full text-left text-white hover:text-red-500 py-2"
+                  >
+                    Logout
+                  </button>
+                </>
               ) : (
-                <button
-                  className="w-full mt-4 flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 text-white rounded-lg"
-                  onClick={() => {
-                    setUser({ isLoggedIn: true })
-                    toggleMobileMenu()
-                  }}
+                <Link
+                  href="/auth"
+                  className="block text-white hover:text-red-500 py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <LogIn className="h-5 w-5" />
-                  <span>Login</span>
-                </button>
+                  Login
+                </Link>
               )}
             </div>
           </motion.div>
@@ -185,4 +242,3 @@ const Header = () => {
 }
 
 export default Header
-
