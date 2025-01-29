@@ -17,7 +17,7 @@ export default function AuthPage({
       <div className="hidden md:block md:w-1/2 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-red-600/50 to-black/50 z-10" />
         <Image
-          src="/yoga.jpg"
+          src="/bg.jpeg"
           alt="Trading Background"
           fill
           className="object-cover object-center opacity-90"

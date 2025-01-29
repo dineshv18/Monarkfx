@@ -103,9 +103,9 @@ export function MentorshipSection() {
           <motion.div
             ref={contentRef}
             style={{ y: contentY, opacity: contentOpacity }}
-            className="sticky top-0 h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 xl:px-12 z-10"
+            className="sticky top-32 h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 xl:px-12 z-10"
           >
-            <div className="max-w-xl mx-auto w-full ">
+            <div className="max-w-xl mx-auto w-full py-20">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -113,8 +113,8 @@ export function MentorshipSection() {
                 className="mb-8 sm:mb-12"
               >
                 <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 sm:mb-6 leading-[1.1]">
-                  Master the Markets with
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600 block mt-2">
+                  Master the Markets with{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-600">
                     Professional Mentorship
                   </span>
                 </h1>

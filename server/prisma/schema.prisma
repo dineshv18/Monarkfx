@@ -52,7 +52,6 @@ model User {
 enum Role {
   STUDENT
   ADMIN
-  INSTRUCTOR
 }
 
 enum UserType {
