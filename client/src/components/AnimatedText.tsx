@@ -2,7 +2,13 @@
 import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 import React, { useRef } from "react";
-import { AnimatedTextProps } from "@/type";
+
+interface AnimatedTextProps {
+  text?: string;
+  html?: React.ReactNode;
+  className?: string;
+  delay?: number;
+}
 
 
 const defaultAnimations = {
@@ -33,7 +39,7 @@ export function AnimatedText({
   delay = 0,
 }: AnimatedTextProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { 
+  const isInView = useInView(ref, {
     amount: 0.5,
     margin: "-10% 0px -10% 0px"
   });
@@ -85,13 +91,13 @@ export function AnimatedText({
           if (React.isValidElement(child)) {
             return React.cloneElement(child, {
               ...child.props,
-              children: typeof child.props.children === 'string' 
+              children: typeof child.props.children === 'string'
                 ? wrapWordsInMotion(child.props.children)
                 : React.Children.map(child.props.children, (nestedChild) =>
-                    typeof nestedChild === 'string'
-                      ? wrapWordsInMotion(nestedChild)
-                      : nestedChild
-                  ),
+                  typeof nestedChild === 'string'
+                    ? wrapWordsInMotion(nestedChild)
+                    : nestedChild
+                ),
             });
           }
           return child;

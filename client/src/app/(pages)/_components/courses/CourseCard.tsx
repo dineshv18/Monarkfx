@@ -3,7 +3,24 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { Course, CourseCardProps } from "@/type";
+
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  image: string;
+  category: string;
+  instructor: string;
+  reviews: number;
+  lessons: number;
+  students: number;
+}
+
+interface CourseCardProps {
+  course: Course;
+  formatPrice: (price: number) => string;
+}
 
 const cardVariants = {
   hidden: {
@@ -31,8 +48,6 @@ const cardVariants = {
   },
 };
 
-
-
 export function CourseCard({ course, formatPrice }: CourseCardProps) {
   return (
     <motion.div
@@ -48,8 +63,8 @@ export function CourseCard({ course, formatPrice }: CourseCardProps) {
         <Image
           src={course.image}
           alt={course.title}
-          layout="fill"
-          objectFit="cover"
+          fill
+          className="object-cover"
         />
         <motion.div
           className="absolute -bottom-7 right-4 bg-[var(--custom-green-1)] text-white w-16 h-16 rounded-full 
