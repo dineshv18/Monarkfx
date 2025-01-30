@@ -142,11 +142,10 @@ export function DynamicTable({
       return (
         <Badge
           variant="outline"
-          className={`${
-            item.paid
+          className={`${item.paid
               ? "bg-green-50 text-green-700 border-green-200"
               : "bg-blue-50 text-blue-700 border-blue-200"
-          } px-2 py-1 text-xs font-medium rounded-md`}
+            } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.paid ? "Paid" : "Free"}
         </Badge>
@@ -157,11 +156,10 @@ export function DynamicTable({
       return (
         <Badge
           variant="outline"
-          className={`${
-            item.isVerified
+          className={`${item.isVerified
               ? "bg-green-50 text-green-700 border-green-200"
               : "bg-yellow-50 text-yellow-700 border-yellow-200"
-          } px-2 py-1 text-xs font-medium rounded-md`}
+            } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isVerified ? "Verified" : "Unverified"}
         </Badge>
@@ -174,11 +172,10 @@ export function DynamicTable({
       return (
         <Badge
           variant="outline"
-          className={`${
-            item.isPublished
+          className={`${item.isPublished
               ? "bg-green-50 text-green-700 border-green-200"
               : "bg-yellow-50 text-yellow-700 border-yellow-200"
-          } px-2 py-1 text-xs font-medium rounded-md`}
+            } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isPublished ? "Published" : "Draft"}
         </Badge>
@@ -315,15 +312,15 @@ export function DynamicTable({
                         {(item as Course).salePrice ? (
                           <>
                             <span className="text-[#290b34] font-semibold">
-                            {formatPrice(Number((item as Course).salePrice))}
+                              {formatPrice(Number((item as Course).salePrice))}
                             </span>
                             <span className="text-gray-500 line-through text-sm">
-                            {formatPrice(Number(item[column.key]))}
+                              {formatPrice(Number(item[column.key]))}
                             </span>
                           </>
                         ) : (
                           <span className="text-[#601b79] font-semibold">
-                           {formatPrice(Number(item[column.key]))}
+                            {formatPrice(Number(item[column.key]))}
                           </span>
                         )}
                       </div>

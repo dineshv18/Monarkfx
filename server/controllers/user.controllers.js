@@ -477,18 +477,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
       isVerified: true,
       provider: true,
       slug: true,
-      Purchase: {
-        select: {
-          course: {
-            select: {
-              id: true,
-              title: true,
-              description: true,
-              price: true,
-            },
-          },
-        },
-      },
+     
     },
   });
 

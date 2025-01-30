@@ -12,6 +12,7 @@ import {
   MapPinHouse,
   Menu,
   Puzzle,
+  School,
   ShoppingBasket,
 } from "lucide-react";
 import { BookOpen, Users, FilePlus, FileText } from "lucide-react";
@@ -52,6 +53,11 @@ const navItems: NavItem[] = [
     title: "Orders",
     href: "/dashboard/purchase",
     icon: ShoppingBasket,
+  },
+  {
+    title: "Students",
+    href: "/dashboard/students",
+    icon: School,
   },
 ];
 
