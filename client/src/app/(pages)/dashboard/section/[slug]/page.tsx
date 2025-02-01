@@ -98,6 +98,8 @@ const SortableRow = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(section.title);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [sections, setSections] = useState<Section[]>([]);
+
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -303,10 +305,19 @@ const SectionPage = () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/section/get/${params.slug}`
       );
-      setSections(response.data.message);
+
+      const sectionsData = response.data.data || [];
+
+      if (Array.isArray(sectionsData)) {
+        setSections(sectionsData);
+      } else {
+        setSections([]);
+      }
+
     } catch (error) {
       console.error("Error fetching sections:", error);
       toast.error("Failed to fetch sections");
+      setSections([]);
     }
   };
 
@@ -518,27 +529,25 @@ const SectionPage = () => {
               onDragEnd={handleDragEnd}
             >
               <SortableContext
-                items={sections.map((s) => s.id)}
+                items={(sections || []).map((s) => s.id)}
                 strategy={verticalListSortingStrategy}
               >
                 <TableBody>
-                  {sections.map((section) => (
-                    <SortableRow
-                      key={section.id}
-                      section={section}
-                      onPublishToggle={handlePublishToggle}
-                      onDelete={handleDelete}
-                      onUpdate={handleUpdate}
-                      deletingId={deletingId}
-                      router={router}
-                    />
-                  ))}
-                  {sections.length === 0 && (
+                  {(sections || []).length > 0 ? (
+                    sections.map((section) => (
+                      <SortableRow
+                        key={section.id}
+                        section={section}
+                        onPublishToggle={handlePublishToggle}
+                        onDelete={handleDelete}
+                        onUpdate={handleUpdate}
+                        deletingId={deletingId}
+                        router={router}
+                      />
+                    ))
+                  ) : (
                     <TableRow>
-                      <TableCell
-                        colSpan={6}
-                        className="text-center text-gray-500 py-8"
-                      >
+                      <TableCell colSpan={6} className="text-center text-gray-500 py-8">
                         No sections found. Create your first section above.
                       </TableCell>
                     </TableRow>

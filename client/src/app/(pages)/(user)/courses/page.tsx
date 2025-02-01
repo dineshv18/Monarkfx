@@ -1,46 +1,67 @@
 "use client";
-import React, { useEffect, useState } from "react";
 
+import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { CourseDataNew, CourseResponse } from "@/type";
 import CourseCards from "../../_components/CourseCards";
 import SkeletonCardGrid from "../../_components/SkeletonCardGrid";
 import Background from "../../_components/Background";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Search, SlidersHorizontal } from "lucide-react";
+import { useCustomDebounce } from "@/hooks/useCustomDebounce";
 
 const Courses = () => {
   const [courses, setCourses] = useState<CourseDataNew[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
+  const [categories, setCategories] = useState<{ id: string; name: string; }[]>([]);
 
-  useEffect(() => {
-    fetchCourses();
-  }, [currentPage]);
+  const debouncedSearch = useCustomDebounce(searchQuery, 500);
 
-  const fetchCourses = async () => {
-    setIsLoading(true);
+  const fetchCategories = async () => {
     try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`);
+      if (!response.ok) throw new Error("Failed to fetch categories");
+      const data = await response.json();
+      if (data.success) {
+        setCategories(data.data);
+      }
+    } catch (error) {
+      toast.error("Failed to load categories");
+    }
+  };
+
+  const fetchCourses = useCallback(async () => {
+    try {
+      const queryParams = new URLSearchParams({
+        page: currentPage.toString(),
+        ...(debouncedSearch && { search: debouncedSearch }),
+        ...(selectedCategory !== "all" && { category: selectedCategory }),
+        ...(sortBy && { sort: sortBy }),
+      });
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/course/get-courses?page=${currentPage}`,
-        {
-          cache: "no-store",
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/course/get-courses?${queryParams}`
       );
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
+      if (!response.ok) throw new Error("Failed to fetch courses");
 
       const data = await response.json();
-
-      if (data && data.success) {
-        const message = data.message as CourseResponse;
-        setCourses(message.courses);
-        setTotalPages(message.totalPages);
+      if (data.success) {
+        setCourses(data.data.courses);
+        setTotalPages(data.data.totalPages);
       }
     } catch (error) {
       toast.error("An error occurred while fetching courses");
@@ -48,26 +69,119 @@ const Courses = () => {
     } finally {
       setIsLoading(false);
     }
+  }, [currentPage, debouncedSearch, selectedCategory, sortBy]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchCourses();
+  }, [fetchCourses]);
+
+  const handleReset = () => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+    setSortBy("newest");
+    setCurrentPage(1);
   };
 
   return (
     <>
-       <Background 
+      <Background
         title="Our Trading"
         highlightedText="Courses"
         subtitle="Master the markets with our professional trading courses"
       />
-      <div className="p-3 md:p-5">
-        <section className="px-4 pt-3 container mx-auto max-w-7xl"></section>
-        {isLoading ? (
-          <SkeletonCardGrid />
-        ) : (
+
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col gap-4 mb-8">
+          {/* Search Input */}
+          <div className="w-full">
+            <div className="relative">
+              <Input
+                placeholder="Search courses..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="pl-10 w-full"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            </div>
+          </div>
+
+          {/* Filters Group */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full">
+            <div className="flex flex-col sm:flex-row gap-4 flex-grow">
+              <Select
+                value={selectedCategory}
+                onValueChange={(value) => {
+                  setSelectedCategory(value);
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={sortBy}
+                onValueChange={(value) => {
+                  setSortBy(value);
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest First</SelectItem>
+                  <SelectItem value="oldest">Oldest First</SelectItem>
+                  <SelectItem value="price_high">Price: High to Low</SelectItem>
+                  <SelectItem value="price_low">Price: Low to High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={handleReset}
+              className="w-full sm:w-auto"
+            >
+              <SlidersHorizontal className="mr-2 h-4 w-4" />
+              Reset Filters
+            </Button>
+          </div>
+        </div>
+
+        {isLoading && <SkeletonCardGrid />}
+
+        {!isLoading && courses.length > 0 && (
           <CourseCards
             courses={courses}
             currentPage={currentPage}
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}
           />
+        )}
+
+        {!isLoading && courses.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-700">No courses found</h3>
+            <p className="text-gray-500 mt-2">Try adjusting your search or filters</p>
+          </div>
         )}
       </div>
     </>

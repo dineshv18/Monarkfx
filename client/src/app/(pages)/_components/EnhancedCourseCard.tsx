@@ -1,120 +1,127 @@
 import Image from "next/image";
 import Link from "next/link";
 import parse from "html-react-parser";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { CourseCardProps } from "@/type";
-import { TrendingUp, Crown, Flame, Clock } from "lucide-react";
+import { TrendingUp, Crown, Flame, Clock, BookOpen, Tag, Gift } from "lucide-react";
 import { formatDate, formatPrice } from "@/helper/FormatPrice";
 
 export default function EnhancedCourseCard({ course }: CourseCardProps) {
   const isFree = !course.paid;
 
- 
-
   return (
     <Link href={`/courses/${course.slug}`}>
-      <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg font-plus-jakarta-sans">
-        <CardHeader className="p-0">
-          <div className="relative aspect-video w-full overflow-hidden">
-            <Image
-              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
-              alt={course.title}
-              layout="fill"
-              objectFit="cover"
-              className="transition-transform duration-300 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        whileHover={{ y: -5 }}
+        className="relative h-full rounded-xl overflow-hidden bg-white dark:bg-gray-800/90 shadow-lg hover:shadow-xl transition-all duration-300"
+      >
+        {/* Image Container */}
+        <div className="relative aspect-[4/3] overflow-hidden">
+          <Image
+            src={course.thumbnail ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}` : "/placeholder.jpg"}
+            alt={course.title}
+            fill
+            className="object-cover transition-transform duration-500 hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-60" />
 
-            {/* Course Tags */}
-            <div className="absolute left-3 top-3 flex flex-wrap gap-2 font-inter">
-              {isFree ? (
-                <Badge className="bg-green-500 text-white font-semibold px-3 py-1">
-                  Free Course
-                </Badge>
-              ) : (
-                <Badge className="bg-blue-500 text-white font-semibold px-3 py-1">
-                  Premium
-                </Badge>
-              )}
-            </div>
-
-            {/* Feature Tags */}
-            <div className="absolute right-3 top-3 flex flex-col gap-2 font-inter">
-              {course.isTrending && (
-                <Badge className="bg-orange-500 text-white font-semibold flex items-center gap-1 px-3 py-1">
-                  <TrendingUp className="w-3 h-3" /> Trending
-                </Badge>
-              )}
-              {course.isPopular && (
-                <Badge className="bg-purple-500 text-white font-semibold flex items-center gap-1 px-3 py-1">
-                  <Flame className="w-3 h-3" /> Popular
-                </Badge>
-              )}
-              {course.isBestseller && (
-                <Badge className="bg-yellow-500 text-white font-semibold flex items-center gap-1 px-3 py-1">
-                  <Crown className="w-3 h-3" /> Bestseller
-                </Badge>
-              )}
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="flex flex-grow flex-col gap-4 p-5">
-          <div>
-            <CardTitle className="mb-2 text-xl font-bold text-gray-800 line-clamp-2">
-              {course.title}
-            </CardTitle>
-            {course.language && (
-              <Badge variant="outline" className="mb-3 capitalize">
-                {course.language}
+          {/* Badges Container */}
+          <div className="absolute top-4 left-4 flex flex-wrap gap-2 max-w-[80%]">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <Badge className="bg-white/90 text-gray-900 backdrop-blur-sm capitalize">
+                {course.category?.name}
               </Badge>
+            </motion.div>
+            {course.isBestseller && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Badge className="bg-amber-500/90 text-white backdrop-blur-sm">
+                  <Crown className="w-3.5 h-3.5 mr-1" /> Bestseller
+                </Badge>
+              </motion.div>
             )}
-            <CardDescription className="text-sm text-gray-600 line-clamp-3 font-inter">
-              {parse(course.description)}
-            </CardDescription>
           </div>
-        </CardContent>
 
-        <CardFooter className="flex items-center justify-between p-5 border-t">
-          <div className="flex items-center gap-3">
-            {isFree ? (
-              <span className="text-lg font-bold text-green-600">
-                Free Access
-              </span>
-            ) : (
-              <div className="flex flex-col">
-                {course.salePrice && course.salePrice < course.price ? (
-                  <>
-                    <span className="text-lg font-bold text-[#601b79]">
-                      {formatPrice(course.salePrice)}
-                    </span>
+          {/* Price Tag */}
+          <div className="absolute bottom-4 right-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className={`${isFree ? 'bg-green-500' : 'bg-white px-4 py-2'} text-white   rounded-full font-bold shadow-lg`}
+            >
+              {isFree ? (
+                <motion.div
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full font-bold shadow-lg"
+                >
+                  <Gift className="w-4 h-4" />
+                  <span>Free Access</span>
+                </motion.div>) : (
+                <div className="flex items-baseline gap-2">
+                  <span className="text-primary font-bold">
+                    {(course.salePrice ?? 0) > 0 ? formatPrice(course.salePrice ?? 0) : formatPrice(course.price)}
+                  </span>
+                  {(course.salePrice ?? 0) > 0 && (course.salePrice ?? 0) < course.price && (
                     <span className="text-sm text-gray-500 line-through">
                       {formatPrice(course.price)}
                     </span>
-                  </>
-                ) : (
-                  <span className="text-lg font-bold text-[#601b79]">
-                    {formatPrice(course.price)}
-                  </span>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          <div className="flex items-center gap-2 mb-3">
+            <Badge variant="secondary" className="flex items-center gap-1.5 uppercase">
+              <BookOpen className="w-3.5 h-3.5" />
+              {course.language}
+            </Badge>
+            {course.isTrending && (
+              <Badge variant="secondary" className="flex items-center gap-1.5 bg-orange-500/10 text-orange-600">
+                <TrendingUp className="w-3.5 h-3.5" />
+                Trending
+              </Badge>
             )}
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Clock className="w-4 h-4" />
-            {course.createdAt ? formatDate(course.createdAt) : "N/A"}
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+            {course.title}
+          </h3>
+
+          <div className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">
+            {parse(course.description)}
           </div>
-        </CardFooter>
-      </Card>
+
+          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-1">
+              <Clock className="w-4 h-4" />
+              {formatDate(course.createdAt ?? '')}
+            </div>
+            {course.isPopular && (
+              <Badge variant="secondary" className="bg-purple-500/10 text-purple-600">
+                <Flame className="w-3.5 h-3.5 mr-1" /> Popular
+              </Badge>
+            )}
+          </div>
+        </div>
+      </motion.div>
     </Link>
   );
 }

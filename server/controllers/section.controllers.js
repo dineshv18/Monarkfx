@@ -78,7 +78,7 @@ export const getSections = asyncHandler(async (req, res) => {
   const course = await prisma.course.findUnique({
     where: { slug: courseSlug },
     include: {
-      Section: {
+      sections: {
         include: {
           chapters: {
             orderBy: { position: "asc" },
@@ -96,7 +96,7 @@ export const getSections = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponsive(200, "Sections retrieved successfully", course.Section)
+      new ApiResponsive(200, course.sections, "Sections retrieved successfully")
     );
 });
 // Update a section

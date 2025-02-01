@@ -82,6 +82,7 @@ export const createCourse = asyncHandler(async (req, res) => {
       isPopular,
       isTrending,
       isBestseller,
+      categoryId
     } = req.body;
 
     // Get meta fields separately
@@ -92,6 +93,14 @@ export const createCourse = asyncHandler(async (req, res) => {
     const user = await prisma.user.findUnique({ where: { id: req.user.id } });
     if (!user) {
       throw new ApiError(404, "User not found");
+    }
+
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId }
+    });
+  
+    if (!category) {
+      throw new ApiError(400, "Invalid category");
     }
 
     // Generate meta fields
@@ -139,6 +148,7 @@ export const createCourse = asyncHandler(async (req, res) => {
         isBestseller: parseBooleanField(isBestseller),
         videoUrl,
         paid: parseBooleanField(paid),
+        categoryId
       },
     });
 
@@ -157,21 +167,59 @@ export const getCourses = asyncHandler(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 12;
   const skip = (page - 1) * limit;
+  const search = req.query.search;
+  const category = req.query.category;
+  const sort = req.query.sort;
+
+  const where = {
+    isPublished: true,
+    ...(search && {
+      OR: [
+        { title: { contains: search, mode: "insensitive" } },
+        { description: { contains: search, mode: "insensitive" } }
+      ]
+    }),
+    ...(category && category !== "all" && { categoryId: category })
+  };
+
+  let orderBy = {};
+  switch (sort) {
+    case "oldest":
+      orderBy = { createdAt: "asc" };
+      break;
+    case "price_high":
+      orderBy = { price: "desc" };
+      break;
+    case "price_low":
+      orderBy = { price: "asc" };
+      break;
+    default: // newest
+      orderBy = { createdAt: "desc" };
+  }
 
   const [courses, totalCourses] = await Promise.all([
     prisma.course.findMany({
-      where: { isPublished: true },
+      where,
+      orderBy,
       skip,
       take: limit,
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
+      }
     }),
-    prisma.course.count({ where: { isPublished: true } }),
+    prisma.course.count({ where })
   ]);
 
   return res.status(200).json(
-    new ApiResponsive(200, "Courses retrieved successfully", {
+    new ApiResponsive(200, {
       courses,
       totalPages: Math.ceil(totalCourses / limit),
-      currentPage: page,
+      currentPage: page
     })
   );
 });
@@ -238,13 +286,24 @@ export const getCourse = asyncHandler(async (req, res) => {
       videoUrl: true,
       language: true,
       isPublished: true,
+      isPublic: true,
       createdAt: true,
       updatedAt: true,
       metaDesc: true,
       metaTitle: true,
       subheading: true,
-
-      Section: {
+      categoryId: true,
+      userId: true,
+      
+      // Add category with required fields
+      category: {
+        select: {
+          id: true,
+          name: true
+        }
+      },
+      
+      sections: {
         orderBy: {
           position: "asc",
         },
@@ -276,7 +335,7 @@ export const getCourse = asyncHandler(async (req, res) => {
             },
           },
         },
-      },
+      }
     },
   });
 

@@ -14,6 +14,8 @@ import cartRoutes from "./routes/cart.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 import couponRoutes from "./routes/coupon.routes.js";
 import sectionRoutes from "./routes/section.routes.js";
+import categoryRouter from "./routes/category.routes.js";
+
 
 const app = express();
 
@@ -82,6 +84,7 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/review", reviewRoutes);
 app.use("/api/v1/coupon", couponRoutes);
 app.use("/api/v1/section", sectionRoutes);
+app.use("/api/v1/category", categoryRouter);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

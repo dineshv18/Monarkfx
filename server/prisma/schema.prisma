@@ -86,10 +86,10 @@ model Course {
   isPublished  Boolean @default(false)
 
   // Relations
-  user       User      @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
   userId     String
-  categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
 
   // Content
   sections Section[]

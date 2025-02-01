@@ -499,6 +499,11 @@ export interface ChapterFormPropsSecond {
   isSubmitting: boolean;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+}
+
 export interface CourseDataNew {
   id: string;
   title: string;
@@ -520,6 +525,11 @@ export interface CourseDataNew {
   slug?: string;
   createdAt?: string;
   Section: Section[];
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface Section {

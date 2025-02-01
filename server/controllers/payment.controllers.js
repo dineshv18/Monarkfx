@@ -138,7 +138,7 @@ export const paymentVerification = asyncHandler(async (req, res) => {
               data: {
                 couponId: couponDetails.id,
                 userId: req.user.id,
-                courseId,
+                ...(courseIds.length === 1 && { courseId: courseIds[0] }),
               },
             });
           }

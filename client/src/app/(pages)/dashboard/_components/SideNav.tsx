@@ -25,9 +25,9 @@ const navItems: NavItem[] = [
     icon: BookOpen,
   },
   {
-    title: "Users",
-    href: "/dashboard/users",
-    icon: Users,
+    title: "Students",
+    href: "/dashboard/students",
+    icon: School,
   },
   {
     title: "Create Course",
@@ -54,11 +54,7 @@ const navItems: NavItem[] = [
     href: "/dashboard/purchase",
     icon: ShoppingBasket,
   },
-  {
-    title: "Students",
-    href: "/dashboard/students",
-    icon: School,
-  },
+
 ];
 
 export function Sidenav() {
