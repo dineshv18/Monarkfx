@@ -516,7 +516,13 @@ export const coursePage = asyncHandler(async (req, res) => {
       metaDesc: true,
       metaTitle: true,
       subheading: true,
-      Section: {
+      category: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      sections: {
         where: { isPublished: true },
         orderBy: { position: "asc" },
         select: {
@@ -557,7 +563,7 @@ export const getFreeChapterVideo = asyncHandler(async (req, res) => {
       isPublished: true
     },
     include: {
-      Section: {
+      sections: {
         where: {
           isPublished: true
         },
@@ -578,7 +584,7 @@ export const getFreeChapterVideo = asyncHandler(async (req, res) => {
   }
 
   // Find the chapter across all sections
-  const chapter = course.Section
+  const chapter = course.sections
     .flatMap(section => section.chapters)
     .find(chapter => chapter?.id === chapterId);
 
@@ -618,8 +624,20 @@ export const updateCourse = asyncHandler(async (req, res) => {
     isPopular,
     isTrending,
     isBestseller,
+    categoryId 
   } = req.body;
 
+  // Verify course exists
+  const checkCourse = await prisma.course.findUnique({
+    where: { slug },
+    include: { category: true } 
+  });
+
+  if (!checkCourse) {
+    throw new ApiError(404, "Course not found");
+  }
+
+  // Build update data
   const updateData = {};
 
   if (title !== undefined) updateData.title = title.toLowerCase();
@@ -635,25 +653,30 @@ export const updateCourse = asyncHandler(async (req, res) => {
   if (isPopular !== undefined) updateData.isPopular = isPopular;
   if (isTrending !== undefined) updateData.isTrending = isTrending;
   if (isBestseller !== undefined) updateData.isBestseller = isBestseller;
-  if (price !== undefined) {
-    updateData.price = price ? parseFloat(price) : 0;
+  if (price !== undefined) updateData.price = price ? parseFloat(price) : 0;
+  if (salePrice !== undefined) updateData.salePrice = salePrice ? parseFloat(salePrice) : 0;
+  
+  // Handle category update
+  if (categoryId !== undefined) {
+    // Verify category exists
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId }
+    });
+    
+    if (!category) {
+      throw new ApiError(400, "Invalid category");
+    }
+    
+    updateData.categoryId = categoryId;
   }
 
-  if (salePrice !== undefined) {
-    updateData.salePrice = salePrice ? parseFloat(salePrice) : 0;
-  }
-
-  const checkCourse = await prisma.course.findUnique({
-    where: { slug },
-  });
-
-  if (!checkCourse) {
-    throw new ApiError(404, "Course not found");
-  }
-
+  // Update course
   const updatedCourse = await prisma.course.update({
     where: { slug },
     data: updateData,
+    include: { 
+      category: true 
+    }
   });
 
   return res

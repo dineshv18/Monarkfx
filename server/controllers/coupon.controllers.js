@@ -3,29 +3,27 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponsive } from "../utils/ApiResponsive.js";
 
-//  createCoupon controller
 export const createCoupon = asyncHandler(async (req, res) => {
-  const { 
-    code, 
-    discount,
-    courseIds,
-    validFrom,
-    validUntil,
-    minimumPurchase,
-    limit,
-    isActive,
-    oneTimePerUser
-  } = req.body;
+  const { code, discount, courseIds, validFrom, validUntil, minimumPurchase, limit, isActive, oneTimePerUser } =
+    req.body
 
   if (!code || !discount) {
-    throw new ApiError(400, "Code and discount are required");
+    throw new ApiError(400, "Code and discount are required")
   }
 
   if (discount < 1 || discount > 99) {
-    throw new ApiError(400, "Discount must be between 1% and 99%");
+    throw new ApiError(400, "Discount must be between 1% and 99%")
   }
 
   try {
+    const existingCoupon = await prisma.coupon.findUnique({
+      where: { code: code.toUpperCase() },
+    })
+
+    if (existingCoupon) {
+      throw new ApiError(400, "Coupon code already exists")
+    }
+
     const coupon = await prisma.coupon.create({
       data: {
         code: code.toUpperCase(),
@@ -36,86 +34,91 @@ export const createCoupon = asyncHandler(async (req, res) => {
         validFrom: validFrom ? new Date(validFrom) : new Date(),
         validUntil: validUntil ? new Date(validUntil) : null,
         minimumPurchase: minimumPurchase ? Number(minimumPurchase) : null,
-        ...(courseIds && courseIds.length > 0 && {
-          courses: {
-            connect: courseIds.map(id => ({ id }))
-          }
-        })
+        ...(courseIds &&
+          courseIds.length > 0 && {
+            courses: {
+              connect: courseIds.map((id) => ({ id })),
+            },
+          }),
       },
       include: {
-        courses: true
-      }
-    });
+        courses: true,
+      },
+    })
 
-    return res.status(201).json(
-      new ApiResponsive(201, { coupon }, "Coupon created successfully")
-    );
-
+    return res.status(201).json(new ApiResponsive(201, { coupon }, "Coupon created successfully"))
   } catch (error) {
-    if (error.code === 'P2002') {
-      throw new ApiError(400, "Coupon code already exists");
+    if (error instanceof ApiError) {
+      throw error
     }
-    throw new ApiError(500, "Error creating coupon", [error.message]);
+    throw new ApiError(500, "Error creating coupon", error)
   }
-});
-
+})
 
 export const updateCoupon = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { 
-      code, 
-      discount, 
-      courseIds, 
-      validFrom, 
-      validUntil, 
-      minimumPurchase,
-      limit,
-      isActive,
-      oneTimePerUser
-  } = req.body;
+  const { id } = req.params
+  const { code, discount, courseIds, validFrom, validUntil, minimumPurchase, limit, isActive, oneTimePerUser } =
+    req.body
 
   if (discount && (discount < 1 || discount > 99)) {
-      throw new ApiError(400, "Discount must be between 1% and 99%");
+    throw new ApiError(400, "Discount must be between 1% and 99%")
   }
 
   try {
-      const coupon = await prisma.coupon.update({
+    const existingCoupon = await prisma.coupon.findUnique({
+      where: { id },
+      include: { courses: true },
+    })
+
+    if (!existingCoupon) {
+      throw new ApiError(404, "Coupon not found")
+    }
+
+    const updatedCoupon = await prisma.coupon.update({
       where: { id },
       data: {
-          ...(code && { code: code.toUpperCase() }),
-          ...(discount && { discount: Number(discount) }),
-          ...(limit !== undefined && { limit: Number(limit) }),
-          ...(isActive !== undefined && { isActive: Boolean(isActive) }),
-          ...(oneTimePerUser !== undefined && { oneTimePerUser: Boolean(oneTimePerUser) }),
-          ...(validFrom && { validFrom: new Date(validFrom) }),
-          validUntil: validUntil ? new Date(validUntil) : null,
-          minimumPurchase: minimumPurchase ? Number(minimumPurchase) : null,
-          ...(courseIds && {
+        ...(code && { code: code.toUpperCase() }),
+        ...(discount !== undefined && { discount: Number(discount) }),
+        ...(limit !== undefined && { limit: Number(limit) }),
+        ...(isActive !== undefined && { isActive: Boolean(isActive) }),
+        ...(oneTimePerUser !== undefined && { oneTimePerUser: Boolean(oneTimePerUser) }),
+        ...(validFrom && { validFrom: new Date(validFrom) }),
+        ...(validUntil && { validUntil: new Date(validUntil) }),
+        ...(minimumPurchase !== undefined && { minimumPurchase: Number(minimumPurchase) }),
+        ...(courseIds && {
           courses: {
-              set: courseIds.map(id => ({ id }))
-          }
-          })
+            set: courseIds.map((id) => ({ id })),
+          },
+        }),
       },
       include: {
-          courses: true
-      }
-      });
+        courses: true,
+      },
+    })
 
-      res.status(200).json(
-      new ApiResponsive(200, { coupon }, "Coupon updated successfully")
-      );
+    res.status(200).json(new ApiResponsive(200, { coupon: updatedCoupon }, "Coupon updated successfully"))
   } catch (error) {
-      if (error.code === 'P2025') {
-      throw new ApiError(404, "Coupon not found");
-      }
-      throw new ApiError(500, "Error updating coupon", [error.message]);
+    if (error instanceof ApiError) {
+      throw error
+    }
+    throw new ApiError(500, "Error updating coupon", error)
   }
-  });
+})
 
 // Get all coupons
 export const getAllCoupons = asyncHandler(async (req, res) => {
   try {
-    const coupons = await prisma.coupon.findMany();
+    const coupons = await prisma.coupon.findMany({
+      include: {
+        courses: {
+          select: {
+            id: true,
+            title: true,
+            price: true
+          }
+        }
+      }
+    });
 
     res
       .status(200)

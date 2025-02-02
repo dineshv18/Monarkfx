@@ -524,7 +524,7 @@ export interface CourseDataNew {
   paid: boolean;
   slug?: string;
   createdAt?: string;
-  Section: Section[];
+  sections: Section[];
   categoryId: string;
   category: {
     id: string;
