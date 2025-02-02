@@ -95,7 +95,7 @@ const Courses = () => {
         subtitle="Master the markets with our professional trading courses"
       />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex flex-col gap-4 mb-8">
           {/* Search Input */}
           <div className="w-full">

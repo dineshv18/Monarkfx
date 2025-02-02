@@ -327,3 +327,9 @@ body {
 .dark .ql-snow .ql-fill {
   fill: #e5e7eb;
 }
+
+@property --border-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}

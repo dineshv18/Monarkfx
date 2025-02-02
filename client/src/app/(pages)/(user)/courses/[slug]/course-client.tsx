@@ -15,6 +15,7 @@ import {
   AlertTriangle,
   Pause,
   Lock,
+  Folder,
 } from "lucide-react"
 import parse from "html-react-parser"
 import { Element } from "domhandler"
@@ -36,6 +37,11 @@ interface Chapter {
   description: string
   slug: string
 }
+interface Category {
+  id: string
+  name: string
+}
+
 
 interface Section {
   id: string
@@ -61,6 +67,7 @@ interface CourseData {
   metaTitle: string
   metaDesc: string
   sections: Section[]
+  category: Category
 }
 
 interface CourseClientProps {
@@ -86,6 +93,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
   } | null>(null)
   const [freeChapterVideo, setFreeChapterVideo] = useState<string | null>(null)
   const [isLoadingVideo, setIsLoadingVideo] = useState(false)
+
 
   useEffect(() => {
     setIsClient(true)
@@ -299,66 +307,122 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
   return (
     <div className="min-h-screen bg-gray-50 font-plus-jakarta-sans">
       {/* Course Header */}
-      <div className="bg-gradient-to-r from-[#7c3297] to-[#ffad96c1] text-white">
-        <div className="container mx-auto px-4 py-8 md:py-12 max-w-7xl">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="order-2 md:order-1">
-              <div className="flex flex-wrap gap-2 mb-4">
-                {course.isBestseller && <Badge variant="secondary">Bestseller</Badge>}
-                {course.isTrending && <Badge variant="secondary">Trending</Badge>}
-                {course.isPopular && <Badge variant="secondary">Popular</Badge>}
-                {course.isFeatured && <Badge variant="secondary">Featured</Badge>}
-              </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 capitalize">{course.title}</h1>
+      <div className="bg-gradient-to-t from-[#ef5252] to-[#1c1c1cc1] text-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
 
-              {course.subheading && <p className="text-sm md:text-base mb-4">{course.subheading}</p>}
-              <div className="flex flex-wrap gap-4 mb-6">
-                <Badge variant="secondary" className="px-3 py-1">
-                  <Book className="w-4 h-4 mr-2" />
-                  {sectionsWithChapters.reduce((total, section) => total + section.chapters.length, 0)}
-                  {"  "}
-                  Chapters
-                </Badge>
-                <Badge variant="secondary" className="px-3 py-1 capitalize">
-                  <Languages className="w-4 h-4 mr-2" />
-                  {course.language}
-                </Badge>
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Course Info */}
+            <div className="order-2 md:order-1 space-y-6">
+              {/* Badges */}
+              <div className="flex flex-wrap gap-2">
+                {course.isBestseller && (
+                  <Badge variant="secondary" className="bg-yellow-400/20 text-yellow-200 border-yellow-400/40">
+                    <Award className="w-4 h-4 mr-1" /> Bestseller
+                  </Badge>
+                )}
+                {course.isTrending && (
+                  <Badge variant="secondary" className="bg-blue-400/20 text-blue-200 border-blue-400/40">
+                    📈 Trending
+                  </Badge>
+                )}
+                {course.isPopular && (
+                  <Badge variant="secondary" className="bg-green-400/20 text-green-200 border-green-400/40">
+                    🔥 Popular
+                  </Badge>
+                )}
+                {course.isFeatured && (
+                  <Badge variant="secondary" className="bg-purple-400/20 text-purple-200 border-purple-400/40">
+                    ⭐ Featured
+                  </Badge>
+                )}
+              </div>
+
+              {/* Title & Subheading */}
+              <div className="space-y-4">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold capitalize leading-tight">
+                  {course.title}
+                </h1>
+                {course.subheading && (
+                  <p className="text-lg md:text-xl text-white/80 font-medium">
+                    {course.subheading}
+                  </p>
+                )}
+              </div>
+
+              {/* Course Meta Info */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                  <div className="flex items-center gap-2">
+                    <Book className="w-5 h-5 text-white/80" />
+                    <span className="text-lg font-medium">
+                      {sectionsWithChapters.reduce((total, section) => total + section.chapters.length, 0)} Chapters
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                  <div className="flex items-center gap-2">
+                    <Languages className="w-5 h-5 text-white/80" />
+                    <span className="text-lg font-medium capitalize">
+                      {course.language}
+                    </span>
+                  </div>
+                </div>
+
+                {course.category && (
+                  <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                    <div className="flex items-center gap-2">
+                      <Folder className="w-5 h-5 text-white/80" />
+                      <span className="text-lg font-medium">
+                        {course.category.name}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-            <div className="order-1 md:order-2 relative aspect-video">
-              {isClient && course.videoUrl ? (
-                <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl">
-                  <ReactPlayer
-                    ref={playerRef}
-                    url={course.videoUrl}
-                    width="100%"
-                    height="100%"
-                    playing={isPlaying}
-                    controls={false}
-                    onPause={() => setIsPlaying(false)}
-                    onPlay={() => setIsPlaying(true)}
-                    onError={() => setVideoError(true)}
-                    className="rounded-lg overflow-hidden shadow-xl"
-                  />
-                  {videoError ? (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-                      <p>Sorry, the video could not be played. Please try again later.</p>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={togglePlayPause}
-                      className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-colors"
-                    >
-                      {isPlaying ? (
-                        <Pause className="w-16 h-16 text-white" />
-                      ) : (
-                        <PlayCircle className="w-16 h-16 text-white" />
-                      )}
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl">
+
+            {/* Video/Thumbnail */}
+            <div className="order-1 md:order-2">
+              <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/20">
+                {isClient && course.videoUrl ? (
+                  <div className="absolute inset-0">
+                    <ReactPlayer
+                      ref={playerRef}
+                      url={course.videoUrl}
+                      width="100%"
+                      height="100%"
+                      playing={isPlaying}
+                      controls={false}
+                      onPause={() => setIsPlaying(false)}
+                      onPlay={() => setIsPlaying(true)}
+                      onError={() => setVideoError(true)}
+                      className="rounded-xl overflow-hidden"
+                    />
+                    {videoError ? (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
+                        <p>Sorry, the video could not be played.</p>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={togglePlayPause}
+                        className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
+                      >
+                        {isPlaying ? (
+                          <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                        ) : (
+                          <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                ) : (
                   <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
                     alt={course.title}
@@ -366,8 +430,8 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                     objectFit="cover"
                     className="transition-transform duration-300 hover:scale-105"
                   />
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -426,8 +490,8 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                                 <div
                                   key={chapter.id}
                                   className={`flex flex-col gap-2 p-3 rounded-lg transition-all duration-200 border ${(!course.paid && isEnrolled) || chapter.isFree || hasPurchased
-                                      ? "hover:bg-gray-50 cursor-pointer"
-                                      : "opacity-90 bg-gray-50"
+                                    ? "hover:bg-gray-50 cursor-pointer"
+                                    : "opacity-90 bg-gray-50"
                                     }`}
                                   onClick={() => handleChapterClick(chapter)}
                                 >
@@ -442,10 +506,10 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                                       )}
                                       <span
                                         className={`font-medium ${chapter.isFree ||
-                                            (course.paid && hasPurchased) ||
-                                            (!course.paid && isEnrolled)
-                                            ? ""
-                                            : "text-gray-800"
+                                          (course.paid && hasPurchased) ||
+                                          (!course.paid && isEnrolled)
+                                          ? ""
+                                          : "text-gray-800"
                                           }`}
                                       >
                                         {chapter.title}
