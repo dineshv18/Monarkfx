@@ -25,7 +25,7 @@ import {
 import CourseCard from "./CourseCard";
 import AddressList from "./AddressList";
 
-import { Trash2 } from "lucide-react";
+import { Trash2, XCircle } from "lucide-react";
 import { formatPrice } from "@/helper/FormatPrice";
 import { CourseParams } from "@/components/CourseParams";
 
@@ -195,9 +195,9 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
       const options = {
         key: key,
         amount: order.amount,
-        currency: "USD",
-        name: "Universal Yogi - Professional Online Yoga Courses Classes",
-        description: "Join Universal Yogi to learn in depth Knowledge of Yoga Asana and Meditation online. With our Experienced instructors, you will get the best out of you.",
+        currency: "INR",
+        name: "MonarkFX - Global Trading Excellence",
+        description: "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
         order_id: order.id,
         handler: async function (response: RazorpayResponse) {
           try {
@@ -255,7 +255,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
           email: data.email,
         },
         theme: {
-          color: "#610981",
+          color: "#EF4444",
         },
       };
 
@@ -292,21 +292,18 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f7effa] to-white py-12 px-4 sm:px-6 lg:px-8 font-plus-jakarta-sans">
-      <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        strategy="lazyOnload"
-      />
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8 font-plus-jakarta-sans">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl border border-red-100">
           <div className="p-6 md:p-8 lg:p-10">
             <h1 className="text-4xl font-bold text-gray-900 mb-8">Your Cart</h1>
             {user && (
-              <div className="mb-8 p-6 bg-sky-50 rounded-xl border border-sky-200">
-                <h2 className="text-2xl font-semibold text-sky-800 mb-2">
+              <div className="mb-8 p-6 bg-red-50 rounded-xl border border-red-200">
+                <h2 className="text-2xl font-semibold text-red-800 mb-2">
                   Welcome, {user.name}!
                 </h2>
-                <p className="text-sky-600 text-lg">{user.email}</p>
+                <p className="text-red-600 text-lg">{user.email}</p>
               </div>
             )}
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -348,9 +345,9 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                         <div className="flex flex-col items-end">
                           <span
                             className={`text-2xl font-bold ${discountedPrice ||
-                                currentTotalPrice < originalTotalPrice
-                                ? "line-through text-gray-400"
-                                : "text-gray-900"
+                              currentTotalPrice < originalTotalPrice
+                              ? "line-through text-gray-400"
+                              : "text-gray-900"
                               }`}
                           >
                             {formatPrice(originalTotalPrice)}
@@ -396,7 +393,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                     </div>
                     <Button
                       onClick={handleSubmit(onSubmit)}
-                      className="w-full mt-8 py-6 text-lg font-semibold text-white bg-[#610981] hover:bg-[#ffac96] hover:text-black"
+                      className="w-full mt-8 py-6 text-lg font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? "Processing..." : "Proceed to Checkout"}
@@ -414,25 +411,25 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
 
 function BuyPageSkeleton() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f7effa] to-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="p-6 md:p-8 lg:p-10">
-            <Skeleton className="w-64 h-12 bg-sky-200 mb-8" />
-            <Skeleton className="w-full h-24 bg-sky-100 mb-8" />
+            <Skeleton className="w-64 h-12 bg-red-200/50 mb-8" />
+            <Skeleton className="w-full h-24 bg-red-100/50 mb-8" />
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="w-full h-64 bg-sky-50" />
+                <Skeleton key={i} className="w-full h-64 bg-red-50/50" />
               ))}
             </div>
             <div className="mt-12 grid gap-8 lg:grid-cols-2">
               <div>
-                <Skeleton className="w-48 h-8 bg-sky-100 mb-6" />
-                <Skeleton className="w-full h-96 bg-sky-50" />
+                <Skeleton className="w-48 h-8 bg-red-100/50 mb-6" />
+                <Skeleton className="w-full h-96 bg-red-50/50" />
               </div>
               <div>
-                <Skeleton className="w-48 h-8 bg-sky-100 mb-6" />
-                <Skeleton className="w-full h-96 bg-sky-50" />
+                <Skeleton className="w-48 h-8 bg-red-100/50 mb-6" />
+                <Skeleton className="w-full h-96 bg-red-50/50" />
               </div>
             </div>
           </div>
@@ -441,16 +438,23 @@ function BuyPageSkeleton() {
     </div>
   );
 }
-
 function ErrorCard({ error, retry }: { error: string; retry: () => void }) {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-[#f7effa] to-white py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md bg-white shadow-xl">
-        <CardContent className="p-6">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
-          <p className="text-gray-700 mb-6">{error}</p>
-          <Button onClick={retry} className="w-full">
-            Retry
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md bg-white shadow-xl border border-red-100">
+        <CardContent className="p-8">
+          <h2 className="text-2xl font-bold text-red-600 mb-4 flex items-center gap-2">
+            <XCircle className="w-6 h-6" />
+            Error Occurred
+          </h2>
+          <p className="text-gray-700 mb-6 bg-red-50 p-4 rounded-lg border border-red-100">
+            {error}
+          </p>
+          <Button
+            onClick={retry}
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2.5"
+          >
+            Try Again
           </Button>
         </CardContent>
       </Card>

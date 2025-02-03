@@ -220,7 +220,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
       }
       return (
         <Link href={`/courses/${slug}/${firstChapter.id}`} className="block w-full">
-          <Button className="w-full bg-[#7c3297] hover:bg-[#ffac96] hover:text-black" size="lg">
+          <Button className="w-full bg-red-500 hover:bg-red-600  text-white" size="lg">
             Continue Learning
             <ChevronRight className="w-4 h-4 ml-2" />
           </Button>
@@ -230,7 +230,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
     return (
       <Button
         onClick={handleEnrollment}
-        className="w-full bg-[#7c3297] hover:bg-[#ffac96] hover:text-black transition-colors duration-300"
+        className="w-full bg-red-500 hover:bg-red-600  text-white transition-colors duration-300"
         size="lg"
         variant="default"
         disabled={!hasSections}
@@ -307,7 +307,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
   return (
     <div className="min-h-screen bg-gray-50 font-plus-jakarta-sans">
       {/* Course Header */}
-      <div className="bg-gradient-to-t from-[#ef5252] to-[#1c1c1cc1] text-white relative overflow-hidden">
+      <div className="bg-gradient-to-t from-[#ef5252] to-[#000000c1] text-white relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -479,7 +479,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                       <AccordionItem key={section.id} value={section.id} className="border rounded-lg">
                         <AccordionTrigger className="px-4 py-3 bg-gray-50 hover:bg-gray-100">
                           <div className="flex items-center gap-3">
-                            <span className="text-[#7c3297] font-semibold">Section {sectionIndex + 1}:</span>
+                            <span className="text-red-600 font-semibold">Section {sectionIndex + 1}:</span>
                             <span className="font-medium">{section.title}</span>
                           </div>
                         </AccordionTrigger>
@@ -500,7 +500,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                                       {chapter.isFree ||
                                         (course.paid && hasPurchased) ||
                                         (!course.paid && isEnrolled) ? (
-                                        <PlayCircle className="w-5 h-5 text-[#7c3297]" />
+                                        <PlayCircle className="w-5 h-5 text-red-600" />
                                       ) : (
                                         <Lock className="w-5 h-5 text-gray-400" />
                                       )}
@@ -527,7 +527,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                                         chapter.isFree
                                           ? "bg-green-100 text-green-800"
                                           : (course.paid && hasPurchased) || (!course.paid && isEnrolled)
-                                            ? "bg-[#7c3297] text-white"
+                                            ? "bg-red-600 text-white"
                                             : "text-gray-700"
                                       }
                                     >
@@ -566,11 +566,11 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                     <div className="flex flex-col items-start gap-2">
                       {course.salePrice && course.salePrice < course.price ? (
                         <>
-                          <span className="text-3xl font-bold text-[#7c3297]">{formatPrice(course.salePrice)}</span>
+                          <span className="text-3xl font-bold text-red-600">{formatPrice(course.salePrice)}</span>
                           <span className="text-xl text-gray-500 line-through">{formatPrice(course.price)}</span>
                         </>
                       ) : (
-                        <span className="text-3xl font-bold text-[#7c3297]">{formatPrice(course.price)}</span>
+                        <span className="text-3xl font-bold text-red-600">{formatPrice(course.price)}</span>
                       )}
                       <Badge variant="secondary" className="text-sm">
                         PAID
@@ -588,16 +588,16 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                   <ul className="space-y-3 font-inter">
                     {sectionsWithChapters.reduce((total, section) => total + section.chapters.length, 0) > 0 && (
                       <li className="flex items-center gap-2 text-gray-600">
-                        <PlayCircle className="w-5 h-5 text-[#7c3297]" />
+                        <PlayCircle className="w-5 h-5 text-red-600" />
                         {sectionsWithChapters.reduce((total, section) => total + section.chapters.length, 0)} chapters
                       </li>
                     )}
                     <li className="flex items-center gap-2 text-gray-600">
-                      <Book className="w-5 h-5 text-[#7c3297]" />
+                      <Book className="w-5 h-5 text-red-600" />
                       Full lifetime access
                     </li>
                     <li className="flex items-center gap-2 text-gray-600">
-                      <Award className="w-5 h-5 text-[#7c3297]" />
+                      <Award className="w-5 h-5 text-red-600" />
                       Certificate of completion
                     </li>
                   </ul>
