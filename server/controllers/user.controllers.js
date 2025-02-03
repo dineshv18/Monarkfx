@@ -61,7 +61,7 @@ const sendResetPasswordEmail = async (user, token) => {
 const generateToken = () => crypto.randomBytes(32).toString("hex");
 
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, role, provider, slug , usertype} = req.body;
+  const { name, email, password, role, provider, slug, usertype } = req.body;
 
   if (!name || !email || !password) {
     throw new ApiError(
@@ -126,15 +126,32 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 
 export const verifyEmail = asyncHandler(async (req, res) => {
-  const { token, id } = req.body || req.query || req.params;
+  const { token, id } = req.body;
 
-  if (!token) {
-    throw new ApiError(400, "Invalid token");
+  if (!token || !id) {
+    throw new ApiError(400, "Invalid token or ID");
   }
 
-  const user = await prisma.user.findUnique({ where: { id } });
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      isVerified: true,
+      verificationToken: true,
+      verificationTokenExpiry: true,
+      name: true,
+      email: true,
+      role: true
+    }
+  });
+
   if (!user) {
     throw new ApiError(404, "User not found");
+  }
+
+  // Check if already verified
+  if (user.isVerified) {
+    throw new ApiError(400, "Email already verified");
   }
 
   if (
@@ -163,25 +180,26 @@ export const verifyEmail = asyncHandler(async (req, res) => {
     expires: new Date(Date.now() + COOKIE_EXPIRY),
   };
 
-  res.cookie("refreshToken", refreshToken, cookieOptions);
-  res.cookie("accessToken", accessToken, cookieOptions);
-
-  return res.status(200).json(
-    new ApiResponsive(
-      200,
-      {
-        user: {
-          id: updatedUser.id,
-          name: updatedUser.name,
-          email: updatedUser.email,
-          role: updatedUser.role,
-          isVerified: updatedUser.isVerified,
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .json(
+      new ApiResponsive(
+        200,
+        {
+          user: {
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            isVerified: updatedUser.isVerified,
+          },
+          accessToken,
         },
-        accessToken,
-      },
-      "Email verified and user logged in successfully"
-    )
-  );
+        "Email verified and user logged in successfully"
+      )
+    );
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
@@ -477,7 +495,7 @@ export const getAllUsers = asyncHandler(async (req, res) => {
       isVerified: true,
       provider: true,
       slug: true,
-     
+
     },
   });
 
@@ -605,7 +623,6 @@ export const googleAuth = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Get user info from Google
     const userInfoResponse = await axios.get(
       "https://www.googleapis.com/oauth2/v3/userinfo",
       {
@@ -615,16 +632,21 @@ export const googleAuth = asyncHandler(async (req, res) => {
 
     const { email, name } = userInfoResponse.data;
 
-    // Find or create user
+    // Check if user exists with email
     let user = await prisma.user.findFirst({
-      where: {
-        email,
-        provider: "google",
-      },
+      where: { email }
     });
 
+    // If user exists with credentials, throw error
+    if (user && user.provider === "credentials") {
+      throw new ApiError(
+        400,
+        `This email is already registered with us. Please use your password to login or use different email for Google login.`
+      );
+    }
+
+    // If no user exists or user exists with google provider
     if (!user) {
-      // Create new user if doesn't exist
       let uniqueSlug = createSlug(name);
       let existingSlug = await prisma.user.findUnique({
         where: { slug: uniqueSlug },
@@ -651,7 +673,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
       });
     }
 
-    // Generate tokens
+    // Generate tokens and continue...
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       user.id,
       { name: user.name, email: user.email, role: user.role }
@@ -687,9 +709,8 @@ export const googleAuth = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error("Google Auth Error:", error);
     throw new ApiError(
-      500,
-      `Authentication failed: ${error.message || "Unknown error"}`,
-      error
+      error.statusCode || 500,
+      error.message || "Authentication failed"
     );
   }
 });
@@ -777,7 +798,7 @@ export const AdminUpdateUser = asyncHandler(async (req, res) => {
     cleanedUpdateData.verificationTokenExpiry = null;
   }
 
-  if(cleanedUpdateData.password){
+  if (cleanedUpdateData.password) {
     const hashedPassword = await bcrypt.hash(cleanedUpdateData.password, SALT_ROUNDS);
     cleanedUpdateData.password = hashedPassword;
   }

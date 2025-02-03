@@ -9,7 +9,7 @@ interface UserDetails {
 }
 
 const ROUTES = {
-  public: ["/", "/about", "/contact", "/courses", "/blog"],
+  public: ["/", "/about", "/contact", "/courses", "/blog","verify-email", "/reset-password"],
   auth: ["/auth", "/login", "/register"],
   admin: ["/dashboard", "/admin"],
   user: ["/user-profile", "/my-courses", "/settings"],

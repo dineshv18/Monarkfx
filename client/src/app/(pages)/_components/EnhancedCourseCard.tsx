@@ -27,8 +27,7 @@ export default function EnhancedCourseCard({ course }: CourseCardProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className={`relative transform-gpu transition-all duration-500 h-[480px] w-full max-w-[422px] mx-auto ${isHovered ? "scale-105" : ""
-        }`}>
+      <div className={`relative transform-gpu transition-all duration-500 h-[480px] w-full max-w-[422px] mx-auto`}>
         {/* Main Card with Animated Border */}
         <div className="relative h-full w-full [background:linear-gradient(45deg,#ffffff,theme(colors.gray.50)_50%,#fafafa)_padding-box,conic-gradient(from_var(--border-angle),theme(colors.gray.200/.75)_75%,_theme(colors.red.400)_80%,_theme(colors.red.300)_85%,_theme(colors.red.400)_90%,_theme(colors.gray.200/.75))_border-box] rounded-2xl border-[2px] border-transparent animate-border shadow-xl">
 

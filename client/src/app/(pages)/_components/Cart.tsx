@@ -83,7 +83,7 @@ const Cart: React.FC = () => {
     };
 
     const getCourseSlugs = () => {
-        return cartItems.map((item) => item.course.slug).join("&course-slug=");
+        return cartItems.map(item => encodeURIComponent(item.course.slug)).join("&course-slug=");
     };
 
     const hasSalePrice = cartItems.some((item) => item.course.salePrice);
@@ -111,7 +111,7 @@ const Cart: React.FC = () => {
             </SheetTrigger>
             <SheetContent
                 side="right"
-                className="w-full sm:max-w-md bg-gray-50 p-0 border-l border-gray-200"
+                className="w-full sm:max-w-md bg-gray-50 p-0 border-l border-gray-200 flex flex-col"
             >
                 <SheetHeader className="p-6 bg-white shadow-sm">
                     <SheetTitle className="text-2xl font-bold text-gray-900">
@@ -119,7 +119,7 @@ const Cart: React.FC = () => {
                     </SheetTitle>
                 </SheetHeader>
 
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-[calc(100vh-140px)]">
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                         {isLoading ? (
                             [...Array(2)].map((_, i) => (
@@ -183,13 +183,14 @@ const Cart: React.FC = () => {
                                         <Card className="bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
                                             <CardContent className="p-4">
                                                 <div className="flex gap-4">
-                                                    <Image
-                                                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${item.course.thumbnail}`}
-                                                        alt={item.course.title}
-                                                        width={100}
-                                                        height={100}
-                                                        className="rounded-lg object-cover"
-                                                    />
+                                                    <div className="relative w-[80px] h-[80px] flex-shrink-0">
+                                                        <Image
+                                                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${item.course.thumbnail}`}
+                                                            alt={item.course.title}
+                                                            fill
+                                                            className="rounded-lg object-cover"
+                                                        />
+                                                    </div>
                                                     <div className="flex-1 min-w-0">
                                                         <h3 className="font-semibold text-gray-900 mb-1">
                                                             {item.course.title}
@@ -200,9 +201,9 @@ const Cart: React.FC = () => {
                                                         <div className="flex justify-between items-center">
                                                             <div className="flex flex-col">
                                                                 <span className="text-lg font-bold text-red-600">
-                                                                    {formatPrice(item.course.salePrice || item.course.price)}
+                                                                    {formatPrice(item.course.price)}
                                                                 </span>
-                                                                {item.course.salePrice && (
+                                                                {item.course.salePrice !== undefined && item.course.salePrice > 0 && (
                                                                     <span className="text-sm text-gray-500 line-through">
                                                                         {formatPrice(item.course.price)}
                                                                     </span>
@@ -228,7 +229,7 @@ const Cart: React.FC = () => {
                     </div>
 
                     {isAuthenticated && cartItems.length > 0 && (
-                        <div className="p-6 bg-white border-t border-gray-200">
+                        <div className="sticky bottom-0 p-5 bg-white border-t border-gray-200 mt-auto">
                             <div className="flex justify-between items-center mb-4">
                                 <span className="text-gray-900 font-medium">Total</span>
                                 <div className="text-right">

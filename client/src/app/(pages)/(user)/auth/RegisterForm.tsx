@@ -122,14 +122,10 @@ export default function RegisterForm({
         className="w-full bg-red-600 hover:bg-red-700 text-white transition-colors duration-200"
       >
         {isLoading ? (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="flex items-center gap-2"
-          >
-            <Loader2 className="h-4 w-4" />
-            <span>Registering...</span>
-          </motion.div>
+          <div className="flex items-center justify-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Please wait...</span>
+          </div>
         ) : (
           "Register"
         )}

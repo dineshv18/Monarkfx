@@ -1,6 +1,6 @@
-import Link from "next/link";
+
 import { motion } from "framer-motion";
-import { CheckCircle2, Mail } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 export default function RegistrationSuccessMessage() {
   return (
@@ -15,7 +15,7 @@ export default function RegistrationSuccessMessage() {
         animate={{ scale: 1 }}
         transition={{ delay: 0.2, type: "spring" }}
       >
-        <CheckCircle2 className="w-16 h-16 mx-auto text-red-600" />
+        <CheckCircle2 className="w-16 h-16 mx-auto text-green-600" />
       </motion.div>
 
       <div className="space-y-3">
@@ -27,13 +27,7 @@ export default function RegistrationSuccessMessage() {
         </p>
       </div>
 
-      <Link
-        href="/verify-email"
-        className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
-      >
-        <Mail className="w-4 h-4" />
-        <span>Verify Email</span>
-      </Link>
+
     </motion.div>
   );
 }

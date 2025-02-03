@@ -43,6 +43,9 @@ model User {
   // Visibility settings
   visibleCourses CourseVisibility[]
 
+  // payments
+  payments Payment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -307,8 +310,11 @@ model Payment {
   razorpay_order_id   String
   razorpay_payment_id String
   razorpay_signature  String
+  status              String
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
   createdAt           DateTime @default(now())
-  updatedAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model BillingDetails {

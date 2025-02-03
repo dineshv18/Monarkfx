@@ -95,10 +95,15 @@ export const createCourse = asyncHandler(async (req, res) => {
       throw new ApiError(404, "User not found");
     }
 
+    // Validate category
+    if (!categoryId) {
+      throw new ApiError(400, "Category is required");
+    }
+
     const category = await prisma.category.findUnique({
       where: { id: categoryId }
     });
-  
+
     if (!category) {
       throw new ApiError(400, "Invalid category");
     }
@@ -130,8 +135,8 @@ export const createCourse = asyncHandler(async (req, res) => {
 
     const course = await prisma.course.create({
       data: {
-        title: title.toLowerCase().trim(),
-        description: description.toLowerCase(),
+        title: title.trim(),
+        description: description,
         slug: uniqueSlug,
         price: price ? parseFloat(price) : 0,
         salePrice: salePrice ? parseFloat(salePrice) : 0,
@@ -188,12 +193,18 @@ export const getCourses = asyncHandler(async (req, res) => {
       orderBy = { createdAt: "asc" };
       break;
     case "price_high":
-      orderBy = { price: "desc" };
+      orderBy = [
+        { salePrice: "desc" },
+        { price: "desc" }
+      ];
       break;
     case "price_low":
-      orderBy = { price: "asc" };
+      orderBy = [
+        { salePrice: "asc" },
+        { price: "asc" }
+      ];
       break;
-    default: // newest
+    default:
       orderBy = { createdAt: "desc" };
   }
 
@@ -214,6 +225,15 @@ export const getCourses = asyncHandler(async (req, res) => {
     }),
     prisma.course.count({ where })
   ]);
+
+  // Sort courses after fetching based on effective price
+  if (sort === "price_high" || sort === "price_low") {
+    courses.sort((a, b) => {
+      const priceA = a.salePrice > 0 ? a.salePrice : a.price;
+      const priceB = b.salePrice > 0 ? b.salePrice : b.price;
+      return sort === "price_high" ? priceB - priceA : priceA - priceB;
+    });
+  }
 
   return res.status(200).json(
     new ApiResponsive(200, {
@@ -294,7 +314,7 @@ export const getCourse = asyncHandler(async (req, res) => {
       subheading: true,
       categoryId: true,
       userId: true,
-      
+
       // Add category with required fields
       category: {
         select: {
@@ -302,7 +322,7 @@ export const getCourse = asyncHandler(async (req, res) => {
           name: true
         }
       },
-      
+
       sections: {
         orderBy: {
           position: "asc",
@@ -438,8 +458,7 @@ export const coursePublishToggle = asyncHandler(async (req, res) => {
     .status(200)
     .json(
       new ApiResponsive(
-        `Course ${
-          updatedCourse.isPublished ? "published" : "unpublished"
+        `Course ${updatedCourse.isPublished ? "published" : "unpublished"
         } successfully`,
         { isPublished: updatedCourse.isPublished },
         200
@@ -624,13 +643,13 @@ export const updateCourse = asyncHandler(async (req, res) => {
     isPopular,
     isTrending,
     isBestseller,
-    categoryId 
+    categoryId
   } = req.body;
 
   // Verify course exists
   const checkCourse = await prisma.course.findUnique({
     where: { slug },
-    include: { category: true } 
+    include: { category: true }
   });
 
   if (!checkCourse) {
@@ -655,18 +674,18 @@ export const updateCourse = asyncHandler(async (req, res) => {
   if (isBestseller !== undefined) updateData.isBestseller = isBestseller;
   if (price !== undefined) updateData.price = price ? parseFloat(price) : 0;
   if (salePrice !== undefined) updateData.salePrice = salePrice ? parseFloat(salePrice) : 0;
-  
+
   // Handle category update
   if (categoryId !== undefined) {
     // Verify category exists
     const category = await prisma.category.findUnique({
       where: { id: categoryId }
     });
-    
+
     if (!category) {
       throw new ApiError(400, "Invalid category");
     }
-    
+
     updateData.categoryId = categoryId;
   }
 
@@ -674,8 +693,8 @@ export const updateCourse = asyncHandler(async (req, res) => {
   const updatedCourse = await prisma.course.update({
     where: { slug },
     data: updateData,
-    include: { 
-      category: true 
+    include: {
+      category: true
     }
   });
 

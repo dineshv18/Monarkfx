@@ -43,19 +43,20 @@ export const paymentVerification = asyncHandler(async (req, res) => {
       courseDetails,
     } = req.body;
 
+    // Basic validation
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-      throw new ApiError(400, "Missing required payment details");
+      throw new ApiError(400, "Missing payment details");
     }
 
-    if (!courseIds?.length || !courseDetails?.length) {
-      throw new ApiError(400, "Missing course details");
+    if (!Array.isArray(courseIds) || !courseIds.length) {
+      throw new ApiError(400, "Invalid course details");
     }
 
     if (!billingId) {
-      throw new ApiError(400, "Missing billing details");
+      throw new ApiError(400, "Missing billing ID");
     }
 
-    // Verify signature
+    // Verify Razorpay signature
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -66,106 +67,155 @@ export const paymentVerification = asyncHandler(async (req, res) => {
       throw new ApiError(400, "Invalid payment signature");
     }
 
-    // Validate billing exists
+    // Verify billing exists
     const billing = await prisma.billingDetails.findUnique({
       where: { id: billingId },
     });
 
     if (!billing) {
-      throw new ApiError(404, "Billing details not found");
+      throw new ApiError(404, "Billing not found");
     }
 
-    // Start transaction with error handling
-    try {
-      await prisma.$transaction(async (prisma) => {
-        // Create payment record
-        await prisma.payment.create({
-          data: {
-            razorpay_order_id,
-            razorpay_payment_id,
-            razorpay_signature,
-          },
-        });
+    // Process transaction
+    await prisma.$transaction(async (tx) => {
+      // Create payment record
 
-        // Update billing status
-        await prisma.billingDetails.update({
-          where: { id: billingId },
-          data: { paymentStatus: true },
-        });
-
-        // Process each course purchase
-        for (const courseId of courseIds) {
-          const courseDetail = courseDetails.find((c) => c.id === courseId);
-
-          if (!courseDetail) {
-            throw new ApiError(
-              400,
-              `Missing price details for course ${courseId}`
-            );
+      const payment = await tx.payment.create({
+        data: {
+          razorpay_order_id,
+          razorpay_payment_id,
+          razorpay_signature,
+          status: "SUCCESS",
+          user: {
+            connect: {
+              id: req.user.id
+            }
           }
-
-          // Create purchase with validated price
-          await prisma.purchase.create({
-            data: {
-              userId: req.user.id,
-              courseId,
-              purchasePrice: courseDetail.discountedPrice || courseDetail.price,
-              discountPrice: courseDetail.discountedPrice
-                ? courseDetail.price - courseDetail.discountedPrice
-                : null,
-              couponCode: couponDetails?.code || null,
-            },
-          });
-
-          // Create enrollment if doesn't exist
-          await prisma.enrollment.upsert({
-            where: {
-              userId_courseId: {
-                userId: req.user.id,
-                courseId,
-              },
-            },
-            create: {
-              userId: req.user.id,
-              courseId,
-            },
-            update: {},
-          });
-
-          // Handle coupon usage
-          if (couponDetails) {
-            await prisma.couponUsage.create({
-              data: {
-                couponId: couponDetails.id,
-                userId: req.user.id,
-                ...(courseIds.length === 1 && { courseId: courseIds[0] }),
-              },
-            });
-          }
-        }
-
-        // Clear cart items
-        await prisma.cart.deleteMany({
-          where: {
-            userId: req.user.id,
-            courseId: { in: courseIds },
-          },
-        });
+        },
       });
 
-      res
-        .status(200)
-        .json(
-          new ApiResponsive(
-            200,
-            true,
-            "Payment verified and courses enrolled successfully"
-          )
-        );
-    } catch (error) {
-      throw new ApiError(500, "Transaction failed", [error.message]);
-    }
+      // Rest of the transaction remains same
+      await tx.billingDetails.update({
+        where: { id: billingId },
+        data: {
+          paymentStatus: true,
+          payment: {
+            connect: {
+              id: payment.id
+            }
+          }
+        },
+      });
+
+      // Process each course
+      for (const courseId of courseIds) {
+        const courseDetail = courseDetails.find((c) => c.id === courseId);
+        if (!courseDetail) {
+          console.warn(`Course detail not found for courseId: ${courseId}`);
+          continue;
+        }
+
+        // Create purchase record
+        await tx.purchase.create({
+          data: {
+            user: {
+              connect: {
+                id: req.user.id
+              }
+            },
+            course: {
+              connect: {
+                id: courseId
+              }
+            },
+            purchasePrice: courseDetail.discountedPrice || courseDetail.price,
+            discountPrice: courseDetail.discountedPrice
+              ? courseDetail.price - courseDetail.discountedPrice
+              : 0,
+            couponCode: couponDetails?.code || null,
+            payment: {
+              connect: {
+                id: payment.id
+              }
+            }
+          },
+        });
+
+        // Create/update enrollment
+        await tx.enrollment.upsert({
+          where: {
+            userId_courseId: {
+              userId: req.user.id,
+              courseId,
+            },
+          },
+          create: {
+            user: {
+              connect: {
+                id: req.user.id
+              }
+            },
+            course: {
+              connect: {
+                id: courseId
+              }
+            }
+          },
+          update: {},
+        });
+      }
+
+      // Handle coupon if exists
+      if (couponDetails?.id) {
+        await tx.couponUsage.create({
+          data: {
+            coupon: {
+              connect: {
+                id: couponDetails.id
+              }
+            },
+            user: {
+              connect: {
+                id: req.user.id
+              }
+            },
+            course: courseIds.length === 1 ? {
+              connect: {
+                id: courseIds[0]
+              }
+            } : undefined
+          },
+        });
+      }
+
+      // Clear cart
+      await tx.cart.deleteMany({
+        where: {
+          userId: req.user.id,
+          courseId: { in: courseIds },
+        },
+      });
+    });
+
+    return res.status(200).json(
+      new ApiResponsive(200, { success: true }, "Payment successful")
+    );
+
   } catch (error) {
-    throw new ApiError(error.statusCode || 500, error.message);
+    console.error("Payment Verification Error:", error);
+
+    // Handle specific Prisma errors
+    if (error.code === 'P2002') {
+      throw new ApiError(400, "Duplicate payment record");
+    }
+
+    if (error.code === 'P2025') {
+      throw new ApiError(404, "Related record not found");
+    }
+
+    throw new ApiError(
+      error.statusCode || 500,
+      error.message || "Payment verification failed"
+    );
   }
 });

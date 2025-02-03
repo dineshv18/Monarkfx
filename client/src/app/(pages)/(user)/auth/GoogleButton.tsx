@@ -62,11 +62,13 @@ export default function GoogleButton({ mode, courseSlug }: GoogleButtonProps) {
         }
       } catch (error) {
         console.error("Google Auth Error:", error);
-        toast.error(
-          axios.isAxiosError(error)
-            ? error.response?.data?.message
-            : "Authentication failed"
-        );
+        if (axios.isAxiosError(error) && error.response?.data?.message) {
+          toast.error(error.response.data.message, {
+            duration: 5000,
+          });
+        } else {
+          toast.error("Authentication failed");
+        }
       } finally {
         setIsLoading(false);
       }
