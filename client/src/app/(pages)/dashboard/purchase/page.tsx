@@ -23,7 +23,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CalendarIcon, BarChart2, PieChart, Download } from "lucide-react";
+import { 
+  CalendarIcon, 
+  Download, 
+  TrendingUp,
+  Users,
+  CreditCard,
+  Search,
+  ArrowUpRight,
+  ArrowDownRight,
+  Filter
+} from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -32,27 +42,10 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/helper/AuthContext";
 import { cn } from "@/lib/utils";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-} from "chart.js";
-import { Bar, Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface Purchase {
   id: string;
@@ -92,6 +85,16 @@ const formatDate = (date: string) => {
     minute: "2-digit",
   };
   return new Intl.DateTimeFormat("en-IN", options).format(new Date(date));
+};
+
+const formatIndianPrice = (price?: number) => {
+  if (!price && price !== 0) return "₹0";
+  return price.toLocaleString("en-IN", {
+    style: "currency",
+    currency: "INR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 };
 
 export default function Purchase() {
@@ -231,7 +234,7 @@ export default function Purchase() {
 
    const downloadCSV = () => {
     const formatCSVPrice = (price: number) => {
-      return price.toLocaleString('en-US', {
+      return price.toLocaleString('en-IN', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
         useGrouping: false 
@@ -286,294 +289,282 @@ export default function Purchase() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-4 sm:p-6 space-y-4">
-        <Skeleton className="h-8 w-48" />
-        <Card>
-          <div className="p-4 space-y-4">
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-32 w-full" />
-          </div>
-        </Card>
+      <div className="container mx-auto p-6 space-y-6">
+        <div className="grid gap-6 md:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-32 rounded-xl" />
+          ))}
+        </div>
+        <Skeleton className="h-[600px] rounded-xl" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-4 sm:p-6">
-      {/* Header Section */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-        {/* Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-          <Input
-            placeholder="Search courses or users..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full sm:w-64"
-          />
-          <div className="flex flex-wrap gap-3 w-full sm:w-auto">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full sm:w-[240px] justify-start text-left font-normal",
-                    !dateRange.from && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dateRange.from ? (
-                    dateRange.to ? (
-                      <>
-                        {format(dateRange.from, "LLL dd, y")} -{" "}
-                        {format(dateRange.to, "LLL dd, y")}
-                      </>
-                    ) : (
-                      format(dateRange.from, "LLL dd, y")
-                    )
-                  ) : (
-                    <span>Select date range</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  initialFocus
-                  mode="range"
-                  defaultMonth={dateRange.from}
-                  selected={{
-                    from: dateRange.from,
-                    to: dateRange.to,
-                  }}
-                  onSelect={(range) => {
-                    setDateRange({
+    <div className="container mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="flex flex-col gap-2">
+        <h1 className="text-2xl font-bold tracking-tight">Sales Overview</h1>
+        <p className="text-muted-foreground">
+          Monitor your course sales and revenue metrics
+        </p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card className="relative overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-1">
+              <div className="text-2xl font-bold">
+                {formatIndianPrice(totalAmount)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                From {purchases.length} sales
+              </p>
+            </div>
+            <div className="absolute bottom-0 right-0 p-4">
+              <TrendingUp className="h-16 w-16 text-primary/10" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="relative overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
+            <ArrowUpRight className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-1">
+              <div className="text-2xl font-bold">
+                {formatIndianPrice(totalAmount / (purchases.length || 1))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Per transaction
+              </p>
+            </div>
+            <div className="absolute bottom-0 right-0 p-4">
+              <Users className="h-16 w-16 text-primary/10" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="relative overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <ArrowDownRight className="h-4 w-4 text-red-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-1">
+              <div className="text-2xl font-bold">{purchases.length}</div>
+              <p className="text-xs text-muted-foreground">
+                Enrolled students
+              </p>
+            </div>
+            <div className="absolute bottom-0 right-0 p-4">
+              <Users className="h-16 w-16 text-primary/10" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters and Actions */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="flex flex-wrap gap-3 items-center">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search transactions..."
+              className="pl-8 w-[250px]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                <Filter className="h-4 w-4" />
+                Filters
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <h4 className="font-medium">Date Range</h4>
+                  <Calendar
+                    mode="range"
+                    selected={{
+                      from: dateRange.from,
+                      to: dateRange.to,
+                    }}
+                    onSelect={(range) => setDateRange({
                       from: range?.from,
                       to: range?.to,
-                    });
-                  }}
-                  numberOfMonths={2}
-                />
-              </PopoverContent>
-            </Popover>
-            <Select value={selectedCourse} onValueChange={setSelectedCourse}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Filter by course" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Courses</SelectItem>
-                {uniqueCourses.map((course) => (
-                  <SelectItem key={course} value={course}>
-                    {course}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select
-              value={sortBy}
-              onValueChange={(value: "date" | "price") => setSortBy(value)}
-            >
-              <SelectTrigger className="w-full sm:w-32">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="date">Date</SelectItem>
-                <SelectItem value="price">Price</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Purchases
-            </CardTitle>
-            <BarChart2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{purchases.length}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <PieChart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${totalAmount.toLocaleString("en-IN")}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Most Popular Course
-            </CardTitle>
-            <BarChart2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {Object.entries(courseCounts).length > 0
-                ? Object.entries(courseCounts).reduce((a, b) =>
-                    a[1] > b[1] ? a : b
-                  )[0]
-                : "No courses yet"}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tabs and Table */}
-      <Card className="overflow-hidden">
-        <div className="flex border-b overflow-x-auto">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`px-4 sm:px-6 py-3 text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === "all"
-                ? "bg-primary text-white"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            All Orders
-          </button>
-          <button
-            onClick={() => setActiveTab("recent")}
-            className={`px-4 sm:px-6 py-3 text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === "recent"
-                ? "bg-primary text-white"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            Recent Orders
-          </button>
-          <button
-            onClick={() => setActiveTab("analytics")}
-            className={`px-4 sm:px-6 py-3 text-sm font-medium transition-colors whitespace-nowrap ${
-              activeTab === "analytics"
-                ? "bg-primary text-white"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            Analytics
-          </button>
-        </div>
-
-        {activeTab === "analytics" ? (
-          <div className="p-4 grid md:grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Course Purchases</h3>
-              <Bar data={barChartData} />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">
-                Purchase Distribution
-              </h3>
-              <Pie data={pieChartData} />
-            </div>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <ScrollArea className="h-[400px]">
-              <div className="min-w-[800px] p-4">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[25%]">Course</TableHead>
-                      <TableHead className="w-[20%]">User</TableHead>
-                      <TableHead className="w-[20%]">Price Details</TableHead>
-                      <TableHead className="w-[20%]">Purchase Date</TableHead>
-                      <TableHead className="w-[15%]">Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {displayPurchases.length > 0 ? (
-                      displayPurchases.map((purchase) => (
-                        <TableRow key={purchase.id}>
-                          <TableCell className="font-medium">
-                            {purchase.course.title}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-col">
-                              <span>{purchase.user?.name || "N/A"}</span>
-                              <span className="text-xs text-gray-500">
-                                {purchase.user?.email || "N/A"}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[#610981] font-semibold">
-                              {formatPrice(purchase.purchasePrice)}
-                            </span>
-                            {purchase.purchasePrice < purchase.course.price && (
-                              <span className="text-gray-500 line-through text-xs">
-                                {formatPrice(purchase.course.price)}
-                              </span>
-                            )}
-                          </div>
-                          {(purchase.savingsAmount ?? 0) > 0 && (
-                            <span className="text-xs text-green-600">
-                              Saved: {formatPrice(purchase.savingsAmount)}
-                            </span>
-                          )}
-                          {purchase.couponCode && (
-                            <span className="text-xs text-purple-600">
-                              Code: {purchase.couponCode}
-                            </span>
-                          )}
-                        </div>
-                      </TableCell>
-                          <TableCell>
-                            <div className="flex flex-col">
-                              <span>
-                                {format(
-                                  new Date(purchase.createdAt),
-                                  "MMM dd, yyyy"
-                                )}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                {format(
-                                  new Date(purchase.createdAt),
-                                  "hh:mm a"
-                                )}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              Completed
-                            </span>
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={5}
-                          className="text-center py-6 text-gray-500"
-                        >
-                          No purchases found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+                    })}
+                    className="rounded-md border"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-medium">Course</h4>
+                  <Select value={selectedCourse} onValueChange={setSelectedCourse}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select course" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Courses</SelectItem>
+                      {uniqueCourses.map((course) => (
+                        <SelectItem key={course} value={course}>
+                          {course}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </ScrollArea>
-          </div>
-        )}
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        <Button onClick={downloadCSV} className="gap-2">
+          <Download className="h-4 w-4" />
+          Export
+        </Button>
+      </div>
+
+      {/* Transactions Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Transactions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ScrollArea className="h-[400px]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Course</TableHead>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {displayPurchases.map((purchase) => (
+                  <TableRow key={purchase.id}>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{purchase.course.title}</span>
+                        <span className="text-xs text-muted-foreground">
+                          ID: {purchase.id.slice(0, 8)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span>{purchase.user?.name || "N/A"}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {purchase.user?.email || "N/A"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-green-600">
+                          {formatIndianPrice(purchase.purchasePrice)}
+                        </span>
+                        {purchase.savingsAmount && (
+                          <span className="text-xs text-muted-foreground">
+                            Saved {formatIndianPrice(purchase.savingsAmount ?? 0)}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Completed
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span>
+                          {format(new Date(purchase.createdAt), "MMM dd, yyyy")}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {format(new Date(purchase.createdAt), "hh:mm a")}
+                        </span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </ScrollArea>
+        </CardContent>
       </Card>
 
-      {/* Download CSV Button */}
-      <div className="mt-4 flex justify-end">
-        <Button onClick={downloadCSV} className="flex items-center gap-2">
-          <Download className="h-4 w-4" />
-          Download CSV
-        </Button>
+      {/* Analytics Section */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Revenue Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px] flex items-center justify-center">
+              <Doughnut
+                data={{
+                  labels: Object.keys(courseCounts),
+                  datasets: [{
+                    data: Object.values(courseCounts),
+                    backgroundColor: [
+                      '#4F46E5',
+                      '#7C3AED',
+                      '#EC4899',
+                      '#8B5CF6',
+                      '#6366F1'
+                    ],
+                    borderWidth: 0
+                  }]
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      position: 'bottom'
+                    }
+                  },
+                  cutout: '70%'
+                }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Selling Courses</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {Object.entries(courseCounts)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5)
+                .map(([course, count], index) => (
+                  <div key={course} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        {index + 1}
+                      </div>
+                      <span className="font-medium">{course}</span>
+                    </div>
+                    <span className="text-muted-foreground">{count} sales</span>
+                  </div>
+                ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

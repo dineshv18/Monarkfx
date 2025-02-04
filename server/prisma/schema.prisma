@@ -33,9 +33,11 @@ model User {
   reviews      Review[]
 
   // Billing and Payments
-  billingDetails     BillingDetails[]
-  monthlyFeePayments MonthlyFeePayment[]
-  razorPayCustomer   RazorPayCustomer[]
+  billingDetails   BillingDetails[]
+  fees             Fee[]
+  feePayments      FeePayment[]
+  isOffline        Boolean            @default(false)
+  razorPayCustomer RazorPayCustomer[]
 
   // Coupons
   couponUsage CouponUsage[]
@@ -131,47 +133,76 @@ model CourseVisibility {
   @@index([userId])
 }
 
-// New model for monthly fees
-model MonthlyFee {
-  id String @id @default(uuid())
+model Fee {
+  id          String    @id @default(uuid())
+  amount      Float
+  dueDate     DateTime
+  description String?
+  status      FeeStatus @default(PENDING)
+  type        FeeType   @default(MONTHLY)
 
-  amount          Float
-  dueDate         DateTime
-  gracePeriodDays Int      @default(3)
-  lateFeeAmount   Float
-  isActive        Boolean  @default(true)
+  title         String
+  lateFeeDate   DateTime?
+  lateFeeAmount Float?
+  isOfflineFee  Boolean   @default(false)
 
-  payments MonthlyFeePayment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([dueDate])
-}
-
-// New model for monthly fee payments
-model MonthlyFeePayment {
-  id           String        @id @default(uuid())
-  monthlyFee   MonthlyFee    @relation(fields: [monthlyFeeId], references: [id])
-  monthlyFeeId String
-  user         User          @relation(fields: [userId], references: [id])
-  userId       String
-  amount       Float
-  lateFee      Float         @default(0)
-  paymentDate  DateTime      @default(now())
-  status       PaymentStatus @default(PENDING)
+  // Relations
+  user     User         @relation(fields: [userId], references: [id])
+  userId   String
+  payments FeePayment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([userId])
-  @@index([monthlyFeeId])
+  @@index([dueDate])
+}
+
+model FeePayment {
+  id                  String        @id @default(uuid())
+  amount              Float
+  paymentDate         DateTime      @default(now())
+  razorpay_order_id   String?
+  razorpay_payment_id String?
+  razorpay_signature  String?
+  status              PaymentStatus @default(PENDING)
+  receiptNumber       String        @unique
+
+  lateFeeApplied  Float?
+  actualDueAmount Float
+
+  // Relations
+  fee    Fee    @relation(fields: [feeId], references: [id])
+  feeId  String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([feeId])
+}
+
+enum FeeStatus {
+  PENDING
+  PAID
+  OVERDUE
+  PARTIAL
+}
+
+enum FeeType {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+  ONETIME
 }
 
 enum PaymentStatus {
   PENDING
   COMPLETED
   FAILED
+  REFUNDED
 }
 
 // Updated Coupon model with course-specific features

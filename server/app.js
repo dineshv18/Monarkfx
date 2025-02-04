@@ -15,6 +15,7 @@ import reviewRoutes from "./routes/review.routes.js";
 import couponRoutes from "./routes/coupon.routes.js";
 import sectionRoutes from "./routes/section.routes.js";
 import categoryRouter from "./routes/category.routes.js";
+import feeRoutes from "./routes/fee.routes.js";
 
 
 const app = express();
@@ -66,10 +67,19 @@ app.use((req, res, next) => {
 app.use(express.static("public/upload"));
 
 // Initialize Razorpay
-export const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+let razorpay;
+try {
+  razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+  });
+
+  console.log("Razorpay Initialized Successfully:");
+} catch (error) {
+  console.error("Razorpay Initialization Error:", error);
+}
+
+export { razorpay };
 
 // API Routes
 app.use("/api/v1/user", userRoutes);
@@ -85,6 +95,7 @@ app.use("/api/v1/review", reviewRoutes);
 app.use("/api/v1/coupon", couponRoutes);
 app.use("/api/v1/section", sectionRoutes);
 app.use("/api/v1/category", categoryRouter);
+app.use("/api/v1/fees", feeRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

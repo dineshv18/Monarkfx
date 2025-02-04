@@ -1,8 +1,13 @@
 import nodemailer from "nodemailer";
-import { getDeleteTemplate,
+import {
+  getVerificationTemplate,
   getResetTemplate,
-  getVerificationTemplate, } from "./temp/EmailTemplate.js";
-
+  getDeleteTemplate,
+  getFeeReceiptTemplate,
+  getFeeNotificationTemplate,
+  getPaymentSuccessTemplate,
+  getPaymentFailureTemplate
+} from "../email/temp/EmailTemplate.js";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMPT_HOST,
@@ -14,31 +19,55 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const SendEmail = async ({ email, message, emailType }) => {
+export const SendEmail = async ({ email, subject, message, emailType, attachments }) => {
   try {
     let htmlContent;
-    let subject;
 
-    if (emailType === "VERIFY") {
-      subject = "Verify your email";
-      htmlContent = getVerificationTemplate(message);
-    } else if (emailType === "DELETE") {
-      subject = "Delete your account";
-      htmlContent = getDeleteTemplate(message);
-    } else if (emailType === "RESET") {
-      subject = "Reset your password";
-      htmlContent = getResetTemplate(message);
-    } else {
-      throw new Error("Invalid email type");
+    switch (emailType) {
+      case "VERIFY":
+        subject = "Verify your email";
+        htmlContent = getVerificationTemplate(message);
+        break;
+      case "DELETE":
+        subject = "Delete your account";
+        htmlContent = getDeleteTemplate(message);
+        break;
+      case "RESET":
+        subject = "Reset your password";
+        htmlContent = getResetTemplate(message);
+        break;
+      case "FEE_RECEIPT":
+        subject = subject || "Fee Payment Receipt";
+        htmlContent = getFeeReceiptTemplate(message);
+        break;
+      case "FEE_NOTIFICATION":
+        subject = subject || "New Fee Assignment";
+        htmlContent = getFeeNotificationTemplate(message);
+        break;
+      case "PAYMENT_SUCCESS":
+        subject = subject || "Payment Successful - MonarkFX";
+        htmlContent = getPaymentSuccessTemplate(message);
+        break;
+      case "PAYMENT_FAILURE":
+        subject = subject || "Payment Failed - MonarkFX";
+        htmlContent = getPaymentFailureTemplate(message);
+        break;
+      default:
+        htmlContent = message;
     }
 
-    await transporter.sendMail({
+    const mailOptions = {
       from: process.env.FROM_EMAIL,
       to: email,
       subject,
       html: htmlContent,
-    });
+      attachments: attachments || []
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
   } catch (error) {
     console.error("Error sending email:", error);
+    return false;
   }
 };

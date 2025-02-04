@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/helper/AuthContext"
@@ -10,13 +10,12 @@ import { format } from "date-fns"
 import { toast } from "sonner"
 
 // UI Components
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 
-// Custom Components
 
 // Icons
 import {
@@ -25,18 +24,16 @@ import {
   ShieldCheckIcon,
   ShoppingCartIcon,
   CalendarIcon,
-  ClockIcon,
   CreditCardIcon,
   UserIcon,
-  MapPinIcon,
   GraduationCap,
   Target,
   Trophy,
   Award,
-  ChevronRight,
   Building2,
   Clock4,
   AlertCircle,
+  Mail,
 } from "lucide-react"
 
 // Types
@@ -44,9 +41,7 @@ import type { ApiResponseTh, Enrollment, UserSec, Purchase } from "@/type"
 import EnhancedCourseCard from "../../_components/EnhancedCourseCard"
 import CustomSeparator from "./custom-separator"
 import CustomProgress from "./custom-progress"
-import CustomAvatar from "./custom-avatar"
-import CustomTooltip from "./custom-tooltip"
-import SpotlightCard from "../business/SpotlightCard"
+import UserFees from "./UserFees"
 
 interface UserSubscription {
   type: "ONLINE" | "OFFLINE"
@@ -76,155 +71,25 @@ const StatCard = ({
   icon: Icon,
   label,
   value,
-  description,
 }: {
   icon: any
   label: string
   value: string | number
-  description?: string
 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="p-4 bg-white rounded-xl border border-red-100 shadow-sm hover:shadow-md transition-all duration-200"
-  >
-    <div className="flex items-start space-x-3">
-      <div className="p-2 bg-red-50 rounded-lg">
+  <div className="bg-white rounded-xl border border-red-100 shadow-sm hover:shadow-md transition-all duration-200 p-4">
+    <div className="flex items-center gap-3">
+      <div className="p-2 bg-gradient-to-br from-red-50 to-red-100 rounded-lg">
         <Icon className="h-5 w-5 text-red-600" />
       </div>
       <div>
         <p className="text-sm text-gray-600">{label}</p>
         <p className="text-lg font-semibold text-gray-900">{value}</p>
-        {description && <p className="text-xs text-gray-500 mt-1">{description}</p>}
       </div>
     </div>
-  </motion.div>
-)
-
-const UserStats = ({ user }: { user: ExtendedUserSec }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <StatCard icon={BookOpenIcon} label="Total Courses" value={user.totalCourses || 0} description="Enrolled courses" />
-    <StatCard
-      icon={GraduationCap}
-      label="Completed"
-      value={user.completedCourses || 0}
-      description="Successfully finished"
-    />
-    <StatCard
-      icon={Trophy}
-      label="Certificates"
-      value={user.certificatesEarned || 0}
-      description="Achievements earned"
-    />
-    <StatCard
-      icon={Target}
-      label="Overall Progress"
-      value={`${user.subscription?.progress || 0}%`}
-      description="Course completion"
-    />
   </div>
 )
 
-const SubscriptionInfo = ({ subscription }: { subscription?: UserSubscription }) => {
-  if (!subscription) {
-    return (
-      <Card className="border-red-100 mb-6">
-        <CardContent className="p-6">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-8"
-          >
-            <Award className="h-12 w-12 text-red-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No Active Subscription</h3>
-            <p className="text-gray-600 mb-4 max-w-md mx-auto">
-              Join Monark FX to access premium trading courses and expert mentorship
-            </p>
-            <Button
-              className="bg-red-600 hover:bg-red-700 text-white"
-              onClick={() => (window.location.href = "/pricing")}
-            >
-              View Plans
-            </Button>
-          </motion.div>
-        </CardContent>
-      </Card>
-    )
-  }
-  return (
-    <Card className="border-red-100 mb-6">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span className="text-xl font-semibold text-gray-900">Subscription Details</span>
-          <Badge
-            variant={subscription.status === "ACTIVE" ? "default" : "destructive"}
-            className={subscription.status === "ACTIVE" ? "bg-green-500" : ""}
-          >
-            {subscription.status}
-          </Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Building2 className="h-4 w-4 text-gray-500" />
-                <span className="text-gray-600">Type</span>
-              </div>
-              <Badge variant="outline" className="font-medium">
-                {subscription.type}
-              </Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Clock4 className="h-4 w-4 text-gray-500" />
-                <span className="text-gray-600">Batch Timing</span>
-              </div>
-              <span className="font-medium">{subscription.batchTiming || "Not specified"}</span>
-            </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <CreditCardIcon className="h-4 w-4 text-gray-500" />
-                <span className="text-gray-600">Fees</span>
-              </div>
-              <span className="font-medium">₹{subscription.fees.toLocaleString()}</span>
-            </div>
-
-            <CustomSeparator />
-            <div className="space-y-2">
-              <p className="text-sm text-gray-600">Started: {format(new Date(subscription.startDate), "PP")}</p>
-              <p className="text-sm text-gray-600">Expires: {format(new Date(subscription.endDate), "PP")}</p>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <div>
-              <div className="flex justify-between text-sm mb-2">
-                <span className="text-gray-600">Course Progress</span>
-                <span className="font-medium">{subscription.progress || 0}%</span>
-              </div>
-              <CustomProgress value={subscription.progress || 0} className="bg-red-100" />
-            </div>
-            <div>
-              <div className="flex justify-between text-sm mb-2">
-                <span className="text-gray-600">Attendance</span>
-                <span className="font-medium">{subscription.attendance || 0}%</span>
-              </div>
-              <CustomProgress value={subscription.attendance || 0} className="bg-red-100" />
-            </div>
-
-            <div className="bg-red-50 p-4 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-900 mb-2">Location</h4>
-              <p className="text-sm text-gray-600">{subscription.location || "Online"}</p>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
 
 const LoadingState = () => (
   <div className="min-h-screen p-4 md:p-6 bg-gradient-to-br from-white via-red-50 to-gray-50">
@@ -343,96 +208,120 @@ const UserProfile = () => {
   if (!user) return null
 
   return (
-    <div className="min-h-screen p-6  font-plus-jakarta-sans mt-20" >
-      <SpotlightCard
-        spotlightColor="rgba(220, 38, 38, 0.85)"
-        className="bg-gradient-to-br from-gray-900/10 via-red-600/20 to-gray-100"
-
-      >
-        <Card className="max-w-4xl mx-auto ">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 p-6 font-plus-jakarta-sans">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Profile Header */}
+        <Card className="border-red-100">
           <CardContent className="p-6">
-            <div className="flex items-center space-x-4 mb-6">
-              <CustomAvatar
-                src={`https://ui-avatars.com/api/?name=${user.name.replace(" ", "+")}&background=610981&color=fff`}
-                alt={user.name}
-                size="lg"
-              />
-              <div>
-                {isEditing ? (
-                  <form onSubmit={handleNameUpdate} className="flex items-center space-x-2">
-                    <Input value={newName} onChange={(e) => setNewName(e.target.value)} className="text-2xl font-bold" />
-                    <Button type="submit" variant="outline">
-                      Save
-                    </Button>
-                  </form>
-                ) : (
-                  <div className="flex items-center space-x-2">
-                    <h1 className="text-2xl font-bold text-gray-800">{user.name}</h1>
-                    <CustomTooltip content="Edit name">
-                      <Button variant="ghost" size="icon" onClick={() => setIsEditing(true)} className="h-8 w-8">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+              <div className="relative">
+                <div className="h-24 w-24 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-2xl font-bold">
+                  {user.name.charAt(0)}
+                </div>
+                {user.isVerified && (
+                  <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1">
+                    <ShieldCheckIcon className="h-4 w-4 text-white" />
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-3">
+                  {isEditing ? (
+                    <form onSubmit={handleNameUpdate} className="flex items-center gap-2">
+                      <Input value={newName} onChange={(e) => setNewName(e.target.value)} className="max-w-xs" />
+                      <Button type="submit" variant="outline" size="sm">Save</Button>
+                    </form>
+                  ) : (
+                    <>
+                      <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
+                      <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
                         <PencilIcon className="h-4 w-4" />
                       </Button>
-                    </CustomTooltip>
+                    </>
+                  )}
+                </div>
+                
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Mail className="h-4 w-4" />
+                    <span>{user.email}</span>
                   </div>
-                )}
-                <p className="text-gray-600 font-inter">{user.email}</p>
-                <div className="flex items-center space-x-2 mt-2">
-                  <Badge variant={user.role === "ADMIN" ? "default" : "secondary"} className="text-sm">
-                    {user.role}
-                  </Badge>
-                  {user.isVerified && (
-                    <Badge variant="outline" className="text-sm flex items-center space-x-1">
-                      <ShieldCheckIcon className="h-3 w-3" />
-                      <span>Verified</span>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <UserIcon className="h-4 w-4" />
+                    <Badge variant="outline" className="text-sm">
+                      {user.role}
                     </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <CustomSeparator className="my-6" />
-
-            <UserStats user={user} />
-            <SubscriptionInfo subscription={user.subscription} />
-
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                  <BookOpenIcon className="mr-2" />
-                  My Enrolled Courses
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {enrollments.length === 0 ? (
-                    <p className="text-gray-500 font-inter">You haven&apos;t enrolled in any courses yet.</p>
-                  ) : (
-                    enrollments.map((enrollment) => (
-                      <EnhancedCourseCard key={enrollment.course.id} course={enrollment.course} />
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <CustomSeparator className="my-6" />
-
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                  <ShoppingCartIcon className="mr-2" />
-                  My Purchased Courses
-                </h2>
-                {purchases.length === 0 ? (
-                  <p className="text-gray-500 font-inter">You haven&apos;t purchased any courses yet.</p>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {purchases.map((purchase, idx) => (
-                      <EnhancedCourseCard key={idx} course={purchase.course} />
-                    ))}
                   </div>
-                )}
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <CalendarIcon className="h-4 w-4" />
+                    <span>Joined {format(new Date(user.joinedDate || Date.now()), "MMMM yyyy")}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
-      </SpotlightCard>
+
+    
+
+        {/* Fees Section */}
+        <div className="mb-6">
+          <UserFees />
+        </div>
+
+        {/* Courses Sections */}
+        <div className="space-y-6">
+          {/* Enrolled Courses */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                <BookOpenIcon className="h-5 w-5 text-red-600" />
+                My Enrolled Courses
+              </h2>
+              
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {enrollments.length === 0 ? (
+                <Card className="col-span-full p-8 text-center border-dashed border-2 border-red-200">
+                  <p className="text-gray-600">You haven't enrolled in any courses yet.</p>
+                  <Button className="mt-4 bg-red-600 hover:bg-red-700" onClick={() => router.push('/courses')}>
+                    Browse Courses
+                  </Button>
+                </Card>
+              ) : (
+                enrollments.map((enrollment: any) => (
+                  <EnhancedCourseCard key={enrollment.course.id} course={enrollment.course} />
+                ))
+              )}
+            </div>
+          </section>
+
+          {/* Purchased Courses */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                <ShoppingCartIcon className="h-5 w-5 text-red-600" />
+                Purchased Courses
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {purchases.length === 0 ? (
+                <Card className="col-span-full p-8 text-center border-dashed border-2 border-red-200">
+                  <p className="text-gray-600">No purchased courses yet.</p>
+                  <Button className="mt-4 bg-red-600 hover:bg-red-700" onClick={() => router.push('/courses')}>
+                    Explore Courses
+                  </Button>
+                </Card>
+              ) : (
+                purchases.map((purchase: any) => (
+                  <EnhancedCourseCard key={purchase.course.id} course={purchase.course} />
+                ))
+              )}
+            </div>
+          </section>
+        </div>
+      </div>
     </div>
   )
 }
