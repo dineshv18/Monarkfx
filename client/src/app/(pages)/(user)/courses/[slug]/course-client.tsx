@@ -16,6 +16,7 @@ import {
   Pause,
   Lock,
   Folder,
+  Check,
 } from "lucide-react"
 import parse from "html-react-parser"
 import { Element } from "domhandler"
@@ -568,49 +569,74 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
 
           {/* Price Card (first on mobile) */}
           <div className="md:col-span-1 order-1 md:order-none">
+
             <Card className="sticky top-4">
               <CardHeader>
                 <CardTitle>
-                  {course.paid ? (
-                    <div className="flex flex-col items-start gap-2">
-                      {course.salePrice && course.salePrice < course.price ? (
-                        <>
-                          <span className="text-3xl font-bold text-red-600">{formatPrice(course.salePrice)}</span>
-                          <span className="text-xl text-gray-500 line-through">{formatPrice(course.price)}</span>
-                        </>
-                      ) : (
-                        <span className="text-3xl font-bold text-red-600">{formatPrice(course.price)}</span>
-                      )}
-                      <Badge variant="secondary" className="text-sm">
-                        PAID
+                  {(course.paid && hasPurchased) || (!course.paid && isEnrolled) ? (
+                    <div className="space-y-2">
+                      <Badge variant="outline" className="bg-green-100 text-green-800 text-base px-4 py-1">
+                        <Check className="w-4 h-4 mr-2" />
+                        Continue Learning
                       </Badge>
+                      {/* <div className="mt-4">
+                        <div className="h-2 w-full bg-gray-100 rounded-full">
+                          <div className="h-full bg-green-500 rounded-full w-[0%]" />
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2">0% Complete</p>
+                      </div> */}
                     </div>
                   ) : (
-                    <span className="text-3xl font-bold text-green-600">FREE</span>
+                    <div className="flex flex-col items-start gap-2">
+                      {course.paid ? (
+                        <div>
+                          <span className="text-3xl font-bold text-red-600">
+                            {formatPrice(course.price)}
+                          </span>
+                          <Badge variant="secondary" className="text-sm ml-2">PAID</Badge>
+                        </div>
+                      ) : (
+                        <span className="text-3xl font-bold text-green-600">FREE</span>
+                      )}
+                    </div>
                   )}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {renderEnrollmentButton()}
-                <div className="space-y-4">
-                  <h3 className="font-semibold">This course includes:</h3>
-                  <ul className="space-y-3 font-inter">
-                    {sectionsWithChapters.reduce((total, section) => total + section.chapters.length, 0) > 0 && (
+                {(!course.paid && isEnrolled) || (course.paid && hasPurchased) ? (
+                  <div className="space-y-4">
+                    <h3 className="font-semibold">Your Progress</h3>
+                    <ul className="space-y-3">
+                      <li className="flex items-center gap-2 text-gray-600">
+                        <Book className="w-5 h-5 text-green-600" />
+                        Enrolled Course
+                      </li>
+                      <li className="flex items-center gap-2 text-gray-600">
+                        <Award className="w-5 h-5 text-green-600" />
+                        Certificate Available on Completion
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <h3 className="font-semibold">This course includes:</h3>
+                    <ul className="space-y-3">
                       <li className="flex items-center gap-2 text-gray-600">
                         <PlayCircle className="w-5 h-5 text-red-600" />
                         {sectionsWithChapters.reduce((total, section) => total + section.chapters.length, 0)} chapters
                       </li>
-                    )}
-                    <li className="flex items-center gap-2 text-gray-600">
-                      <Book className="w-5 h-5 text-red-600" />
-                      Full lifetime access
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-600">
-                      <Award className="w-5 h-5 text-red-600" />
-                      Certificate of completion
-                    </li>
-                  </ul>
-                </div>
+                      <li className="flex items-center gap-2 text-gray-600">
+                        <Book className="w-5 h-5 text-red-600" />
+                        Full lifetime access
+                      </li>
+                      <li className="flex items-center gap-2 text-gray-600">
+                        <Award className="w-5 h-5 text-red-600" />
+                        Certificate of completion
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

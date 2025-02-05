@@ -33,8 +33,21 @@ const findCourseBySlug = async (slug) => {
 
 const handleFileUpload = (file) => {
   if (!file?.filename) {
-    throw new ApiError(400, "Please provide a thumbnail for the course");
+    throw new ApiError(400, "Invalid file upload");
   }
+
+  // Validate file type
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!allowedTypes.includes(file.mimetype)) {
+    throw new ApiError(400, "Invalid file type. Only JPG, PNG and WebP allowed");
+  }
+
+  // Validate file size (e.g., 5MB limit)
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  if (file.size > maxSize) {
+    throw new ApiError(400, "File too large. Maximum size is 5MB");
+  }
+
   return file.filename;
 };
 
@@ -425,25 +438,59 @@ export const deleteCourse = asyncHandler(async (req, res) => {
 
 export const updateCourseImage = asyncHandler(async (req, res) => {
   const { slug } = req.params;
-  const course = await findCourseBySlug(slug);
 
-  const thumbnail = handleFileUpload(req.file);
-
-  await prisma.course.update({
-    where: { slug },
-    data: { thumbnail },
-  });
-
-  if (course.thumbnail) {
-    await deleteFile(course.thumbnail);
+  // Check if file exists
+  if (!req.file) {
+    throw new ApiError(400, "No image file provided");
   }
 
-  return res.status(200).json(
-    new ApiResponsive(200, "Course thumbnail updated successfully", {
-      thumbnail,
-    })
-  );
+  // Get existing course
+  const existingCourse = await prisma.course.findUnique({
+    where: { slug },
+    select: {
+      thumbnail: true,
+      id: true
+    }
+  });
+
+  if (!existingCourse) {
+    throw new ApiError(404, "Course not found");
+  }
+
+  try {
+    // Lock the course for update to prevent concurrent modifications
+    const updatedCourse = await prisma.$transaction(async (tx) => {
+      // Delete old thumbnail if exists
+      if (existingCourse.thumbnail) {
+        await deleteFile(existingCourse.thumbnail);
+      }
+
+      // Handle new file upload
+      const thumbnail = handleFileUpload(req.file);
+
+      // Update course with new thumbnail
+      return await tx.course.update({
+        where: { id: existingCourse.id },
+        data: { thumbnail }
+      });
+    });
+
+    return res.status(200).json(
+      new ApiResponsive(200, "Course thumbnail updated successfully", {
+        thumbnail: updatedCourse.thumbnail
+      })
+    );
+
+  } catch (error) {
+    // Clean up uploaded file if transaction fails
+    if (req.file?.filename) {
+      await deleteFile(req.file.filename);
+    }
+    throw new ApiError(500, "Failed to update course thumbnail");
+  }
 });
+
+
 
 export const coursePublishToggle = asyncHandler(async (req, res) => {
   const { slug } = req.params;
@@ -767,4 +814,155 @@ export const getAllCourseForSEO = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponsive(200, courses, "Courses retrieved successfully"));
+});
+
+
+export const getFeaturedSections = asyncHandler(async (req, res) => {
+  try {
+    const [featured, popular, trending, bestseller, free] = await Promise.all([
+
+
+      // Featured Courses
+      prisma.course.findMany({
+        where: {
+          isPublished: true,
+          isFeatured: true
+        },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          thumbnail: true,
+          paid: true,
+          description: true,
+          isFeatured: true,
+          price: true,
+          salePrice: true,
+          category: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }),
+
+      // Popular Courses
+      prisma.course.findMany({
+        where: {
+          isPublished: true,
+          isPopular: true
+        },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          paid: true,
+          thumbnail: true,
+          description: true,
+          isPopular: true,
+          price: true,
+          salePrice: true,
+          category: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }),
+
+      // Trending Courses
+      prisma.course.findMany({
+        where: {
+          isPublished: true,
+          isTrending: true
+        },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          paid: true,
+          slug: true,
+          thumbnail: true,
+          description: true,
+          isTrending: true,
+          price: true,
+          salePrice: true,
+          category: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }),
+
+      // Bestseller Courses
+      prisma.course.findMany({
+        where: {
+          isPublished: true,
+          isBestseller: true
+        },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          paid: true,
+          description: true,
+          thumbnail: true,
+          isBestseller: true,
+          price: true,
+          salePrice: true,
+          category: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }),
+      // Free Courses
+      prisma.course.findMany({
+        where: {
+          isPublished: true,
+          paid: false
+        },
+        take: 4,
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          paid: true,
+          thumbnail: true,
+          description: true,
+          price: true,
+          salePrice: true,
+          category: {
+            select: {
+              name: true
+            }
+          }
+        }
+      })
+    ]);
+
+    return res.status(200).json(
+      new ApiResponsive(200, {
+        featured: featured.length > 0 ? featured : null,
+        popular: popular.length > 0 ? popular : null,
+        trending: trending.length > 0 ? trending : null,
+        bestseller: bestseller.length > 0 ? bestseller : null,
+        free: free.length > 0 ? free : null
+
+      })
+    );
+  } catch (error) {
+    console.error("Featured sections error:", error);
+    throw new ApiError(500, "Failed to fetch featured sections");
+  }
 });

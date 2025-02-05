@@ -56,17 +56,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (courseData.error) {
     return {
-      title: "Error | Universal Yogi",
+      title: "Error | MonarkFX - Global Trading Excellence",
       description: "Course not found",
     };
   }
 
   return {
     title:
-      courseData.data.metaTitle || courseData.data.title || "Universal Yogi",
+      courseData.data.metaTitle || courseData.data.title || "MonarkFX - Global Trading Excellence",
     description:
       courseData.data.metaDesc ||
-      "E-Learning Platform for students and teachers",
+      "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
   };
 }
 
@@ -89,7 +89,7 @@ export default async function CoursePage({ params }: Props) {
             <div className="mt-6">
               <a
                 href="/courses"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-[#610981] hover:bg-[#ffac96] hover:text-black text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-red-600 hover:bg-red-700 hover:text-white text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Browse All Courses
               </a>

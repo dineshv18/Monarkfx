@@ -1,24 +1,22 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from 'next/navigation';
 import { toast } from "sonner";
-import { CourseDataNew, CourseResponse } from "@/type";
+import { CourseDataNew } from "@/type";
 import CourseCards from "../../_components/CourseCards";
 import SkeletonCardGrid from "../../_components/SkeletonCardGrid";
 import Background from "../../_components/Background";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useCustomDebounce } from "@/hooks/useCustomDebounce";
 
 const Courses = () => {
+  const searchParams = useSearchParams();
+  const marketParam = searchParams.get('market');
+
   const [courses, setCourses] = useState<CourseDataNew[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -37,6 +35,16 @@ const Courses = () => {
       const data = await response.json();
       if (data.success) {
         setCategories(data.data);
+        // If market param exists, find and set matching category
+        if (marketParam) {
+          const matchingCategory = data.data.find(
+            (cat: { name: string }) =>
+              cat.name.toLowerCase() === marketParam.toLowerCase()
+          );
+          if (matchingCategory) {
+            setSelectedCategory(matchingCategory.id);
+          }
+        }
       }
     } catch (error) {
       toast.error("Failed to load categories");
@@ -50,6 +58,7 @@ const Courses = () => {
         ...(debouncedSearch && { search: debouncedSearch }),
         ...(selectedCategory !== "all" && { category: selectedCategory }),
         ...(sortBy && { sort: sortBy }),
+        ...(marketParam && { market: marketParam }),
       });
 
       const response = await fetch(
@@ -69,11 +78,11 @@ const Courses = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, debouncedSearch, selectedCategory, sortBy]);
+  }, [currentPage, debouncedSearch, selectedCategory, sortBy, marketParam]);
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [marketParam]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -87,17 +96,34 @@ const Courses = () => {
     setCurrentPage(1);
   };
 
+  const getBackgroundTitle = () => {
+    if (marketParam) {
+      switch (marketParam.toLowerCase()) {
+        case 'forex':
+          return { title: "Forex Trading", subtitle: "Master currency trading with our professional forex courses" };
+        case 'equity':
+          return { title: "Stock Market", subtitle: "Excel in equity trading with our comprehensive courses" };
+        case 'crypto':
+          return { title: "Cryptocurrency", subtitle: "Learn crypto trading with our expert courses" };
+        default:
+          return { title: "Our Trading", subtitle: "Master the markets with our professional trading courses" };
+      }
+    }
+    return { title: "Our Trading", subtitle: "Master the markets with our professional trading courses" };
+  };
+
+  const { title, subtitle } = getBackgroundTitle();
+
   return (
     <>
       <Background
-        title="Our Trading"
+        title={title}
         highlightedText="Courses"
-        subtitle="Master the markets with our professional trading courses"
+        subtitle={subtitle}
       />
 
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="flex flex-col gap-4 mb-8">
-          {/* Search Input */}
           <div className="w-full">
             <div className="relative">
               <Input
@@ -113,7 +139,6 @@ const Courses = () => {
             </div>
           </div>
 
-          {/* Filters Group */}
           <div className="flex flex-col sm:flex-row gap-4 w-full">
             <div className="flex flex-col sm:flex-row gap-4 flex-grow">
               <Select

@@ -16,11 +16,14 @@ import {
   toggleCourseProperty,
   getAllCourseForSEO,
   getFreeChapterVideo,
+  getFeaturedSections,
 } from "../controllers/course.controllers.js";
 import { compressImage, upload } from "../middlewares/multer.middlerware.js";
 
 const router = Router();
 
+
+router.route("/featured-sections").get(getFeaturedSections);
 router.route("/get-courses-for-seo").get(getAllCourseForSEO);
 router.route("/get-courses").get(getCourses);
 router.route("/get-course-page/:slug").get(coursePage);

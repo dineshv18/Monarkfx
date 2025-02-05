@@ -291,7 +291,7 @@ const UserProfile = () => {
                 </Card>
               ) : (
                 enrollments.map((enrollment: any) => (
-                  <EnhancedCourseCard key={enrollment.course.id} course={enrollment.course} />
+                  <EnhancedCourseCard hidePrice={true} key={enrollment.course.id} course={enrollment.course} />
                 ))
               )}
             </div>
@@ -315,7 +315,7 @@ const UserProfile = () => {
                 </Card>
               ) : (
                 purchases.map((purchase: any) => (
-                  <EnhancedCourseCard key={purchase.course.id} course={purchase.course} />
+                  <EnhancedCourseCard hidePrice={true} key={purchase.course.id} course={purchase.course} />
                 ))
               )}
             </div>

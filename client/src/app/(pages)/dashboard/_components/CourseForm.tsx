@@ -266,11 +266,6 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
     }
   }
 
-  useEffect(() => {
-    if (isEditing && thumbnail) {
-      updateThumbnail()
-    }
-  }, [thumbnail, isEditing, updateThumbnail])
 
   if (!courseData && isEditing) {
     return <div>Loading...</div>
@@ -381,7 +376,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
               defaultValue="basic-info"
               className="bg-white dark:bg-gray-800 rounded-lg shadow"
             >
-                  {/* Basic Information */}
+              {/* Basic Information */}
               <AccordionItem value="basic-info">
                 <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                   Basic Information
@@ -392,14 +387,14 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                     <Label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Title
                     </Label>
-                      <Input
-                        id="title"
-                        {...register("title", { required: "Title is required" })}
+                    <Input
+                      id="title"
+                      {...register("title", { required: "Title is required" })}
                       placeholder="Course title"
                       className="mt-1"
-                      />
+                    />
                     {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
-                    </div>
+                  </div>
 
                   {/* Description */}
                   <div className="flex flex-col space-y-2">
@@ -410,15 +405,15 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                       Description
                     </Label>
                     <div className="h-[400px] relative">
-                        <Controller
-                          name="description"
-                          control={control}
-                          rules={{ required: "Description is required" }}
-                          render={({ field }) => (
-                            <ReactQuill
-                              theme="snow"
+                      <Controller
+                        name="description"
+                        control={control}
+                        rules={{ required: "Description is required" }}
+                        render={({ field }) => (
+                          <ReactQuill
+                            theme="snow"
                             value={field.value}
-                              onChange={field.onChange}
+                            onChange={field.onChange}
                             className="h-[350px] bg-white dark:bg-gray-800"
                             modules={{
                               toolbar: [
@@ -510,32 +505,32 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                       className="mt-1"
                     />
                     {errors.language && <span className="text-red-500 text-sm">{errors.language.message}</span>}
-                    </div>
+                  </div>
 
                   {/* Category */}
                   <div>
                     <Label htmlFor="categoryId" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Category
                     </Label>
-                      <Controller
-                        name="categoryId"
-                        control={control}
-                        rules={{ required: "Category is required" }}
-                        render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger>
+                    <Controller
+                      name="categoryId"
+                      control={control}
+                      rules={{ required: "Category is required" }}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <SelectTrigger>
                             <SelectValue placeholder="Select a category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {categories.map((category) => (
-                                <SelectItem key={category.id} value={category.id}>
-                                  {category.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.map((category) => (
+                              <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
                     {errors.categoryId && <span className="text-red-500 text-sm">{errors.categoryId.message}</span>}
                   </div>
 
@@ -544,7 +539,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                     <Label htmlFor="subheading" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Subheading
                     </Label>
-                      <Input
+                    <Input
                       id="subheading"
                       {...register("subheading")}
                       placeholder="Course subheading"
@@ -571,17 +566,17 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                     <Label htmlFor="metaDesc" className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Meta Description
                     </Label>
-                      <Textarea
-                        id="metaDesc"
-                        {...register("metaDesc")}
+                    <Textarea
+                      id="metaDesc"
+                      {...register("metaDesc")}
                       placeholder="SEO Meta description"
                       className="mt-1"
-                      />
+                    />
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
-                  {/* Course Settings */}
+              {/* Course Settings */}
               <AccordionItem value="settings">
                 <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                   Course Settings
@@ -624,26 +619,50 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                 <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                   Course Thumbnail
                 </AccordionTrigger>
+
                 <AccordionContent className="p-4">
                   <div
                     {...getRootProps()}
-                    className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors duration-200"
+                    className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-red-500 transition-colors duration-200"
                   >
                     <input {...getInputProps()} />
                     {thumbnailPreview ? (
-                      <div className="relative h-[200px] w-full">
-                        <Image
-                          src={thumbnailPreview || "/placeholder.svg"}
-                          alt="Thumbnail preview"
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-lg"
-                        />
+                      <div className="space-y-4">
+                        <div className="relative h-[200px] w-full">
+                          <Image
+                            src={thumbnailPreview}
+                            alt="Thumbnail preview"
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-lg"
+                          />
+                        </div>
+                        {isEditing && thumbnail && (
+                          <Button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateThumbnail();
+                            }}
+                            disabled={isLoading}
+                            className="w-full"
+                          >
+                            {isLoading ? (
+                              <div className="flex items-center gap-2">
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                <span>Uploading...</span>
+                              </div>
+                            ) : (
+                              <span>Update Thumbnail</span>
+                            )}
+                          </Button>
+                        )}
                       </div>
                     ) : (
                       <div className="py-8">
                         <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-500">Drag & drop or click to select thumbnail</p>
+                        <p className="mt-2 text-sm text-gray-500">
+                          Drag & drop or click to select thumbnail
+                        </p>
                       </div>
                     )}
                   </div>
@@ -666,45 +685,45 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                       placeholder="https://www.your-video-url.com"
                       className="mt-1"
                     />
-              </div>
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
 
             <div className="flex flex-col space-y-4">
-            {Object.keys(errors).length > 0 && (
+              {Object.keys(errors).length > 0 && (
                 <div
                   className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-h-40 overflow-y-auto"
                   role="alert"
                 >
                   <strong className="font-bold">Please fix the following errors:</strong>
                   <ul className="mt-2 list-disc list-inside">
-                  {Object.entries(errors).map(([key, error]) => (
-                    <li key={key}>{error.message}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <Button
-              type="submit"
-              disabled={isLoading}
+                    {Object.entries(errors).map(([key, error]) => (
+                      <li key={key}>{error.message}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <Button
+                type="submit"
+                disabled={isLoading}
                 className="w-full bg-blue-600 hover:bg-blue-700 
                 text-white font-semibold py-2.5 px-6 rounded-lg 
                 transition-all duration-200 
                 disabled:opacity-70 disabled:cursor-not-allowed
                 shadow-md"
-            >
-              {isLoading ? (
+              >
+                {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Please wait...</span>
-                </div>
-              ) : isEditing ? (
-                "Update Course"
-              ) : (
-                "Create Course"
-              )}
-            </Button>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Please wait...</span>
+                  </div>
+                ) : isEditing ? (
+                  "Update Course"
+                ) : (
+                  "Create Course"
+                )}
+              </Button>
             </div>
           </form>
         </CardContent>

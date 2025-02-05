@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 
 
 export const metadata: Metadata = {
-  title: "Dashboard | E-Learning Platform",
-  description: "E-Learning Platform for students and teachers",
+  title: "Dashboard | MonarkFX - Global Trading Excellence",
+  description: "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
 };
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
