@@ -707,16 +707,18 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-blue-600 hover:bg-blue-700 
-                text-white font-semibold py-2.5 px-6 rounded-lg 
-                transition-all duration-200 
+                className="w-full bg-red-500 hover:bg-red-600 
+                text-white font-semibold py-3 px-6 rounded-lg 
+                transition-all duration-300 
                 disabled:opacity-70 disabled:cursor-not-allowed
-                shadow-md"
+                shadow-lg hover:shadow-xl active:transform 
+                active:scale-[0.99] focus:outline-none 
+                focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Please wait...</span>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span className="font-medium">Please wait...</span>
                   </div>
                 ) : isEditing ? (
                   "Update Course"

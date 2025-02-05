@@ -30,6 +30,7 @@ import ReactPlayer from "react-player"
 import { ErrorComponent, LoadingSkeleton } from "./course-loading-error"
 import FreeChapterDialog from "./FreeChapterDialog"
 import { formatPrice } from "@/helper/FormatPrice"
+import { ReviewSection } from "./review-section"
 
 interface Chapter {
   id: string
@@ -640,6 +641,14 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
               </CardContent>
             </Card>
           </div>
+        </div>
+        <div className="py-8">
+          <ReviewSection
+            courseId={course.id}
+            isEnrolled={isEnrolled}
+            hasPurchased={hasPurchased}
+
+          />
         </div>
       </div>
 

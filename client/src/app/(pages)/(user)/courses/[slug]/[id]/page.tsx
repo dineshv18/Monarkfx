@@ -45,7 +45,7 @@ export default async function CoursePage({ params }: Props) {
             <div className="mt-8 space-x-4">
               <a
                 href="/courses"
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium bg-[#610981] hover:bg-[#ffac96] hover:text-black text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium bg-red-600 hover:bg-red-700 hover:text-white text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 Browse Courses
               </a>

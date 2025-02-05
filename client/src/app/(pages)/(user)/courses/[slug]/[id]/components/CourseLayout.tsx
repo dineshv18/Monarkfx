@@ -158,7 +158,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
   )
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100 font-plus-jakarta-sans">
+    <div className="flex flex-col min-h-screen bg-gray-100 font-plus-jakarta-sans">
 
 
       <div className="flex flex-1 overflow-hidden">

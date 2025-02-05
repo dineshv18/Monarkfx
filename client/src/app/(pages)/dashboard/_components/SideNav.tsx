@@ -16,12 +16,9 @@ import {
   ShoppingBasket,
   Wallet,
   BookOpen,
-  Users,
   FilePlus,
   FileText,
-  LayoutDashboard,
-  Settings,
-  Bell,
+  MessageSquare
 } from "lucide-react";
 import { NavItem } from "@/type";
 
@@ -35,6 +32,11 @@ const navItems: NavItem[] = [
     title: "Student List",
     href: "/dashboard/students",
     icon: School,
+  },
+  {
+    title: "Reviews",
+    href: "/dashboard/reviews",
+    icon: MessageSquare,
   },
   {
     title: "New Course",

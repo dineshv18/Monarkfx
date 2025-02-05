@@ -575,3 +575,26 @@ export interface AnimatedTextProps2 {
   className?: string;
   letterSpacing?: string;
 }
+
+export interface ReviewSectionProps {
+    courseId: string
+    isEnrolled: boolean
+    hasPurchased: boolean
+    userId?: string
+}
+
+export interface Review {
+    id: string
+    rating: number
+    comment?: string
+    isEdited: boolean
+    userId: string
+    courseId: string
+    createdAt: string
+    updatedAt: string
+    user: {
+        id: string
+        name: string
+        email: string
+    }
+}
