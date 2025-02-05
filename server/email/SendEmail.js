@@ -6,7 +6,8 @@ import {
   getFeeReceiptTemplate,
   getFeeNotificationTemplate,
   getPaymentSuccessTemplate,
-  getPaymentFailureTemplate
+  getPaymentFailureTemplate,
+  getFeeUpdateTemplate
 } from "../email/temp/EmailTemplate.js";
 
 const transporter = nodemailer.createTransport({
@@ -25,23 +26,23 @@ export const SendEmail = async ({ email, subject, message, emailType, attachment
 
     switch (emailType) {
       case "VERIFY":
-        subject = "Verify your email";
+        subject = "Verify your email - MonarkFX";
         htmlContent = getVerificationTemplate(message);
         break;
       case "DELETE":
-        subject = "Delete your account";
+        subject = "Delete your account - MonarkFX";
         htmlContent = getDeleteTemplate(message);
         break;
       case "RESET":
-        subject = "Reset your password";
+        subject = "Reset your password - MonarkFX";
         htmlContent = getResetTemplate(message);
         break;
       case "FEE_RECEIPT":
-        subject = subject || "Fee Payment Receipt";
+        subject = subject || "Fee Payment Receipt - MonarkFX";
         htmlContent = getFeeReceiptTemplate(message);
         break;
       case "FEE_NOTIFICATION":
-        subject = subject || "New Fee Assignment";
+        subject = subject || "New Fee Assignment - MonarkFX";
         htmlContent = getFeeNotificationTemplate(message);
         break;
       case "PAYMENT_SUCCESS":
@@ -51,6 +52,10 @@ export const SendEmail = async ({ email, subject, message, emailType, attachment
       case "PAYMENT_FAILURE":
         subject = subject || "Payment Failed - MonarkFX";
         htmlContent = getPaymentFailureTemplate(message);
+        break;
+      case "FEE_UPDATE":
+        subject = subject || "Fee Update Notification - MonarkFX";
+        htmlContent = getFeeUpdateTemplate(message);
         break;
       default:
         htmlContent = message;

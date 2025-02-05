@@ -92,7 +92,7 @@ const StatCard = ({
 
 
 const LoadingState = () => (
-  <div className="min-h-screen p-4 md:p-6 bg-gradient-to-br from-white via-red-50 to-gray-50">
+  <div className="min-h-screen p-4 md:p-6 bg-gradient-to-br from-white via-red-50 to-gray-50 mt-20">
     <Card className="max-w-4xl mx-auto">
       <CardContent className="p-6">
         <div className="space-y-6">
@@ -208,7 +208,7 @@ const UserProfile = () => {
   if (!user) return null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 p-6 font-plus-jakarta-sans">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 p-6 font-plus-jakarta-sans mt-20">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Profile Header */}
         <Card className="border-red-100">
@@ -224,7 +224,7 @@ const UserProfile = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-3">
                   {isEditing ? (
@@ -241,7 +241,7 @@ const UserProfile = () => {
                     </>
                   )}
                 </div>
-                
+
                 <div className="flex flex-wrap gap-4">
                   <div className="flex items-center gap-2 text-gray-600">
                     <Mail className="h-4 w-4" />
@@ -263,7 +263,7 @@ const UserProfile = () => {
           </CardContent>
         </Card>
 
-    
+
 
         {/* Fees Section */}
         <div className="mb-6">
@@ -279,7 +279,7 @@ const UserProfile = () => {
                 <BookOpenIcon className="h-5 w-5 text-red-600" />
                 My Enrolled Courses
               </h2>
-              
+
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {enrollments.length === 0 ? (

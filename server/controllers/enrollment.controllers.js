@@ -70,6 +70,7 @@ export const getUserEnrollments = asyncHandler(async (req, res) => {
 
   const enrollments = await prisma.enrollment.findMany({
     where: { userId },
+    orderBy: { createdAt: "desc" },
     include: {
       course: true,
     },

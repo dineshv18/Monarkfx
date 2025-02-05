@@ -13,19 +13,22 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import {
-  BookOpen,
-  Image as ImageIcon,
-  Settings,
-  Upload,
-  Loader2,
-  IndianRupee,
-  Search
-} from "lucide-react"
-import { formatIndianPrice } from "@/lib/utils"
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Trash2, Upload, Loader2 } from "lucide-react"
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
 import "react-quill/dist/quill.snow.css"
@@ -269,73 +272,144 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
     }
   }, [thumbnail, isEditing, updateThumbnail])
 
-  // Configure ReactQuill
-  const modules = {
-    toolbar: [
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'color': [] }, { 'background': [] }],
-      ['link', 'image', 'video'],
-      ['clean']
-    ],
-  }
-
   if (!courseData && isEditing) {
     return <div>Loading...</div>
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <Card className="max-w-5xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">
+    <div className="container max-w-4xl mx-auto py-8 px-4">
+      <Card className="shadow-lg bg-white dark:bg-gray-800">
+        <CardHeader className="flex flex-row items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-t-lg">
+          <CardTitle className="text-2xl font-bold text-gray-800 dark:text-white">
             {isEditing ? "Edit Course" : "Create New Course"}
           </CardTitle>
+          {isEditing && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Course
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the course and remove all associated
+                    data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            <Tabs defaultValue="basic" className="w-full">
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="basic" className="flex items-center gap-2">
-                  <BookOpen className="h-4 w-4" />
-                  Basic
-                </TabsTrigger>
-                <TabsTrigger value="media" className="flex items-center gap-2">
-                  <ImageIcon className="h-4 w-4" />
-                  Media
-                </TabsTrigger>
-                <TabsTrigger value="pricing" className="flex items-center gap-2">
-                  <IndianRupee className="h-4 w-4" />
-                  Pricing
-                </TabsTrigger>
-                <TabsTrigger value="seo" className="flex items-center gap-2">
-                  <Search className="h-4 w-4" />
-                  SEO
-                </TabsTrigger>
-                <TabsTrigger value="settings" className="flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
-                  Settings
-                </TabsTrigger>
-              </TabsList>
+        <CardContent className="p-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Course Status */}
+            <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+              <Label htmlFor="isPublished" className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                Course Status
+              </Label>
+              <Controller
+                name="isPublished"
+                control={control}
+                render={({ field }) => (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <Switch
+                            checked={!!field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked)
+                              if (isEditing) {
+                                handleToggle("isPublished")
+                              }
+                            }}
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {field.value
+                          ? "Course is live and visible to students"
+                          : "Course is not yet visible to students"}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              />
+            </div>
 
-              <div className="mt-6">
-                <TabsContent value="basic" className="space-y-6">
+            {/* Course Type */}
+            <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+              <Label htmlFor="paid" className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                Course Type
+              </Label>
+              <Controller
+                name="paid"
+                control={control}
+                render={({ field }) => (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <Switch
+                            checked={!!field.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked)
+                              if (isEditing) {
+                                handleToggle("paid")
+                              }
+                            }}
+                          />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>{field.value ? "This is a paid course" : "This is a free course"}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              />
+            </div>
+
+            <Accordion
+              type="single"
+              collapsible
+              defaultValue="basic-info"
+              className="bg-white dark:bg-gray-800 rounded-lg shadow"
+            >
                   {/* Basic Information */}
-                  <div className="grid gap-6">
-                    <div className="grid gap-2">
-                      <Label htmlFor="title">Course Title</Label>
+              <AccordionItem value="basic-info">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                  Basic Information
+                </AccordionTrigger>
+                <AccordionContent className="space-y-4 p-4">
+                  {/* Title */}
+                  <div>
+                    <Label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Title
+                    </Label>
                       <Input
                         id="title"
                         {...register("title", { required: "Title is required" })}
-                        placeholder="Enter course title"
-                        className="w-full"
+                      placeholder="Course title"
+                      className="mt-1"
                       />
+                    {errors.title && <span className="text-red-500 text-sm">{errors.title.message}</span>}
                     </div>
 
-                    <div className="grid gap-2">
-                      <Label htmlFor="description">Course Description</Label>
-                      <div className="min-h-[300px]">
+                  {/* Description */}
+                  <div className="flex flex-col space-y-2">
+                    <Label
+                      htmlFor="description"
+                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                    >
+                      Description
+                    </Label>
+                    <div className="h-[400px] relative">
                         <Controller
                           name="description"
                           control={control}
@@ -343,18 +417,106 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                           render={({ field }) => (
                             <ReactQuill
                               theme="snow"
-                              modules={modules}
-                              value={field.value || ''}
+                            value={field.value}
                               onChange={field.onChange}
-                              className="bg-white h-[300px] mb-12"
-                            />
-                          )}
+                            className="h-[350px] bg-white dark:bg-gray-800"
+                            modules={{
+                              toolbar: [
+                                [{ 'header': [1, 2, 3, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                ['link', 'blockquote'],
+                                [{ 'color': [] }, { 'background': [] }],
+                                ['clean']
+                              ]
+                            }}
+                          />
+                        )}
+                      />
+                    </div>
+                    {errors.description && (
+                      <span className="text-red-500 text-sm mt-1">
+                        {errors.description.message}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Price (if paid) */}
+                  {isPaid && (
+                    <div>
+                      <Label htmlFor="price" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Regular Price (₹)
+                      </Label>
+                      <div className="relative mt-1">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                        <Input
+                          id="price"
+                          {...register("price", {
+                            required: "Price is required for paid courses",
+                            min: { value: 0.01, message: "Price must be greater than 0" },
+                          })}
+                          className="pl-8"
+                          placeholder="499.00"
+                          type="number"
+                          step="0.01"
                         />
                       </div>
+                      {errors.price && <span className="text-red-500 text-sm">{errors.price.message}</span>}
+                    </div>
+                  )}
+                  {/* Sale Price (if paid) */}
+                  {isPaid && (
+                    <div>
+                      <Label htmlFor="salePrice" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                        Sale Price (Optional) (₹)
+                      </Label>
+                      <div className="relative mt-1">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                        <Input
+                          id="salePrice"
+                          {...register("salePrice", {
+                            setValueAs: (value) => (value === "" ? 0 : parseFloat(value)),
+                            validate: {
+                              validPrice: (value) => {
+                                // Always allow zero or empty values
+                                if (value === 0 || String(value) === "" || !value) return true;
+
+                                const regularPrice = parseFloat(String(watch("price") || "0"));
+                                // Only validate if sale price is greater than zero
+                                return value <= regularPrice || "Sale price must be less than or equal to regular price";
+                              },
+                            },
+                          })}
+                          className="pl-8"
+                          placeholder="299.00"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                        />
+                      </div>
+                      {errors.salePrice && <span className="text-red-500 text-sm">{errors.salePrice.message}</span>}
+                    </div>
+                  )}
+
+                  {/* Language */}
+                  <div>
+                    <Label htmlFor="language" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Language
+                    </Label>
+                    <Input
+                      id="language"
+                      {...register("language", { required: "Language is required" })}
+                      placeholder="Course language"
+                      className="mt-1"
+                    />
+                    {errors.language && <span className="text-red-500 text-sm">{errors.language.message}</span>}
                     </div>
 
-                    <div className="grid gap-2">
-                      <Label htmlFor="category">Category</Label>
+                  {/* Category */}
+                  <div>
+                    <Label htmlFor="categoryId" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Category
+                    </Label>
                       <Controller
                         name="categoryId"
                         control={control}
@@ -362,7 +524,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                         render={({ field }) => (
                           <Select onValueChange={field.onChange} value={field.value}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select category" />
+                            <SelectValue placeholder="Select a category" />
                             </SelectTrigger>
                             <SelectContent>
                               {categories.map((category) => (
@@ -374,160 +536,64 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                           </Select>
                         )}
                       />
-                    </div>
-
-                    <div className="grid gap-2">
-                      <Label htmlFor="language">Language</Label>
-                      <Input
-                        id="language"
-                        {...register("language")}
-                        placeholder="Course language"
-                      />
-                    </div>
+                    {errors.categoryId && <span className="text-red-500 text-sm">{errors.categoryId.message}</span>}
                   </div>
-                </TabsContent>
 
-                <TabsContent value="media" className="space-y-6">
-                  {/* Thumbnail Upload */}
-                  <div className="grid gap-4">
-                    <Label>Course Thumbnail</Label>
-                    <div
-                      {...getRootProps()}
-                      className="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer hover:border-primary transition-colors"
-                    >
-                      <input {...getInputProps()} />
-                      {thumbnailPreview ? (
-                        <div className="relative h-[200px] w-full">
-                          <Image
-                            src={thumbnailPreview}
-                            alt="Thumbnail preview"
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-lg"
-                          />
-                        </div>
-                      ) : (
-                        <div className="py-8">
-                          <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                          <p className="mt-2 text-sm text-gray-500">
-                            Drag & drop or click to select thumbnail
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Video URL */}
-                    <div className="grid gap-2 mt-4">
-                      <Label htmlFor="videoUrl">Video URL</Label>
+                  {/* Subheading */}
+                  <div>
+                    <Label htmlFor="subheading" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Subheading
+                    </Label>
                       <Input
-                        id="videoUrl"
-                        {...register("videoUrl")}
-                        placeholder="Enter preview video URL"
-                      />
-                    </div>
+                      id="subheading"
+                      {...register("subheading")}
+                      placeholder="Course subheading"
+                      className="mt-1"
+                    />
                   </div>
-                </TabsContent>
+                </AccordionContent>
+              </AccordionItem>
 
-                <TabsContent value="pricing" className="space-y-6">
-                  {/* Pricing Information */}
-                  <div className="grid gap-6">
-                    <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                      <div className="flex items-center space-x-2">
-                        <IndianRupee className="h-4 w-4" />
-                        <Label htmlFor="paid">Paid Course</Label>
-                      </div>
-                      <Controller
-                        name="paid"
-                        control={control}
-                        render={({ field }) => (
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        )}
-                      />
-                    </div>
-
-                    {isPaid && (
-                      <>
-                        <div className="grid gap-2">
-                          <Label htmlFor="price">Price</Label>
-                          <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2">₹</span>
-                            <Input
-                              id="price"
-                              type="number"
-                              {...register("price", {
-                                valueAsNumber: true,
-                                validate: (value) => !isPaid || value > 0 || "Price must be greater than 0",
-                              })}
-                              className="pl-8"
-                              placeholder="Enter course price"
-                            />
-                          </div>
-                          {watch("price") && (
-                            <p className="text-sm text-muted-foreground">
-                              {formatIndianPrice(watch("price"))}
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="grid gap-2">
-                          <Label htmlFor="salePrice">Sale Price (Optional)</Label>
-                          <div className="relative">
-                            <span className="absolute left-3 top-1/2 -translate-y-1/2">₹</span>
-                            <Input
-                              id="salePrice"
-                              type="number"
-                              {...register("salePrice", { valueAsNumber: true })}
-                              className="pl-8"
-                              placeholder="Enter sale price"
-                            />
-                          </div>
-                          {watch("salePrice") && (
-                            <p className="text-sm text-muted-foreground">
-                              {formatIndianPrice(watch("salePrice") ?? 0)}
-                            </p>
-                          )}
-                        </div>
-                      </>
-                    )}
+              {/* SEO Settings */}
+              <AccordionItem value="seo">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                  SEO Settings
+                </AccordionTrigger>
+                <AccordionContent className="space-y-4 p-4">
+                  <div>
+                    <Label htmlFor="metaTitle" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Meta Title
+                    </Label>
+                    <Input id="metaTitle" {...register("metaTitle")} placeholder="SEO Meta title" className="mt-1" />
                   </div>
-                </TabsContent>
 
-                <TabsContent value="seo" className="space-y-6">
-                  {/* SEO Settings */}
-                  <div className="grid gap-6">
-                    <div className="grid gap-2">
-                      <Label htmlFor="metaTitle">Meta Title</Label>
-                      <Input
-                        id="metaTitle"
-                        {...register("metaTitle")}
-                        placeholder="SEO meta title"
-                      />
-                    </div>
-
-                    <div className="grid gap-2">
-                      <Label htmlFor="metaDesc">Meta Description</Label>
+                  <div>
+                    <Label htmlFor="metaDesc" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Meta Description
+                    </Label>
                       <Textarea
                         id="metaDesc"
                         {...register("metaDesc")}
-                        placeholder="SEO meta description"
-                        rows={4}
+                      placeholder="SEO Meta description"
+                      className="mt-1"
                       />
-                    </div>
                   </div>
-                </TabsContent>
+                </AccordionContent>
+              </AccordionItem>
 
-                <TabsContent value="settings" className="space-y-6">
                   {/* Course Settings */}
+              <AccordionItem value="settings">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                  Course Settings
+                </AccordionTrigger>
+                <AccordionContent className="space-y-4 p-4">
                   <div className="grid grid-cols-2 gap-4">
                     {["featured", "popular", "trending", "bestseller"].map((type) => (
                       <div
                         key={type}
-                        className="flex items-center justify-between bg-muted p-4 rounded-lg"
+                        className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg"
                       >
-                        <Label className="capitalize text-sm font-medium">
+                        <Label className="capitalize text-sm font-medium text-gray-700 dark:text-gray-200">
                           {type}
                         </Label>
                         <Controller
@@ -536,37 +602,100 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                           render={({ field }) => (
                             <Switch
                               checked={!!field.value}
-                              onCheckedChange={field.onChange}
+                              onCheckedChange={(checked) => {
+                                field.onChange(checked)
+                                if (isEditing) {
+                                  handleToggle(
+                                    `is${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof CourseDataNew,
+                                  )
+                                }
+                              }}
                             />
                           )}
                         />
                       </div>
                     ))}
                   </div>
-                </TabsContent>
-              </div>
-            </Tabs>
+                </AccordionContent>
+              </AccordionItem>
 
-            {/* Error Display */}
+              {/* Course Thumbnail */}
+              <AccordionItem value="thumbnail">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                  Course Thumbnail
+                </AccordionTrigger>
+                <AccordionContent className="p-4">
+                  <div
+                    {...getRootProps()}
+                    className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors duration-200"
+                  >
+                    <input {...getInputProps()} />
+                    {thumbnailPreview ? (
+                      <div className="relative h-[200px] w-full">
+                        <Image
+                          src={thumbnailPreview || "/placeholder.svg"}
+                          alt="Thumbnail preview"
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-lg"
+                        />
+                      </div>
+                    ) : (
+                      <div className="py-8">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <p className="mt-2 text-sm text-gray-500">Drag & drop or click to select thumbnail</p>
+                      </div>
+                    )}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Thumbnail Video */}
+              <AccordionItem value="video">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                  Thumbnail Video
+                </AccordionTrigger>
+                <AccordionContent className="p-4">
+                  <div>
+                    <Label htmlFor="videoUrl" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Video URL
+                    </Label>
+                    <Input
+                      id="videoUrl"
+                      {...register("videoUrl")}
+                      placeholder="https://www.your-video-url.com"
+                      className="mt-1"
+                    />
+              </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            <div className="flex flex-col space-y-4">
             {Object.keys(errors).length > 0 && (
-              <div className="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded-lg space-y-2">
-                <p className="font-semibold">Please fix the following errors:</p>
-                <ul className="list-disc list-inside text-sm">
+                <div
+                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-h-40 overflow-y-auto"
+                  role="alert"
+                >
+                  <strong className="font-bold">Please fix the following errors:</strong>
+                  <ul className="mt-2 list-disc list-inside">
                   {Object.entries(errors).map(([key, error]) => (
                     <li key={key}>{error.message}</li>
                   ))}
                 </ul>
               </div>
             )}
-
-            {/* Submit Button */}
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full"
+                className="w-full bg-blue-600 hover:bg-blue-700 
+                text-white font-semibold py-2.5 px-6 rounded-lg 
+                transition-all duration-200 
+                disabled:opacity-70 disabled:cursor-not-allowed
+                shadow-md"
             >
               {isLoading ? (
-                <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   <span>Please wait...</span>
                 </div>
@@ -576,6 +705,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                 "Create Course"
               )}
             </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
@@ -584,4 +714,3 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 }
 
 export default CourseForm
-

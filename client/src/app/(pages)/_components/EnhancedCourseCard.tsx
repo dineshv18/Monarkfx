@@ -93,7 +93,7 @@ export default function EnhancedCourseCard({ course }: CourseCardProps) {
               </Badge>
               <Badge variant="outline" className="bg-white/90 text-gray-700 border-gray-200 shadow-sm uppercase">
                 <Folder className="w-3.5 h-3.5 mr-1.5" />
-                {course.category.name}
+                {course?.category?.name}
               </Badge>
             </div>
 

@@ -208,137 +208,6 @@ const AdminCouponsPage: React.FC = () => {
     <div className="container mx-auto p-4">
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Create New Coupon</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleCreateCoupon} className="space-y-4">
-            <div>
-              <Label htmlFor="code">Code</Label>
-              <Input
-                id="code"
-                value={newCoupon.code}
-                onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase() })}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="discount">Discount (%)</Label>
-              <Input
-                id="discount"
-                type="number"
-                value={newCoupon.discount}
-                onChange={(e) => setNewCoupon({ ...newCoupon, discount: Number(e.target.value) })}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="limit">Usage Limit (-1 for unlimited)</Label>
-              <Input
-                id="limit"
-                type="number"
-                value={newCoupon.limit}
-                onChange={(e) => setNewCoupon({ ...newCoupon, limit: Number(e.target.value) })}
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isActive"
-                checked={newCoupon.isActive}
-                onCheckedChange={(checked) => setNewCoupon({ ...newCoupon, isActive: checked as boolean })}
-              />
-              <Label htmlFor="isActive">Is Active</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="oneTimePerUser"
-                checked={newCoupon.oneTimePerUser}
-                onCheckedChange={(checked) => setNewCoupon({ ...newCoupon, oneTimePerUser: checked as boolean })}
-              />
-              <Label htmlFor="oneTimePerUser">One-time use per user</Label>
-            </div>
-            <div>
-              <Label>Valid From</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left font-normal">
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {format(new Date(newCoupon.validFrom), "PPP")}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={new Date(newCoupon.validFrom)}
-                    onSelect={(date) => date && setNewCoupon({ ...newCoupon, validFrom: date.toISOString() })}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div>
-              <Label>Valid Until</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left font-normal">
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {newCoupon.validUntil ? format(new Date(newCoupon.validUntil), "PPP") : "No expiry"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={newCoupon.validUntil ? new Date(newCoupon.validUntil) : undefined}
-                    onSelect={(date) =>
-                      setNewCoupon({
-                        ...newCoupon,
-                        validUntil: date ? date.toISOString() : null,
-                      })
-                    }
-                    disabled={(date) => date <= new Date(newCoupon.validFrom)}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div>
-              <Label htmlFor="minimumPurchase">Minimum Purchase Amount</Label>
-              <Input
-                id="minimumPurchase"
-                type="number"
-                value={newCoupon.minimumPurchase}
-                onChange={(e) => setNewCoupon({ ...newCoupon, minimumPurchase: Number(e.target.value) })}
-              />
-            </div>
-            <div>
-              <Label>Apply to Courses</Label>
-              <Select
-                value={newCoupon.courses.map((c) => c.id).join(",")}
-                onValueChange={(value) => {
-                  const selectedIds = value.split(",").filter(Boolean)
-                  const selectedCourses = courses.filter((c) => selectedIds.includes(c.id))
-                  setNewCoupon({
-                    ...newCoupon,
-                    courses: selectedCourses,
-                  })
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select courses (optional)" />
-                </SelectTrigger>
-                <SelectContent>
-                  {courses.map((course) => (
-                    <SelectItem key={course.id} value={course.id}>
-                      {course.title} - ₹{course.price}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button type="submit">Create Coupon</Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card className="mt-8">
-        <CardHeader>
           <CardTitle>Existing Coupons</CardTitle>
         </CardHeader>
         <CardContent>
@@ -501,7 +370,7 @@ const AdminCouponsPage: React.FC = () => {
                     <TableCell>
                       {editingCoupon?.id === coupon.id ? (
                         <>
-                          <Button onClick={() => handleEdit(coupon.id)} size="sm" variant="outline">
+                          <Button onClick={() => handleEdit(coupon.id)} size="sm" variant="outline" className="m-2">
                             Save
                           </Button>
                           <Button onClick={handleCancelEdit} size="sm" variant="outline">
@@ -510,7 +379,7 @@ const AdminCouponsPage: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <Button onClick={() => handleEditClick(coupon)} size="sm" variant="outline">
+                          <Button onClick={() => handleEditClick(coupon)} size="sm" variant="outline" className="mx-2">
                             <Edit2 className="h-4 w-4" />
                           </Button>
                           <Button onClick={() => handleDelete(coupon.id)} size="sm" variant="destructive">
@@ -526,6 +395,138 @@ const AdminCouponsPage: React.FC = () => {
           </div>
         </CardContent>
       </Card>
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle>Create New Coupon</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleCreateCoupon} className="space-y-4">
+            <div>
+              <Label htmlFor="code">Code</Label>
+              <Input
+                id="code"
+                value={newCoupon.code}
+                onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase() })}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="discount">Discount (%)</Label>
+              <Input
+                id="discount"
+                type="number"
+                value={newCoupon.discount}
+                onChange={(e) => setNewCoupon({ ...newCoupon, discount: Number(e.target.value) })}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="limit">Usage Limit (-1 for unlimited)</Label>
+              <Input
+                id="limit"
+                type="number"
+                value={newCoupon.limit}
+                onChange={(e) => setNewCoupon({ ...newCoupon, limit: Number(e.target.value) })}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="isActive"
+                checked={newCoupon.isActive}
+                onCheckedChange={(checked) => setNewCoupon({ ...newCoupon, isActive: checked as boolean })}
+              />
+              <Label htmlFor="isActive">Is Active</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="oneTimePerUser"
+                checked={newCoupon.oneTimePerUser}
+                onCheckedChange={(checked) => setNewCoupon({ ...newCoupon, oneTimePerUser: checked as boolean })}
+              />
+              <Label htmlFor="oneTimePerUser">One-time use per user</Label>
+            </div>
+            <div>
+              <Label>Valid From</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {format(new Date(newCoupon.validFrom), "PPP")}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={new Date(newCoupon.validFrom)}
+                    onSelect={(date) => date && setNewCoupon({ ...newCoupon, validFrom: date.toISOString() })}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div>
+              <Label>Valid Until</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start text-left font-normal">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {newCoupon.validUntil ? format(new Date(newCoupon.validUntil), "PPP") : "No expiry"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={newCoupon.validUntil ? new Date(newCoupon.validUntil) : undefined}
+                    onSelect={(date) =>
+                      setNewCoupon({
+                        ...newCoupon,
+                        validUntil: date ? date.toISOString() : null,
+                      })
+                    }
+                    disabled={(date) => date <= new Date(newCoupon.validFrom)}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div>
+              <Label htmlFor="minimumPurchase">Minimum Purchase Amount</Label>
+              <Input
+                id="minimumPurchase"
+                type="number"
+                value={newCoupon.minimumPurchase}
+                onChange={(e) => setNewCoupon({ ...newCoupon, minimumPurchase: Number(e.target.value) })}
+              />
+            </div>
+            <div>
+              <Label>Apply to Courses</Label>
+              <Select
+                value={newCoupon.courses.map((c) => c.id).join(",")}
+                onValueChange={(value) => {
+                  const selectedIds = value.split(",").filter(Boolean)
+                  const selectedCourses = courses.filter((c) => selectedIds.includes(c.id))
+                  setNewCoupon({
+                    ...newCoupon,
+                    courses: selectedCourses,
+                  })
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select courses (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {courses.map((course) => (
+                    <SelectItem key={course.id} value={course.id}>
+                      {course.title} - ₹{course.price}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit">Create Coupon</Button>
+          </form>
+        </CardContent>
+      </Card>
+
+
     </div>
   )
 }

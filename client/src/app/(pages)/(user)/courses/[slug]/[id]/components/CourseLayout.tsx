@@ -159,21 +159,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 font-plus-jakarta-sans">
-      {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-50">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={() => router.back()} className="hover:bg-gray-100">
-                <ChevronLeft className="h-5 w-5 text-gray-600" />
-              </Button>
-              <div>
-                <h1 className="text-xl font-semibold text-gray-800 line-clamp-1">{course.title}</h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       <div className="flex flex-1 overflow-hidden">
         {isDesktop ? (
@@ -199,7 +185,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
         )}
 
         {/* Main Content */}
-        <div className="flex flex-col flex-1 overflow-hidden">
+        <div className="flex flex-col flex-1 overflow-hidden mt-20">
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-4">
               <VideoPlayer
@@ -208,7 +194,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
                 className={`
                 w-full bg-white rounded-lg shadow-md
                 transition-all duration-300 ease-in-out
-                ${isSidebarOpen ? "aspect-video" : "aspect-[21/9]"}
+                ${isSidebarOpen ? "aspect-[21/9]" : "aspect-video"}
               `}
               />
               <div className="bg-white rounded-lg shadow-md p-6">

@@ -23,9 +23,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  CalendarIcon, 
-  Download, 
+import {
+  CalendarIcon,
+  Download,
   TrendingUp,
   Users,
   CreditCard,
@@ -44,6 +44,7 @@ import { useAuth } from "@/helper/AuthContext";
 import { cn } from "@/lib/utils";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { Badge } from "@/components/ui/badge";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -52,14 +53,14 @@ interface Purchase {
   courseId: string;
   userId: string;
   createdAt: string;
-  purchasePrice: number;      
+  purchasePrice: number;
   discountPrice?: number;
   couponCode?: string;
   savingsAmount?: number;
   course: {
     title: string;
-    price: number;           
-    salePrice?: number;      
+    price: number;
+    salePrice?: number;
   };
   user?: {
     name: string;
@@ -145,15 +146,6 @@ export default function Purchase() {
     if (isAuthenticated) fetchPurchases();
   }, [isAuthenticated]);
 
-  const formatPrice = (price?: number) => {
-    if (!price && price !== 0) return "$0";
-    return price.toLocaleString("en-IN", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
 
   const courseCounts = purchases.reduce((acc, purchase) => {
     const courseTitle = purchase.course.title;
@@ -190,65 +182,30 @@ export default function Purchase() {
   const displayPurchases =
     activeTab === "recent" ? sortedPurchases.slice(0, 5) : sortedPurchases;
 
-    const totalAmount = filteredPurchases.reduce(
-      (sum, purchase) => sum + purchase.purchasePrice,
-      0
-    );
+  const totalAmount = filteredPurchases.reduce(
+    (sum, purchase) => sum + purchase.purchasePrice,
+    0
+  );
 
-  const barChartData = {
-    labels: Object.keys(courseCounts),
-    datasets: [
-      {
-        label: "Number of Purchases",
-        data: Object.values(courseCounts),
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
 
-  const pieChartData = {
-    labels: Object.keys(courseCounts),
-    datasets: [
-      {
-        data: Object.values(courseCounts),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.6)",
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
 
-   const downloadCSV = () => {
+  const downloadCSV = () => {
     const formatCSVPrice = (price: number) => {
       return price.toLocaleString('en-IN', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-        useGrouping: false 
+        useGrouping: false
       });
     };
-  
+
     const escapeCSV = (field: string | number): string => {
       const stringField = String(field);
       if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
-      return `"${stringField.replace(/"/g, '""')}"`;
+        return `"${stringField.replace(/"/g, '""')}"`;
       }
       return stringField;
     };
-  
+
     const headers = [
       "Course",
       "User",
@@ -259,7 +216,7 @@ export default function Purchase() {
       "Purchase Date",
       "Status",
     ];
-  
+
     const csvContent = [
       headers.join(","),
       ...sortedPurchases.map((purchase) =>
@@ -275,7 +232,7 @@ export default function Purchase() {
         ].join(",")
       ),
     ].join("\n");
-  
+
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
@@ -443,11 +400,13 @@ export default function Purchase() {
         <CardContent>
           <ScrollArea className="h-[400px]">
             <Table>
+
               <TableHeader>
                 <TableRow>
                   <TableHead>Course</TableHead>
                   <TableHead>Student</TableHead>
                   <TableHead>Amount</TableHead>
+                  <TableHead>Coupon</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
                 </TableRow>
@@ -476,12 +435,36 @@ export default function Purchase() {
                         <span className="font-medium text-green-600">
                           {formatIndianPrice(purchase.purchasePrice)}
                         </span>
-                        {purchase.savingsAmount && (
-                          <span className="text-xs text-muted-foreground">
-                            Saved {formatIndianPrice(purchase.savingsAmount ?? 0)}
-                          </span>
-                        )}
+                        <span className="text-xs text-muted-foreground">
+                          Original: {formatIndianPrice(purchase.course.price)}
+                        </span>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {purchase.couponCode ? (
+                        <div className="flex flex-col gap-1.5">
+                          <Badge
+                            variant="secondary"
+                            className="w-fit bg-blue-100 text-blue-800 hover:bg-blue-100"
+                          >
+                            {purchase.couponCode}
+                          </Badge>
+                          {purchase.savingsAmount && purchase.savingsAmount > 0 && (
+                            <div className="flex items-center gap-1 text-xs">
+                              <Badge
+                                variant="outline"
+                                className="bg-green-50 text-green-700 border-green-200"
+                              >
+                                Saved {formatIndianPrice(purchase.savingsAmount)}
+                              </Badge>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">
+                          No coupon applied
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -549,7 +532,7 @@ export default function Purchase() {
           <CardContent>
             <div className="space-y-4">
               {Object.entries(courseCounts)
-                .sort(([,a], [,b]) => b - a)
+                .sort(([, a], [, b]) => b - a)
                 .slice(0, 5)
                 .map(([course, count], index) => (
                   <div key={course} className="flex items-center justify-between">

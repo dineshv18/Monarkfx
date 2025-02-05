@@ -199,6 +199,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
         name: "MonarkFX - Global Trading Excellence",
         description: "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
         order_id: order.id,
+        image: "/logo.png", 
         handler: async function (response: RazorpayResponse) {
           try {
             const courseDetails = courses.map((course) => {

@@ -680,13 +680,13 @@ export const getPaymentSuccessTemplate = (data) => `
                 </div>
                 <div class="detail-row">
                     <strong>Date:</strong>
-                    <span>${new Date(data.date).toLocaleString('en-IN', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })}</span>
+                    <span>${new Date(data.date).toLocaleString('en-IN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+})}</span>
                 </div>
                 <div class="detail-row">
                     <strong>Fee Type:</strong>
@@ -803,6 +803,47 @@ export const getPaymentFailureTemplate = (data) => `
         <div class="footer">
             <p>© ${new Date().getFullYear()} MonarkFX Trading Platform</p>
             <p>Need help? Contact our support team at support@monarkfx.com</p>
+        </div>
+    </div>
+</body>
+</html>
+`;
+
+export const getFeeUpdateTemplate = ({ name, feeTitle, oldAmount, newAmount, oldDate, newDate, reason }) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #EF4444; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9fafb; }
+        .footer { text-align: center; padding: 20px; color: #666; }
+        .amount { font-size: 18px; font-weight: bold; color: #EF4444; }
+        .details { margin: 20px 0; padding: 15px; background: white; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Fee Update Notification</h2>
+        </div>
+        <div class="content">
+            <p>Dear ${name},</p>
+            <p>This is to inform you that there has been an update to your fee: <strong>${feeTitle}</strong></p>
+            
+            <div class="details">
+                <h3>Update Details:</h3>
+                <p><strong>Amount:</strong> ₹${oldAmount} → ₹${newAmount}</p>
+                <p><strong>Due Date:</strong> ${oldDate} → ${newDate}</p>
+                <p><strong>Reason:</strong> ${reason}</p>
+            </div>
+
+            <p>If you have any questions, please contact our support team.</p>
+        </div>
+        <div class="footer">
+            <p>MonarkFX - Global Trading Excellence</p>
+            <small>This is an automated message, please do not reply.</small>
         </div>
     </div>
 </body>

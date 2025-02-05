@@ -391,8 +391,20 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
             {/* Video/Thumbnail */}
             <div className="order-1 md:order-2">
               <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/20">
-                {isClient && course.videoUrl ? (
-                  <div className="absolute inset-0">
+                {/* Thumbnail Image - Always visible when not playing */}
+                <div className={`absolute inset-0 transition-opacity duration-300 ${isPlaying ? 'opacity-0' : 'opacity-100'}`}>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
+                    alt={course.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform duration-300 hover:scale-105"
+                  />
+                </div>
+
+                {/* Video Player - Only visible when playing */}
+                {isClient && course.videoUrl && (
+                  <div className={`absolute inset-0 transition-opacity duration-300 ${isPlaying ? 'opacity-100' : 'opacity-0'}`}>
                     <ReactPlayer
                       ref={playerRef}
                       url={course.videoUrl}
@@ -405,31 +417,28 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                       onError={() => setVideoError(true)}
                       className="rounded-xl overflow-hidden"
                     />
-                    {videoError ? (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-                        <p>Sorry, the video could not be played.</p>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={togglePlayPause}
-                        className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
-                      >
-                        {isPlaying ? (
-                          <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
-                        ) : (
-                          <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
-                        )}
-                      </button>
-                    )}
                   </div>
-                ) : (
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
-                    alt={course.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform duration-300 hover:scale-105"
-                  />
+                )}
+
+                {/* Play/Pause Overlay */}
+                {!videoError && (
+                  <button
+                    onClick={togglePlayPause}
+                    className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
+                  >
+                    {isPlaying ? (
+                      <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                    ) : (
+                      <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                    )}
+                  </button>
+                )}
+
+                {/* Error Message */}
+                {videoError && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
+                    <p>Sorry, the video could not be played.</p>
+                  </div>
                 )}
               </div>
             </div>

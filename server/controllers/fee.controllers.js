@@ -157,8 +157,6 @@ export const payFee = asyncHandler(async (req, res) => {
             }
         };
 
-        console.log("Creating order with options:", orderOptions);
-
         // Create order with promise handling
         const order = await new Promise((resolve, reject) => {
             razorpay.orders.create(orderOptions, (err, order) => {
@@ -245,7 +243,7 @@ export const updateFee = asyncHandler(async (req, res) => {
         // Parse numeric values
         if (updateData.amount) updateData.amount = parseFloat(updateData.amount);
         if (updateData.lateFeeAmount) updateData.lateFeeAmount = parseFloat(updateData.lateFeeAmount);
-        
+
         // Parse dates
         if (updateData.dueDate) updateData.dueDate = new Date(updateData.dueDate);
         if (updateData.lateFeeDate) updateData.lateFeeDate = new Date(updateData.lateFeeDate);
@@ -264,19 +262,28 @@ export const updateFee = asyncHandler(async (req, res) => {
             }
         });
 
-        // Send email notification for fee update
         await SendEmail({
             email: existingFee.user.email,
-            subject: "Fee Details Updated",
+            subject: "Fee Details Updated - MonarkFX",
             message: {
-                title: "Fee Update Notification",
+                name: existingFee.user.name,
                 feeTitle: updatedFee.title,
-                changes: Object.keys(updateData).join(", "),
-                newDueDate: updateData.dueDate ? updateData.dueDate.toLocaleDateString() : undefined,
-                newAmount: updateData.amount
+                oldAmount: existingFee.amount,
+                newAmount: updateData.amount || existingFee.amount,
+                oldDate: new Date(existingFee.dueDate).toLocaleDateString('en-IN'),
+                newDate: updateData.dueDate ?
+                    new Date(updateData.dueDate).toLocaleDateString('en-IN') :
+                    new Date(existingFee.dueDate).toLocaleDateString('en-IN'),
+                reason: updateData.description || "Fee details have been updated"
             },
             emailType: "FEE_UPDATE"
         });
+
+        // Add validation before sending
+        if (!existingFee.user.email || !existingFee.user.name) {
+            console.error("Missing user details for fee update email");
+            return;
+        }
 
         return res.status(200).json(
             new ApiResponsive(200, updatedFee, "Fee updated successfully")
@@ -367,7 +374,7 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
             include: { payments: true }
         });
 
-        const totalPaid = fee.payments.reduce((sum, p) => 
+        const totalPaid = fee.payments.reduce((sum, p) =>
             sum + (p.status === "COMPLETED" ? p.amount : 0), 0
         );
 
@@ -383,14 +390,15 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
             email: req.user.email,
             subject: "Payment Confirmation",
             message: {
-                title: "Payment Successful",
+                title: "Payment Successful - MonarkFX",
+                userName: req.user.name,
                 amount: amount,
                 feeTitle: fee.title,
                 paymentId: razorpay_payment_id,
                 receiptNumber: receiptNumber,
                 date: new Date().toLocaleDateString()
             },
-            emailType: "PAYMENT_CONFIRMATION"
+            emailType: "PAYMENT_SUCCESS"
         });
 
         return res.status(200).json(
@@ -409,53 +417,87 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
 // Get fee details for a user
 export const getFeeDetails = asyncHandler(async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
         const fees = await prisma.fee.findMany({
-            where: { 
+            where: {
                 userId: req.user.id,
+                status: {
+                    not: 'PAID'
+                }
             },
-            include: {
-                payments: true,
-                user: {
+            select: {
+                id: true,
+                amount: true,
+                dueDate: true,
+                title: true,
+                status: true,
+                type: true,
+                lateFeeAmount: true,
+                lateFeeDate: true,
+                payments: {
+                    where: {
+                        status: "COMPLETED"
+                    },
                     select: {
-                        name: true,
-                        email: true
+                        amount: true,
+                        status: true
                     }
                 }
             },
-            orderBy: { dueDate: 'desc' }
+            orderBy: [
+                { dueDate: 'asc' },
+                { createdAt: 'desc' }
+            ],
+            skip,
+            take: limit
         });
 
         const feeSummary = fees.map(fee => {
-            const totalPaid = fee.payments.reduce((sum, payment) => 
-                sum + (payment.status === "COMPLETED" ? payment.amount : 0), 0
-            );
+            const totalPaid = fee.payments.reduce((sum, payment) => sum + payment.amount, 0);
             const remaining = fee.amount - totalPaid;
-            
-            // Calculate status based on payment and due date
-            let status = "PENDING";
-            if (totalPaid >= fee.amount) {
-                status = "PAID";
-            } else if (new Date() > new Date(fee.dueDate)) {
-                status = "OVERDUE";
-            }
+            const today = new Date();
+            const dueDate = new Date(fee.dueDate);
+            const daysLate = today > dueDate ? Math.floor((today - dueDate) / (1000 * 60 * 60 * 24)) : 0;
 
             return {
                 ...fee,
                 totalPaid,
                 remaining,
-                status
+                status: today > dueDate ? "OVERDUE" :
+                    totalPaid > 0 ? "PARTIALLY_PAID" : "PENDING",
+                lateFeeAmount: daysLate > 0 && fee.lateFeeAmount ? fee.lateFeeAmount : 0,
+                daysOverdue: daysLate > 0 ? daysLate : null
             };
         });
 
-        return res.status(200).json(
-            new ApiResponsive(200, feeSummary, "Fee details fetched successfully")
-        );
+        const total = await prisma.fee.count({
+            where: {
+                userId: req.user.id,
+                status: {
+                    not: 'PAID'
+                }
+            }
+        });
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                fees: feeSummary,
+                pagination: {
+                    total,
+                    page,
+                    pages: Math.ceil(total / limit)
+                }
+            }
+        });
     } catch (error) {
         console.error("Fee details error:", error);
         throw new ApiError(500, "Failed to fetch fee details");
     }
 });
-
 // Get all fees (Admin)
 export const getAllFees = asyncHandler(async (req, res) => {
     try {
@@ -508,28 +550,59 @@ export const getAllFees = asyncHandler(async (req, res) => {
 // Get fee payment history
 export const getFeeHistory = asyncHandler(async (req, res) => {
     try {
-        const { userId } = req.params;
+        // Add pagination
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 8;
+        const skip = (page - 1) * limit;
 
+        // Optimized query
         const payments = await prisma.feePayment.findMany({
             where: {
-                userId: userId || req.user.id
+                userId: req.user.id,
+                status: "COMPLETED"
             },
-            include: {
-                fee: true,
-                user: {
+            select: {
+                id: true,
+                amount: true,
+                paymentDate: true,
+                status: true,
+                receiptNumber: true,
+                createdAt: true,
+                fee: {
                     select: {
-                        name: true,
-                        email: true
+                        title: true,
+                        type: true,
+                        amount: true
                     }
                 }
             },
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
+            skip,
+            take: limit
         });
 
-        return res.status(200).json(
-            new ApiResponsive(200, payments, "Payment history fetched successfully")
-        );
+        // Get total count for pagination
+        const total = await prisma.feePayment.count({
+            where: {
+                userId: req.user.id,
+                status: "COMPLETED"
+            }
+        });
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                payments,
+                pagination: {
+                    total,
+                    page,
+                    pages: Math.ceil(total / limit)
+                }
+            },
+            message: "Payment history fetched successfully"
+        });
     } catch (error) {
+        console.error("Payment history error:", error);
         throw new ApiError(500, "Failed to fetch payment history");
     }
 });
@@ -575,7 +648,7 @@ export const getFeeAnalytics = asyncHandler(async (req, res) => {
 
         // Base query conditions
         let whereConditions = {};
-        
+
         // Add date range filter if provided
         if (startDate && endDate) {
             whereConditions.dueDate = {
@@ -630,7 +703,7 @@ export const getFeeAnalytics = asyncHandler(async (req, res) => {
             const totalPaid = fee.payments.reduce((sum, payment) => sum + payment.amount, 0);
             const remaining = fee.amount - totalPaid;
             const month = new Date(fee.dueDate).toLocaleString('default', { month: 'long', year: 'numeric' });
-            
+
             // Update total amounts
             analytics.totalAmount += fee.amount;
             analytics.collectedAmount += totalPaid;

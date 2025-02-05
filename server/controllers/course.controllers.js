@@ -251,7 +251,7 @@ export const getCourseall = asyncHandler(async (req, res) => {
     select: {
       id: true,
       slug: true,
-      Section: {
+      sections: {
         select: {
           id: true,
           slug: true,
@@ -374,7 +374,7 @@ export const deleteCourse = asyncHandler(async (req, res) => {
   const course = await prisma.course.findUnique({
     where: { slug },
     include: {
-      Section: {
+      sections: {
         include: {
           chapters: true,
         },
@@ -389,7 +389,7 @@ export const deleteCourse = asyncHandler(async (req, res) => {
   // Delete all related data
   await prisma.$transaction(async (tx) => {
     // Delete chapters
-    for (const section of course.Section) {
+    for (const section of course.sections) {
       await tx.chapter.deleteMany({
         where: { sectionId: section.id },
       });

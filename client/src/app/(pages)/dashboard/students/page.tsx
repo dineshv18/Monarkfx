@@ -254,92 +254,6 @@ const AdminUsersPage: React.FC = () => {
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-3xl font-bold mb-8 text-center">User Management</h1>
-
-            <Card className="mb-8">
-                <CardHeader>
-                    <CardTitle>Create New User</CardTitle>
-                    <CardDescription>Enter the details of the new user</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit}>
-                        <div className="grid w-full items-center gap-4">
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="name">Name</Label>
-                                <Input id="name" name="name" value={newUser.name} onChange={handleInputChange} required />
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    value={newUser.email}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="password">Password</Label>
-                                <div className="relative">
-                                    <Input
-                                        id="password"
-                                        name="password"
-                                        type={showPassword ? "text" : "password"}
-                                        value={newUser.password}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                                    >
-                                        {showPassword ? (
-                                            <EyeOff className="h-4 w-4 text-gray-500" />
-                                        ) : (
-                                            <Eye className="h-4 w-4 text-gray-500" />
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="role">Role</Label>
-                                <Select name="role" value={newUser.role} onValueChange={(value) => handleSelectChange("role", value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select role" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="STUDENT">Student</SelectItem>
-                                        <SelectItem value="ADMIN">Admin</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="usertype">User Type</Label>
-                                <Select
-                                    name="usertype"
-                                    value={newUser.usertype}
-                                    onValueChange={(value) => handleSelectChange("usertype", value)}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select user type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="ONLINE">Online</SelectItem>
-                                        <SelectItem value="OFFLINE">Offline</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                    </form>
-                </CardContent>
-                <CardFooter>
-                    <Button type="submit" onClick={handleSubmit} disabled={!newUser.name || !newUser.email || !newUser.password}>
-                        Create User
-                    </Button>
-                </CardFooter>
-            </Card>
-
             <Card>
                 <CardHeader>
                     <CardTitle>User List</CardTitle>
@@ -479,6 +393,93 @@ const AdminUsersPage: React.FC = () => {
                     )}
                 </CardContent>
             </Card>
+
+            <Card className="mt-8">
+                <CardHeader>
+                    <CardTitle>Create New User</CardTitle>
+                    <CardDescription>Enter the details of the new user</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit}>
+                        <div className="grid w-full items-center gap-4">
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="name">Name</Label>
+                                <Input id="name" name="name" value={newUser.name} onChange={handleInputChange} required />
+                            </div>
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="email">Email</Label>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={newUser.email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="password">Password</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        name="password"
+                                        type={showPassword ? "text" : "password"}
+                                        value={newUser.password}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                                    >
+                                        {showPassword ? (
+                                            <EyeOff className="h-4 w-4 text-gray-500" />
+                                        ) : (
+                                            <Eye className="h-4 w-4 text-gray-500" />
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="role">Role</Label>
+                                <Select name="role" value={newUser.role} onValueChange={(value) => handleSelectChange("role", value)}>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select role" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="STUDENT">Student</SelectItem>
+                                        <SelectItem value="ADMIN">Admin</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="usertype">User Type</Label>
+                                <Select
+                                    name="usertype"
+                                    value={newUser.usertype}
+                                    onValueChange={(value) => handleSelectChange("usertype", value)}
+                                >
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select user type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="ONLINE">Online</SelectItem>
+                                        <SelectItem value="OFFLINE">Offline</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                    </form>
+                </CardContent>
+                <CardFooter>
+                    <Button type="submit" onClick={handleSubmit} disabled={!newUser.name || !newUser.email || !newUser.password}>
+                        Create User
+                    </Button>
+                </CardFooter>
+            </Card>
+
+
         </div>
     )
 }
