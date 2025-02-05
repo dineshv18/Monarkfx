@@ -179,6 +179,11 @@ export default function UserFees() {
 
                         if (verifyResponse.data?.success) {
                             toast.success("Payment successful!")
+                            // Update the fee status in the local state
+                            setFeeData((prevData) => ({
+                                ...prevData,
+                                fees: prevData.fees.map((f) => (f.id === feeId ? { ...f, status: "PAID", remaining: 0 } : f)),
+                            }))
                             fetchUserFees()
                             fetchPaymentHistory()
                         } else {
@@ -208,6 +213,26 @@ export default function UserFees() {
             toast.dismiss()
             console.error("Payment initiation error:", error)
             toast.error(error.response?.data?.message || error.message || "Failed to initiate payment")
+        }
+    }
+
+    const downloadReceipt = async (paymentId: string) => {
+        try {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/fees/receipt/${paymentId}`, {
+                responseType: "blob",
+                withCredentials: true,
+            })
+
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement("a")
+            link.href = url
+            link.setAttribute("download", `receipt-${paymentId}.pdf`)
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
+        } catch (error: any) {
+            console.error("Error downloading receipt:", error)
+            toast.error("Failed to download receipt")
         }
     }
 
@@ -397,6 +422,11 @@ export default function UserFees() {
                                                         <p className="text-sm text-gray-600">Receipt Number</p>
                                                         <p className="font-semibold text-gray-900">{payment.receiptNumber}</p>
                                                     </div>
+                                                </div>
+                                                <div className="mt-4 flex justify-end">
+                                                    <Button onClick={() => downloadReceipt(payment.id)} variant="outline" size="sm">
+                                                        Download Receipt
+                                                    </Button>
                                                 </div>
                                             </div>
                                         ))

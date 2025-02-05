@@ -4,7 +4,15 @@ import { useEffect, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { useAuth } from "@/helper/AuthContext"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -35,8 +43,7 @@ import { FeeTableSkeleton } from "./loading"
 import { Progress } from "@/components/ui/progress"
 import axios from "axios"
 import { BarChart } from "@/components/ui/bar-chart"
-import * as XLSX from 'xlsx'
-import { Skeleton } from "@/components/ui/skeleton"
+import * as XLSX from "xlsx"
 
 interface Fee {
     id: string
@@ -69,33 +76,33 @@ interface Student {
 
 // Add this type for editable fields
 type EditableField = {
-    key: keyof Fee;
-    label: string;
+    key: keyof Fee
+    label: string
 }
 
 // Add this constant for editable fields
 const EDITABLE_FIELDS: EditableField[] = [
-    { key: 'title', label: 'Title' },
-    { key: 'amount', label: 'Amount' },
-    { key: 'dueDate', label: 'Due Date' },
-    { key: 'type', label: 'Type' },
-    { key: 'description', label: 'Description' },
-    { key: 'lateFeeDate', label: 'Late Fee Date' },
-    { key: 'lateFeeAmount', label: 'Late Fee Amount' },
-];
+    { key: "title", label: "Title" },
+    { key: "amount", label: "Amount" },
+    { key: "dueDate", label: "Due Date" },
+    { key: "type", label: "Type" },
+    { key: "description", label: "Description" },
+    { key: "lateFeeDate", label: "Late Fee Date" },
+    { key: "lateFeeAmount", label: "Late Fee Amount" },
+]
 
 // Add this type for custom badge variants
-type CustomBadgeVariant = "success" | "warning" | "default" | "destructive" | "outline" | "secondary";
+type CustomBadgeVariant = "success" | "warning" | "default" | "destructive" | "outline" | "secondary"
 
 // Update the Badge component to handle custom variants
-const CustomBadge = ({ 
-    variant, 
-    children, 
-    className 
-}: { 
-    variant: CustomBadgeVariant; 
-    children: React.ReactNode;
-    className?: string;
+const CustomBadge = ({
+    variant,
+    children,
+    className,
+}: {
+    variant: CustomBadgeVariant
+    children: React.ReactNode
+    className?: string
 }) => {
     const getVariantStyles = (variant: CustomBadgeVariant) => {
         switch (variant) {
@@ -111,88 +118,55 @@ const CustomBadge = ({
     }
 
     return (
-        <Badge 
-            variant="outline"
-            className={cn(
-                getVariantStyles(variant),
-                className
-            )}
-        >
+        <Badge variant="outline" className={cn(getVariantStyles(variant), className)}>
             {children}
         </Badge>
     )
 }
 
-// Add these utility functions at the top of the file
-const getBadgeVariant = (status: string) => {
-  switch (status) {
-    case "PAID":
-      return "outline" // or "secondary"
-    case "PARTIAL":
-      return "secondary"
-    case "OVERDUE":
-      return "destructive"
-    default:
-      return "default"
-  }
-}
-
-const getBadgeStyles = (status: string) => {
-  switch (status) {
-    case "PAID":
-      return "bg-green-100 text-green-800 border-green-200"
-    case "PARTIAL":
-      return "bg-yellow-100 text-yellow-800 border-yellow-200"
-    case "OVERDUE":
-      return "bg-red-100 text-red-800 border-red-200"
-    default:
-      return "bg-gray-100 text-gray-800 border-gray-200"
-  }
-}
-
 // Add these new components for analytics
 const FeeAnalytics = () => {
-    const [analytics, setAnalytics] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const [analytics, setAnalytics] = useState<any>(null)
+    const [loading, setLoading] = useState(true)
     const [dateRange, setDateRange] = useState({
         startDate: null,
-        endDate: null
-    });
-    const [selectedType, setSelectedType] = useState("");
+        endDate: null,
+    })
+    const [selectedType, setSelectedType] = useState("")
 
     const fetchAnalytics = async () => {
         try {
-            setLoading(true);
-            let url = `${process.env.NEXT_PUBLIC_API_URL}/fees/analytics`;
-            
+            setLoading(true)
+            let url = `${process.env.NEXT_PUBLIC_API_URL}/fees/analytics`
+
             // Add query parameters if filters are set
-            const params = new URLSearchParams();
-            if (dateRange.startDate) params.append('startDate', dateRange.startDate);
-            if (dateRange.endDate) params.append('endDate', dateRange.endDate);
-            if (selectedType) params.append('type', selectedType);
-            
+            const params = new URLSearchParams()
+            if (dateRange.startDate) params.append("startDate", dateRange.startDate)
+            if (dateRange.endDate) params.append("endDate", dateRange.endDate)
+            if (selectedType) params.append("type", selectedType)
+
             if (params.toString()) {
-                url += `?${params.toString()}`;
+                url += `?${params.toString()}`
             }
 
-            const response = await axios.get(url, { withCredentials: true });
-            
+            const response = await axios.get(url, { withCredentials: true })
+
             if (response.data?.success) {
-                setAnalytics(response.data.data);
+                setAnalytics(response.data.data)
             }
         } catch (error) {
-            console.error("Error fetching analytics:", error);
-            toast.error("Failed to fetch analytics");
+            console.error("Error fetching analytics:", error)
+            toast.error("Failed to fetch analytics")
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
     useEffect(() => {
-        fetchAnalytics();
-    }, [dateRange, selectedType]);
+        fetchAnalytics()
+    }, [dateRange, selectedType])
 
-    if (loading) return <div>Loading analytics...</div>;
+    if (loading) return <div>Loading analytics...</div>
 
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -203,13 +177,8 @@ const FeeAnalytics = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="text-2xl font-bold">₹{analytics?.collectedAmount.toFixed(2)}</div>
-                    <p className="text-xs text-muted-foreground">
-                        of ₹{analytics?.totalAmount.toFixed(2)}
-                    </p>
-                    <Progress 
-                        value={analytics?.collectionRate} 
-                        className="mt-2"
-                    />
+                    <p className="text-xs text-muted-foreground">of ₹{analytics?.totalAmount.toFixed(2)}</p>
+                    <Progress value={analytics?.collectionRate} className="mt-2" />
                 </CardContent>
             </Card>
 
@@ -235,10 +204,10 @@ const FeeAnalytics = () => {
                     <CardTitle>Monthly Collection</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <BarChart 
+                    <BarChart
                         data={Object.entries(analytics?.monthlyCollection || {}).map(([month, amount]) => ({
                             month,
-                            amount: typeof amount === 'number' ? amount : 0
+                            amount: typeof amount === "number" ? amount : 0,
                         }))}
                     />
                 </CardContent>
@@ -265,9 +234,7 @@ const FeeAnalytics = () => {
                                     <TableCell>{payment.user.name}</TableCell>
                                     <TableCell>₹{payment.amount}</TableCell>
                                     <TableCell>{payment.fee.type}</TableCell>
-                                    <TableCell>
-                                        {new Date(payment.createdAt).toLocaleDateString()}
-                                    </TableCell>
+                                    <TableCell>{new Date(payment.createdAt).toLocaleDateString()}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -275,16 +242,42 @@ const FeeAnalytics = () => {
                 </CardContent>
             </Card>
         </div>
-    );
-};
-
+    )
+}
+interface FeeFormData {
+    title: string
+    amount: number
+    type: string
+    description?: string
+    lateFeeAmount?: number
+    lateFeeDate?: string
+    dueDate?: string
+    isOfflineFee?: boolean
+    userId: string
+}
 export default function FeesPage() {
     const [fees, setFees] = useState<Fee[]>([])
     const [students, setStudents] = useState<Student[]>([])
     const [loading, setLoading] = useState(true)
     const [selectedFee, setSelectedFee] = useState<Fee | null>(null)
     const { checkAuth } = useAuth()
-    const { register, handleSubmit, control, reset } = useForm()
+    const {
+        register,
+        handleSubmit,
+        control,
+        reset,
+        formState: { errors }
+    } = useForm<FeeFormData>({
+        defaultValues: {
+            title: '',
+            amount: 0,
+            type: '',
+            description: '',
+            lateFeeAmount: 0,
+            lateFeeDate: '',
+            dueDate: ''
+        }
+    });
     const [editDate, setEditDate] = useState<Date>()
     const [createDate, setCreateDate] = useState<Date>()
     const [editLateFeeDate, setEditLateFeeDate] = useState<Date>()
@@ -292,6 +285,9 @@ export default function FeesPage() {
     const [createLateFeeDate, setCreateLateFeeDate] = useState<Date>()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     const [editFormData, setEditFormData] = useState<any>(null)
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+
 
     useEffect(() => {
         fetchFees()
@@ -356,12 +352,12 @@ export default function FeesPage() {
             const feeData = {
                 userId: data.userId,
                 title: data.title,
-                amount: parseFloat(data.amount),
+                amount: Number.parseFloat(data.amount),
                 dueDate: format(createDate, "yyyy-MM-dd"), // Use the createDate state
                 type: data.type,
                 description: data.description || null,
                 lateFeeDate: data.lateFeeDate ? format(new Date(data.lateFeeDate), "yyyy-MM-dd") : null,
-                lateFeeAmount: data.lateFeeAmount ? parseFloat(data.lateFeeAmount) : null,
+                lateFeeAmount: data.lateFeeAmount ? Number.parseFloat(data.lateFeeAmount) : null,
                 isOfflineFee: data.isOfflineFee || false
             }
 
@@ -371,7 +367,7 @@ export default function FeesPage() {
                 body: JSON.stringify(feeData),
                 credentials: "include",
             })
-            
+
             if (response.ok) {
                 toast.success("Fee created successfully")
                 fetchFees()
@@ -400,74 +396,49 @@ export default function FeesPage() {
         });
         setEditDate(new Date(fee.dueDate));
         setEditLateFeeDate(fee.lateFeeDate ? new Date(fee.lateFeeDate) : undefined);
+        setSelectedFields(new Set()); // Reset selected fields
         setIsDialogOpen(true);
     };
 
-    const onSubmitUpdate = async (data: any) => {
-        console.log("Update triggered", { data, selectedFee });
-        
+    const onSubmitUpdate = async (formData: any) => {
         if (!selectedFee) {
             toast.error("No fee selected");
             return;
         }
 
         if (selectedFields.size === 0) {
-            toast.error("Please select at least one field to update");
+            toast.error("No fields selected for update");
             return;
         }
-        
-        const isAuth = await checkAuth();
-        if (!isAuth) return;
 
+        setIsSubmitting(true);
         try {
-            const updateData = Array.from(selectedFields).reduce((acc: any, field: keyof Fee) => {
-                if (field === 'dueDate' && editDate) {
-                    acc[field] = format(editDate, "yyyy-MM-dd");
-                }
-                else if (field === 'lateFeeDate' && editLateFeeDate) {
-                    acc[field] = format(editLateFeeDate, "yyyy-MM-dd");
-                }
-                else if ((field === 'amount' || field === 'lateFeeAmount') && data[field]) {
-                    acc[field] = parseFloat(data[field]);
-                }
-                else if (data[field] !== undefined && data[field] !== '') {
-                    acc[field] = data[field];
-                }
-                return acc;
-            }, {});
+            const updateData = {
+                ...(selectedFields.has('title') && { title: formData.title }),
+                ...(selectedFields.has('amount') && { amount: Number.parseFloat(formData.amount) }),
+                ...(selectedFields.has('type') && { type: formData.type }),
+                ...(selectedFields.has('description') && { description: formData.description }),
+                ...(selectedFields.has('dueDate') && { dueDate: format(editDate!, "yyyy-MM-dd") }),
+                ...(selectedFields.has('lateFeeDate') && { lateFeeDate: format(editLateFeeDate!, "yyyy-MM-dd") }),
+                ...(selectedFields.has('lateFeeAmount') && { lateFeeAmount: Number.parseFloat(formData.lateFeeAmount) })
+            };
 
-            console.log("Update data being sent:", updateData);
-
-            if (Object.keys(updateData).length === 0) {
-                toast.error("No changes detected");
-                return;
+            const response = await axios.patch(
+                `${process.env.NEXT_PUBLIC_API_URL}/fees/update/${selectedFee.id}`,
+                updateData,
+                { withCredentials: true }
+            );
+            if (response.data?.success) {
+                toast.success("Fee updated successfully");
+                await fetchFees();
+                setIsDialogOpen(false);
+                setEditDate(undefined);
+                reset();
             }
-
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fees/update/${selectedFee.id}`, {
-                method: "PATCH",
-                headers: { 
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(updateData),
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to update fee");
-            }
-
-            toast.success("Fee updated successfully");
-            await fetchFees();
-            setSelectedFields(new Set());
-            setSelectedFee(null);
-            setEditDate(undefined);
-            setEditLateFeeDate(undefined);
-            setEditFormData(null);
-            setIsDialogOpen(false);
         } catch (error: any) {
-            console.error("Update error:", error);
-            toast.error(error.message || "Error updating fee");
+            toast.error(error.response?.data?.message || error.message || "Update failed");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -542,7 +513,7 @@ export default function FeesPage() {
         const ws = XLSX.utils.json_to_sheet(dataToExport)
         const wb = XLSX.utils.book_new()
         XLSX.utils.book_append_sheet(wb, ws, "Fees")
-        
+
         XLSX.writeFile(wb, `fees_report_${format(new Date(), "dd-MM-yyyy")}.xlsx`)
     }
 
@@ -552,7 +523,7 @@ export default function FeesPage() {
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Fee Management</h1>
-                <Button 
+                <Button
                     onClick={exportToExcel}
                     className="bg-green-600 hover:bg-green-700 text-white"
                 >
@@ -617,10 +588,10 @@ export default function FeesPage() {
                                                 <Badge variant="outline">{fee.type}</Badge>
                                             </TableCell>
                                             <TableCell>
-                                                <CustomBadge 
+                                                <CustomBadge
                                                     variant={
-                                                        fee.status === "PAID" ? "success" : 
-                                                        fee.status === "PARTIAL" ? "warning" : "default"
+                                                        fee.status === "PAID" ? "success" :
+                                                            fee.status === "PARTIAL" ? "warning" : "default"
                                                     }
                                                 >
                                                     {fee.status}
@@ -629,9 +600,9 @@ export default function FeesPage() {
                                             <TableCell>
                                                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                                                     <DialogTrigger asChild>
-                                                        <Button 
-                                                            variant="outline" 
-                                                            className="mr-2" 
+                                                        <Button
+                                                            variant="outline"
+                                                            className="mr-2"
                                                             onClick={() => handleEditClick(fee)}
                                                             disabled={fee.status === "PAID"}
                                                         >
@@ -645,7 +616,7 @@ export default function FeesPage() {
                                                                 Select fields you want to update for {fee.user.name}
                                                             </DialogDescription>
                                                         </DialogHeader>
-                                                        
+
                                                         {selectedFields.size === 0 ? (
                                                             <div className="space-y-4">
                                                                 <div className="grid grid-cols-2 gap-2">
@@ -678,16 +649,16 @@ export default function FeesPage() {
                                                                         </Button>
                                                                     ))}
                                                                 </div>
-                                                                <Button 
-                                                                    className="w-full mt-4"
-                                                                    onClick={() => {
-                                                                        if (selectedFields.size === 0) {
-                                                                            toast.error("Please select at least one field to edit");
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    Continue to Edit
-                                                                </Button>
+                                                                {selectedFields.size > 0 && (
+                                                                    <Button
+                                                                        className="w-full mt-4"
+                                                                        onClick={() => {
+                                                                            // Continue to edit
+                                                                        }}
+                                                                    >
+                                                                        Continue to Edit
+                                                                    </Button>
+                                                                )}
                                                             </div>
                                                         ) : (
                                                             <ScrollArea className="max-h-[80vh] px-1">
@@ -703,7 +674,7 @@ export default function FeesPage() {
                                                                             />
                                                                         </div>
                                                                     )}
-                                                                    
+
                                                                     {selectedFields.has('amount') && (
                                                                         <div>
                                                                             <Label htmlFor="editAmount">Amount</Label>
@@ -731,9 +702,9 @@ export default function FeesPage() {
                                                                                         )}
                                                                                     >
                                                                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                                                                        {editDate ? format(editDate, "PPP") : 
-                                                                                         fee.dueDate ? format(new Date(fee.dueDate), "PPP") : 
-                                                                                         <span>Pick a date</span>}
+                                                                                        {editDate ? format(editDate, "PPP") :
+                                                                                            fee.dueDate ? format(new Date(fee.dueDate), "PPP") :
+                                                                                                <span>Pick a date</span>}
                                                                                     </Button>
                                                                                 </PopoverTrigger>
                                                                                 <PopoverContent className="w-auto p-0" align="start">
@@ -765,8 +736,8 @@ export default function FeesPage() {
                                                                                 control={control}
                                                                                 defaultValue={editFormData?.type}
                                                                                 render={({ field }) => (
-                                                                                    <Select 
-                                                                                        onValueChange={field.onChange} 
+                                                                                    <Select
+                                                                                        onValueChange={field.onChange}
                                                                                         defaultValue={field.value}
                                                                                     >
                                                                                         <SelectTrigger className="mt-1">
@@ -809,9 +780,9 @@ export default function FeesPage() {
                                                                                         )}
                                                                                     >
                                                                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                                                                        {editLateFeeDate ? format(editLateFeeDate, "PPP") : 
-                                                                                         fee.lateFeeDate ? format(new Date(fee.lateFeeDate), "PPP") : 
-                                                                                         <span>Pick a date</span>}
+                                                                                        {editLateFeeDate ? format(editLateFeeDate, "PPP") :
+                                                                                            fee.lateFeeDate ? format(new Date(fee.lateFeeDate), "PPP") :
+                                                                                                <span>Pick a date</span>}
                                                                                     </Button>
                                                                                 </PopoverTrigger>
                                                                                 <PopoverContent className="w-auto p-0" align="start">
@@ -840,22 +811,16 @@ export default function FeesPage() {
                                                                     )}
 
                                                                     <DialogFooter className="mt-6">
-                                                                        <Button 
-                                                                            type="button" 
-                                                                            variant="outline" 
-                                                                            onClick={() => {
-                                                                                setSelectedFields(new Set());
-                                                                                setEditDate(undefined);
-                                                                                setEditLateFeeDate(undefined);
-                                                                            }}
-                                                                        >
-                                                                            Back to Selection
+                                                                        <Button type="button" variant="outline" onClick={() => {
+                                                                            setIsDialogOpen(false);
+                                                                            setEditDate(undefined);
+                                                                            setEditLateFeeDate(undefined);
+                                                                        }}>
+                                                                            Cancel
                                                                         </Button>
-                                                                        <Button 
-                                                                            type="submit"
-                                                                            variant="default"
-                                                                        >
-                                                                            Update Fee
+
+                                                                        <Button type="submit" disabled={isSubmitting}>
+                                                                            {isSubmitting ? "Updating..." : "Update Fee"}
                                                                         </Button>
                                                                     </DialogFooter>
                                                                 </form>
@@ -863,15 +828,15 @@ export default function FeesPage() {
                                                         )}
                                                     </DialogContent>
                                                 </Dialog>
-                                                
+
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
-                                                        <Button 
+                                                        <Button
                                                             variant="destructive"
                                                             disabled={fee.payments.length > 0 || fee.status === "PAID"}
                                                         >
                                                             <Trash className="h-4 w-4" />
-                                                          
+
                                                         </Button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
@@ -932,22 +897,22 @@ export default function FeesPage() {
                                 </div>
                                 <div>
                                     <Label htmlFor="title">Title *</Label>
-                                    <Input 
-                                        id="title" 
-                                        {...register("title", { 
-                                            required: "Title is required" 
-                                        })} 
+                                    <Input
+                                        id="title"
+                                        {...register("title", {
+                                            required: "Title is required"
+                                        })}
                                     />
                                 </div>
                                 <div>
                                     <Label htmlFor="amount">Amount *</Label>
-                                    <Input 
-                                        id="amount" 
-                                        type="number" 
-                                        {...register("amount", { 
+                                    <Input
+                                        id="amount"
+                                        type="number"
+                                        {...register("amount", {
                                             required: "Amount is required",
                                             min: { value: 0, message: "Amount must be positive" }
-                                        })} 
+                                        })}
                                     />
                                 </div>
                                 <div>
@@ -955,7 +920,7 @@ export default function FeesPage() {
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <Button
-                                                variant={"outline"}
+                                                variant="outline"
                                                 className={cn(
                                                     "w-full justify-start text-left font-normal",
                                                     !createDate && "text-muted-foreground"
@@ -1027,19 +992,19 @@ export default function FeesPage() {
                                 </div>
                                 <div>
                                     <Label htmlFor="lateFeeAmount">Late Fee Amount (Optional)</Label>
-                                    <Input 
-                                        id="lateFeeAmount" 
-                                        type="number" 
-                                        {...register("lateFeeAmount", { 
+                                    <Input
+                                        id="lateFeeAmount"
+                                        type="number"
+                                        {...register("lateFeeAmount", {
                                             min: { value: 0, message: "Late fee amount must be positive" }
-                                        })} 
+                                        })}
                                     />
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <input 
-                                        type="checkbox" 
-                                        id="isOfflineFee" 
-                                        {...register("isOfflineFee")} 
+                                    <input
+                                        type="checkbox"
+                                        id="isOfflineFee"
+                                        {...register("isOfflineFee")}
                                         className="rounded border-gray-300 text-primary focus:ring-primary"
                                     />
                                     <Label htmlFor="isOfflineFee">Is Offline Fee (Optional)</Label>

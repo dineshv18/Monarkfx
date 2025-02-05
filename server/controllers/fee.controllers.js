@@ -172,8 +172,6 @@ export const payFee = asyncHandler(async (req, res) => {
             });
         });
 
-        console.log("Order created:", order);
-
         if (!order || !order.id) {
             throw new ApiError(500, "Failed to create payment order");
         }
