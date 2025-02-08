@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
@@ -8,6 +8,7 @@ import { Award, TrendingUp, Flame, Star, BookOpen, Gift, Folder, Check } from "l
 import { formatPrice } from "@/helper/FormatPrice"
 import { CourseCardProps } from "@/type"
 import parse from "html-react-parser"
+import { Progress } from "@/components/ui/progress"
 
 const BadgeStyles = {
   bestseller: "bg-yellow-400/20 text-yellow-200 border-yellow-400/40",
@@ -19,15 +20,56 @@ const BadgeStyles = {
 export default function EnhancedCourseCard({ course, hidePrice = false }: CourseCardProps & { hidePrice?: boolean }) {
   const [isHovered, setIsHovered] = useState(false)
   const isFree = !course.paid
+  const [courseProgress, setCourseProgress] = useState<{
+    percentage: number;
+    completedChapters: number;
+    totalChapters: number;
+  }>({
+    percentage: 0,
+    completedChapters: 0,
+    totalChapters: 0
+  });
+
+  useEffect(() => {
+    if (hidePrice) {
+      const fetchCourseProgress = async () => {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/user-progress/course/${course.id}`,
+            {
+              credentials: 'include',
+            }
+          );
+          const data = await response.json();
+          if (data.success) {
+            setCourseProgress({
+              percentage: data.data.percentage || 0,
+              completedChapters: data.data.completedCount || 0,
+              totalChapters: data.data.totalChapters || 0
+            });
+          }
+        } catch (error) {
+          console.error("Failed to fetch course progress:", error);
+        }
+      };
+
+      fetchCourseProgress();
+    }
+  }, [course.id, hidePrice]);
+
+  // Determine the correct URL based on hidePrice (enrolled/purchased status)
+  const courseUrl = hidePrice 
+    ? `/courses/${course.slug}/${course.id}` // For enrolled/purchased courses - go to course player
+    : `/courses/${course.slug}`              // For non-enrolled courses - go to course details
 
   return (
     <Link
-      href={`/courses/${course.slug}`}
+      href={courseUrl}
       className="block perspective-1000"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className={`relative transform-gpu transition-all duration-500 h-[480px] w-full max-w-[422px] mx-auto`}>
+      <div className={`relative transform-gpu transition-all duration-500 h-[500px] w-full max-w-[422px] mx-auto`}>
         {/* Main Card with Animated Border */}
         <div className="relative h-full w-full [background:linear-gradient(45deg,#ffffff,theme(colors.gray.50)_50%,#fafafa)_padding-box,conic-gradient(from_var(--border-angle),theme(colors.gray.200/.75)_75%,_theme(colors.red.400)_80%,_theme(colors.red.300)_85%,_theme(colors.red.400)_90%,_theme(colors.gray.200/.75))_border-box] rounded-xl border-[2px] border-transparent animate-border shadow-xl">
 
@@ -96,12 +138,21 @@ export default function EnhancedCourseCard({ course, hidePrice = false }: Course
               </Badge>
             </div>
 
-            {/* Price Section or Enrolled Badge */}
+            {/* Price Section or Progress Badge */}
             <div className="pt-4 mt-2 border-t border-gray-100">
               {hidePrice ? (
-                <Badge variant="secondary" className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-sm">
-                  <Check className="w-4 h-4 mr-1.5" /> Enrolled
-                </Badge>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <Badge variant="secondary" className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-sm">
+                      <Check className="w-4 h-4 mr-1.5" /> Enrolled
+                    </Badge>
+                    <span className="text-sm text-gray-600">
+                      {courseProgress.completedChapters}/{courseProgress.totalChapters} Chapters
+                    </span>
+                  </div>
+                  <Progress value={courseProgress.percentage} className="h-2" />
+                  <span className="text-xs text-gray-600">{Math.round(courseProgress.percentage)}% Complete</span>
+                </div>
               ) : isFree ? (
                 <Badge variant="secondary" className="bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 shadow-sm">
                   <Gift className="w-4 h-4 mr-1.5" /> Free Access

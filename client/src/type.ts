@@ -524,12 +524,14 @@ export interface CourseDataNew {
   paid: boolean;
   slug?: string;
   createdAt?: string;
+  duration?: number;
   sections: Section[];
   categoryId: string;
   category: {
     id: string;
     name: string;
   };
+  gracePeriod?: number;
 }
 
 export interface Section {
@@ -557,6 +559,10 @@ export interface ChapterDataNew {
   sectionId: string;
   createdAt: string;
   updatedAt: string;
+  duration?: number;
+  progress?: {
+    watchedTime: number
+  }
 }
 
 export interface CourseSeo {
@@ -597,4 +603,37 @@ export interface Review {
         name: string
         email: string
     }
+}
+
+export interface Fee {
+    id: string;
+    title: string;
+    amount: number;
+    dueDate: string;
+    type: string;
+    description?: string;
+    lateFeeDate?: string;
+    lateFeeAmount?: number;
+    isOfflineFee: boolean;
+    userId: string;
+    user: {
+        name: string;
+        email: string;
+    };
+    totalPaid: number;
+    remaining: number;
+    gracePeriod?: number;
+}
+
+export interface FeeFormData {
+    title: string;
+    amount: number;
+    dueDate: string;
+    type: string;
+    description?: string;
+    lateFeeDate?: string;
+    lateFeeAmount?: number;
+    isOfflineFee: boolean;
+    userId: string;
+    gracePeriod?: number;
 }

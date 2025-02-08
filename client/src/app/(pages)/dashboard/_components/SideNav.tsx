@@ -18,7 +18,8 @@ import {
   BookOpen,
   FilePlus,
   FileText,
-  MessageSquare
+  MessageSquare,
+  Award
 } from "lucide-react";
 import { NavItem } from "@/type";
 
@@ -67,6 +68,11 @@ const navItems: NavItem[] = [
     title: "Revenue",
     href: "/dashboard/fees",
     icon: Wallet,
+  },
+  {
+    title: "Certificates",
+    href: "/dashboard/certificates",
+    icon: Award
   },
 ];
 

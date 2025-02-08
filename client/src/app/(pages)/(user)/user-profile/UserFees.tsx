@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { CreditCard, AlertCircle, Clock, IndianRupee, Calendar, ArrowRight, History } from "lucide-react"
 import axios from "axios"
 import Script from "next/script"
+import { Skeleton } from "@/components/ui/skeleton"
 
 declare global {
     interface Window {
@@ -29,7 +30,8 @@ interface Fee {
     lateFeeDate: string | null
     totalPaid: number
     remaining: number
-    daysOverdue: number | null
+    gracePeriod: number
+    description?: string
 }
 
 interface Payment {
@@ -38,6 +40,7 @@ interface Payment {
     status: string
     paymentDate: string
     receiptNumber: string
+    createdAt: string
     fee: {
         title: string
         type: string
@@ -53,6 +56,7 @@ interface PaginationInfo {
 
 interface FeeResponse {
     fees: Fee[]
+    payments: Payment[]
     pagination: PaginationInfo
 }
 
@@ -61,13 +65,22 @@ interface PaymentResponse {
     pagination: PaginationInfo
 }
 
+interface FeeData {
+    fees: Fee[]
+    payments: Payment[]
+}
+
 export default function UserFees() {
-    const [feeData, setFeeData] = useState<FeeResponse>({ fees: [], pagination: { total: 0, page: 1, pages: 1 } })
-    const [paymentData, setPaymentData] = useState<PaymentResponse>({
-        payments: [],
-        pagination: { total: 0, page: 1, pages: 1 },
-    })
     const [loading, setLoading] = useState(true)
+    const [feeData, setFeeData] = useState<FeeResponse>({ 
+        fees: [], 
+        payments: [], 
+        pagination: { 
+            total: 0, 
+            page: 1, 
+            pages: 1 
+        } 
+    })
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
@@ -84,7 +97,17 @@ export default function UserFees() {
             })
 
             if (response.data?.success) {
-                setFeeData(response.data.data)
+                const { fees, payments } = response.data.data
+
+                setFeeData({
+                    fees: fees,
+                    payments: payments,
+                    pagination: {
+                        total: fees.length,
+                        page: page,
+                        pages: Math.ceil(fees.length / 10)
+                    }
+                })
             } else {
                 setError("Failed to fetch fees data")
             }
@@ -97,22 +120,23 @@ export default function UserFees() {
         }
     }
 
-    const fetchPaymentHistory = async (page = 1) => {
+    const fetchPaymentHistory = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/fees/history?page=${page}`, {
-                withCredentials: true,
-            })
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URL}/fees/history`,
+                { withCredentials: true }
+            );
 
             if (response.data?.success) {
-                setPaymentData(response.data.data)
-            } else {
-                toast.error("Failed to fetch payment history")
+                setFeeData(prevData => ({
+                    ...prevData,
+                    payments: response.data.data.payments || []
+                }));
             }
-        } catch (error: any) {
-            console.error("Error fetching payment history:", error)
-            toast.error(error.response?.data?.message || "Error fetching payment history")
+        } catch (error) {
+            console.error("Error fetching payment history:", error);
         }
-    }
+    };
 
     const handlePayFee = async (feeId: string, amount: number) => {
         try {
@@ -185,7 +209,6 @@ export default function UserFees() {
                                 fees: prevData.fees.map((f) => (f.id === feeId ? { ...f, status: "PAID", remaining: 0 } : f)),
                             }))
                             fetchUserFees()
-                            fetchPaymentHistory()
                         } else {
                             throw new Error(verifyResponse.data?.message || "Payment verification failed")
                         }
@@ -240,8 +263,10 @@ export default function UserFees() {
         switch (status) {
             case "PAID":
                 return "bg-green-100 text-green-800 border-green-200"
-            case "PARTIALLY_PAID":
+            case "PARTIAL":
                 return "bg-yellow-100 text-yellow-800 border-yellow-200"
+            case "PENDING":
+                return "bg-blue-100 text-blue-800 border-blue-200"
             case "OVERDUE":
                 return "bg-red-100 text-red-800 border-red-200"
             default:
@@ -252,9 +277,16 @@ export default function UserFees() {
     if (loading) {
         return (
             <Card>
-                <CardContent className="p-8">
-                    <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <CardHeader>
+                    <CardTitle>
+                        <Skeleton className="h-8 w-32" />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-4">
+                        {[...Array(3)].map((_, i) => (
+                            <Skeleton key={i} className="h-16 w-full" />
+                        ))}
                     </div>
                 </CardContent>
             </Card>
@@ -264,14 +296,8 @@ export default function UserFees() {
     if (error) {
         return (
             <Card>
-                <CardContent className="p-8">
-                    <div className="flex flex-col items-center justify-center text-center space-y-4">
-                        <AlertCircle className="h-8 w-8 text-red-500" />
-                        <p className="text-red-600">{error}</p>
-                        <Button onClick={() => fetchUserFees()} variant="outline">
-                            Try Again
-                        </Button>
-                    </div>
+                <CardContent className="p-6">
+                    <div className="text-center text-red-500">{error}</div>
                 </CardContent>
             </Card>
         )
@@ -298,12 +324,12 @@ export default function UserFees() {
                         <TabsContent value="upcoming">
                             <ScrollArea className="h-[400px] pr-4">
                                 <div className="space-y-4">
-                                    {feeData.fees.length === 0 ? (
+                                    {!loading && feeData?.fees?.length === 0 ? (
                                         <div className="text-center py-8">
-                                            <p className="text-gray-500">No fees due at the moment</p>
+                                            <p className="text-gray-500">No upcoming fees due within 10 days</p>
                                         </div>
                                     ) : (
-                                        feeData.fees.map((fee) => (
+                                        feeData?.fees?.map((fee) => (
                                             <div key={fee.id} className="p-4 rounded-lg border bg-white hover:shadow-md transition-shadow">
                                                 <div className="flex justify-between items-start">
                                                     <div className="space-y-1">
@@ -311,6 +337,9 @@ export default function UserFees() {
                                                         <div className="flex items-center gap-2 text-sm text-gray-600">
                                                             <Calendar className="h-4 w-4" />
                                                             <span>Due: {format(new Date(fee.dueDate), "PPP")}</span>
+                                                            <span className="text-primary">
+                                                                ({Math.ceil((new Date(fee.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days remaining)
+                                                            </span>
                                                         </div>
                                                     </div>
                                                     <Badge variant="outline" className={getStatusColor(fee.status)}>
@@ -353,21 +382,12 @@ export default function UserFees() {
                                                         </Button>
                                                     </div>
                                                 )}
-
-                                                {fee.daysOverdue && fee.daysOverdue > 0 && (
-                                                    <div className="mt-4 flex items-center gap-2 text-sm text-red-600">
-                                                        <Clock className="h-4 w-4" />
-                                                        <span>
-                                                            Overdue by {fee.daysOverdue} {fee.daysOverdue === 1 ? "day" : "days"}
-                                                        </span>
-                                                    </div>
-                                                )}
                                             </div>
                                         ))
                                     )}
                                 </div>
                             </ScrollArea>
-                            {feeData.pagination.pages > 1 && (
+                            {feeData?.pagination?.pages > 1 && (
                                 <div className="mt-4 flex justify-center">
                                     <Button
                                         onClick={() => fetchUserFees(feeData.pagination.page - 1)}
@@ -387,15 +407,16 @@ export default function UserFees() {
                                 </div>
                             )}
                         </TabsContent>
+
                         <TabsContent value="history">
                             <ScrollArea className="h-[400px] pr-4">
                                 <div className="space-y-4">
-                                    {paymentData.payments.length === 0 ? (
+                                    {!loading && feeData?.payments?.length === 0 ? (
                                         <div className="text-center py-8">
-                                            <p className="text-gray-500">No payment history found</p>
+                                            <p className="text-gray-500">No payment history available</p>
                                         </div>
                                     ) : (
-                                        paymentData.payments.map((payment) => (
+                                        feeData?.payments?.map((payment) => (
                                             <div
                                                 key={payment.id}
                                                 className="p-4 rounded-lg border bg-white hover:shadow-md transition-shadow"
@@ -433,25 +454,6 @@ export default function UserFees() {
                                     )}
                                 </div>
                             </ScrollArea>
-                            {paymentData.pagination.pages > 1 && (
-                                <div className="mt-4 flex justify-center">
-                                    <Button
-                                        onClick={() => fetchPaymentHistory(paymentData.pagination.page - 1)}
-                                        disabled={paymentData.pagination.page === 1}
-                                        variant="outline"
-                                        className="mr-2"
-                                    >
-                                        Previous
-                                    </Button>
-                                    <Button
-                                        onClick={() => fetchPaymentHistory(paymentData.pagination.page + 1)}
-                                        disabled={paymentData.pagination.page === paymentData.pagination.pages}
-                                        variant="outline"
-                                    >
-                                        Next
-                                    </Button>
-                                </div>
-                            )}
                         </TabsContent>
                     </Tabs>
                 </CardContent>

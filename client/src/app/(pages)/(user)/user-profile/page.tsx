@@ -42,6 +42,7 @@ import EnhancedCourseCard from "../../_components/EnhancedCourseCard"
 import CustomSeparator from "./custom-separator"
 import CustomProgress from "./custom-progress"
 import UserFees from "./UserFees"
+import UserCertificates from "./UserCertificates"
 
 interface UserSubscription {
   type: "ONLINE" | "OFFLINE"
@@ -268,6 +269,11 @@ const UserProfile = () => {
         {/* Fees Section */}
         <div className="mb-6">
           <UserFees />
+        </div>
+
+        {/* Certificates Section */}
+        <div className="mb-6">
+          <UserCertificates />
         </div>
 
         {/* Courses Sections */}

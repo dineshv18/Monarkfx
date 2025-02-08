@@ -16,12 +16,14 @@ import couponRoutes from "./routes/coupon.routes.js";
 import sectionRoutes from "./routes/section.routes.js";
 import categoryRouter from "./routes/category.routes.js";
 import feeRoutes from "./routes/fee.routes.js";
+import certificateRoutes from "./routes/certificate.routes.js";
 
 
 const app = express();
 
 // Security & Parse Middlewares
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
@@ -96,6 +98,7 @@ app.use("/api/v1/coupon", couponRoutes);
 app.use("/api/v1/section", sectionRoutes);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/fees", feeRoutes);
+app.use("/api/v1/certificates", certificateRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

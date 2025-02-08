@@ -23,13 +23,19 @@ interface CourseLayoutProps {
   slug: string
 }
 
+interface CourseProgress {
+  percentage: number;
+  completedChapters: string[];
+  isCompleted: boolean;
+}
+
 const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) => {
   const router = useRouter()
   const { checkAuth } = useAuth()
   const [course] = useState<CourseDataNew>(initialCourseData)
   const [selectedChapter, setSelectedChapter] = useState<ChapterDataNew | null>(null)
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [isPurchaseChecked, setIsPurchaseChecked] = useState(false)
   const [isVideoLoading, setIsVideoLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -37,6 +43,15 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+  const [chapterProgress, setChapterProgress] = useState<{
+    isCompleted: boolean;
+    watchedTime: number;
+  } | null>(null);
+  const [courseProgress, setCourseProgress] = useState<CourseProgress>({
+    percentage: 0,
+    completedChapters: [],
+    isCompleted: false
+  });
 
   const makeAuthenticatedRequest = async (url: string, options: RequestInit = {}) => {
     try {
@@ -58,6 +73,8 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
       }
 
       const data = await response.json()
+      console.log("API Response:", data); // Add this for debugging
+
       if (!data.success) {
         throw new Error(data.message || "Request failed")
       }
@@ -68,50 +85,65 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
     }
   }
 
-  useEffect(() => {
-    const initializeAuth = async () => {
-      const isAuth = await checkAuth()
-      if (!isAuth) {
-        router.push("/auth")
-      } else {
-        checkPurchaseStatus()
-      }
-    }
-    initializeAuth()
-  }, [checkAuth, slug])
+  const canAccessCourse = () => {
+    return !course.paid || isPurchased;
+  };
 
   const checkPurchaseStatus = async () => {
     setIsLoading(true)
     try {
       if (course.paid) {
         const data = await makeAuthenticatedRequest(`${process.env.NEXT_PUBLIC_API_URL}/purchase/${course.id}`)
-        setIsPurchased(data.message.purchased)
+        console.log("Purchase status:", data);
+        const hasPurchased = data.message?.purchased;
+        setIsPurchased(hasPurchased)
+        setIsPurchaseChecked(true)
+        return hasPurchased;
+      } else {
+        setIsPurchased(true)
+        setIsPurchaseChecked(true)
+        return true;
       }
-      setIsPurchaseChecked(true)
     } catch (err) {
-      console.error(err)
+      console.error("Purchase check error:", err)
       setError("Failed to check purchase status")
+      return false;
     } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    if (!isPurchaseChecked) return
+    const initializeAuth = async () => {
+      try {
+        const isAuth = await checkAuth()
+        if (!isAuth) {
+          router.push("/auth")
+          return;
+        }
+        
+        const hasPurchased = await checkPurchaseStatus()
+        
+        if (course.paid && !hasPurchased) {
+          router.push(`/courses/${slug}`)
+          toast.error("Please purchase this course to access the content")
+          return;
+        }
 
-    const firstChapter =
-      course?.sections?.length > 0
-        ? course.sections.flatMap((s) => s.chapters || []).find((chapter) => chapter)
-        : null
-
-    if (firstChapter) {
-      setSelectedChapter(firstChapter)
-      const canAccess = !course.paid || firstChapter.isFree || isPurchased
-      if (canAccess) {
-        loadVideoUrl(firstChapter.slug)
+        if (course?.sections?.length > 0) {
+          const firstChapter = course.sections.flatMap((s) => s.chapters || []).find((chapter) => chapter);
+          if (firstChapter) {
+            setSelectedChapter(firstChapter)
+            await loadVideoUrl(firstChapter.slug)
+          }
+        }
+      } catch (error) {
+        console.error("Auth error:", error);
+        setError("Authentication failed")
       }
     }
-  }, [isPurchaseChecked, course, isPurchased])
+    initializeAuth()
+  }, [checkAuth, slug])
 
   const loadVideoUrl = async (chapterSlug: string) => {
     setIsVideoLoading(true)
@@ -128,14 +160,165 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
     }
   }
 
-  const handleChapterClick = async (chapter: ChapterDataNew) => {
-    setSelectedChapter(chapter)
-    if (!course.paid || chapter.isFree || isPurchased) {
-      await loadVideoUrl(chapter.slug)
-    } else {
-      setIsDialogOpen(true)
+  const fetchCourseProgress = async () => {
+    try {
+      const data = await makeAuthenticatedRequest(
+        `${process.env.NEXT_PUBLIC_API_URL}/user-progress/course/${course.id}`
+      );
+      console.log("Course Progress Data:", data);
+      setCourseProgress({
+        percentage: data.data.percentage || 0,
+        completedChapters: Array.isArray(data.data.completedChapters) 
+          ? data.data.completedChapters 
+          : [],
+        isCompleted: data.data.percentage === 100
+      });
+    } catch (err) {
+      console.error("Failed to fetch course progress:", err);
+      setCourseProgress({
+        percentage: 0,
+        completedChapters: [],
+        isCompleted: false
+      });
     }
-  }
+  };
+
+  useEffect(() => {
+    const initProgress = async () => {
+      if (isPurchaseChecked && course.id) {
+        await fetchCourseProgress();
+      }
+    };
+    initProgress();
+  }, [isPurchaseChecked, course.id]);
+
+  const handleVideoProgress = async (progress: { playedSeconds: number }) => {
+    if (selectedChapter) {
+      try {
+        await makeAuthenticatedRequest(
+          `${process.env.NEXT_PUBLIC_API_URL}/user-progress/update`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              chapterId: selectedChapter.id,
+              watchedTime: progress.playedSeconds,
+            }),
+          }
+        );
+        await fetchCourseProgress();
+      } catch (err) {
+        console.error("Failed to update progress:", err);
+      }
+    }
+  };
+
+  const handleVideoEnded = async () => {
+    if (selectedChapter) {
+      try {
+        await makeAuthenticatedRequest(
+          `${process.env.NEXT_PUBLIC_API_URL}/user-progress/complete`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              chapterId: selectedChapter.id,
+              watchedTime: selectedChapter.duration || 100
+            }),
+          }
+        );
+        
+        setChapterProgress({ 
+          isCompleted: true, 
+          watchedTime: selectedChapter.duration || 100 
+        });
+        
+        await fetchCourseProgress();
+
+        if (courseProgress.percentage === 100) {
+          toast.success("🎉 Congratulations! You've completed the entire course!");
+        } else {
+          const nextChapter = getNextChapter();
+          if (nextChapter) {
+            toast.success("Chapter completed! Moving to next chapter...");
+            setSelectedChapter(nextChapter);
+            loadVideoUrl(nextChapter.slug);
+            const progressData = await makeAuthenticatedRequest(
+              `${process.env.NEXT_PUBLIC_API_URL}/user-progress/chapter/${nextChapter.id}`
+            );
+            setChapterProgress(progressData.data);
+          } else {
+            toast.success("Congratulations! You've completed all chapters!");
+          }
+        }
+      } catch (err) {
+        console.error("Failed to mark chapter as complete:", err);
+        toast.error("Failed to mark chapter as complete");
+      }
+    }
+  };
+
+  const getNextChapter = () => {
+    if (!selectedChapter || !course.sections) return null;
+
+    const currentSectionIndex = course.sections.findIndex((section) =>
+      section.chapters.some((chapter) => chapter.id === selectedChapter.id)
+    );
+    const currentSection = course.sections[currentSectionIndex];
+    const currentChapterIndex = currentSection.chapters.findIndex(
+      (chapter) => chapter.id === selectedChapter.id
+    );
+
+    if (currentChapterIndex < currentSection.chapters.length - 1) {
+      return currentSection.chapters[currentChapterIndex + 1];
+    }
+    
+    if (currentSectionIndex < course.sections.length - 1) {
+      return course.sections[currentSectionIndex + 1].chapters[0];
+    }
+
+    return null;
+  };
+
+  const handleChapterClick = async (chapter: ChapterDataNew) => {
+    if (!canAccessCourse() && !chapter.isFree) {
+      toast.error("Please purchase this course to access this chapter")
+      return;
+    }
+
+    if (!chapterProgress?.isCompleted) {
+      const currentSection = course.sections.find(section => 
+        section.chapters.some(ch => ch.id === selectedChapter?.id)
+      );
+      const targetSection = course.sections.find(section => 
+        section.chapters.some(ch => ch.id === chapter.id)
+      );
+
+      if (currentSection && targetSection && currentSection.id !== targetSection.id) {
+        const allCurrentSectionCompleted = currentSection.chapters.every(
+          ch => courseProgress.completedChapters.includes(ch.id)
+        );
+
+        if (!allCurrentSectionCompleted) {
+          toast.error("Please complete all chapters in the current section first");
+          return;
+        }
+      }
+    }
+
+    setSelectedChapter(chapter);
+    if (!course.paid || chapter.isFree || isPurchased) {
+      await loadVideoUrl(chapter.slug);
+      try {
+        const data = await makeAuthenticatedRequest(
+          `${process.env.NEXT_PUBLIC_API_URL}/user-progress/chapter/${chapter.id}`
+        );
+        setChapterProgress(data.data);
+      } catch (err) {
+        console.error("Failed to fetch chapter progress:", err);
+      }
+    } else {
+      setIsDialogOpen(true);
+    }
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen)
@@ -148,35 +331,29 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
     <ChapterList
       course={{
         ...course,
-        sections: course?.sections || []
+        sections: course?.sections || [],
       }}
       selectedChapter={selectedChapter}
       isPurchased={isPurchased}
       onChapterClick={handleChapterClick}
       canAccessContent={!course.paid || isPurchased}
+      completedChapters={courseProgress.completedChapters || []}
+      courseProgress={courseProgress.percentage}
     />
   )
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100 font-plus-jakarta-sans">
-
-
       <div className="flex flex-1 overflow-hidden">
         {isDesktop ? (
-          // Sidebar for desktop
           <div
-            className={`
-            ${isSidebarOpen ? "w-[300px]" : "w-0"}
-            transition-all duration-300 ease-in-out
-            overflow-hidden
-            border-r shadow-xl
-            bg-white
-          `}
+            className={`${
+              isSidebarOpen ? "w-[300px]" : "w-0"
+            } transition-all duration-300 ease-in-out overflow-hidden border-r shadow-xl bg-white`}
           >
             <ScrollArea className="h-full">{SidebarContent}</ScrollArea>
           </div>
         ) : (
-          // Sheet for mobile
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
             <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
               <ScrollArea className="h-full pt-12">{SidebarContent}</ScrollArea>
@@ -184,18 +361,20 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
           </Sheet>
         )}
 
-        {/* Main Content */}
         <div className="flex flex-col flex-1 overflow-hidden mt-20">
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-4">
               <VideoPlayer
                 videoUrl={videoUrl}
                 isLoading={isVideoLoading}
-                className={`
-                w-full bg-white rounded-lg shadow-md
-                transition-all duration-300 ease-in-out
-                ${isSidebarOpen ? "aspect-[21/9]" : "aspect-video"}
-              `}
+                onProgress={handleVideoProgress}
+                onDuration={() => {}}
+                onEnded={handleVideoEnded}
+                className={`w-full bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out ${
+                  isSidebarOpen ? "aspect-[21/9]" : "aspect-video"
+                }`}
+                initialProgress={chapterProgress?.watchedTime || 0}
+                isCompleted={chapterProgress?.isCompleted || false}
               />
               <div className="bg-white rounded-lg shadow-md p-6">
                 <ChapterDetails chapter={selectedChapter} />
@@ -203,18 +382,11 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({ initialCourseData, slug }) 
             </div>
           </ScrollArea>
 
-          {/* Sidebar/Sheet Toggle Button */}
           <Button
             variant="outline"
             size="sm"
             onClick={toggleSidebar}
-            className={`
-              fixed z-50 h-10 px-2 bg-white/95 backdrop-blur-sm
-              hover:bg-gradient-to-r hover:from-[#fce7ff] hover:to-[#fff1eb]
-              border border-[#610981]/20 shadow-lg hover:shadow-xl
-              transition-all duration-300 ease-in-out group
-              left-0 top-1/2 -translate-y-1/2 rounded-r-lg
-            `}
+            className={`fixed z-50 h-10 px-2 bg-white/95 backdrop-blur-sm hover:bg-gradient-to-r hover:from-[#fce7ff] hover:to-[#fff1eb] border border-[#610981]/20 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out group left-0 top-1/2 -translate-y-1/2 rounded-r-lg`}
           >
             {isSidebarOpen ? (
               <ChevronLeft className="h-5 w-5 text-[#610981] group-hover:scale-110 transition-transform duration-200" />

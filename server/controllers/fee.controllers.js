@@ -358,7 +358,7 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
                 feeId,
                 userId: req.user.id,
                 receiptNumber,
-                actualDueAmount: parseFloat(amount) // Add this required field
+                actualDueAmount: parseFloat(amount)
             },
             include: {
                 fee: true,
@@ -366,22 +366,46 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
             }
         });
 
-        // Update fee status
-        const fee = await prisma.fee.findUnique({
-            where: { id: feeId },
-            include: { payments: true }
-        });
-
-        const totalPaid = fee.payments.reduce((sum, p) =>
-            sum + (p.status === "COMPLETED" ? p.amount : 0), 0
-        );
-
+        // Update current fee status
         await prisma.fee.update({
             where: { id: feeId },
-            data: {
-                status: totalPaid >= fee.amount ? "PAID" : "PARTIAL"
-            }
+            data: { status: "PAID" }
         });
+
+        // Create next fee based on type
+        const currentFee = payment.fee;
+        let nextDueDate = new Date(currentFee.dueDate);
+
+        switch (currentFee.type) {
+            case "MONTHLY":
+                nextDueDate.setMonth(nextDueDate.getMonth() + 1);
+                break;
+            case "QUARTERLY":
+                nextDueDate.setMonth(nextDueDate.getMonth() + 3);
+                break;
+            case "YEARLY":
+                nextDueDate.setFullYear(nextDueDate.getFullYear() + 1);
+                break;
+            default:
+                nextDueDate = null;
+        }
+
+        if (nextDueDate && currentFee.type !== "ONETIME") {
+            await prisma.fee.create({
+                data: {
+                    title: currentFee.title,
+                    amount: currentFee.amount,
+                    dueDate: nextDueDate,
+                    type: currentFee.type,
+                    description: currentFee.description,
+                    lateFeeDate: currentFee.lateFeeDate ? 
+                        new Date(nextDueDate.getTime() + (new Date(currentFee.lateFeeDate).getTime() - new Date(currentFee.dueDate).getTime())) : null,
+                    lateFeeAmount: currentFee.lateFeeAmount,
+                    gracePeriod: currentFee.gracePeriod,
+                    userId: currentFee.userId
+                }
+            });
+        }
 
         // Send payment confirmation email
         await SendEmail({
@@ -391,7 +415,7 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
                 title: "Payment Successful - MonarkFX",
                 userName: req.user.name,
                 amount: amount,
-                feeTitle: fee.title,
+                feeTitle: currentFee.title,
                 paymentId: razorpay_payment_id,
                 receiptNumber: receiptNumber,
                 date: new Date().toLocaleDateString()
@@ -415,84 +439,79 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
 // Get fee details for a user
 export const getFeeDetails = asyncHandler(async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
+        // Get current date and date 10 days ahead
+        const currentDate = new Date();
+        const tenDaysFromNow = new Date();
+        tenDaysFromNow.setDate(tenDaysFromNow.getDate() + 10);
 
+        // Get fees that are:
+        // 1. Not paid
+        // 2. Due within next 10 days
         const fees = await prisma.fee.findMany({
             where: {
                 userId: req.user.id,
                 status: {
-                    not: 'PAID'
+                    not: "PAID"
+                },
+                dueDate: {
+                    gte: currentDate,
+                    lte: tenDaysFromNow
                 }
             },
-            select: {
-                id: true,
-                amount: true,
-                dueDate: true,
-                title: true,
-                status: true,
-                type: true,
-                lateFeeAmount: true,
-                lateFeeDate: true,
-                payments: {
-                    where: {
-                        status: "COMPLETED"
-                    },
+            include: {
+                user: {
                     select: {
-                        amount: true,
-                        status: true
+                        name: true,
+                        email: true
+                    }
+                },
+                payments: true
+            },
+            orderBy: {
+                dueDate: 'asc'
+            }
+        });
+
+        // Get payment history
+        const payments = await prisma.feePayment.findMany({
+            where: { 
+                userId: req.user.id,
+                status: "COMPLETED"
+            },
+            include: {
+                fee: {
+                    select: {
+                        title: true,
+                        type: true,
+                        amount: true
                     }
                 }
             },
-            orderBy: [
-                { dueDate: 'asc' },
-                { createdAt: 'desc' }
-            ],
-            skip,
-            take: limit
-        });
-
-        const feeSummary = fees.map(fee => {
-            const totalPaid = fee.payments.reduce((sum, payment) => sum + payment.amount, 0);
-            const remaining = fee.amount - totalPaid;
-            const today = new Date();
-            const dueDate = new Date(fee.dueDate);
-            const daysLate = today > dueDate ? Math.floor((today - dueDate) / (1000 * 60 * 60 * 24)) : 0;
-
-            return {
-                ...fee,
-                totalPaid,
-                remaining,
-                status: today > dueDate ? "OVERDUE" :
-                    totalPaid > 0 ? "PARTIALLY_PAID" : "PENDING",
-                lateFeeAmount: daysLate > 0 && fee.lateFeeAmount ? fee.lateFeeAmount : 0,
-                daysOverdue: daysLate > 0 ? daysLate : null
-            };
-        });
-
-        const total = await prisma.fee.count({
-            where: {
-                userId: req.user.id,
-                status: {
-                    not: 'PAID'
-                }
+            orderBy: { 
+                createdAt: 'desc' 
             }
         });
 
-        return res.status(200).json({
-            success: true,
-            data: {
-                fees: feeSummary,
-                pagination: {
-                    total,
-                    page,
-                    pages: Math.ceil(total / limit)
-                }
-            }
-        });
+        const feeSummary = fees.map(fee => ({
+            ...fee,
+            totalPaid: fee.payments.reduce((sum, p) => 
+                sum + (p.status === "COMPLETED" ? p.amount : 0), 0),
+            remaining: fee.amount - fee.payments.reduce((sum, p) => 
+                sum + (p.status === "COMPLETED" ? p.amount : 0), 0),
+            daysRemaining: Math.ceil((new Date(fee.dueDate).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
+        }));
+
+        return res.status(200).json(
+            new ApiResponsive(200, 
+                { 
+                    fees: feeSummary, 
+                    payments: payments 
+                }, 
+                "Fee details fetched successfully"
+            )
+        );
     } catch (error) {
-        console.error("Fee details error:", error);
+        console.error("Error fetching fee details:", error);
         throw new ApiError(500, "Failed to fetch fee details");
     }
 });
@@ -779,3 +798,18 @@ export const getFeeAnalytics = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Failed to fetch fee analytics");
     }
 });
+
+// Add this helper function
+const calculateNextDueDate = (currentDate, feeType) => {
+    const date = new Date(currentDate);
+    switch (feeType) {
+        case 'MONTHLY':
+            return new Date(date.setMonth(date.getMonth() + 1));
+        case 'QUARTERLY':
+            return new Date(date.setMonth(date.getMonth() + 3));
+        case 'YEARLY':
+            return new Date(date.setFullYear(date.getFullYear() + 1));
+        default:
+            return null;
+    }
+};
