@@ -583,57 +583,97 @@ export interface AnimatedTextProps2 {
 }
 
 export interface ReviewSectionProps {
-    courseId: string
-    isEnrolled: boolean
-    hasPurchased: boolean
-    userId?: string
+  courseId: string
+  isEnrolled: boolean
+  hasPurchased: boolean
+  userId?: string
 }
 
 export interface Review {
+  id: string
+  rating: number
+  comment?: string
+  isEdited: boolean
+  userId: string
+  courseId: string
+  createdAt: string
+  updatedAt: string
+  user: {
     id: string
-    rating: number
-    comment?: string
-    isEdited: boolean
-    userId: string
-    courseId: string
-    createdAt: string
-    updatedAt: string
-    user: {
-        id: string
-        name: string
-        email: string
-    }
+    name: string
+    email: string
+  }
 }
 
 export interface Fee {
-    id: string;
-    title: string;
-    amount: number;
-    dueDate: string;
-    type: string;
-    description?: string;
-    lateFeeDate?: string;
-    lateFeeAmount?: number;
-    isOfflineFee: boolean;
-    userId: string;
-    user: {
-        name: string;
-        email: string;
-    };
-    totalPaid: number;
-    remaining: number;
-    gracePeriod?: number;
+  id: string
+  amount: number
+  dueDate: string
+  description: string
+  status: string
+  type: string
+  title: string
+  lateFeeAmount: number
+  lateFeeDate: string | null
+  isOfflineFee: boolean
+  recurringDuration: string | null
+  recurringEndDate: string | null
+  gracePeriod: number | null
+  nextDueDate: string | null
+  isRecurring: boolean
+  userId: string
+  createdAt: string
+  updatedAt: string
+  user: {
+    name: string
+    email: string
+  }
+  payments: any[]
+  totalPaid: number
+  remaining: number
+  daysRemaining: number
+  isOverdue: boolean
+  lateFeeApplicable: boolean | null
 }
 
-export interface FeeFormData {
-    title: string;
-    amount: number;
-    dueDate: string;
-    type: string;
-    description?: string;
-    lateFeeDate?: string;
-    lateFeeAmount?: number;
-    isOfflineFee: boolean;
-    userId: string;
-    gracePeriod?: number;
+export interface Payment {
+  id: string
+  amount: number
+  paymentDate: string
+  razorpay_order_id: string
+  razorpay_payment_id: string
+  razorpay_signature: string
+  status: string
+  receiptNumber: string
+  lateFeeApplied: number | null
+  actualDueAmount: number
+  feeId: string
+  userId: string
+  createdAt: string
+  updatedAt: string
+  fee: {
+    title: string
+    type: string
+    amount: number
+    dueDate: string
+  }
+}
+
+export interface FeeData {
+  fees: {
+    upcoming: Fee[]
+    overdue: Fee[]
+    summary: {
+      totalDue: number
+      overdueCount: number
+      upcomingCount: number
+    }
+  }
+  payments: Payment[]
+}
+
+export interface PaginationInfo {
+  total: number
+  page: number
+  pages: number
 }

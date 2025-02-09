@@ -152,13 +152,13 @@ model Fee {
   lateFeeDate   DateTime?
   lateFeeAmount Float?
   isOfflineFee  Boolean   @default(false)
-  
+
   // New fields
-  recurringDuration Int?      // Number of months/quarters/years to recur
+  recurringDuration Int? // Number of months/quarters/years to recur
   recurringEndDate  DateTime? // When to stop recurring
-  gracePeriod      Int?      // Number of days for grace period
-  nextDueDate      DateTime? // Next due date after payment
-  isRecurring      Boolean   @default(false)
+  gracePeriod       Int? // Number of days for grace period
+  nextDueDate       DateTime? // Next due date after payment
+  isRecurring       Boolean   @default(false)
 
   // Relations
   user     User         @relation(fields: [userId], references: [id])
@@ -302,26 +302,25 @@ model Chapter {
 }
 
 model UserProgress {
-  id            String    @id @default(uuid())
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  chapter       Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  chapterId     String
-  isCompleted   Boolean   @default(false)
-  completedAt   DateTime?
-  watchedTime   Float     @default(0)  // Keep this as watchedTime
-  lastAccessed  DateTime  @default(now())
+  id           String    @id @default(uuid())
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  chapter      Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId    String
+  isCompleted  Boolean   @default(false)
+  completedAt  DateTime?
+  watchedTime  Float     @default(0) // Keep this as watchedTime
+  lastAccessed DateTime  @default(now())
 
   @@unique([userId, chapterId])
   @@index([userId])
   @@index([chapterId])
 }
 
-
 model Purchase {
   id String @id @default(uuid())
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -441,7 +440,7 @@ model CouponUsage {
 
 model CourseCompletion {
   id            String   @id @default(uuid())
-  user          User     @relation(fields: [userId], references: [id],onDelete: Cascade)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
   course        Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId      String
@@ -455,13 +454,13 @@ model CourseCompletion {
 }
 
 model Certificate {
-  id             String    @id @default(uuid())
-  user           User      @relation(fields: [userId], references: [id])
+  id             String   @id @default(uuid())
+  user           User     @relation(fields: [userId], references: [id])
   userId         String
-  course         Course    @relation(fields: [courseId], references: [id])
+  course         Course   @relation(fields: [courseId], references: [id])
   courseId       String
-  issuedAt       DateTime  @default(now())
+  issuedAt       DateTime @default(now())
   certificateUrl String?
-  
+
   @@unique([userId, courseId])
 }

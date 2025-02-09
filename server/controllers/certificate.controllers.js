@@ -29,76 +29,76 @@ const generateCertificatePDF = async (certificateData) => {
     // Add elegant border
     const borderWidth = 20;
     doc.rect(borderWidth, borderWidth, doc.page.width - (borderWidth * 2), doc.page.height - (borderWidth * 2))
-       .lineWidth(2)
-       .stroke('#FFD700');
+        .lineWidth(2)
+        .stroke('#FFD700');
 
     // Title
     doc.fontSize(36)
-       .font('Times-Bold')
-       .fillColor('#002366')
-       .text('MONARK FX-FINANCE MARKET INSTITUTE', {
-           align: 'center'
-       })
-       .moveDown(0.5);
+        .font('Times-Bold')
+        .fillColor('#002366')
+        .text('MONARK FX-FINANCE MARKET INSTITUTE', {
+            align: 'center'
+        })
+        .moveDown(0.5);
 
     // Decorative line
     doc.moveTo(doc.page.width * 0.2, doc.y)
-       .lineTo(doc.page.width * 0.8, doc.y)
-       .lineWidth(2)
-       .stroke('#FFD700');
+        .lineTo(doc.page.width * 0.8, doc.y)
+        .lineWidth(2)
+        .stroke('#FFD700');
 
     // Certificate title
     doc.moveDown()
-       .fontSize(32)
-       .font('Times-Bold')
-       .fillColor('#800020')
-       .text('Certificate of Achievement', { align: 'center' })
-       .moveDown();
+        .fontSize(32)
+        .font('Times-Bold')
+        .fillColor('#800020')
+        .text('Certificate of Achievement', { align: 'center' })
+        .moveDown();
 
     // Certificate content
     doc.fontSize(20)
-       .font('Times-Roman')
-       .fillColor('#333333')
-       .text('This is to certify that', { align: 'center' })
-       .moveDown(0.5);
+        .font('Times-Roman')
+        .fillColor('#333333')
+        .text('This is to certify that', { align: 'center' })
+        .moveDown(0.5);
 
     // Student name
     doc.fontSize(28)
-       .font('Times-Bold')
-       .fillColor('#002366')
-       .text(certificateData.userName, { align: 'center' })
-       .moveDown(0.5);
+        .font('Times-Bold')
+        .fillColor('#002366')
+        .text(certificateData.userName, { align: 'center' })
+        .moveDown(0.5);
 
     // Course details
     doc.fontSize(20)
-       .font('Times-Roman')
-       .fillColor('#333333')
-       .text('has successfully completed the course', { align: 'center' })
-       .moveDown(0.5)
-       .fontSize(24)
-       .font('Times-Bold')
-       .text(certificateData.courseTitle, { align: 'center' })
-       .moveDown();
+        .font('Times-Roman')
+        .fillColor('#333333')
+        .text('has successfully completed the course', { align: 'center' })
+        .moveDown(0.5)
+        .fontSize(24)
+        .font('Times-Bold')
+        .text(certificateData.courseTitle, { align: 'center' })
+        .moveDown();
 
     // Date and grade
     doc.fontSize(18)
-       .font('Times-Roman')
-       .text(`Awarded on ${format(new Date(certificateData.completedDate), 'MMMM dd, yyyy')}`, { align: 'center' });
+        .font('Times-Roman')
+        .text(`Awarded on ${format(new Date(certificateData.completedDate), 'MMMM dd, yyyy')}`, { align: 'center' });
 
     if (certificateData.grade) {
         doc.moveDown(0.5)
-           .text(`Grade Achieved: ${certificateData.grade}`, { align: 'center' });
+            .text(`Grade Achieved: ${certificateData.grade}`, { align: 'center' });
     }
 
     // Verification URL at bottom right
     doc.moveDown(1.5); // Add some space before the verification URL
     doc.fontSize(10)
-       .fillColor('#666666')
-       .text(
-           `Verify at: ${process.env.FRONTEND_URL}/verify-certificate/${certificateData.certificateId}`,
-           doc.page.width - 200,
-           doc.y // Use current y position for the URL
-       );
+        .fillColor('#666666')
+        .text(
+            `Verify at: ${process.env.FRONTEND_URL}/verify-certificate/${certificateData.certificateId}`,
+            doc.page.width - 200,
+            doc.y
+        );
 
     return doc;
 };
@@ -127,12 +127,10 @@ export const getUserCertificates = asyncHandler(async (req, res) => {
 
 export const downloadCertificate = asyncHandler(async (req, res) => {
     const { certificateId } = req.params;
-    const userId = req.user.id;
 
-    const certificate = await prisma.courseCompletion.findFirst({
+    const certificate = await prisma.courseCompletion.findUnique({
         where: {
-            certificateId,
-            userId
+            certificateId
         },
         include: {
             user: true,

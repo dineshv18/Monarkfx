@@ -398,7 +398,7 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
                     dueDate: nextDueDate,
                     type: currentFee.type,
                     description: currentFee.description,
-                    lateFeeDate: currentFee.lateFeeDate ? 
+                    lateFeeDate: currentFee.lateFeeDate ?
                         new Date(nextDueDate.getTime() + (new Date(currentFee.lateFeeDate).getTime() - new Date(currentFee.dueDate).getTime())) : null,
                     lateFeeAmount: currentFee.lateFeeAmount,
                     gracePeriod: currentFee.gracePeriod,
@@ -439,23 +439,14 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
 // Get fee details for a user
 export const getFeeDetails = asyncHandler(async (req, res) => {
     try {
-        // Get current date and date 10 days ahead
         const currentDate = new Date();
-        const tenDaysFromNow = new Date();
-        tenDaysFromNow.setDate(tenDaysFromNow.getDate() + 10);
 
-        // Get fees that are:
-        // 1. Not paid
-        // 2. Due within next 10 days
+        // Get all unpaid fees (both upcoming and overdue)
         const fees = await prisma.fee.findMany({
             where: {
                 userId: req.user.id,
                 status: {
                     not: "PAID"
-                },
-                dueDate: {
-                    gte: currentDate,
-                    lte: tenDaysFromNow
                 }
             },
             include: {
@@ -472,9 +463,27 @@ export const getFeeDetails = asyncHandler(async (req, res) => {
             }
         });
 
+        // Separate fees into upcoming and overdue
+        const feeSummary = fees.map(fee => {
+            const dueDate = new Date(fee.dueDate);
+            const totalPaid = fee.payments.reduce((sum, p) =>
+                sum + (p.status === "COMPLETED" ? p.amount : 0), 0);
+            const remaining = fee.amount - totalPaid;
+            const daysRemaining = Math.ceil((dueDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24));
+
+            return {
+                ...fee,
+                totalPaid,
+                remaining,
+                daysRemaining,
+                isOverdue: dueDate < currentDate && remaining > 0,
+                lateFeeApplicable: fee.lateFeeDate && new Date(fee.lateFeeDate) < currentDate
+            };
+        });
+
         // Get payment history
         const payments = await prisma.feePayment.findMany({
-            where: { 
+            where: {
                 userId: req.user.id,
                 status: "COMPLETED"
             },
@@ -483,30 +492,33 @@ export const getFeeDetails = asyncHandler(async (req, res) => {
                     select: {
                         title: true,
                         type: true,
-                        amount: true
+                        amount: true,
+                        dueDate: true
                     }
                 }
             },
-            orderBy: { 
-                createdAt: 'desc' 
+            orderBy: {
+                createdAt: 'desc'
             }
         });
 
-        const feeSummary = fees.map(fee => ({
-            ...fee,
-            totalPaid: fee.payments.reduce((sum, p) => 
-                sum + (p.status === "COMPLETED" ? p.amount : 0), 0),
-            remaining: fee.amount - fee.payments.reduce((sum, p) => 
-                sum + (p.status === "COMPLETED" ? p.amount : 0), 0),
-            daysRemaining: Math.ceil((new Date(fee.dueDate).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24))
-        }));
+        // Group fees by status
+        const groupedFees = {
+            upcoming: feeSummary.filter(fee => !fee.isOverdue),
+            overdue: feeSummary.filter(fee => fee.isOverdue),
+            summary: {
+                totalDue: feeSummary.reduce((sum, fee) => sum + fee.remaining, 0),
+                overdueCount: feeSummary.filter(fee => fee.isOverdue).length,
+                upcomingCount: feeSummary.filter(fee => !fee.isOverdue).length
+            }
+        };
 
         return res.status(200).json(
-            new ApiResponsive(200, 
-                { 
-                    fees: feeSummary, 
-                    payments: payments 
-                }, 
+            new ApiResponsive(200,
+                {
+                    fees: groupedFees,
+                    payments: payments
+                },
                 "Fee details fetched successfully"
             )
         );

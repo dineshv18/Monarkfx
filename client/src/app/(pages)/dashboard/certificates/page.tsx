@@ -15,13 +15,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
-import { Download, Search, Trash2, Award } from "lucide-react"
+import { Download, Trash2, Award } from "lucide-react"
 import { useAuth } from "@/helper/AuthContext"
 
 interface Certificate {
@@ -104,7 +98,7 @@ export default function AdminCertificates() {
         }
     }
 
-    const filteredCertificates = certificates.filter(cert => 
+    const filteredCertificates = certificates.filter(cert =>
         cert.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         cert.user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         cert.course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -19,7 +19,8 @@ import {
   FilePlus,
   FileText,
   MessageSquare,
-  Award
+  Award,
+  // Eye
 } from "lucide-react";
 import { NavItem } from "@/type";
 
@@ -34,6 +35,11 @@ const navItems: NavItem[] = [
     href: "/dashboard/students",
     icon: School,
   },
+  // {
+  //   title: "Course Access",
+  //   href: "/dashboard/visibility",
+  //   icon: Eye,
+  // },
   {
     title: "Reviews",
     href: "/dashboard/reviews",

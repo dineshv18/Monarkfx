@@ -218,10 +218,11 @@ const FeeAnalytics = () => {
                 </CardContent>
             </Card>
 
-            {/* Recent Payments */}
+
             <Card className="col-span-full">
                 <CardHeader>
                     <CardTitle>Recent Payments</CardTitle>
+                    <CardDescription>Latest fee transactions</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -230,16 +231,51 @@ const FeeAnalytics = () => {
                                 <TableHead>Student</TableHead>
                                 <TableHead>Amount</TableHead>
                                 <TableHead>Fee Type</TableHead>
-                                <TableHead>Date</TableHead>
+                                <TableHead>Payment Date</TableHead>
+                                <TableHead>Status</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {analytics?.recentPayments.map((payment: any) => (
                                 <TableRow key={payment.id}>
-                                    <TableCell>{payment.user.name}</TableCell>
-                                    <TableCell>₹{payment.amount}</TableCell>
-                                    <TableCell>{payment.fee.type}</TableCell>
-                                    <TableCell>{new Date(payment.createdAt).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                        <div className="flex flex-col gap-1">
+                                            <span className="font-medium">
+                                                {payment.user.name}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {payment.user.email}
+                                            </span>
+                                            {payment.user.isOffline && (
+                                                <Badge variant="secondary" className="w-fit text-xs">
+                                                    Offline
+                                                </Badge>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="font-medium">₹{payment.amount}</div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline">
+                                            {payment.fee.type}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex flex-col">
+                                            <span>{format(new Date(payment.createdAt), "PP")}</span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {format(new Date(payment.createdAt), "p")}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <CustomBadge
+                                            variant={payment.status === "SUCCESS" ? "success" : "default"}
+                                        >
+                                            {payment.status}
+                                        </CustomBadge>
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -410,7 +446,7 @@ export default function FeesPage() {
 
     const handleEditClick = (fee: Fee) => {
         setSelectedFee(fee);
-        
+
         // Set all form data with existing values
         reset({
             title: fee.title,
@@ -436,7 +472,7 @@ export default function FeesPage() {
             isRecurring: fee.isRecurring || false,
             recurringDuration: fee.recurringDuration || 0
         });
-        
+
         // Set dates if they exist
         if (fee.dueDate) setEditDate(new Date(fee.dueDate));
         if (fee.lateFeeDate) setEditLateFeeDate(new Date(fee.lateFeeDate));
@@ -452,10 +488,12 @@ export default function FeesPage() {
             'gracePeriod',
             'status'
         ]));
-        
+
         setIsDialogOpen(true);
     };
-
+    const getSelectedStudent = (studentId: string) => {
+        return students.find(student => student.id === studentId);
+    };
     const onSubmitUpdate = async (formData: any) => {
         if (!selectedFee) {
             toast.error("No fee selected");
@@ -633,7 +671,16 @@ export default function FeesPage() {
                                     {fees.map((fee) => (
                                         <TableRow key={fee.id}>
                                             <TableCell className="font-medium">{fee.title}</TableCell>
-                                            <TableCell>{fee.user.name}</TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-col group cursor-default">
+                                                    <span className="font-medium group-hover:text-primary transition-colors">
+                                                        {fee.user.name}
+                                                    </span>
+                                                    <span className="text-xs text-muted-foreground group-hover:text-primary/70 transition-colors">
+                                                        {fee.user.email}
+                                                    </span>
+                                                </div>
+                                            </TableCell>
                                             <TableCell>₹{fee.amount}</TableCell>
                                             <TableCell>
                                                 <div className="flex flex-col">
@@ -644,12 +691,9 @@ export default function FeesPage() {
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                {fee.lateFeeAmount && fee.lateFeeDate ? (
+                                                {fee.lateFeeAmount && fee.lateFeeAmount ? (
                                                     <div className="flex flex-col gap-1">
                                                         <span>₹{fee.lateFeeAmount}</span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            After {format(new Date(fee.lateFeeDate), "PPP")}
-                                                        </span>
                                                     </div>
                                                 ) : (
                                                     "N/A"
@@ -689,7 +733,7 @@ export default function FeesPage() {
                                                                 Select the fields you want to update for {selectedFee?.user.name}
                                                             </DialogDescription>
                                                         </DialogHeader>
-                                                        
+
                                                         <ScrollArea className="max-h-[60vh] px-1">
                                                             <form onSubmit={handleSubmit(onSubmitUpdate)} className="space-y-6">
                                                                 {/* Field Selection Section */}
@@ -697,8 +741,8 @@ export default function FeesPage() {
                                                                     <h3 className="text-sm font-medium mb-3">Select Fields to Update</h3>
                                                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                                                         {EDITABLE_FIELDS.map((field) => (
-                                                                            <div 
-                                                                                key={field.key} 
+                                                                            <div
+                                                                                key={field.key}
                                                                                 className={cn(
                                                                                     "flex items-center space-x-2 p-2 rounded-md transition-colors",
                                                                                     selectedFields.has(field.key) ? "bg-primary/10" : "hover:bg-gray-100"
@@ -711,7 +755,7 @@ export default function FeesPage() {
                                                                                     onChange={() => handleFieldSelection(field.key)}
                                                                                     className="rounded border-gray-300 text-primary focus:ring-primary"
                                                                                 />
-                                                                                <Label 
+                                                                                <Label
                                                                                     htmlFor={`select-${field.key}`}
                                                                                     className="text-sm cursor-pointer"
                                                                                 >
@@ -950,9 +994,9 @@ export default function FeesPage() {
                                                                 </div>
 
                                                                 <DialogFooter className="mt-6 gap-2">
-                                                                    <Button 
-                                                                        type="button" 
-                                                                        variant="outline" 
+                                                                    <Button
+                                                                        type="button"
+                                                                        variant="outline"
                                                                         onClick={() => {
                                                                             setIsDialogOpen(false);
                                                                             setEditDate(undefined);
@@ -963,8 +1007,8 @@ export default function FeesPage() {
                                                                         Cancel
                                                                     </Button>
 
-                                                                    <Button 
-                                                                        type="submit" 
+                                                                    <Button
+                                                                        type="submit"
                                                                         disabled={isSubmitting || selectedFields.size === 0}
                                                                         className="bg-primary hover:bg-primary/90"
                                                                     >
@@ -1026,6 +1070,10 @@ export default function FeesPage() {
                             <form onSubmit={handleSubmit(handleAddFee)} className="space-y-4">
                                 <div>
                                     <Label htmlFor="userId">Student *</Label>
+
+
+
+
                                     <Controller
                                         name="userId"
                                         control={control}
@@ -1033,13 +1081,31 @@ export default function FeesPage() {
                                         render={({ field, fieldState: { error } }) => (
                                             <div>
                                                 <Select onValueChange={field.onChange}>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select a student" />
+                                                    <SelectTrigger className="w-full">
+                                                        {field.value ? (
+                                                            <div className="flex flex-col items-start">
+                                                                <span className="font-medium">
+                                                                    {getSelectedStudent(field.value)?.name}
+                                                                </span>
+                                                                <span className="text-xs text-muted-foreground">
+                                                                    {getSelectedStudent(field.value)?.email}
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <SelectValue placeholder="Select a student" />
+                                                        )}
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {students.map((student) => (
-                                                            <SelectItem key={student.id} value={student.id}>
-                                                                {student.name}
+                                                            <SelectItem
+                                                                key={student.id}
+                                                                value={student.id}
+                                                                className="flex flex-col items-start py-3"
+                                                            >
+                                                                <div className="flex flex-col">
+                                                                    <span className="font-medium">{student.name}</span>
+                                                                    <span className="text-xs text-muted-foreground">{student.email}</span>
+                                                                </div>
                                                             </SelectItem>
                                                         ))}
                                                     </SelectContent>

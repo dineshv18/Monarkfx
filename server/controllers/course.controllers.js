@@ -820,6 +820,7 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           isFeatured: true,
           price: true,
           salePrice: true,
+          language: true,
           category: {
             select: {
               name: true
@@ -846,6 +847,7 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           isPopular: true,
           price: true,
           salePrice: true,
+          language: true,
           category: {
             select: {
               name: true
@@ -872,6 +874,7 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           isTrending: true,
           price: true,
           salePrice: true,
+          language: true,
           category: {
             select: {
               name: true
@@ -898,6 +901,7 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           isBestseller: true,
           price: true,
           salePrice: true,
+          language: true,
           category: {
             select: {
               name: true
@@ -922,6 +926,7 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           description: true,
           price: true,
           salePrice: true,
+          language: true,
           category: {
             select: {
               name: true

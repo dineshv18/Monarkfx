@@ -17,6 +17,7 @@ import sectionRoutes from "./routes/section.routes.js";
 import categoryRouter from "./routes/category.routes.js";
 import feeRoutes from "./routes/fee.routes.js";
 import certificateRoutes from "./routes/certificate.routes.js";
+import visibilityRoutes from "./routes/visibility.routes.js";
 
 
 const app = express();
@@ -99,6 +100,7 @@ app.use("/api/v1/section", sectionRoutes);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/fees", feeRoutes);
 app.use("/api/v1/certificates", certificateRoutes);
+app.use("/api/v1/visibility", visibilityRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
