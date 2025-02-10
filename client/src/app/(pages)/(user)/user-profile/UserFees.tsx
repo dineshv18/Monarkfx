@@ -193,11 +193,15 @@ export default function UserFees() {
   }
 
   const isLateFeeApplicable = (fee: Fee) => {
+    if (!fee.lateFeeDate || !fee.lateFeeAmount) {
+      return false;
+    }
+
     const currentDate = new Date()
     const dueDate = new Date(fee.dueDate)
-    const lateFeeDate = fee.lateFeeDate ? new Date(fee.lateFeeDate) : null
+    const lateFeeDate = new Date(fee.lateFeeDate)
 
-    if (lateFeeDate && isAfter(currentDate, lateFeeDate)) {
+    if (isAfter(currentDate, lateFeeDate)) {
       return true
     }
 
@@ -249,7 +253,7 @@ export default function UserFees() {
             <p className="text-sm text-gray-600">Remaining</p>
             <p className="font-semibold text-red-600">
               ₹{fee.remaining.toLocaleString()}
-              {lateFeeApplicable && (
+              {lateFeeApplicable && fee.lateFeeAmount && (
                 <span>
                   + ₹{fee.lateFeeAmount.toLocaleString()} <span className="font-normal">(Late Fee)</span>
                 </span>
@@ -257,11 +261,15 @@ export default function UserFees() {
             </p>
           </div>
         </div>
-
         {fee.remaining > 0 && (
           <div className="mt-4 flex justify-end">
             <Button
-              onClick={() => handlePayFee(fee.id, fee.remaining + (lateFeeApplicable ? fee.lateFeeAmount : 0))}
+              onClick={() =>
+                handlePayFee(
+                  fee.id,
+                  fee.remaining + (lateFeeApplicable && fee.lateFeeAmount ? fee.lateFeeAmount : 0)
+                )
+              }
               className="bg-primary hover:bg-primary/90"
             >
               <IndianRupee className="h-4 w-4 mr-2" />
