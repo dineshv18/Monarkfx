@@ -563,12 +563,6 @@ export const getFeeNotificationTemplate = (data) => `
                     <span>${data.description}</span>
                 </div>
                 ` : ''}
-                ${data.lateFeeDate ? `
-                <div class="fee-item">
-                    <strong>Late Fee After:</strong>
-                    <span class="important">${new Date(data.lateFeeDate).toLocaleDateString()}</span>
-                </div>
-                ` : ''}
                 ${data.lateFeeAmount ? `
                 <div class="fee-item">
                     <strong>Late Fee Amount:</strong>
@@ -677,16 +671,6 @@ export const getPaymentSuccessTemplate = (data) => `
                 <div class="detail-row">
                     <strong>Payment ID:</strong>
                     <span>${data.paymentId}</span>
-                </div>
-                <div class="detail-row">
-                    <strong>Date:</strong>
-                    <span>${new Date(data.date).toLocaleString('en-IN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-})}</span>
                 </div>
                 <div class="detail-row">
                     <strong>Fee Type:</strong>
