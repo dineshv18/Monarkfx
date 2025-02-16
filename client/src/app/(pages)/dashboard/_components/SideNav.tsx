@@ -20,6 +20,7 @@ import {
   FileText,
   MessageSquare,
   Award,
+  MessageSquareText,
   // Eye
 } from "lucide-react";
 import { NavItem } from "@/type";
@@ -79,6 +80,11 @@ const navItems: NavItem[] = [
     title: "Certificates",
     href: "/dashboard/certificates",
     icon: Award
+  },
+  {
+    title: "Contact Messages",
+    href: "/dashboard/contact-message",
+    icon: MessageSquareText,
   },
 ];
 
