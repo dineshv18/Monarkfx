@@ -1,6 +1,18 @@
 import { Metadata } from "next";
-import CourseClient from "./course-client";
 import { AlertTriangle } from "lucide-react";
+import { Suspense } from "react";
+import dynamic from "next/dynamic";
+import CourseLoading from "./loading";
+
+const CourseClient = dynamic(() => import("./course-client"), {
+  ssr: false,
+  loading: () => <CourseLoading />
+});
+
+
+type Props = {
+  params: { slug: string };
+};
 
 async function getCourse(slug: string) {
   try {
@@ -11,8 +23,7 @@ async function getCourse(slug: string) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/course/get-course-page/${slug}`,
       {
-        next: { revalidate: 0 },
-        method: "GET",
+        next: { revalidate: 3600 },
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -21,79 +32,77 @@ async function getCourse(slug: string) {
     );
 
     if (!res.ok) {
-      console.error("API Error:", {
-        status: res.status,
-        statusText: res.statusText,
-        url: res.url
-      });
       throw new Error(`Failed to fetch course: ${res.status}`);
     }
 
     const data = await res.json();
-
-    if (!data || !data.data) {
-      console.error("Invalid API response:", data);
-      throw new Error("Invalid response format");
-    }
-
     return data;
   } catch (error) {
     console.error("Error fetching course:", error);
     return {
       error: true,
-      message: "Failed to fetch course",
-      data: {}
+      message: error instanceof Error ? error.message : "Failed to fetch course",
+      data: null
     };
   }
 }
 
-type Props = {
-  params: { slug: string };
-};
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const courseData = await getCourse(params.slug);
+  const defaultTitle = "MonarkFX - Global Trading Excellence";
+  const defaultDesc = "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.";
 
-  if (courseData.error) {
+  if (courseData.error || !courseData.data) {
     return {
-      title: "Error | MonarkFX - Global Trading Excellence",
-      description: "Course not found",
+      title: "Course Not Found | " + defaultTitle,
+      description: defaultDesc,
     };
   }
 
+  const { data } = courseData;
+  const ogImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}/${data.thumbnail}`;
+
   return {
-    title:
-      courseData.data.metaTitle || courseData.data.title || "MonarkFX - Global Trading Excellence",
-    description:
-      courseData.data.metaDesc ||
-      "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
+    title: data.metaTitle || data.title || defaultTitle,
+    description: data.metaDesc || defaultDesc,
+    openGraph: {
+      title: data.title,
+      description: data.metaDesc || defaultDesc,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: data.title }],
+      type: 'website',
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.title,
+      description: data.metaDesc || defaultDesc,
+      images: [ogImage],
+    },
   };
 }
 
 export default async function CoursePage({ params }: Props) {
   const courseData = await getCourse(params.slug);
 
-  if (courseData.error) {
+  if (courseData.error || !courseData.data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8 font-plus-jakarta-sans">
-        <div className="max-w-md w-full space-y-8 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 font-plus-jakarta-sans">
+        <div className="max-w-md w-full space-y-8 text-center p-6">
           <div className="flex flex-col items-center justify-center">
             <AlertTriangle className="h-16 w-16 text-yellow-400 animate-bounce" />
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-              Oops! Course Not Found
-            </h2>
-            <p className="mt-2 text-sm text-gray-600 font-inter">
-              We couldn&apos;t find the course you&apos;re looking for. It might
-              have been moved or deleted.
+            <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+              Course Not Found
+            </h1>
+            <p className="mt-4 text-gray-600">
+              The course you're looking for might have been moved or deleted.
             </p>
-            <div className="mt-6">
-              <a
-                href="/courses"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm bg-red-600 hover:bg-red-700 hover:text-white text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Browse All Courses
-              </a>
-            </div>
+            <a
+              href="/courses"
+              className="mt-8 inline-flex items-center px-6 py-3 border border-transparent
+                text-base font-medium rounded-md shadow-sm text-white bg-blue-600
+                hover:bg-blue-700 transition-colors duration-200 ease-in-out"
+            >
+              Explore Trading Courses
+            </a>
           </div>
         </div>
       </div>
@@ -101,6 +110,13 @@ export default async function CoursePage({ params }: Props) {
   }
 
   return (
-    <CourseClient initialCourseData={courseData.data} slug={params.slug} />
+    <Suspense fallback={<CourseLoading />}>
+      <CourseClient
+        initialCourseData={courseData.data}
+        slug={params.slug}
+      />
+    </Suspense>
   );
 }
+
+

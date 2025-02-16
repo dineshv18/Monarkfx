@@ -143,8 +143,8 @@ export function DynamicTable({
         <Badge
           variant="outline"
           className={`${item.paid
-              ? "bg-green-50 text-green-700 border-green-200"
-              : "bg-blue-50 text-blue-700 border-blue-200"
+            ? "bg-green-50 text-green-700 border-green-200"
+            : "bg-blue-50 text-blue-700 border-blue-200"
             } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.paid ? "Paid" : "Free"}
@@ -157,8 +157,8 @@ export function DynamicTable({
         <Badge
           variant="outline"
           className={`${item.isVerified
-              ? "bg-green-50 text-green-700 border-green-200"
-              : "bg-yellow-50 text-yellow-700 border-yellow-200"
+            ? "bg-green-50 text-green-700 border-green-200"
+            : "bg-yellow-50 text-yellow-700 border-yellow-200"
             } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isVerified ? "Verified" : "Unverified"}
@@ -173,8 +173,8 @@ export function DynamicTable({
         <Badge
           variant="outline"
           className={`${item.isPublished
-              ? "bg-green-50 text-green-700 border-green-200"
-              : "bg-yellow-50 text-yellow-700 border-yellow-200"
+            ? "bg-green-50 text-green-700 border-green-200"
+            : "bg-yellow-50 text-yellow-700 border-yellow-200"
             } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isPublished ? "Published" : "Draft"}
@@ -184,35 +184,39 @@ export function DynamicTable({
   };
 
   const renderLoadingSkeleton = () => (
-    <div className="w-full overflow-hidden rounded-lg shadow-sm">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {columns.map((column) => (
-              <TableHead key={column.key}>
-                <Skeleton className="h-4 w-full" />
-              </TableHead>
-            ))}
-            <TableHead>
-              <Skeleton className="h-4 w-20" />
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {[...Array(5)].map((_, i) => (
-            <TableRow key={i}>
-              {columns.map((column) => (
-                <TableCell key={column.key}>
-                  <Skeleton className="h-4 w-full" />
-                </TableCell>
+    <div className="container mx-auto w-full">
+      <div className="w-full overflow-x-auto">
+        <div className="min-w-full rounded-lg shadow-sm">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableHead key={column.key} className="min-w-[150px]">
+                    <Skeleton className="h-4 w-full" />
+                  </TableHead>
+                ))}
+                <TableHead className="min-w-[100px]">
+                  <Skeleton className="h-4 w-20" />
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[...Array(5)].map((_, i) => (
+                <TableRow key={i}>
+                  {columns.map((column) => (
+                    <TableCell key={column.key} className="min-w-[150px]">
+                      <Skeleton className="h-4 w-full" />
+                    </TableCell>
+                  ))}
+                  <TableCell className="min-w-[100px]">
+                    <Skeleton className="h-8 w-20" />
+                  </TableCell>
+                </TableRow>
               ))}
-              <TableCell>
-                <Skeleton className="h-8 w-20" />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     </div>
   );
 

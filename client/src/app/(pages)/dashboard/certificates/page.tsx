@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table"
 import { Download, Trash2, Award } from "lucide-react"
 import { useAuth } from "@/helper/AuthContext"
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface Certificate {
     id: string
@@ -106,14 +107,57 @@ export default function AdminCertificates() {
     )
 
     if (loading) {
-        return <div>Loading certificates...</div>
+        return (
+            <div className="container mx-auto py-10">
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <Skeleton className="h-8 w-[250px]" />
+                        <Skeleton className="h-10 w-[200px]" />
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Student</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead>Course</TableHead>
+                                    <TableHead>Completed On</TableHead>
+                                    <TableHead>Grade</TableHead>
+                                    <TableHead>Certificate ID</TableHead>
+                                    <TableHead>Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {[...Array(5)].map((_, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-[180px]" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-[40px]" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center gap-2">
+                                                <Skeleton className="h-8 w-8" />
+                                                <Skeleton className="h-8 w-8" />
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            </div>
+        )
     }
+
 
     return (
         <div className="container mx-auto py-10">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle className="text-2xl font-bold flex items-center gap-2">
+                    <CardTitle className="text-lg md:text-2xl font-bold flex items-center gap-2">
                         <Award className="h-6 w-6 text-red-600" />
                         Certificates Management
                     </CardTitle>

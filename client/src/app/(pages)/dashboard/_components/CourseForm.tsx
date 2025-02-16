@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation"
 import axios from "axios"
 import { useDropzone } from "react-dropzone"
 import Image from "next/image"
-import dynamic from "next/dynamic"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -29,12 +28,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Trash2, Upload, Loader2 } from "lucide-react"
+import dynamic from "next/dynamic"
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
-import "react-quill/dist/quill.snow.css"
 
 import type { CourseDataNew, Category } from "@/type"
 import { toast } from "@/hooks/use-toast"
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false })
 
 const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
   isEditing: boolean,
@@ -273,8 +272,8 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
   return (
     <div className="container max-w-4xl mx-auto py-8 px-4">
-      <Card className="shadow-lg bg-white dark:bg-gray-800">
-        <CardHeader className="flex flex-row items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-t-lg">
+      <Card className="shadow-lg bg-white ">
+        <CardHeader className="flex flex-row items-center justify-between bg-gray-50  rounded-t-lg">
           <CardTitle className="text-2xl font-bold text-gray-800 dark:text-white">
             {isEditing ? "Edit Course" : "Create New Course"}
           </CardTitle>
@@ -306,9 +305,14 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Course Status */}
             <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-              <Label htmlFor="isPublished" className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                Course Status
-              </Label>
+              <div className="flex flex-col">
+                <Label htmlFor="isPublished" className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                  Publication Status
+                </Label>
+                <span className="text-sm text-gray-500">
+                  {watch("isPublished") ? "Published - Visible to students" : "Draft - Not visible to students"}
+                </span>
+              </div>
               <Controller
                 name="isPublished"
                 control={control}
@@ -331,7 +335,8 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                       <TooltipContent>
                         {field.value
                           ? "Course is live and visible to students"
-                          : "Course is not yet visible to students"}
+                          : "Course is not yet visible to students"
+                        }
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -340,10 +345,15 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
             </div>
 
             {/* Course Type */}
-            <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-              <Label htmlFor="paid" className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                Course Type
-              </Label>
+            <div className="flex items-center justify-between bg-gray-100  p-4 rounded-lg">
+              <div className="flex flex-col">
+                <Label htmlFor="paid" className="text-lg font-semibold text-gray-700">
+                  Payment Type
+                </Label>
+                <span className="text-sm text-gray-500">
+                  {watch("paid") ? "Premium Course (Paid Access)" : "Free Course (Open Access)"}
+                </span>
+              </div>
               <Controller
                 name="paid"
                 control={control}
@@ -374,17 +384,17 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
               type="single"
               collapsible
               defaultValue="basic-info"
-              className="bg-white dark:bg-gray-800 rounded-lg shadow"
+              className="bg-white  rounded-lg shadow"
             >
               {/* Basic Information */}
               <AccordionItem value="basic-info">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50  hover:bg-gray-100  transition-colors">
                   Basic Information
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4 p-4">
                   {/* Title */}
                   <div>
-                    <Label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <Label htmlFor="title" className="text-sm font-medium text-gray-700 ">
                       Title
                     </Label>
                     <Input
@@ -397,10 +407,11 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                   </div>
 
                   {/* Description */}
+
                   <div className="flex flex-col space-y-2">
                     <Label
                       htmlFor="description"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-gray-700"
                     >
                       Description
                     </Label>
@@ -410,21 +421,49 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                         control={control}
                         rules={{ required: "Description is required" }}
                         render={({ field }) => (
-                          <ReactQuill
-                            theme="snow"
+                          <JoditEditor
                             value={field.value}
-                            onChange={field.onChange}
-                            className="h-[350px] bg-white dark:bg-gray-800"
-                            modules={{
-                              toolbar: [
-                                [{ 'header': [1, 2, 3, false] }],
-                                ['bold', 'italic', 'underline', 'strike'],
-                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                ['link', 'blockquote'],
-                                [{ 'color': [] }, { 'background': [] }],
-                                ['clean']
-                              ]
+                            config={{
+                              readonly: false,
+                              height: 350,
+                              toolbarSticky: false,
+                              toolbarAdaptive: false,
+                              buttons: [
+                                'source', '|',
+                                'bold', 'strikethrough', 'underline', 'italic', '|',
+                                'superscript', 'subscript', '|',
+                                'ul', 'ol', '|',
+                                'outdent', 'indent', '|',
+                                'font', 'fontsize', 'brush', 'paragraph', '|',
+                                'image', 'video', 'table', 'link', '|',
+                                'align', 'undo', 'redo', '|',
+                                'hr', 'eraser', 'copyformat', '|',
+                                'symbol', 'fullsize', 'print', 'about'
+                              ],
+                              uploader: {
+                                insertImageAsBase64URI: true
+                              },
+                              removeButtons: [],
+                              showCharsCounter: true,
+                              showWordsCounter: true,
+                              showXPathInStatusbar: false,
+                              askBeforePasteHTML: false,
+                              askBeforePasteFromWord: false,
+                              defaultActionOnPaste: 'insert_clear_html',
+                              width: '100%',
+                              enableDragAndDropFileToEditor: true,
+                              colors: {
+                                greyscale: ['#000000', '#434343', '#666666', '#999999', '#B7B7B7', '#CCCCCC', '#D9D9D9', '#EFEFEF', '#F3F3F3', '#FFFFFF'],
+                                palette: ['#980000', '#FF0000', '#FF9900', '#FFFF00', '#00F0F0', '#00FFFF', '#4A86E8', '#0000FF', '#9900FF', '#FF00FF'],
+                                full: ['#E6B8AF', '#F4CCCC', '#FCE5CD', '#FFF2CC', '#D9EAD3', '#D0E0E3', '#C9DAF8', '#CFE2F3', '#D9D2E9', '#EAD1DC',
+                                  '#DD7E6B', '#EA9999', '#F9CB9C', '#FFE599', '#B6D7A8', '#A2C4C9', '#A4C2F4', '#9FC5E8', '#B4A7D6', '#D5A6BD',
+                                  '#CC4125', '#E06666', '#F6B26B', '#FFD966', '#93C47D', '#76A5AF', '#6D9EEB', '#6FA8DC', '#8E7CC3', '#C27BA0',
+                                  '#A61C00', '#CC0000', '#E69138', '#F1C232', '#6AA84F', '#45818E', '#3C78D8', '#3D85C6', '#674EA7', '#A64D79',
+                                  '#85200C', '#990000', '#B45F06', '#BF9000', '#38761D', '#134F5C', '#1155CC', '#0B5394', '#351C75', '#741B47',
+                                  '#5B0F00', '#660000', '#783F04', '#7F6000', '#274E13', '#0C343D', '#1C4587', '#073763', '#20124D', '#4C1130']
+                              },
                             }}
+                            onBlur={(newContent) => field.onChange(newContent)}
                           />
                         )}
                       />
@@ -439,7 +478,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                   {/* Price (if paid) */}
                   {isPaid && (
                     <div>
-                      <Label htmlFor="price" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      <Label htmlFor="price" className="text-sm font-medium text-gray-700 ">
                         Regular Price (₹)
                       </Label>
                       <div className="relative mt-1">
@@ -462,7 +501,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                   {/* Sale Price (if paid) */}
                   {isPaid && (
                     <div>
-                      <Label htmlFor="salePrice" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      <Label htmlFor="salePrice" className="text-sm font-medium text-gray-700 ">
                         Sale Price (Optional) (₹)
                       </Label>
                       <div className="relative mt-1">
@@ -495,7 +534,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
                   {/* Language */}
                   <div>
-                    <Label htmlFor="language" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <Label htmlFor="language" className="text-sm font-medium text-gray-700 ">
                       Language
                     </Label>
                     <Input
@@ -509,7 +548,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
                   {/* Category */}
                   <div>
-                    <Label htmlFor="categoryId" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <Label htmlFor="categoryId" className="text-sm font-medium text-gray-700 ">
                       Category
                     </Label>
                     <Controller
@@ -536,7 +575,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
                   {/* Subheading */}
                   <div>
-                    <Label htmlFor="subheading" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <Label htmlFor="subheading" className="text-sm font-medium text-gray-700 ">
                       Subheading
                     </Label>
                     <Input
@@ -551,19 +590,19 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
               {/* SEO Settings */}
               <AccordionItem value="seo">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50  hover:bg-gray-100  transition-colors">
                   SEO Settings
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4 p-4">
                   <div>
-                    <Label htmlFor="metaTitle" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <Label htmlFor="metaTitle" className="text-sm font-medium text-gray-700 ">
                       Meta Title
                     </Label>
                     <Input id="metaTitle" {...register("metaTitle")} placeholder="SEO Meta title" className="mt-1" />
                   </div>
 
                   <div>
-                    <Label htmlFor="metaDesc" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <Label htmlFor="metaDesc" className="text-sm font-medium text-gray-700 ">
                       Meta Description
                     </Label>
                     <Textarea
@@ -578,7 +617,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
               {/* Course Settings */}
               <AccordionItem value="settings">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50  hover:bg-gray-100  transition-colors">
                   Course Settings
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4 p-4">
@@ -586,9 +625,9 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
                     {["featured", "popular", "trending", "bestseller"].map((type) => (
                       <div
                         key={type}
-                        className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg"
+                        className="flex items-center justify-between bg-gray-50  p-3 rounded-lg"
                       >
-                        <Label className="capitalize text-sm font-medium text-gray-700 dark:text-gray-200">
+                        <Label className="capitalize text-sm font-medium text-gray-700 ">
                           {type}
                         </Label>
                         <Controller
@@ -616,7 +655,7 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
               {/* Course Thumbnail */}
               <AccordionItem value="thumbnail">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50  hover:bg-gray-100  transition-colors">
                   Course Thumbnail
                 </AccordionTrigger>
 
@@ -671,12 +710,12 @@ const CourseForm = ({ isEditing, initialData, courseSlug, onUpdateSuccess }: {
 
               {/* Thumbnail Video */}
               <AccordionItem value="video">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50  hover:bg-gray-100  transition-colors">
                   Thumbnail Video
                 </AccordionTrigger>
                 <AccordionContent className="p-4">
                   <div>
-                    <Label htmlFor="videoUrl" className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <Label htmlFor="videoUrl" className="text-sm font-medium text-gray-700 ">
                       Video URL
                     </Label>
                     <Input

@@ -379,9 +379,9 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
               </motion.div>
 
               {/* Course Meta Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
 
-                {/* Language */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                {/* Language Card */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -400,13 +400,14 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                     </div>
                   </div>
                 </motion.div>
-                {/* Category */}
+
+                {/* Category Card */}
                 {course.category && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
-                    className="bg-white/10 rounded-xl p-4 md:p-5 backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300 col-span-1 sm:col-span-2 lg:col-span-1"
+                    className="bg-white/10 rounded-xl p-4 md:p-5 backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300"
                   >
                     <div className="flex items-center gap-2 md:gap-3">
                       <div className="p-2 bg-white/10 rounded-lg">
@@ -441,6 +442,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                   layout="fill"
                   objectFit="cover"
                   className="transition-transform duration-300 hover:scale-105"
+                  unoptimized
                 />
               </div>
 
@@ -460,6 +462,7 @@ const CourseClient: React.FC<CourseClientProps> = ({ initialCourseData, slug }) 
                     onPlay={() => setIsPlaying(true)}
                     onError={() => setVideoError(true)}
                     className="rounded-xl overflow-hidden"
+                    fallback={<div className="absolute inset-0 bg-gray-200" />}
                   />
                 </div>
               )}
