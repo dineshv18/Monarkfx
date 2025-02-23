@@ -1,0 +1,64 @@
+CREATE USER monark WITH PASSWORD 'monarkfx';
+
+CREATE DATABASE monarkfx;
+
+GRANT ALL PRIVILEGES ON DATABASE monarkfx TO monark;
+
+\c
+
+\q
+
+psql --version
+16.6 (Ubuntu 16.6-1.pgdg18.04+1)
+
+sudo nano /etc/postgresql/16/main/pg_hba.conf
+
+sudo nano /etc/postgresql/16/main/postgresql.conf
+
+sudo nano /etc/postgresql/*/main/pg_hba.conf 
+
+host    all             all             0.0.0.0/0            md5
+
+
+sudo -u postgres psql
+
+# Create user monark (if not already created)
+CREATE USER monark WITH PASSWORD 'monarkfx';
+
+# Create database
+CREATE DATABASE monarkfx;
+
+# Connect to the new database
+\c monarkfx
+
+# Grant all privileges to monark
+GRANT ALL PRIVILEGES ON DATABASE monarkfx TO monark;
+GRANT ALL PRIVILEGES ON SCHEMA public TO monark;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO monark;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO monark;
+GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO monark;
+
+# Set default privileges
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO monark;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO monark;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO monark;
+
+# Change ownership
+ALTER DATABASE monarkfx OWNER TO monark;
+ALTER SCHEMA public OWNER TO monark;
+\q
+
+
+sudo systemctl daemon-reload
+sudo systemctl restart postgresql
+
+
+
+sudo apt install -y certbot python3-certbot-nginx
+
+
+sudo certbot certonly --nginx -d monarkfx.com -d www.monarkfx.com
+
+
+
+

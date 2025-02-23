@@ -7,6 +7,7 @@ import Earth from '@/components/globe';
 import { AnimatedText } from '@/components/AnimatedText';
 import ButtonHover from '@/components/ButtonHover';
 import AnimatedText2 from '@/components/AnimatedText2';
+import RotatingText from '@/components/rotating-text';
 
 const HeroSection: React.FC = () => {
   const containerVariants = {
@@ -35,22 +36,42 @@ const HeroSection: React.FC = () => {
     <section className="relative bg-black text-white overflow-hidden flex flex-col justify-center">
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-black z-0"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-10 md:pt-2 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12 md:mt-5">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={containerVariants}
             className="text-left"
           >
-            <AnimatedText
-              text="Monark FX"
-              className="text-5xl lg:text-6xl font-bold mb-4 text-red-500"
-              delay={0.5}
-            />
-            <motion.h2 variants={itemVariants} className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
-              Your Gateway to Financial Markets
-            </motion.h2>
-            <p className="text-lg md:text-xl mb-8">Monark FX is a financial market institute specializing in trading education across stocks, forex, and cryptocurrency. We offer comprehensive courses, live trading sessions, personalized mentorship, and ISO-certified programs designed to empower traders with the knowledge and practical skills needed for success in the financial markets.</p>
+            <div className="space-y-4">
+              <AnimatedText
+                text="Monark FX"
+                className="text-5xl lg:text-6xl font-bold mb-4 text-red-500"
+                delay={0.5}
+              />
+              <RotatingText
+                texts={[
+                  'Your Gateway to Financial Markets',
+                  'Master Stock Trading',
+                  'Expert Forex Trading',
+                  'Crypto Trading Excellence',
+                  'Professional Market Analysis'
+                ]}
+                // mainClassName="px-3 sm:px-4 md:px-5 bg-gradient-to-r from-red-500 to-red-700 text-white overflow-hidden py-1 sm:py-2 md:py-3 justify-center rounded-lg inline-block"
+                staggerFrom={"last"}
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "-120%" }}
+                staggerDuration={0.025}
+                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1 text-2xl md:text-3xl font-semibold"
+                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                rotationInterval={3000}
+              />
+            </div>
+            {/* <motion.h2 variants={itemVariants} className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
+              
+            </motion.h2> */}
+            <p className="text-base md:text-lg mb-8">Monark FX is a financial market institute specializing in trading education across stocks, forex, and cryptocurrency. We offer comprehensive courses, live trading sessions, personalized mentorship, and ISO-certified programs designed to empower traders with the knowledge and practical skills needed for success in the financial markets.</p>
             {/* <AnimatedText2
               text="Monark FX is a financial market institute specializing in trading education across stocks, forex, and cryptocurrency. We offer comprehensive courses, live trading sessions, personalized mentorship, and ISO-certified programs designed to empower traders with the knowledge and practical skills needed for success in the financial markets."
               className="text-lg md:text-xl mb-8"
@@ -61,8 +82,7 @@ const HeroSection: React.FC = () => {
               SecondText="Learn More"
               variant="lg"
               className="font-semibold"
-              useExternalLink={true}
-              href="https://wa.me/919220797499?text=Hello%20Monark%20Fx%20Team%2C%20I%27m%20interested%20in%20learning%20more%20about%20your%20institute!"
+              href="/courses"
             />
 
           </motion.div>

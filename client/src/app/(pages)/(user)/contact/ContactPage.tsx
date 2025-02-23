@@ -2,44 +2,59 @@
 
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { MapPin, Send, Phone, Mail, Clock } from 'lucide-react'
+import { MapPin, Send, Phone, Mail, Clock, Globe } from 'lucide-react'
 import Background from '../../_components/Background'
 import { toast } from 'sonner'
 import axios from 'axios'
 
 const greetings = [
-  { text: "Hello!", lang: "English" },
-  { text: "नमस्ते!", lang: "Hindi" },
-  { text: "¡Hola!", lang: "Spanish" },
-  { text: "Bonjour!", lang: "French" },
-  { text: "Ciao!", lang: "Italian" },
-  { text: "こんにちは!", lang: "Japanese" },
-  { text: "안녕하세요!", lang: "Korean" },
-  { text: "Hej!", lang: "Swedish" },
-  { text: "Hallo!", lang: "German" },
-  { text: "Olá!", lang: "Portuguese" }
+  { text: "Welcome to MonarkFX!", lang: "English" },
+  { text: "मोनार्क FX में आपका स्वागत है!", lang: "Hindi" },
+  { text: "¡Bienvenido a MonarkFX!", lang: "Spanish" },
+  { text: "Bienvenue sur MonarkFX!", lang: "French" },
+  { text: "Benvenuti su MonarkFX!", lang: "Italian" },
+  { text: "MonarkFXへようこそ!", lang: "Japanese" },
+  { text: "MonarkFX에 오신 것을 환영합니다!", lang: "Korean" },
+  { text: "Välkommen till MonarkFX!", lang: "Swedish" },
+  { text: "Willkommen bei MonarkFX!", lang: "German" },
+  { text: "Bem-vindo ao MonarkFX!", lang: "Portuguese" }
 ]
 
 const contactInfo = [
   {
     icon: MapPin,
-    title: "Visit Us",
-    details: "Dwarka Sector 7, New Delhi, India"
+    title: "Head Branch",
+    details: "Uttam Nagar, New Delhi, India"
+  },
+  {
+    icon: MapPin,
+    title: "Branch Office",
+    details: "Dashrath Puri, New Delhi, India"
   },
   {
     icon: Phone,
     title: "Call Us",
-    details: "+91 981 180 8558"
+    details: "+91 9220797499 / +91 9773927706"
   },
   {
     icon: Mail,
     title: "Email Us",
-    details: "info@monarkfx.com"
+    details: (
+      <>
+        service@monarkfx.com<br />
+        monarkfx@gmail.com
+      </>
+    )
   },
   {
     icon: Clock,
     title: "Working Hours",
     details: "Mon - Sat: 9AM to 6PM"
+  },
+  {
+    icon: Globe,
+    title: "Website",
+    details: "www.monarkfx.com"
   }
 ]
 
@@ -56,7 +71,7 @@ export default function ContactPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentGreeting((prev) => (prev + 1) % greetings.length)
-    }, 2500)
+    }, 3000)
     return () => clearInterval(interval)
   }, [])
 
@@ -70,13 +85,11 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/contact/create`,
         formData
       )
-
       if (response.data?.message) {
         toast.success(response.data.data)
         setFormData({
@@ -103,25 +116,44 @@ export default function ContactPage() {
         highlightedText="Touch"
         subtitle="We'd love to hear from you"
       />
-
-      <div className="container mx-auto px-4 py-16 max-w-7xl">
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
         {/* Greeting Animation */}
         <motion.div
           key={currentGreeting}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="text-center my-10"
+          className="relative py-12 text-center"
         >
-          <p className="text-3xl font-bold text-gray-900">
-            {greetings[currentGreeting].text}
-          </p>
-          <p className="text-gray-600 mt-2">
-            {greetings[currentGreeting].lang}
-          </p>
+          <div className="absolute inset-0 bg-gradient-to-r from-red-50 via-transparent to-red-50 opacity-40" />
+          <div className="relative">
+            <motion.p
+              className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent py-10"
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              {greetings[currentGreeting].text}
+            </motion.p>
+            <motion.div
+              className="mt-4 inline-block"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <span className="px-4 py-1 rounded-full bg-red-100 text-red-600 text-sm font-medium">
+                {greetings[currentGreeting].lang}
+              </span>
+            </motion.div>
+          </div>
+
+          {/* Add decorative elements */}
+          <div className="absolute top-0 left-0 w-24 h-24 bg-red-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-orange-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
+          <div className="absolute -bottom-4 left-20 w-24 h-24 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000" />
         </motion.div>
         {/* Contact Info Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {contactInfo.map((info, index) => (
             <motion.div
               key={info.title}
@@ -142,7 +174,6 @@ export default function ContactPage() {
             </motion.div>
           ))}
         </div>
-
         <div className="grid md:grid-cols-2 gap-8 items-start">
           {/* Contact Form */}
           <motion.div
@@ -205,7 +236,6 @@ export default function ContactPage() {
               </motion.button>
             </form>
           </motion.div>
-
           {/* Map */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -214,7 +244,7 @@ export default function ContactPage() {
             className="bg-white p-8 rounded-xl shadow-lg border border-red-100 h-[600px]"
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.0168431857125!2d77.0797493!3d28.6198138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1b4a5e42cf8d%3A0xb2c1e0d574e77ba4!2sDwarka%20Sector%207%2C%20Dwarka%2C%20Delhi%2C%20110075!5e0!3m2!1sen!2sin!4v1650000000000!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.7837997936613!2d77.05616367528806!3d28.606262075679115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d05de8d29cab9%3A0x2d77bb4a1742f15c!2sEquity%20Tank%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1740240805113!5m2!1sen!2sin"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -225,8 +255,6 @@ export default function ContactPage() {
             />
           </motion.div>
         </div>
-
-
       </div>
     </>
   )
