@@ -132,8 +132,7 @@ export function MentorshipSection() {
                 SecondText="Learn More"
                 variant="lg"
                 className="font-semibold"
-                useExternalLink={true}
-                href="https://wa.me/919220797499?text=Hello%20Monark%20Fx%20Team%2C%20I%27m%20interested%20in%20learning%20more%20about%20your%20institute!"
+                href="/courses"
               />
             </div>
           </motion.div>

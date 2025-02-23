@@ -175,7 +175,7 @@ export const verifyEmail = asyncHandler(async (req, res) => {
   const cookieOptions = {
     secure: true,
     sameSite: "Strict",
-    domain: ".universalyogi.com",
+    domain: ".monarkfx.com",
     path: "/",
     expires: new Date(Date.now() + COOKIE_EXPIRY),
   };
@@ -231,7 +231,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const cookieOptions = {
     secure: true,
     sameSite: "Strict",
-    domain: ".universalyogi.com",
+    domain: ".monarkfx.com",
     path: "/",
     expires: new Date(Date.now() + COOKIE_EXPIRY),
   };
@@ -319,19 +319,19 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
 export const logoutUser = asyncHandler(async (req, res) => {
   const cookieOptions = {
-    domain: ".universalyogi.com",
+    domain: ".monarkfx.com",
     path: "/",
     secure: true,
     sameSite: "Strict",
   };
 
-  // Clear cookies for '.universalyogi.com'
+  // Clear cookies for '.monarkfx.com'
   res.clearCookie("accessToken", cookieOptions);
   res.clearCookie("refreshToken", cookieOptions);
 
-  // Clear cookies for 'learn.universalyogi.com'
+  // Clear cookies for 'monarkfx.com'
   const subdomainOptions = {
-    domain: "learn.universalyogi.com",
+    domain: "monarkfx.com",
     path: "/",
     secure: true,
     sameSite: "Strict",
@@ -430,7 +430,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
   const cookieOptions = {
     secure: true,
     sameSite: "Strict",
-    domain: ".universalyogi.com",
+    domain: ".monarkfx.com",
     path: "/",
     expires: new Date(Date.now() + COOKIE_EXPIRY),
   };
@@ -682,7 +682,7 @@ export const googleAuth = asyncHandler(async (req, res) => {
     const cookieOptions = {
       secure: true,
       sameSite: "Strict",
-      domain: ".universalyogi.com",
+      domain: ".monarkfx.com",
       path: "/",
       expires: new Date(Date.now() + COOKIE_EXPIRY),
     };
