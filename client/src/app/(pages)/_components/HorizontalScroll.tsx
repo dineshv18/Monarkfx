@@ -7,6 +7,7 @@ import EducationCards from './EducationCards';
 import { AnimatedText } from '@/components/AnimatedText';
 import { MentorshipSection } from './mentorship-section';
 import { useRef } from 'react';
+import MonarkTestimonials from './AnimatedTestimonials';
 
 
 interface Course {
@@ -179,6 +180,8 @@ export default function Home(): JSX.Element {
             </div>
           </div>
         </section>
+
+        <MonarkTestimonials />
 
         {/* Footer */}
         <footer className='group bg-black border-t border-red-600/20'>
