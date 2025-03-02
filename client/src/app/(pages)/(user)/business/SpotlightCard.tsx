@@ -29,7 +29,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
       ref={divRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setOpacity(0)}
-      className={`relative rounded-3xl border border-red-100 bg-white overflow-hidden p-8 ${className}`}
+      className={`relative rounded-3xl border border-red-100 bg-white overflow-hidden text-black p-8 ${className}`}
     >
       <div
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
