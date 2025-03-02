@@ -208,7 +208,7 @@ const About = () => {
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   className={`relative flex items-center mb-16 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                 >
-                  <div className="flex-1 md:px-12">
+                  <div className="md:flex-1 md:px-12">
                     <div
                       className={`p-8 rounded-lg shadow-xl border-t-4 ${index % 2 === 0
                         ? 'text-right md:mr-6 border-red-600 bg-gradient-to-br from-white to-red-50'
@@ -220,7 +220,7 @@ const About = () => {
                     </div>
                   </div>
 
-                  <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex flex-col items-center">
                     <motion.div
                       whileHover={{ scale: 1.1 }}
                       className="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full h-16 w-16 flex items-center justify-center font-bold text-xl shadow-lg z-10 border-2 border-white"
@@ -311,7 +311,7 @@ const About = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {expertiseItems.map((item, index) => {
-                const Icon = item.icon;
+                const IconComponent = item.icon;
                 return (
                   <motion.div
                     key={index}
@@ -323,7 +323,7 @@ const About = () => {
                     className="bg-white p-8 rounded-xl shadow-lg border border-red-100 hover:border-red-300 transition-all"
                   >
                     <div className="bg-red-50 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6">
-                      <Icon className="text-red-600 h-8 w-8" />
+                      <IconComponent className="text-red-600 h-8 w-8" />
                     </div>
 
                     <h3 className="text-xl font-bold text-gray-800 mb-3">{item.title}</h3>
