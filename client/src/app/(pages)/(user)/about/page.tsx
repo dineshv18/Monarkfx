@@ -211,8 +211,8 @@ const About = () => {
                   <div className="flex-1 md:px-12">
                     <div
                       className={`p-8 rounded-lg shadow-xl border-t-4 ${index % 2 === 0
-                          ? 'text-right md:mr-6 border-red-600 bg-gradient-to-br from-white to-red-50'
-                          : 'md:ml-6 border-red-400 bg-gradient-to-br from-white to-red-50'
+                        ? 'text-right md:mr-6 border-red-600 bg-gradient-to-br from-white to-red-50'
+                        : 'md:ml-6 border-red-400 bg-gradient-to-br from-white to-red-50'
                         } hover:shadow-2xl transition-all duration-300 backdrop-blur-sm`}
                     >
                       <h3 className="text-2xl font-bold text-red-600 mb-2">{item.title}</h3>
@@ -291,70 +291,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Programs Section */}
-        <section className="py-24 bg-red-50">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl font-bold text-red-600 mb-4">Our Specialized Programs</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                We provide comprehensive training through our two specialized programs designed to
-                build expertise in various market segments.
-              </p>
-            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              {programs.map((program, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
-                  whileHover={{ y: -10 }}
-                  className="relative group"
-                >
-                  <div className="bg-white rounded-2xl shadow-xl overflow-hidden relative z-10">
-                    <div
-                      className="h-64 relative overflow-hidden"
-                      style={{ backgroundColor: program.color }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-                      <Image
-                        src={program.image}
-                        alt={program.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 flex items-end z-20 p-8">
-                        <div>
-                          <h3 className="text-3xl font-bold text-white">{program.shortName}</h3>
-                          <div className="h-1 w-16 bg-white mt-2"></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-8">
-                      <h3 className="text-2xl font-bold text-gray-800 mb-4">{program.title}</h3>
-                      <p className="text-gray-600">{program.description}</p>
-                      <button className="mt-6 px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors flex items-center">
-                        Learn More <ArrowRight className="ml-2 w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div
-                    className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/10 rounded-2xl transform translate-x-2 translate-y-2 -z-0"
-                  ></div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Expertise Section */}
         <section className="py-24 bg-white">
