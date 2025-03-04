@@ -29,15 +29,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+const allowedOrigins = process.env.CORS_ORIGIN.split(',');
+
 // CORS Configuration
 app.use(
   cors({
-    origin: [
-      process.env.CORS_ORIGIN,
-      "https://www.googleapis.com",
-      "https://oauth2.googleapis.com",
-      "https://accounts.google.com",
-    ],
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if ([...allowedOrigins, "https://www.googleapis.com",
+        "https://oauth2.googleapis.com",
+        "https://accounts.google.com"].indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
