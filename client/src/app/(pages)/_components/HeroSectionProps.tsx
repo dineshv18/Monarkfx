@@ -1,13 +1,12 @@
-'use client';
+"use client"
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { BookOpen, Users, BarChart2 } from 'lucide-react';
-import Earth from '@/components/globe';
-import { AnimatedText } from '@/components/AnimatedText';
-import ButtonHover from '@/components/ButtonHover';
-import AnimatedText2 from '@/components/AnimatedText2';
-import RotatingText from '@/components/rotating-text';
+import type React from "react"
+import Image from "next/image"
+import { motion } from "framer-motion"
+import { BookOpen, Users, BarChart2, ChevronRight } from "lucide-react"
+import clsx from "clsx"
+import { AnimatedText } from "@/components/AnimatedText"
+import RotatingText from "@/components/rotating-text"
 
 const HeroSection: React.FC = () => {
   const containerVariants = {
@@ -18,7 +17,7 @@ const HeroSection: React.FC = () => {
         staggerChildren: 0.1,
       },
     },
-  };
+  }
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
@@ -26,74 +25,131 @@ const HeroSection: React.FC = () => {
       y: 0,
       opacity: 1,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 100,
       },
     },
-  };
+  }
 
   return (
-    <section className="relative bg-black text-white overflow-hidden flex flex-col justify-center">
-      <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-black z-0"></div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-10 md:pt-2 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12 md:mt-5">
+    <section className="relative bg-gradient-to-b from-black to-gray-900 text-white overflow-hidden flex flex-col justify-center min-h-screen">
+      {/* Background patterns */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-full h-full [background:radial-gradient(circle_at_center,rgba(220,38,38,0.1)_0,transparent_70%)]"></div>
+        <div className="absolute w-full h-full opacity-20 [background-image:repeating-linear-gradient(100deg,#64748B_0%,#64748B_1px,transparent_1px,transparent_4%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(185,28,28,0.15),transparent_70%)] blur-[80px]"></div>
+      </div>
+
+      {/* Animated circle with image */}
+      <div className="absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] max-w-full">
+        {/* Base image */}
+        <motion.div
+          className="absolute inset-0 rounded-full overflow-hidden"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="absolute inset-0 bg-black/50 z-10 rounded-full"></div>
+          <Image
+            src="/logo.png"
+            alt="Monark FX"
+            width={520}
+            height={520}
+            className="object-cover opacity-80"
+          />
+        </motion.div>
+
+        {/* Animated rings */}
+        {[0, 1, 2].map((i) => (
           <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-            className="text-left"
-          >
-            <div className="space-y-4">
+            key={i}
+            className={clsx(
+              "absolute inset-0 rounded-full",
+              "border-2",
+              i === 0 ? "border-red-500/80" : i === 1 ? "border-red-400/60" : "border-red-300/40",
+              "z-20",
+            )}
+            animate={{
+              rotate: i % 2 === 0 ? 360 : -360,
+              scale: [1, 1.05 + i * 0.05, 1],
+            }}
+            transition={{
+              duration: 15 + i * 5,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            }}
+          />
+        ))}
+
+        {/* Pulsing glow */}
+        <motion.div
+          className="absolute inset-0 rounded-full bg-red-500/10 z-10 blur-md"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+        <div className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto mt-16">
+          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="mb-16">
+            <motion.div
+              variants={itemVariants}
+              className="inline-block mb-3 px-4 py-1.5 bg-red-500/10 backdrop-blur-sm rounded-full border border-red-500/20"
+            >
+              <span className="text-red-400 font-medium text-sm">Premium Trading Education</span>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="mb-6">
               <AnimatedText
                 text="Monark FX"
-                className="text-5xl lg:text-6xl font-bold mb-4 text-red-500"
-                delay={0.5}
+                className="text-5xl sm:text-6xl md:text-7xl font-bold text-[var(--custom-color-1)]"
+                delay={0.2}
               />
+
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="mb-6 h-12">
               <RotatingText
                 texts={[
-                  'Your Gateway to Financial Markets',
-                  'Master Stock Trading',
-                  'Expert Forex Trading',
-                  'Crypto Trading Excellence',
-                  'Professional Market Analysis'
+                  "Your Gateway to Financial Markets",
+                  "Master Stock Trading",
+                  "Expert Forex Trading",
+                  "Crypto Trading Excellence",
+                  "Professional Market Analysis",
                 ]}
-                // mainClassName="px-3 sm:px-4 md:px-5 bg-gradient-to-r from-red-500 to-red-700 text-white overflow-hidden py-1 sm:py-2 md:py-3 justify-center rounded-lg inline-block"
                 staggerFrom={"last"}
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "-120%" }}
                 staggerDuration={0.025}
-                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1 text-2xl md:text-3xl font-semibold"
+                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1 text-xl sm:text-2xl md:text-3xl font-semibold"
                 transition={{ type: "spring", damping: 30, stiffness: 400 }}
                 rotationInterval={3000}
               />
-            </div>
-            {/* <motion.h2 variants={itemVariants} className="text-2xl md:text-3xl lg:text-4xl font-semibold mb-6">
-              
-            </motion.h2> */}
-            <p className="text-base md:text-lg mb-8">Monark FX is a financial market institute specializing in trading education across stocks, forex, and cryptocurrency. We offer comprehensive courses, live trading sessions, personalized mentorship, and ISO-certified programs designed to empower traders with the knowledge and practical skills needed for success in the financial markets.</p>
-            {/* <AnimatedText2
-              text="Monark FX is a financial market institute specializing in trading education across stocks, forex, and cryptocurrency. We offer comprehensive courses, live trading sessions, personalized mentorship, and ISO-certified programs designed to empower traders with the knowledge and practical skills needed for success in the financial markets."
-              className="text-lg md:text-xl mb-8"
-              letterSpacing='0.02rem'
-            /> */}
-            <ButtonHover
-              FirstText="Get Started"
-              SecondText="Learn More"
-              variant="lg"
-              className="font-semibold"
-              href="/courses"
-            />
+            </motion.div>
 
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-red-500 opacity-20 blur-3xl rounded-full hidden lg:block"></div>
-            <Earth className="w-full md:max-w-[600px] mx-auto relative z-10" />
+            <motion.p variants={itemVariants} className="text-base sm:text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
+              Monark FX is a premier financial market institute specializing in trading education across stocks, forex,
+              and cryptocurrency. Our ISO-certified programs are designed to empower traders at all levels.
+            </motion.p>
+
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-500 rounded-lg font-medium text-white shadow-lg shadow-red-600/20 hover:shadow-red-600/40 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center group">
+                Get Started
+                <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </button>
+              <button className="px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg font-medium text-white hover:bg-white/20 transition-all duration-300 hover:-translate-y-1">
+                Explore Courses
+              </button>
+            </motion.div>
           </motion.div>
         </div>
 
@@ -101,51 +157,71 @@ const HeroSection: React.FC = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto"
         >
           {[
             {
-              icon: <BookOpen className="h-10 w-10 text-red-500" />,
+              icon: <BookOpen className="h-8 w-8 text-red-400" />,
               title: "Comprehensive Courses",
-              description: "From beginner to advanced, our courses cover all aspects of trading.",
+              description:
+                "From beginner to advanced, our courses cover all aspects of trading with practical examples.",
             },
             {
-              icon: <Users className="h-10 w-10 text-red-500" />,
+              icon: <Users className="h-8 w-8 text-red-400" />,
               title: "Personal Mentorship",
-              description: "One-on-one guidance from experienced traders to accelerate your growth.",
+              description: "One-on-one guidance from experienced traders to accelerate your growth and success.",
             },
             {
-              icon: <BarChart2 className="h-10 w-10 text-red-500" />,
+              icon: <BarChart2 className="h-8 w-8 text-red-400" />,
               title: "Live Trading Sessions",
               description: "Apply your knowledge in real-time market conditions with expert supervision.",
             },
           ].map((feature, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="bg-gray-900 p-6 rounded-lg shadow-lg hover:shadow-red-500/20 transition duration-300 ease-in-out"
-              whileHover={{ y: -5 }}
-            >
-              <div className="flex items-center justify-center mb-4">
-                {feature.icon}
+            <motion.div key={index} variants={itemVariants} className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-b from-red-500/20 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
+              <div className="relative bg-gray-800/40 backdrop-blur-md border border-gray-700/50 p-6 sm:p-8 rounded-2xl h-full flex flex-col hover:border-red-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-500/10">
+                <div className="p-3 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl w-fit mb-5 border border-gray-700">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-white">{feature.title}</h3>
+                <p className="text-gray-400 flex-grow">{feature.description}</p>
+                <div className="mt-5 pt-4 border-t border-gray-700/50">
+                  <a
+                    href="#"
+                    className="text-red-400 font-medium flex items-center text-sm hover:text-red-300 transition-colors"
+                  >
+                    Learn more
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </a>
+                </div>
               </div>
-              <h3 className="text-lg font-medium mb-2 text-center">{feature.title}</h3>
-              <p className="text-gray-400 text-center">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Stats section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="mt-20 flex flex-wrap justify-center gap-8 sm:gap-12 max-w-4xl mx-auto"
+        >
+          {[
+            { value: "10K+", label: "Students" },
+            { value: "95%", label: "Success Rate" },
+            { value: "24/7", label: "Support" },
+            { value: "ISO", label: "Certified" },
+          ].map((stat, index) => (
+            <div key={index} className="text-center">
+              <div className="text-3xl sm:text-4xl font-bold text-white mb-1">{stat.value}</div>
+              <div className="text-gray-400 text-sm">{stat.label}</div>
+            </div>
+          ))}
+        </motion.div>
       </div>
-
-      <svg className="absolute bottom-0 left-0 right-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path
-          fill="rgba(185, 28, 28, 0.1)"
-          fillOpacity="1"
-          d="M0,32L48,53.3C96,75,192,117,288,144C384,171,480,181,576,165.3C672,149,768,107,864,90.7C960,75,1056,85,1152,106.7C1248,128,1344,160,1392,176L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-        ></path>
-      </svg>
     </section>
-  );
-};
+  )
+}
 
-export default HeroSection;
+export default HeroSection
 

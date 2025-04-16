@@ -1,22 +1,14 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import Link from "next/link"
-import {
-  Menu,
-  X,
-  LogIn,
-  LogOut,
-  User,
-  ShoppingCart,
-  ChevronDown
-} from "lucide-react"
-import Image from "next/image"
-import { useAuth } from "@/helper/AuthContext"
-import axios from "axios"
-import Cookies from "js-cookie"
-import Cart from "../Cart"
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { Menu, X, LogIn, User, ChevronDown } from "lucide-react";
+import Image from "next/image";
+import { useAuth } from "@/helper/AuthContext";
+import axios from "axios";
+import Cookies from "js-cookie";
+import Cart from "../Cart";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -24,221 +16,334 @@ const menuItems = [
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
   { name: "Business", href: "/business" },
-]
+];
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
-  const navRef = useRef<HTMLDivElement>(null)
-  const { isAuthenticated, checkAuth } = useAuth()
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [navPosition, setNavPosition] = useState({
+    left: 0,
+    width: 0,
+    opacity: 0,
+  });
+  const { isAuthenticated, checkAuth } = useAuth();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    checkAuth()
+    checkAuth();
     const handleScroll = () => {
       if (window.scrollY > 50) {
-        setIsScrolled(true)
-        setIsMobileMenuOpen(false)
+        setIsScrolled(true);
+        setIsMobileMenuOpen(false);
       } else {
-        setIsScrolled(false)
+        setIsScrolled(false);
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [checkAuth])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [checkAuth]);
 
   // Close mobile menu on route change or scroll
   useEffect(() => {
-    const handleRouteChange = () => setIsMobileMenuOpen(false)
-    window.addEventListener('popstate', handleRouteChange)
-    return () => window.removeEventListener('popstate', handleRouteChange)
-  }, [])
+    const handleRouteChange = () => setIsMobileMenuOpen(false);
+    window.addEventListener("popstate", handleRouteChange);
+    return () => window.removeEventListener("popstate", handleRouteChange);
+  }, []);
 
   const handleLogout = async () => {
     try {
-      const accessToken = Cookies.get("accessToken")
-      if (!accessToken) return
+      const accessToken = Cookies.get("accessToken");
+      if (!accessToken) return;
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
         {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
-      )
-      Cookies.remove("accessToken")
-      window.location.href = "/auth"
+      );
+      Cookies.remove("accessToken");
+      window.location.href = "/auth";
     } catch (error) {
-      console.error("Logout error:", error)
+      console.error("Logout error:", error);
     }
-  }
-
-  const shouldShowFullNavbar = !isScrolled || isHovered
-
-  const logoSize = shouldShowFullNavbar ? 45 : 35
+  };
 
   return (
     <motion.nav
-      ref={navRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false)
-        setIsProfileDropdownOpen(false)
-      }}
-      initial={false}
-      animate={{
-        width: shouldShowFullNavbar ? "90%" : "65px",
-        maxWidth: shouldShowFullNavbar ? "1200px" : "65px",
-        backgroundColor: shouldShowFullNavbar ? "rgba(0,0,0,0.9)" : "rgba(0,0,0,0.7)",
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="fixed z-50 top-4 left-0 right-0 mx-auto h-[65px] rounded-lg flex items-center justify-between px-4"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={`fixed z-50 top-[10px] left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-7xl flex flex-col md:flex-row items-center justify-between transition-all duration-500 ${
+        isScrolled
+          ? "bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-[0_0_15px_rgba(220,38,38,0.25)]"
+          : "bg-transparent"
+      }`}
     >
-      {/* Logo with dynamic size */}
-      <Link href="/" className="flex items-center bg-red-600 rounded-md p-1">
-        <Image
-          src="/logo.png"
-          alt="Monark FX"
-          width={logoSize}
-          height={logoSize}
-          className="rounded-lg transition-all duration-300"
-        />
-      </Link>
+      <div className="flex w-full md:w-auto items-center justify-between p-3">
+        {/* Logo with animation */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="relative group"
+        >
+          <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-red-600 to-red-400 opacity-30 group-hover:opacity-60 blur transition duration-500"></div>
+          <Link href="/" className="relative flex items-center rounded-md">
+            <Image
+              src="/logo.png"
+              alt="Monark FX"
+              width={60}
+              height={60}
+              className="rounded-lg"
+            />
+          </Link>
+        </motion.div>
 
-      {/* Desktop Navigation */}
-      {shouldShowFullNavbar && (
-        <div className="hidden md:flex items-center space-x-8">
-          {menuItems.map((item) => (
-            <Link
+        {/* Mobile Menu Toggle */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden text-white bg-red-600/20 p-2 rounded-full border border-red-600/30"
+        >
+          {isMobileMenuOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
+        </motion.button>
+      </div>
+
+      {/* Desktop Navigation with hover effect */}
+      <div className="hidden md:block mx-auto">
+        <ul
+          className="relative flex items-center gap-1 bg-black/50 backdrop-blur-md rounded-full border border-white/10 p-1"
+          onMouseLeave={() => {
+            setNavPosition((prev) => ({ ...prev, opacity: 0 }));
+            setActiveIndex(null);
+          }}
+        >
+          {menuItems.map((item, idx) => (
+            <NavTab
               key={item.name}
               href={item.href}
-              className="text-white hover:text-red-500 transition-colors duration-200"
+              setPosition={setNavPosition}
+              isActive={activeIndex === idx}
+              onClick={() => setActiveIndex(idx)}
             >
               {item.name}
-            </Link>
+            </NavTab>
           ))}
-        </div>
-      )}
+          <NavCursor position={navPosition} />
+        </ul>
+      </div>
 
-      {/* Auth & Cart Section - Only visible on desktop when navbar is expanded */}
-      {shouldShowFullNavbar && (
-        <div className="hidden md:flex items-center space-x-4">
-          {isAuthenticated ? (
-            <div className="relative">
-              <button
-                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="flex items-center space-x-2 text-white hover:text-red-500"
-              >
-                <User className="h-5 w-5" />
-                <ChevronDown className="h-4 w-4" />
-              </button>
+      {/* Auth & Cart Section */}
+      <div className="hidden md:flex items-center space-x-3">
+        {isAuthenticated ? (
+          <div className="relative">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+              className="flex items-center space-x-1 text-white bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:border-red-500/50 transition-all duration-300"
+            >
+              <User className="h-4 w-4 mr-1" />
+              <span className="text-sm">Profile</span>
+              <ChevronDown className="h-3 w-3 ml-1" />
+            </motion.button>
 
-              <AnimatePresence>
-                {isProfileDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2"
-                  >
-                    <Link
-                      href="/user-profile"
-                      className="block px-4 py-2 text-gray-800 hover:bg-red-50"
-                      onClick={() => setIsProfileDropdownOpen(false)}
-                    >
-                      Profile
-                    </Link>
-                    <button
-                      onClick={() => {
-                        handleLogout()
-                        setIsProfileDropdownOpen(false)
-                      }}
-                      className="w-full text-left px-4 py-2 text-gray-800 hover:bg-red-50"
-                    >
-                      Logout
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <Link href="/auth">
-              <button className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                <LogIn className="h-4 w-4" />
-                <span>Login</span>
-              </button>
-            </Link>
-          )}
-
-          {/* Cart only visible in desktop mode when expanded */}
-          {shouldShowFullNavbar && <Cart />}
-        </div>
-      )}
-
-      {/* Mobile Menu Toggle - Only visible when not expanded */}
-      {shouldShowFullNavbar && (
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden text-white"
-        >
-          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      )}
-
-      {/* Mobile Menu with improved animation and behavior */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 mt-2 bg-black/95 rounded-lg p-4 backdrop-blur-lg"
-          >
-            <div className="space-y-4">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block text-white hover:text-red-500 py-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
+            <AnimatePresence>
+              {isProfileDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-48 bg-black/70 backdrop-blur-lg rounded-xl border border-white/10 shadow-[0_5px_15px_rgba(0,0,0,0.3)] py-1 overflow-hidden"
                 >
-                  {item.name}
-                </Link>
-              ))}
-              {isAuthenticated ? (
-                <>
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-b from-red-600/20 to-transparent opacity-60"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.6 }}
+                    exit={{ opacity: 0 }}
+                  />
                   <Link
                     href="/user-profile"
-                    className="block text-white hover:text-red-500 py-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="relative block px-4 py-2 text-white hover:bg-white/10 transition-colors"
+                    onClick={() => setIsProfileDropdownOpen(false)}
                   >
                     Profile
                   </Link>
                   <button
                     onClick={() => {
-                      handleLogout()
-                      setIsMobileMenuOpen(false)
+                      handleLogout();
+                      setIsProfileDropdownOpen(false);
                     }}
-                    className="w-full text-left text-white hover:text-red-500 py-2"
+                    className="relative w-full text-left px-4 py-2 text-white hover:bg-white/10 transition-colors"
                   >
                     Logout
                   </button>
-                </>
-              ) : (
-                <Link
-                  href="/auth"
-                  className="block text-white hover:text-red-500 py-2"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
+                </motion.div>
               )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <Link href="/auth">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-full shadow-[0_0_10px_rgba(220,38,38,0.3)] transition-all duration-300 border border-red-500/50 hover:shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+            >
+              <LogIn className="h-4 w-4 mr-1" />
+              <span className="text-sm">Login</span>
+            </motion.button>
+          </Link>
+        )}
+
+        {/* Cart component */}
+        <Cart />
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="w-full md:hidden mt-1 border-t border-white/10 pt-2 px-3 pb-3 backdrop-blur-md bg-black/70 rounded-b-2xl"
+          >
+            <div className="flex flex-col space-y-2">
+              {menuItems.map((item, index) => (
+                <motion.div
+                  key={item.name}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Link
+                    href={item.href}
+                    className="block text-white text-sm hover:text-red-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                </motion.div>
+              ))}
+
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: menuItems.length * 0.05 }}
+                className="border-t border-white/10 pt-2 mt-2"
+              >
+                {isAuthenticated ? (
+                  <>
+                    <Link
+                      href="/user-profile"
+                      className="block text-white text-sm hover:text-red-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full text-left text-white text-sm hover:text-red-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/auth"
+                    className="flex items-center space-x-2 text-white text-sm bg-gradient-to-r from-red-600 to-red-500 py-2 px-4 rounded-lg my-2"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <LogIn className="h-4 w-4" />
+                    <span>Login</span>
+                  </Link>
+                )}
+              </motion.div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </motion.nav>
-  )
+  );
+};
+
+// Added TypeScript interfaces for the component props
+interface NavTabProps {
+  children: React.ReactNode;
+  href: string;
+  isActive?: boolean;
+  setPosition: React.Dispatch<
+    React.SetStateAction<{
+      left: number;
+      width: number;
+      opacity: number;
+    }>
+  >;
+  onClick?: () => void;
 }
 
-export default Header
+interface NavCursorProps {
+  position: {
+    left: number;
+    width: number;
+    opacity: number;
+  };
+}
+
+// NavTab component for the new hover effect
+const NavTab: React.FC<NavTabProps> = ({
+  children,
+  href,
+  isActive,
+  setPosition,
+  onClick,
+}) => {
+  const ref = useRef<HTMLLIElement>(null);
+
+  return (
+    <motion.li
+      ref={ref}
+      onMouseEnter={() => {
+        if (!ref.current) return;
+
+        const { width } = ref.current.getBoundingClientRect();
+        setPosition({
+          width,
+          opacity: 1,
+          left: ref.current.offsetLeft,
+        });
+      }}
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className={`relative z-10 block cursor-pointer px-4 py-1.5 text-sm uppercase text-white md:py-2 md:text-base transition-colors ${
+        isActive ? "font-medium" : "font-normal"
+      }`}
+    >
+      <Link href={href}>{children}</Link>
+    </motion.li>
+  );
+};
+
+// NavCursor component for the hover effect
+const NavCursor: React.FC<NavCursorProps> = ({ position }) => {
+  return (
+    <motion.div
+      animate={position}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="absolute z-0 h-7 rounded-full bg-gradient-to-r from-red-600 to-red-500 shadow-[0_0_10px_rgba(220,38,38,0.3)] md:h-9"
+    />
+  );
+};
+
+export default Header;

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Space_Grotesk } from "next/font/google";
 import ClientProviders from "@/helper/Providers";
 import Script from "next/script";
+import FuturisticCursor from "@/components/FuturisticCursor";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,9 +24,10 @@ const SpaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: 'MonarkFX - Global Trading Excellence',
-  description: 'Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.',
-}
+  title: "MonarkFX - Global Trading Excellence",
+  description:
+    "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
+};
 
 export default function RootLayout({
   children,
@@ -43,7 +45,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk`}
       >
+        {/* Custom Cursor */}
+        <FuturisticCursor />
+
         <ClientProviders>{children}</ClientProviders>
+
+        <div className="fixed inset-0 -z-50 bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
       </body>
     </html>
   );

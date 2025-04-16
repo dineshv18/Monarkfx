@@ -4,6 +4,7 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  overscroll-behavior: none;
 }
 
 /* globals.css */
@@ -18,6 +19,22 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+
+  .backdrop-blur-2xl {
+    backdrop-filter: blur(40px);
+  }
+
+  /* Text gradient */
+  .text-gradient-red {
+    background: linear-gradient(to right, #ef4444, #dc2626);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
@@ -266,22 +283,39 @@ body {
   }
 }
 
-
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
-.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
-.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
 
- @keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .scroll {
@@ -331,7 +365,7 @@ body {
 @property --border-angle {
   inherits: false;
   initial-value: 0deg;
-  syntax: '<angle>';
+  syntax: "<angle>";
 }
 
 @keyframes blob {
@@ -359,4 +393,93 @@ body {
 
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Custom cursor styles */
+html.using-mouse {
+  cursor: none;
+}
+
+/* Classes for cursor interaction */
+.cursor-link {
+  cursor: none;
+}
+
+.cursor-expanded {
+  cursor: none;
+}
+
+/* Hover transitions for buttons */
+.cursor-link,
+button,
+a {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cursor-link:hover,
+button:hover,
+a:hover {
+  transform: translateY(-2px);
+}
+
+/* Futuristic glowing elements */
+.glow-red {
+  box-shadow: 0 0 15px -3px rgba(239, 68, 68, 0.5);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* Background grid pattern */
+.bg-grid {
+  background-image: linear-gradient(
+      to right,
+      rgba(79, 79, 79, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(79, 79, 79, 0.1) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Animated gradient backgrounds */
+.animated-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    rgba(220, 38, 38, 0.1),
+    rgba(0, 0, 0, 0),
+    rgba(220, 38, 38, 0.2),
+    rgba(0, 0, 0, 0)
+  );
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Floating animation */
+.float {
+  animation: floating 6s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
