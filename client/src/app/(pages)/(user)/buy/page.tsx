@@ -17,7 +17,7 @@ import {
   AddressData,
   BillingDetails,
   CouponDetails,
-  CourseData,
+  CourseDataNew,
   PaymentVerificationData,
   RazorpayResponse,
   UserData,
@@ -48,7 +48,7 @@ export default function BuyPage() {
 
 function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
   const router = useRouter();
-  const [courses, setCourses] = useState<CourseData[]>([]);
+  const [courses, setCourses] = useState<CourseDataNew[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
@@ -257,7 +257,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
           email: data.email,
         },
         theme: {
-          color: "#EF4444",
+          color: "#10B981",
         },
       };
 
@@ -294,15 +294,15 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8 font-plus-jakarta-sans">
+    <div className="min-h-screen bg-black py-12 px-4 sm:px-6 lg:px-8 font-plus-jakarta-sans">
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
       />
       <div className="max-w-7xl mx-auto">
-        <div className="bg-gray-900 rounded-2xl shadow-xl border border-green-500/20">
+        <div className="bg-zinc-900 rounded-2xl shadow-2xl border border-green-500/20">
           <div className="p-6 md:p-8 lg:p-10">
-            <h1 className="text-4xl font-bold text-gray-900 mb-8">Your Cart</h1>
+            <h1 className="text-4xl font-bold text-white mb-8">Your Cart</h1>
             {user && (
               <div className="mb-8 p-6 bg-green-500/10 rounded-xl border border-green-500/30">
                 <h2 className="text-2xl font-semibold text-green-400 mb-2">
@@ -311,14 +311,15 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                 <p className="text-green-300 text-lg">{user.email}</p>
               </div>
             )}
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
               {courses.map((course) => (
                 <CourseCard key={course.id} course={course} />
               ))}
             </div>
-            <div className="mt-12 grid gap-8 lg:grid-cols-2">
+
+            <div className="grid lg:grid-cols-2 gap-8">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                <h2 className="text-2xl font-semibold text-white mb-6">
                   Billing Details
                 </h2>
                 <BillingForm register={register} errors={errors} user={user} />
@@ -328,10 +329,10 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                 />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                <h2 className="text-2xl font-semibold text-white mb-6">
                   Order Summary
                 </h2>
-                <Card className="bg-gray-50 border-gray-200">
+                <Card className="bg-zinc-800 border border-green-500/30">
                   <CardContent className="p-6">
                     <CouponForm
                       onCouponApplied={handleCouponApplied}
@@ -344,52 +345,51 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                       courseId={courses.map((course) => course.id)}
                     />
 
-                    <div className="mt-6 space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-lg text-gray-600">Total:</span>
-                        <div className="flex flex-col items-end">
-                          <span
-                            className={`text-2xl font-bold ${
-                              discountedPrice ||
-                              currentTotalPrice < originalTotalPrice
-                                ? "line-through text-gray-400"
-                                : "text-gray-900"
-                            }`}
-                          >
-                            {formatPrice(originalTotalPrice)}
+                    <div className="space-y-4 mt-6">
+                      <div className="flex justify-between text-zinc-300">
+                        <span>Subtotal:</span>
+                        <span>{formatPrice(currentTotalPrice)}</span>
+                      </div>
+                      {currentTotalPrice < originalTotalPrice && (
+                        <div className="flex justify-between text-green-400">
+                          <span>Course Sale Discount:</span>
+                          <span>
+                            -
+                            {formatPrice(
+                              originalTotalPrice - currentTotalPrice
+                            )}
                           </span>
-                          {(discountedPrice !== null ||
-                            currentTotalPrice < originalTotalPrice) && (
-                            <>
-                              <span className="text-2xl font-bold text-green-600">
-                                {formatPrice(
-                                  discountedPrice || currentTotalPrice
-                                )}
-                              </span>
-                              <span className="text-sm text-green-600">
-                                You save:{" "}
-                                {formatPrice(
-                                  originalTotalPrice -
-                                    (discountedPrice || currentTotalPrice)
-                                )}
-                              </span>
-                            </>
-                          )}
                         </div>
+                      )}
+                      {appliedCoupon && discountedPrice && (
+                        <div className="flex justify-between text-green-400">
+                          <span>Coupon Discount:</span>
+                          <span>
+                            -{formatPrice(currentTotalPrice - discountedPrice)}
+                          </span>
+                        </div>
+                      )}
+                      <hr className="border-green-500/30" />
+                      <div className="flex justify-between text-xl font-bold text-white">
+                        <span>Total:</span>
+                        <span className="text-green-400">
+                          {formatPrice(discountedPrice || currentTotalPrice)}
+                        </span>
                       </div>
                       {appliedCoupon && (
-                        <div className="flex justify-between items-center p-2 bg-green-50 rounded-lg">
-                          <span className="text-lg text-gray-600">
+                        <div className="flex justify-between items-center p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                          <span className="text-lg text-zinc-300">
                             Applied Coupon:
                           </span>
                           <div className="flex items-center space-x-2">
-                            <span className="text-xs font-semibold text-green-600 bg-green-100 px-3 py-1 rounded-full">
+                            <span className="text-xs font-semibold text-green-400 bg-green-500/20 px-3 py-1 rounded-full border border-green-500/50">
                               {appliedCoupon.code}
                             </span>
                             <Button
                               onClick={removeCoupon}
-                              variant="destructive"
+                              variant="ghost"
                               size="sm"
+                              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -399,7 +399,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                     </div>
                     <Button
                       onClick={handleSubmit(onSubmit)}
-                      className="w-full mt-8 py-6 text-lg font-semibold text-white bg-green-600 hover:bg-green-700 transition-colors"
+                      className="w-full mt-8 py-6 text-lg font-semibold text-black bg-green-500 hover:bg-green-600 transition-colors"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? "Processing..." : "Proceed to Checkout"}
@@ -417,48 +417,36 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
 
 function BuyPageSkeleton() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-black py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-gray-900 rounded-2xl shadow-xl overflow-hidden">
-          <div className="p-6 md:p-8 lg:p-10">
-            <Skeleton className="w-64 h-12 bg-green-500/20 mb-8" />
-            <Skeleton className="w-full h-24 bg-green-500/10 mb-8" />
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="w-full h-64 bg-green-500/10" />
-              ))}
-            </div>
-            <div className="mt-12 grid gap-8 lg:grid-cols-2">
-              <div>
-                <Skeleton className="w-48 h-8 bg-green-500/10 mb-6" />
-                <Skeleton className="w-full h-96 bg-green-500/10" />
-              </div>
-              <div>
-                <Skeleton className="w-48 h-8 bg-green-500/10 mb-6" />
-                <Skeleton className="w-full h-96 bg-green-500/10" />
-              </div>
-            </div>
+        <div className="bg-zinc-900 rounded-2xl shadow-2xl border border-green-500/20 p-8">
+          <Skeleton className="h-12 w-48 mb-8 bg-zinc-800" />
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-48 bg-zinc-800" />
+            ))}
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            <Skeleton className="h-96 bg-zinc-800" />
+            <Skeleton className="h-96 bg-zinc-800" />
           </div>
         </div>
       </div>
     </div>
   );
 }
+
 function ErrorCard({ error, retry }: { error: string; retry: () => void }) {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-red-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md bg-gray-900 shadow-xl border border-green-500/20">
-        <CardContent className="p-8">
-          <h2 className="text-2xl font-bold text-green-500 mb-4 flex items-center gap-2">
-            <XCircle className="w-6 h-6" />
-            Error Occurred
-          </h2>
-          <p className="text-gray-300 mb-6 bg-green-500/10 p-4 rounded-lg border border-green-500/30">
-            {error}
-          </p>
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <Card className="max-w-md w-full bg-zinc-900 border border-red-500/30">
+        <CardContent className="p-6 text-center">
+          <XCircle className="h-16 w-16 text-red-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-white mb-2">Error</h3>
+          <p className="text-zinc-400 mb-4">{error}</p>
           <Button
             onClick={retry}
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5"
+            className="bg-green-500 hover:bg-green-600 text-black font-bold"
           >
             Try Again
           </Button>
