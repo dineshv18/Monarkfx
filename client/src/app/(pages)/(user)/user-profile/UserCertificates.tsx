@@ -33,7 +33,7 @@ export default function UserCertificates() {
         try {
             const response = await axios.get(
                 `${process.env.NEXT_PUBLIC_API_URL}/certificates/user`,
-                { 
+                {
                     withCredentials: true,
                 }
             )
@@ -75,8 +75,8 @@ export default function UserCertificates() {
     }
 
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
+        <Card className="my-6">
+            <CardHeader className="flex flex-row items-center justify-between ">
                 <CardTitle className="text-2xl font-bold flex items-center gap-2">
                     <Award className="h-6 w-6 text-red-600" />
                     My Certificates
@@ -104,7 +104,7 @@ export default function UserCertificates() {
                                                 </p>
                                             )}
                                         </div>
-                                        <Button 
+                                        <Button
                                             onClick={() => downloadCertificate(cert.certificateId)}
                                             variant="outline"
                                             size="sm"

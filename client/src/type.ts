@@ -175,6 +175,8 @@ export interface Enrollment {
   progress: number;
   course: CourseDataNew;
   createdAt?: string;
+  expiryDate?: string;
+  isExpired?: boolean;
 }
 export interface CourseCardsProps {
   courses: CourseDataNew[];
@@ -186,6 +188,10 @@ export interface CourseCardsProps {
 
 export interface CourseCardProps {
   course: CourseDataNew;
+  hidePrice?: boolean;
+  expiryDate?: string;
+  isExpired?: boolean;
+  daysLeft?: number;
 }
 
 export interface Chapter {
@@ -472,6 +478,7 @@ export interface Purchase {
   createdAt: string;
   updatedAt: string;
   course: CourseDataNew;
+  expiryDate?: string;
 }
 
 export interface ApiResponseTh<T> {
@@ -532,6 +539,7 @@ export interface CourseDataNew {
     name: string;
   };
   gracePeriod?: number;
+  validityDays?: number;
 }
 
 export interface Section {
@@ -561,8 +569,10 @@ export interface ChapterDataNew {
   updatedAt: string;
   duration?: number;
   progress?: {
-    watchedTime: number
-  }
+    watchedTime: number;
+  };
+  pdfUrl?: string | null;
+  audioUrl?: string | null;
 }
 
 export interface CourseSeo {
@@ -583,97 +593,97 @@ export interface AnimatedTextProps2 {
 }
 
 export interface ReviewSectionProps {
-  courseId: string
-  isEnrolled: boolean
-  hasPurchased: boolean
-  userId?: string
+  courseId: string;
+  isEnrolled: boolean;
+  hasPurchased: boolean;
+  userId?: string;
 }
 
 export interface Review {
-  id: string
-  rating: number
-  comment?: string
-  isEdited: boolean
-  userId: string
-  courseId: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  rating: number;
+  comment?: string;
+  isEdited: boolean;
+  userId: string;
+  courseId: string;
+  createdAt: string;
+  updatedAt: string;
   user: {
-    id: string
-    name: string
-    email: string
-  }
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 export interface Fee {
-  id: string
-  amount: number
-  dueDate: string
-  description: string
-  status: string
-  type: string
-  title: string
-  lateFeeAmount: number
-  lateFeeDate: string | null
-  isOfflineFee: boolean
-  recurringDuration: string | null
-  recurringEndDate: string | null
-  gracePeriod: number | null
-  nextDueDate: string | null
-  isRecurring: boolean
-  userId: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  amount: number;
+  dueDate: string;
+  description: string;
+  status: string;
+  type: string;
+  title: string;
+  lateFeeAmount: number;
+  lateFeeDate: string | null;
+  isOfflineFee: boolean;
+  recurringDuration: string | null;
+  recurringEndDate: string | null;
+  gracePeriod: number | null;
+  nextDueDate: string | null;
+  isRecurring: boolean;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
   user: {
-    name: string
-    email: string
-  }
-  payments: any[]
-  totalPaid: number
-  remaining: number
-  daysRemaining: number
-  isOverdue: boolean
-  lateFeeApplicable: boolean | null
+    name: string;
+    email: string;
+  };
+  payments: any[];
+  totalPaid: number;
+  remaining: number;
+  daysRemaining: number;
+  isOverdue: boolean;
+  lateFeeApplicable: boolean | null;
 }
 
 export interface Payment {
-  id: string
-  amount: number
-  paymentDate: string
-  razorpay_order_id: string
-  razorpay_payment_id: string
-  razorpay_signature: string
-  status: string
-  receiptNumber: string
-  lateFeeApplied: number | null
-  actualDueAmount: number
-  feeId: string
-  userId: string
-  createdAt: string
-  updatedAt: string
+  id: string;
+  amount: number;
+  paymentDate: string;
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  status: string;
+  receiptNumber: string;
+  lateFeeApplied: number | null;
+  actualDueAmount: number;
+  feeId: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
   fee: {
-    title: string
-    type: string
-    amount: number
-    dueDate: string
-  }
+    title: string;
+    type: string;
+    amount: number;
+    dueDate: string;
+  };
 }
 
 export interface FeeData {
   fees: {
-    upcoming: Fee[]
-    overdue: Fee[]
+    upcoming: Fee[];
+    overdue: Fee[];
     summary: {
-      totalDue: number
-      overdueCount: number
-      upcomingCount: number
-    }
-  }
-  payments: Payment[]
+      totalDue: number;
+      overdueCount: number;
+      upcomingCount: number;
+    };
+  };
+  payments: Payment[];
 }
 
 export interface PaginationInfo {
-  total: number
-  page: number
-  pages: number
+  total: number;
+  page: number;
+  pages: number;
 }

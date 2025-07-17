@@ -12,6 +12,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+// Styles
+import "./styles.css";
+
 // UI Components
 import {
   Card,
@@ -76,12 +79,12 @@ interface Subscription {
   startDate: string;
   endDate: string;
   status:
-    | "ACTIVE"
-    | "EXPIRED"
-    | "CANCELLED"
-    | "PENDING_APPROVAL"
-    | "REGISTERED"
-    | "REJECTED";
+  | "ACTIVE"
+  | "EXPIRED"
+  | "CANCELLED"
+  | "PENDING_APPROVAL"
+  | "REGISTERED"
+  | "REJECTED";
   isApproved: boolean;
   isRegistered: boolean;
   hasAccessToLinks: boolean;
@@ -147,8 +150,8 @@ const MyLiveClasses = () => {
       const existingScript = document.querySelector(
         'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
       );
-      if (existingScript) {
-        document.body.removeChild(existingScript);
+      if (existingScript && existingScript.parentNode) {
+        existingScript.parentNode.removeChild(existingScript);
       }
     };
   }, []);
@@ -167,10 +170,9 @@ const MyLiveClasses = () => {
         subscriptionsData.map(async (subscription: Subscription) => {
           try {
             const checkResponse = await axios.get(
-              `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/check-subscription/${subscription.zoomSession.id}${
-                subscription.moduleId
-                  ? `?moduleId=${subscription.moduleId}`
-                  : ""
+              `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/check-subscription/${subscription.zoomSession.id}${subscription.moduleId
+                ? `?moduleId=${subscription.moduleId}`
+                : ""
               }`,
               { withCredentials: true }
             );
@@ -372,7 +374,7 @@ const MyLiveClasses = () => {
       console.error("Error initiating course access payment:", error);
       toast.error(
         error.response?.data?.message ||
-          "Failed to initiate payment. Please try again."
+        "Failed to initiate payment. Please try again."
       );
     } finally {
       setCoursePaymentInProgress(null);
@@ -713,7 +715,7 @@ const MyLiveClasses = () => {
       <div className="space-y-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-            <VideoIcon className="h-5 w-5 text-red-600" />
+            <VideoIcon className="h-5 w-5 text-green-600" />
             My Live Classes
           </h2>
           <Skeleton className="h-9 w-24" />
@@ -731,14 +733,14 @@ const MyLiveClasses = () => {
     <section>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <VideoIcon className="h-6 w-6 text-[#af1d33]" />
+          <VideoIcon className="h-6 w-6 text-green-500" />
           My Live Classes
         </h2>
         <Button
           variant="outline"
           onClick={handleRefresh}
           disabled={refreshing}
-          className="flex items-center gap-2 hover:bg-gray-100 transition-colors"
+          className="flex items-center gap-2 hover:bg-gray-800 transition-colors"
         >
           <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} />
           Refresh

@@ -31,10 +31,21 @@ import {
 } from "lucide-react";
 
 // Types
-import type { ApiResponseTh, Enrollment, UserSec, Purchase } from "@/type";
+import type { ApiResponseTh, UserSec, Purchase } from "@/type";
+import type {
+  Enrollment,
+  CourseData,
+  Purchase as CoursePurchase,
+} from "@/type/course";
 import UserCertificates from "./UserCertificates";
 import MyLiveClasses from "./MyLiveClasses";
 import EnhancedCourseCard from "../../_components/EnhancedCourseCard";
+
+// Define a type for processed purchases
+type ProcessedPurchase = Purchase & {
+  isExpired: boolean;
+  daysLeft: number | null;
+};
 
 interface UserSubscription {
   type: "ONLINE" | "OFFLINE";
@@ -180,7 +191,7 @@ const UserProfile = () => {
   const { checkAuth } = useAuth();
   const [user, setUser] = useState<ExtendedUserSec | null>(null);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
-  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [purchases, setPurchases] = useState<ProcessedPurchase[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -224,7 +235,7 @@ const UserProfile = () => {
       if (enrollmentsResponse.data && enrollmentsResponse.data.success) {
         // Process enrollment data to add validity information
         const processedEnrollments = enrollmentsResponse.data.data.map(
-          (enrollment) => {
+          (enrollment: Enrollment) => {
             const expiryDate = enrollment.expiryDate;
             const isExpired = expiryDate
               ? new Date(expiryDate) < new Date()
@@ -255,7 +266,7 @@ const UserProfile = () => {
           ? purchasesResponse.data.message
           : [];
 
-        const processedPurchases = purchases.map((purchase) => {
+        const processedPurchases = purchases.map((purchase: Purchase) => {
           const expiryDate = purchase.expiryDate;
           const isExpired = expiryDate
             ? new Date(expiryDate) < new Date()
@@ -315,7 +326,7 @@ const UserProfile = () => {
         if (enrollmentsResponse.data && enrollmentsResponse.data.success) {
           // Process enrollment data to add validity information
           const processedEnrollments = enrollmentsResponse.data.data.map(
-            (enrollment) => {
+            (enrollment: Enrollment) => {
               const expiryDate = enrollment.expiryDate;
               const isExpired = expiryDate
                 ? new Date(expiryDate) < new Date()
@@ -346,7 +357,7 @@ const UserProfile = () => {
             ? purchasesResponse.data.message
             : [];
 
-          const processedPurchases = purchases.map((purchase) => {
+          const processedPurchases = purchases.map((purchase: Purchase) => {
             const expiryDate = purchase.expiryDate;
             const isExpired = expiryDate
               ? new Date(expiryDate) < new Date()
@@ -426,7 +437,9 @@ const UserProfile = () => {
         );
 
         if (response.data && response.data.success) {
-          setUser((prevUser) => (prevUser ? { ...prevUser, name } : null));
+          setUser((prevUser: ExtendedUserSec | null) =>
+            prevUser ? { ...prevUser, name } : null
+          );
           toast.success("Name updated successfully");
         } else {
           throw new Error(response.data.message || "Failed to update name");
@@ -444,11 +457,11 @@ const UserProfile = () => {
     };
 
     return (
-      <Card className="border-red-100 mb-6 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <Card className="  overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <div className="relative">
-              <div className="h-24 w-24 rounded-full bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white text-2xl font-bold">
+              <div className="h-24 w-24 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-2xl font-bold">
                 {user?.name.charAt(0)}
               </div>
               {user?.isVerified && (
@@ -480,20 +493,20 @@ const UserProfile = () => {
 
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 text-gray-600">
-                  <Mail className="h-4 w-4 text-red-500" />
+                  <Mail className="h-4 w-4 text-green-500" />
                   <span>{user?.email}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
-                  <UserIcon className="h-4 w-4 text-red-500" />
+                  <UserIcon className="h-4 w-4 text-green-500" />
                   <Badge
                     variant="outline"
-                    className="text-sm font-medium bg-red-50"
+                    className="text-sm font-medium bg-black text-green-700 border border-green-500"
                   >
                     {user?.role}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
-                  <CalendarIcon className="h-4 w-4 text-red-500" />
+                  <CalendarIcon className="h-4 w-4 text-green-500" />
                   <span>
                     Joined{" "}
                     {format(
@@ -506,7 +519,7 @@ const UserProfile = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="ml-auto bg-red-50 hover:bg-red-100 text-red-600 border-red-200"
+                    className="ml-auto bg-red-50 hover:bg-red-100 text-green-600 border-red-200"
                     onClick={() => router.push("/dashboard")}
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2" />
@@ -627,7 +640,7 @@ const UserProfile = () => {
 
   // Dashboard Stats Component
   const DashboardStats = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
       <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         <CardContent className="p-6">
           <h3 className="text-lg font-medium mb-4 flex items-center">
@@ -733,7 +746,7 @@ const UserProfile = () => {
             </div>
 
             {/* Desktop Sidebar */}
-            <Card className="hidden lg:block sticky top-24 border-red-100 shadow-sm overflow-hidden">
+            <Card className="hidden lg:block sticky top-24  shadow-sm overflow-hidden">
               <div className="p-4 bg-red-50">
                 <h2 className="font-bold text-lg text-gray-900 flex items-center gap-2">
                   <UserIcon className="h-5 w-5 text-red-600" />

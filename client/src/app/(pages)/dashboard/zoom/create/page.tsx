@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { FileUpload } from "@/components/ui/dropzone";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ArrowLeft,
@@ -23,6 +22,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { generateSlug } from "@/utils/slugUtils";
+import { FileUpload } from "@/components/dropzone";
 
 interface FormData {
   title: string;
