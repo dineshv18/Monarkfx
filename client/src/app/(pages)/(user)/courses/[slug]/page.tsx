@@ -20,9 +20,11 @@ async function getCourse(slug: string) {
     }
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/course/get-course-page/${slug}`,
+      `${
+        process.env.NEXT_PUBLIC_API_URL
+      }/course/get-course-page/${slug}?v=${Date.now()}`,
       {
-        next: { revalidate: 3600 },
+        cache: "no-store",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",

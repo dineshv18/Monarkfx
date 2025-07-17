@@ -30,7 +30,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/helper/AuthContext";
 import { toast } from "sonner";
@@ -91,6 +90,7 @@ interface CourseData {
   category: Category;
   reviews: Review[];
   userId: string;
+  validityDays?: number;
 }
 
 interface CourseClientProps {
@@ -350,7 +350,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
   return (
     <div className="min-h-screen bg-black font-plus-jakarta-sans">
       {/* Course Header */}
-      <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden">
+      <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden ">
         <div className="absolute inset-0 opacity-5">
           <div
             className="absolute inset-0"
@@ -360,182 +360,212 @@ const CourseClient: React.FC<CourseClientProps> = ({
           />
         </div>
 
-        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10">              <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Course Info */}
-          <div className="order-2 md:order-1 space-y-8">
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2">
-              {course.isBestseller && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-200 border-yellow-500/30 px-3 py-1.5"
-                >
-                  <Award className="w-4 h-4 mr-1.5" /> Bestseller
-                </Badge>
-              )}
-              {course.isTrending && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-200 border-blue-500/30 px-3 py-1.5"
-                >
-                  <TrendingUp className="w-4 h-4 mr-1.5" /> Trending
-                </Badge>
-              )}
-              {course.isPopular && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-200 border-green-500/30 px-3 py-1.5"
-                >
-                  <Flame className="w-4 h-4 mr-1.5" /> Popular
-                </Badge>
-              )}
-              {course.isFeatured && (
-                <Badge
-                  variant="secondary"
-                  className="bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-purple-200 border-purple-500/30 px-3 py-1.5"
-                >
-                  <Star className="w-4 h-4 mr-1.5" /> Featured
-                </Badge>
-              )}
-            </div>
-            {/* Title & Subheading */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="space-y-4 md:space-y-6"
-            >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold capitalize leading-tight tracking-tight">
-                <span className="inline-block">{course.title}</span>
-              </h1>
-              {course.subheading && (
-                <motion.p
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                  className="text-base sm:text-lg md:text-xl text-white/80 font-medium max-w-3xl leading-relaxed"
-                >
-                  {course.subheading}
-                </motion.p>
-              )}
-            </motion.div>
-
-            {/* Course Meta Info */}
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {/* Language Card */}
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10">
+          {" "}
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Course Info */}
+            <div className="order-2 md:order-1 space-y-8">
+              {/* Badges */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-                className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-4 border border-green-500/20 hover:border-green-500/30 hover:bg-zinc-900/70 transition-all duration-300"
+                transition={{ duration: 0.3 }}
+                className="flex flex-wrap gap-3"
               >
-                <div className="flex flex-col items-center text-center gap-2">
-                  <div className="p-2.5 bg-black/30 rounded-lg">
-                    <Languages className="w-6 h-6 text-green-400" />
+                {course.isBestseller && (
+                  <div className="flex items-center bg-gradient-to-r from-yellow-500/30 to-amber-500/30 text-yellow-100 border border-yellow-400/50 px-4 py-2 rounded-full text-sm font-bold backdrop-blur-sm shadow-lg">
+                    <Award className="w-5 h-5 mr-2" /> Bestseller
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-zinc-400">Language</p>
-                    <span className="text-base font-semibold text-white capitalize">
-                      {course.language}
-                    </span>
+                )}
+                {course.isTrending && (
+                  <div className="flex items-center bg-gradient-to-r from-blue-500/30 to-cyan-500/30 text-blue-100 border border-blue-400/50 px-4 py-2 rounded-full text-sm font-bold backdrop-blur-sm shadow-lg">
+                    <TrendingUp className="w-5 h-5 mr-2" /> Trending
                   </div>
-                </div>
+                )}
+                {course.isPopular && (
+                  <div className="flex items-center bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-100 border border-green-400/50 px-4 py-2 rounded-full text-sm font-bold backdrop-blur-sm shadow-lg">
+                    <Flame className="w-5 h-5 mr-2" /> Popular
+                  </div>
+                )}
+                {course.isFeatured && (
+                  <div className="flex items-center bg-gradient-to-r from-purple-500/30 to-fuchsia-500/30 text-purple-100 border border-purple-400/50 px-4 py-2 rounded-full text-sm font-bold backdrop-blur-sm shadow-lg">
+                    <Star className="w-5 h-5 mr-2" /> Featured
+                  </div>
+                )}
+              </motion.div>
+              {/* Title & Subheading */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="space-y-4 md:space-y-6"
+              >
+                <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold capitalize leading-tight tracking-tight">
+                  <span className="inline-block">{course.title}</span>
+                </h1>
+                {course.subheading && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="text-base sm:text-lg md:text-xl text-white/80 font-medium max-w-3xl leading-relaxed"
+                  >
+                    {course.subheading}
+                  </motion.p>
+                )}
               </motion.div>
 
-              {/* Category Card */}
-              {course.category && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                  className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-4 border border-green-500/20 hover:border-green-500/30 hover:bg-zinc-900/70 transition-all duration-300"
-                >
-                  <div className="flex flex-col items-center text-center gap-2">
-                    <div className="p-2.5 bg-black/30 rounded-lg">
-                      <Folder className="w-6 h-6 text-green-400" />
+              {/* Course Meta Info */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+              >
+                {/* Language Card */}
+                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                      <Languages className="w-6 h-6 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-zinc-400">Category</p>
-                      <span className="text-base font-semibold text-white capitalize">
-                        {course.category.name}
+                      <p className="text-sm font-medium text-zinc-400 mb-1">
+                        Language
+                      </p>
+                      <span className="text-base font-bold text-white capitalize">
+                        {course.language}
                       </span>
                     </div>
                   </div>
-                </motion.div>
-              )}
-            </div>
-          </div>
+                </div>
 
-          {/* Video/Thumbnail */}
-          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl ring-1 ring-green-500/20 group">
-            {/* Thumbnail Image - Always visible when not playing */}
-            <div
-              className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-0 scale-110" : "opacity-100 scale-100"
-                }`}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
-                alt={course.title}
-                layout="fill"
-                objectFit="cover"
-                className="transition-transform duration-700 group-hover:scale-110"
-                unoptimized
-                priority
-              />
-              {!isPlaying && (
-                <div className="absolute inset-0 flex items-center justify-center z-20">
-                  <div className="p-4 rounded-full bg-green-500/20 backdrop-blur-sm border border-green-500/30 transition-transform duration-300 group-hover:scale-110">
-                    <PlayCircle className="w-12 h-12 text-green-400" />
+                {/* Category Card */}
+                {course.category && (
+                  <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                    <div className="flex flex-col items-center text-center gap-3">
+                      <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                        <Folder className="w-6 h-6 text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-zinc-400 mb-1">
+                          Category
+                        </p>
+                        <span className="text-base font-bold text-white capitalize">
+                          {course.category.name}
+                        </span>
+                      </div>
+                    </div>
                   </div>
+                )}
+
+                {/* Chapters Count */}
+                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                      <Book className="w-6 h-6 text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-zinc-400 mb-1">
+                        Chapters
+                      </p>
+                      <span className="text-base font-bold text-white">
+                        {sectionsWithChapters.reduce(
+                          (total, section) => total + section.chapters.length,
+                          0
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Level Badge */}
+                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                  <div className="flex flex-col items-center text-center gap-3">
+                    <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                      <Award className="w-6 h-6 text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-zinc-400 mb-1">
+                        Level
+                      </p>
+                      <span className="text-base font-bold text-white">
+                        {course.paid ? "Premium" : "Free"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Video/Thumbnail */}
+            <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl ring-1 ring-green-500/20 group">
+              {/* Thumbnail Image - Always visible when not playing */}
+              <div
+                className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-0 scale-110" : "opacity-100 scale-100"
+                  }`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
+                  alt={course.title}
+                  layout="fill"
+                  objectFit="cover"
+                  className="transition-transform duration-700 group-hover:scale-110"
+                  unoptimized
+                  priority
+                />
+                {!isPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center z-20">
+                    <div className="p-4 rounded-full bg-green-500/20 backdrop-blur-sm border border-green-500/30 transition-transform duration-300 group-hover:scale-110">
+                      <PlayCircle className="w-12 h-12 text-green-400" />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Video Player - Only visible when playing and video URL exists */}
+              {isClient && course.videoUrl && (
+                <div
+                  className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-100 scale-100" : "opacity-0 scale-90"
+                    }`}
+                >
+                  <ReactPlayer
+                    url={course.videoUrl}
+                    width="100%"
+                    height="100%"
+                    playing={isPlaying}
+                    controls={false}
+                    onPause={() => setIsPlaying(false)}
+                    onPlay={() => setIsPlaying(true)}
+                    onError={() => setVideoError(true)}
+                    className="rounded-xl overflow-hidden"
+                    fallback={<div className="absolute inset-0 bg-gray-200" />}
+                  />
+                </div>
+              )}
+
+              {/* Play/Pause Overlay - Only show if video URL exists */}
+              {!videoError && course.videoUrl && (
+                <button
+                  onClick={togglePlayPause}
+                  className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
+                >
+                  {isPlaying ? (
+                    <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                  ) : (
+                    <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                  )}
+                </button>
+              )}
+
+              {/* Error Message */}
+              {videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
+                  <p>Sorry, the video could not be played.</p>
                 </div>
               )}
             </div>
-
-            {/* Video Player - Only visible when playing and video URL exists */}
-            {isClient && course.videoUrl && (
-              <div
-                className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-100 scale-100" : "opacity-0 scale-90"
-                  }`}
-              >
-                <ReactPlayer
-                  url={course.videoUrl}
-                  width="100%"
-                  height="100%"
-                  playing={isPlaying}
-                  controls={false}
-                  onPause={() => setIsPlaying(false)}
-                  onPlay={() => setIsPlaying(true)}
-                  onError={() => setVideoError(true)}
-                  className="rounded-xl overflow-hidden"
-                  fallback={<div className="absolute inset-0 bg-gray-200" />}
-                />
-              </div>
-            )}
-
-            {/* Play/Pause Overlay - Only show if video URL exists */}
-            {!videoError && course.videoUrl && (
-              <button
-                onClick={togglePlayPause}
-                className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
-              >
-                {isPlaying ? (
-                  <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
-                ) : (
-                  <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
-                )}
-              </button>
-            )}
-
-            {/* Error Message */}
-            {videoError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-                <p>Sorry, the video could not be played.</p>
-              </div>
-            )}
           </div>
-        </div>
         </div>
       </div>
 
@@ -633,21 +663,13 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                           {chapter.title}
                                         </span>
                                       </div>
-                                      <Badge
-                                        variant={
-                                          chapter.isFree
-                                            ? "secondary"
-                                            : (course.paid && hasPurchased) ||
-                                              (!course.paid && isEnrolled)
-                                              ? "default"
-                                              : "outline"
-                                        }
+                                      <span
                                         className={
                                           chapter.isFree
-                                            ? "bg-green-500/20 text-green-300 border-green-500/30"
+                                            ? "bg-green-500/20 text-green-300 border-green-500/30 rounded-full px-3 py-1"
                                             : (course.paid && hasPurchased) ||
                                               (!course.paid && isEnrolled)
-                                              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0"
+                                              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 rounded-full px-3 py-1"
                                               : "border-zinc-700 text-zinc-400 bg-zinc-800/50"
                                         }
                                       >
@@ -657,7 +679,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                             (!course.paid && isEnrolled)
                                             ? "Enrolled"
                                             : "Premium"}
-                                      </Badge>
+                                      </span>
                                     </div>
                                   </div>
                                 ))}
@@ -710,12 +732,9 @@ const CourseClient: React.FC<CourseClientProps> = ({
                         <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
                           <Check className="w-8 h-8 text-green-600" />
                         </div>
-                        <Badge
-                          variant="outline"
-                          className="bg-green-50 text-green-700 text-base px-6 py-2 rounded-full border-green-200"
-                        >
+                        <div className="bg-green-500/20 text-green-200 text-base px-6 py-2 rounded-full border border-green-500/30 font-semibold">
                           Enrolled Successfully
-                        </Badge>
+                        </div>
                       </motion.div>
                     ) : (
                       <div className="flex flex-col items-center gap-3 p-4">
@@ -737,10 +756,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                     {formatPrice(course.price)}
                                   </span>
                                   {/* Discount Badge */}
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-green-100 text-green-700"
-                                  >
+                                  <div className="bg-green-500/20 text-green-200 px-3 py-1 rounded-full text-sm font-bold border border-green-500/30">
                                     Save{" "}
                                     {Math.round(
                                       ((course.price - course.salePrice) /
@@ -748,7 +764,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                       100
                                     )}
                                     %
-                                  </Badge>
+                                  </div>
                                 </>
                               ) : (
                                 <>
@@ -756,12 +772,9 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                   <span className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
                                     {formatPrice(course.price)}
                                   </span>
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-green-100 text-green-700 uppercase text-xs"
-                                  >
+                                  <div className="bg-green-500/20 text-green-200 px-3 py-1 rounded-full text-xs font-bold uppercase border border-green-500/30">
                                     Premium
-                                  </Badge>
+                                  </div>
                                 </>
                               )}
                             </div>
@@ -775,12 +788,9 @@ const CourseClient: React.FC<CourseClientProps> = ({
                             <span className="text-4xl font-bold text-green-600">
                               FREE
                             </span>
-                            <Badge
-                              variant="secondary"
-                              className="ml-2 bg-green-100 text-green-700"
-                            >
+                            <div className="ml-2 bg-green-500/20 text-green-200 px-3 py-1 rounded-full text-sm font-bold border border-green-500/30">
                               Limited Time
-                            </Badge>
+                            </div>
                           </motion.div>
                         )}
                       </div>
@@ -809,28 +819,34 @@ const CourseClient: React.FC<CourseClientProps> = ({
                   {(!course.paid && isEnrolled) ||
                     (course.paid && hasPurchased) ? (
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-gray-800">
+                      <h3 className="font-semibold text-white text-lg">
                         Course Progress
                       </h3>
                       <ul className="space-y-3">
-                        <li className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                          <Book className="w-5 h-5 text-green-600" />
+                        <li className="flex items-center gap-3 p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
+                          <div className="p-2 bg-green-500/30 rounded-lg">
+                            <Book className="w-5 h-5 text-green-400" />
+                          </div>
                           <div>
-                            <p className="font-medium text-green-800">
+                            <p className="font-semibold text-green-200">
                               Course Enrolled
                             </p>
-                            <p className="text-sm text-green-600">
-                              Start learning now
+                            <p className="text-sm text-green-300">
+                              {!course.validityDays || course.validityDays === 0
+                                ? "Lifetime access granted"
+                                : `${course.validityDays} days access granted`}
                             </p>
                           </div>
                         </li>
-                        <li className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                          <Award className="w-5 h-5 text-blue-600" />
+                        <li className="flex items-center gap-3 p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                          <div className="p-2 bg-blue-500/30 rounded-lg">
+                            <Award className="w-5 h-5 text-blue-400" />
+                          </div>
                           <div>
-                            <p className="font-medium text-blue-800">
+                            <p className="font-semibold text-blue-200">
                               Certificate Available
                             </p>
-                            <p className="text-sm text-blue-600">
+                            <p className="text-sm text-blue-300">
                               Complete to earn
                             </p>
                           </div>
@@ -839,14 +855,16 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-gray-800">
+                      <h3 className="font-semibold text-white text-lg">
                         Course Includes
                       </h3>
                       <ul className="space-y-3">
-                        <li className="flex items-center gap-3 p-3 rounded-lg border border-gray-700 hover:bg-gray-800 transition-colors">
-                          <PlayCircle className="w-5 h-5 text-green-600" />
+                        <li className="flex items-center gap-3 p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
+                          <div className="p-2 bg-green-500/20 rounded-lg">
+                            <PlayCircle className="w-5 h-5 text-green-400" />
+                          </div>
                           <div>
-                            <p className="font-medium text-gray-800">
+                            <p className="font-semibold text-white">
                               {sectionsWithChapters.reduce(
                                 (total, section) =>
                                   total + section.chapters.length,
@@ -854,29 +872,39 @@ const CourseClient: React.FC<CourseClientProps> = ({
                               )}{" "}
                               Chapters
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-zinc-400">
                               Comprehensive content
                             </p>
                           </div>
                         </li>
-                        <li className="flex items-center gap-3 p-3 rounded-lg border border-gray-700 hover:bg-gray-800 transition-colors">
-                          <Book className="w-5 h-5 text-green-600" />
+                        <li className="flex items-center gap-3 p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
+                          <div className="p-2 bg-green-500/20 rounded-lg">
+                            <Book className="w-5 h-5 text-green-400" />
+                          </div>
                           <div>
-                            <p className="font-medium text-gray-800">
-                              Lifetime Access
+                            <p className="font-semibold text-white">
+                              {!course.validityDays || course.validityDays === 0 ? (
+                                "Lifetime Access"
+                              ) : (
+                                `${course.validityDays} Days Access`
+                              )}
                             </p>
-                            <p className="text-sm text-gray-600">
-                              Learn at your pace
+                            <p className="text-sm text-zinc-400">
+                              {!course.validityDays || course.validityDays === 0
+                                ? "Learn at your own pace"
+                                : `Access expires after ${course.validityDays} days`}
                             </p>
                           </div>
                         </li>
-                        <li className="flex items-center gap-3 p-3 rounded-lg border border-gray-700 hover:bg-gray-800 transition-colors">
-                          <Award className="w-5 h-5 text-green-600" />
+                        <li className="flex items-center gap-3 p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
+                          <div className="p-2 bg-green-500/20 rounded-lg">
+                            <Award className="w-5 h-5 text-green-400" />
+                          </div>
                           <div>
-                            <p className="font-medium text-gray-800">
+                            <p className="font-semibold text-white">
                               Completion Certificate
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-zinc-400">
                               Verify your achievement
                             </p>
                           </div>

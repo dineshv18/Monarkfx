@@ -189,9 +189,9 @@ export interface CourseCardsProps {
 export interface CourseCardProps {
   course: CourseDataNew;
   hidePrice?: boolean;
-  expiryDate?: string;
+  expiryDate?: string | null;
   isExpired?: boolean;
-  daysLeft?: number;
+  daysLeft?: number | null;
 }
 
 export interface Chapter {

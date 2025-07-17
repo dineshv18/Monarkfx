@@ -18,6 +18,7 @@ export interface CourseData {
     };
     categoryId: string;
     userId: string;
+    validityDays?: number;
     courseProgress?: {
         percentage: number;
         completedChapters: number;

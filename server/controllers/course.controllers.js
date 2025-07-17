@@ -700,9 +700,6 @@ export const getFreeChapterVideo = asyncHandler(async (req, res) => {
 
 export const updateCourse = asyncHandler(async (req, res) => {
   const { slug } = req.params;
-  console.log("--------------------------------------------------");
-  console.log("UPDATE COURSE REQUEST - Original slug:", slug);
-  console.log("Full request body:", JSON.stringify(req.body, null, 2));
 
   const {
     title,
@@ -726,7 +723,6 @@ export const updateCourse = asyncHandler(async (req, res) => {
 
   // Get the slug directly from the request body
   const updatedSlug = req.body.slug;
-  console.log("Requested slug update value:", updatedSlug);
 
   // Verify course exists
   const checkCourse = await prisma.course.findUnique({
@@ -737,12 +733,6 @@ export const updateCourse = asyncHandler(async (req, res) => {
   if (!checkCourse) {
     throw new ApiError(404, "Course not found");
   }
-
-  console.log("Found existing course:", {
-    id: checkCourse.id,
-    title: checkCourse.title,
-    currentSlug: checkCourse.slug,
-  });
 
   // Build update data
   const updateData = {};
@@ -768,16 +758,8 @@ export const updateCourse = asyncHandler(async (req, res) => {
 
   // Handle slug update - directly use the slug from request
   if (updatedSlug !== undefined) {
-    console.log(
-      "Processing slug update from:",
-      checkCourse.slug,
-      "to:",
-      updatedSlug
-    );
-
     // Format the slug
     const formattedSlug = createSlug(updatedSlug);
-    console.log("Formatted slug:", formattedSlug);
 
     // Check if the new slug already exists for another course
     if (formattedSlug !== checkCourse.slug) {
@@ -786,17 +768,11 @@ export const updateCourse = asyncHandler(async (req, res) => {
       });
 
       if (existingCourse && existingCourse.id !== checkCourse.id) {
-        console.log("Slug conflict detected with course:", existingCourse.id);
         throw new ApiError(400, "Slug already in use by another course");
       }
 
       updateData.slug = formattedSlug;
-      console.log("Setting new slug in update data:", formattedSlug);
-    } else {
-      console.log("Formatted slug matches current slug - no change needed");
     }
-  } else {
-    console.log("No slug update requested");
   }
 
   // Handle category update
@@ -813,8 +789,6 @@ export const updateCourse = asyncHandler(async (req, res) => {
     updateData.categoryId = categoryId;
   }
 
-  console.log("Final update data:", JSON.stringify(updateData, null, 2));
-
   try {
     // Update course
     const updatedCourse = await prisma.course.update({
@@ -824,13 +798,6 @@ export const updateCourse = asyncHandler(async (req, res) => {
         category: true,
       },
     });
-
-    console.log("Successfully updated course:", {
-      id: updatedCourse.id,
-      title: updatedCourse.title,
-      newSlug: updatedCourse.slug,
-    });
-    console.log("--------------------------------------------------");
 
     return res
       .status(200)
