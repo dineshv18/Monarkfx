@@ -576,7 +576,7 @@ const CourseForm = ({
                       className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
                     <p className="text-xs text-gray-400 mt-1">
-                      URL identifier (e.g., "bansuri-beginner-course").
+                      URL identifier (e.g., "monarkfx-course").
                       {currentSlug && (
                         <span className="font-mono block mt-1 text-green-400">
                           Current: {currentSlug}

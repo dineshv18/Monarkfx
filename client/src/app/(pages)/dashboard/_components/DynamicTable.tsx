@@ -143,8 +143,7 @@ export function DynamicTable({
   const renderStatus = (item: Course | User) => {
     if ("paid" in item) {
       return (
-        <Badge
-          variant="outline"
+        <span
           className={`${
             item.paid
               ? "bg-green-500/20 text-green-400 border-green-500"
@@ -152,14 +151,13 @@ export function DynamicTable({
           } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.paid ? "Paid" : "Free"}
-        </Badge>
+        </span>
       );
     }
 
     if ("isVerified" in item) {
       return (
-        <Badge
-          variant="outline"
+        <span
           className={`${
             item.isVerified
               ? "bg-green-500/20 text-green-400 border-green-500"
@@ -167,7 +165,7 @@ export function DynamicTable({
           } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isVerified ? "Verified" : "Unverified"}
-        </Badge>
+        </span>
       );
     }
   };
@@ -175,8 +173,7 @@ export function DynamicTable({
   const renderPublishStatus = (item: Course) => {
     if ("isPublished" in item) {
       return (
-        <Badge
-          variant="outline"
+        <span
           className={`${
             item.isPublished
               ? "bg-green-500/20 text-green-400 border-green-500"
@@ -184,7 +181,7 @@ export function DynamicTable({
           } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isPublished ? "Published" : "Draft"}
-        </Badge>
+        </span>
       );
     }
   };
@@ -340,15 +337,59 @@ export function DynamicTable({
                           </span>
                         )}
                       </div>
+                    ) : column.key === "category" ? (
+                      // Handle category object display
+                      item[column.key] &&
+                      typeof item[column.key] === "object" ? (
+                        <span className="bg-blue-500/20 text-blue-400 border-blue-500 border px-2 py-1 text-xs font-medium rounded-md inline-block">
+                          {(item[column.key] as any)?.name || "No Category"}
+                        </span>
+                      ) : (
+                        String(item[column.key] || "No Category")
+                      )
                     ) : column.key === "createdAt" ||
                       column.key === "updatedAt" ? (
                       new Date(item[column.key] as string).toLocaleDateString()
                     ) : typeof item[column.key] === "boolean" ? (
-                      item[column.key] ? (
+                      // Handle boolean status fields as badges
+                      column.key.startsWith("is") ? (
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-md border inline-block ${
+                            item[column.key]
+                              ? "bg-green-500/20 text-green-400 border-green-500"
+                              : "bg-gray-700 text-gray-300 border-gray-600"
+                          }`}
+                        >
+                          {(() => {
+                            const value = Boolean(item[column.key]);
+                            switch (column.key) {
+                              case "isPublished":
+                                return value ? "Published" : "Draft";
+                              case "isFeatured":
+                                return value ? "Featured" : "Not Featured";
+                              case "isPopular":
+                                return value ? "Popular" : "Not Popular";
+                              case "isTrending":
+                                return value ? "Trending" : "Not Trending";
+                              case "isBestseller":
+                                return value ? "Bestseller" : "Not Bestseller";
+                              case "isPublic":
+                                return value ? "Public" : "Private";
+                              default:
+                                return value ? "Yes" : "No";
+                            }
+                          })()}
+                        </span>
+                      ) : item[column.key] ? (
                         "Yes"
                       ) : (
                         "No"
                       )
+                    ) : column.key === "language" ? (
+                      // Handle language display with badge
+                      <span className="bg-purple-500/20 text-purple-400 border-purple-500 border px-2 py-1 text-xs font-medium rounded-md capitalize inline-block">
+                        {String(item[column.key] || "Not Set")}
+                      </span>
                     ) : item[column.key] === null ||
                       item[column.key] === undefined ? (
                       "-"

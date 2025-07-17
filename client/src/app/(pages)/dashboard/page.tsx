@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { DynamicTable } from "./_components/DynamicTable";
 import { Button } from "@/components/ui/button";
+
 export default function CoursesPage() {
   const columns = [
     { key: "title", label: "Title" },
     { key: "slug", label: "Slug" },
     { key: "price", label: "Price" },
+    { key: "language", label: "Language" },
   ];
 
   return (

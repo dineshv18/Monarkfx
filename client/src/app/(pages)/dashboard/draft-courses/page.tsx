@@ -7,11 +7,17 @@ export default function DraftCoursesPage() {
     { key: "title", label: "Title" },
     { key: "slug", label: "Slug" },
     { key: "price", label: "Price" },
+    { key: "language", label: "Language" },
   ];
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-5">Draft Courses</h1>
+    <div className="py-10">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">Draft Courses</h1>
+        <p className="text-gray-400">
+          Manage your unpublished and draft course content
+        </p>
+      </div>
       <DynamicTable
         columns={columns}
         apiUrl="/course/draft-course"
