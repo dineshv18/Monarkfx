@@ -29,8 +29,11 @@ export default function CourseManagement({
   const SectionSlug = formatSlugToTitle(params.slug);
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">{SectionSlug}</h1>
+    <div className="py-10">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-white mb-2">{SectionSlug}</h1>
+        <p className="text-gray-400">Manage chapters and course content</p>
+      </div>
       <CourseChapters sectionSlug={params.slug} />
     </div>
   );

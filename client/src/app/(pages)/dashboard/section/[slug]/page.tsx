@@ -100,7 +100,6 @@ const SortableRow = ({
   const [isUpdating, setIsUpdating] = useState(false);
   const [sections, setSections] = useState<Section[]>([]);
 
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -313,7 +312,6 @@ const SectionPage = () => {
       } else {
         setSections([]);
       }
-
     } catch (error) {
       console.error("Error fetching sections:", error);
       toast.error("Failed to fetch sections");
@@ -393,7 +391,6 @@ const SectionPage = () => {
             })),
           }
         );
-
       } catch (error) {
         console.error("Error reordering sections:", error);
         toast.error("Failed to reorder sections");
@@ -443,23 +440,26 @@ const SectionPage = () => {
   };
 
   return (
-    <div className="container max-w-5xl mx-auto py-8 space-y-8">
-      <Card className="border-0 shadow-md">
-        <CardHeader className="bg-gray-50 rounded-t-lg">
-          <CardTitle className="text-xl font-semibold text-gray-800">
+    <div className="max-w-5xl mx-auto py-8 space-y-8">
+      <Card className="bg-gray-900 border-gray-800 shadow-xl">
+        <CardHeader className="bg-gray-800 border-b border-gray-700 rounded-t-lg">
+          <CardTitle className="text-2xl font-semibold text-green-400">
             Create New Section
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-6 bg-gray-900">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <Label htmlFor="title">Section Title</Label>
+              <Label htmlFor="title" className="text-green-400">
+                Section Title
+              </Label>
               <Input
                 {...register("title", { required: "Title is required" })}
                 placeholder="Enter section title"
+                className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
               />
               {errors.title && (
-                <span className="text-red-500">{errors.title.message}</span>
+                <span className="text-red-400">{errors.title.message}</span>
               )}
             </div>
 
@@ -498,27 +498,40 @@ const SectionPage = () => {
               </div>
             </div>
 
-            <Button type="submit">Create Section</Button>
+            <Button
+              type="submit"
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Create Section
+            </Button>
           </form>
         </CardContent>
       </Card>
 
-      <Card className="border-0 shadow-md">
-        <CardHeader className="bg-gray-50 rounded-t-lg">
-          <CardTitle className="text-xl font-semibold text-gray-800">
+      <Card className="bg-gray-900 border-gray-800 shadow-xl">
+        <CardHeader className="bg-gray-800 border-b border-gray-700 rounded-t-lg">
+          <CardTitle className="text-2xl font-semibold text-green-400">
             Course Sections
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-6 bg-gray-900">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50">
+              <TableRow className="bg-gray-800 border-b border-gray-700">
                 <TableHead></TableHead>
-                <TableHead className="font-semibold">Position</TableHead>
-                <TableHead className="font-semibold">Title</TableHead>
-                <TableHead className="font-semibold">Status</TableHead>
-                <TableHead className="font-semibold">Chapters</TableHead>
-                <TableHead className="text-right font-semibold">
+                <TableHead className="font-semibold text-green-400">
+                  Position
+                </TableHead>
+                <TableHead className="font-semibold text-green-400">
+                  Title
+                </TableHead>
+                <TableHead className="font-semibold text-green-400">
+                  Status
+                </TableHead>
+                <TableHead className="font-semibold text-green-400">
+                  Chapters
+                </TableHead>
+                <TableHead className="text-right font-semibold text-green-400">
                   Actions
                 </TableHead>
               </TableRow>
@@ -547,7 +560,10 @@ const SectionPage = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-center text-gray-500 py-8">
+                      <TableCell
+                        colSpan={6}
+                        className="text-center text-gray-400 py-8"
+                      >
                         No sections found. Create your first section above.
                       </TableCell>
                     </TableRow>

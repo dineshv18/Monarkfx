@@ -603,6 +603,7 @@ const CourseForm = ({
                         render={({ field }) => (
                           <JoditEditor
                             value={field.value}
+                            className="text-black bg-white"
                             config={{
                               readonly: false,
                               height: 350,

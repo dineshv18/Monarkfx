@@ -3,7 +3,7 @@ import CreateCourse from "../_components/CreateCourse";
 
 const CourseCreate = () => {
   return (
-    <div>
+    <div className="min-h-screen">
       <CreateCourse />
     </div>
   );

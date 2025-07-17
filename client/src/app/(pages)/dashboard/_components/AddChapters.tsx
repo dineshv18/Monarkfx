@@ -49,11 +49,15 @@ function ChapterFormItem({
   filesState,
   onFileChange,
 }: any) {
-
   return (
-    <div key={index} className="space-y-4 p-4 border rounded-lg">
+    <div
+      key={index}
+      className="space-y-4 p-4 border border-gray-700 bg-gray-800 rounded-lg"
+    >
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Chapter {index + 1}</h3>
+        <h3 className="text-lg font-semibold text-green-400">
+          Chapter {index + 1}
+        </h3>
         {index > 0 && (
           <Button
             type="button"
@@ -67,37 +71,51 @@ function ChapterFormItem({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={`chapters.${index}.title`}>Title</Label>
+        <Label htmlFor={`chapters.${index}.title`} className="text-green-400">
+          Title
+        </Label>
         <Input
           id={`chapters.${index}.title`}
           {...register(`chapters.${index}.title` as const, {
             required: "Title is required",
           })}
+          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
         />
         {errors.chapters?.[index]?.title && (
-          <p className="text-sm text-destructive">
+          <p className="text-sm text-red-400">
             {errors.chapters[index]?.title?.message}
           </p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={`chapters.${index}.description`}>Description</Label>
+        <Label
+          htmlFor={`chapters.${index}.description`}
+          className="text-green-400"
+        >
+          Description
+        </Label>
         <Textarea
           id={`chapters.${index}.description`}
           {...register(`chapters.${index}.description` as const, {
             required: "Description is required",
           })}
+          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
         />
         {errors.chapters?.[index]?.description && (
-          <p className="text-sm text-destructive">
+          <p className="text-sm text-red-400">
             {errors.chapters[index]?.description?.message}
           </p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor={`chapters.${index}.videoUrl`}>Video URL</Label>
+        <Label
+          htmlFor={`chapters.${index}.videoUrl`}
+          className="text-green-400"
+        >
+          Video URL
+        </Label>
         <Input
           id={`chapters.${index}.videoUrl`}
           type="text"
@@ -105,16 +123,17 @@ function ChapterFormItem({
           {...register(`chapters.${index}.videoUrl` as const, {
             required: "Video URL is required",
           })}
+          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
         />
         {errors.chapters?.[index]?.videoUrl && (
-          <p className="text-sm text-destructive">
+          <p className="text-sm text-red-400">
             {errors.chapters[index]?.videoUrl?.message}
           </p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label>PDF Document</Label>
+        <Label className="text-green-400">PDF Document</Label>
         <FileUpload
           accept={{ "application/pdf": [".pdf"] }}
           value={filesState[index]?.pdf || null}
@@ -126,7 +145,7 @@ function ChapterFormItem({
       </div>
 
       <div className="space-y-2">
-        <Label>Audio File</Label>
+        <Label className="text-green-400">Audio File</Label>
         <FileUpload
           accept={{ "audio/*": [".mp3", ".wav"] }}
           value={filesState[index]?.audio || null}
@@ -146,7 +165,9 @@ function ChapterFormItem({
               <Checkbox
                 id={`chapters.${index}.isFree`}
                 checked={field.value}
-                onCheckedChange={(checked) => setValue(`chapters.${index}.isFree`, !!checked)}
+                onCheckedChange={(checked) =>
+                  setValue(`chapters.${index}.isFree`, !!checked)
+                }
               />
             )}
           />
@@ -161,7 +182,9 @@ function ChapterFormItem({
               <Checkbox
                 id={`chapters.${index}.isPublished`}
                 checked={field.value}
-                onCheckedChange={(checked) => setValue(`chapters.${index}.isPublished`, !!checked)}
+                onCheckedChange={(checked) =>
+                  setValue(`chapters.${index}.isPublished`, !!checked)
+                }
               />
             )}
           />
@@ -179,9 +202,9 @@ function ChapterForm({
   submitButtonText,
   isSubmitting,
 }: ChapterFormPropsSecond) {
-  const [filesState, setFilesState] = useState<Array<{ pdf: File | null, audio: File | null }>>([
-    { pdf: null, audio: null }
-  ]);
+  const [filesState, setFilesState] = useState<
+    Array<{ pdf: File | null; audio: File | null }>
+  >([{ pdf: null, audio: null }]);
 
   const {
     register,
@@ -189,7 +212,7 @@ function ChapterForm({
     handleSubmit,
     formState: { errors },
     setValue,
-    watch
+    watch,
   } = useForm<{ chapters: ChapterFormData[] }>({
     defaultValues: {
       chapters: [
@@ -209,8 +232,12 @@ function ChapterForm({
     name: "chapters",
   });
 
-  const handleFileChange = (index: number, type: "pdf" | "audio", file: File | null) => {
-    setFilesState(prev => {
+  const handleFileChange = (
+    index: number,
+    type: "pdf" | "audio",
+    file: File | null
+  ) => {
+    setFilesState((prev) => {
       // Make sure the files array is at least as long as the current index+1
       const newState = [...prev];
       while (newState.length <= index) {
@@ -219,7 +246,7 @@ function ChapterForm({
 
       newState[index] = {
         ...newState[index],
-        [type]: file
+        [type]: file,
       };
 
       return newState;
@@ -237,7 +264,10 @@ function ChapterForm({
 
       // Explicitly convert boolean values to strings
       formData.append("isFree", data.chapters[i].isFree ? "true" : "false");
-      formData.append("isPublished", data.chapters[i].isPublished ? "true" : "false");
+      formData.append(
+        "isPublished",
+        data.chapters[i].isPublished ? "true" : "false"
+      );
 
       // Add files if they exist
       if (filesState[i]?.pdf) {
@@ -286,14 +316,19 @@ function ChapterForm({
             isPublished: false,
           });
           // Extend files state with empty values for the new chapter
-          setFilesState(prev => [...prev, { pdf: null, audio: null }]);
+          setFilesState((prev) => [...prev, { pdf: null, audio: null }]);
         }}
+        className="bg-gray-800 hover:bg-gray-700 text-gray-300 border-gray-600 hover:border-gray-500"
       >
         <Plus className="h-4 w-4 mr-2" />
         Add Chapter
       </Button>
 
-      <Button type="submit" className="md:ml-2" disabled={isSubmitting}>
+      <Button
+        type="submit"
+        className="md:ml-2 bg-green-600 hover:bg-green-700"
+        disabled={isSubmitting}
+      >
         {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -318,7 +353,7 @@ export default function AddChapters({ params }: { params: { slug: string } }) {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/chapter/create/${params.slug}`,
         formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       if (response.status !== 201) {
@@ -328,7 +363,9 @@ export default function AddChapters({ params }: { params: { slug: string } }) {
       return response;
     } catch (error: any) {
       console.error("Error creating chapter:", error);
-      toast.error(`Failed to create chapter: ${error.message || "Unknown error"}`);
+      toast.error(
+        `Failed to create chapter: ${error.message || "Unknown error"}`
+      );
       throw error;
     } finally {
       setIsSubmitting(false);
@@ -349,21 +386,25 @@ export default function AddChapters({ params }: { params: { slug: string } }) {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <Card className="max-w-4xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-2xl sm:text-3xl">Add Chapters</CardTitle>
-          <CardDescription>Create chapters for your course</CardDescription>
+    <div className="py-8 px-4 sm:px-6 lg:px-8">
+      <Card className="max-w-4xl mx-auto bg-gray-900 border-gray-800 shadow-xl">
+        <CardHeader className="bg-gray-800 border-b border-gray-700">
+          <CardTitle className="text-2xl sm:text-3xl text-green-400">
+            Add Chapters
+          </CardTitle>
+          <CardDescription className="text-gray-400">
+            Create chapters for your course
+          </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="bg-gray-900 p-6">
           <ChapterForm
             onSubmit={handleChaptersSubmit}
             submitButtonText="Create Chapters"
             isSubmitting={isSubmitting}
           />
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-          <span className="text-sm text-gray-500">
+        <CardFooter className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 bg-gray-900 border-t border-gray-700">
+          <span className="text-sm text-gray-400">
             Note: You can add more chapters later from the course dashboard
           </span>
         </CardFooter>

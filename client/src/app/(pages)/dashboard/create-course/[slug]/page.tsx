@@ -5,7 +5,7 @@ import AddChapters from "../../_components/AddChapters";
 
 const ChapterCreate = ({ params }: { params: { slug: string } }) => {
   return (
-    <div>
+    <div className="min-h-screen">
       <AddChapters params={params} />
     </div>
   );
