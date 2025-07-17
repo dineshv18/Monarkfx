@@ -32,11 +32,11 @@ export default function AuthModeToggle({
           >
             Need an account? <span className="font-semibold ml-1">Register</span>
           </Button>
-          <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
+          <div className="flex items-center justify-center space-x-2 text-sm text-zinc-400">
             <Button
               variant="link"
               onClick={() => setAuthMode("forgotPassword")}
-              className="text-gray-500 hover:text-green-500 transition-colors duration-200"
+              className="text-zinc-400 hover:text-green-400 transition-colors duration-200"
             >
               Forgot Password?
             </Button>

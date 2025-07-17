@@ -85,15 +85,15 @@ export default function GoogleButton({ mode, courseSlug }: GoogleButtonProps) {
       type="button"
       onClick={() => googleLogin()}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 mt-4 transition-all duration-200 disabled:opacity-50"
+      className="w-full flex items-center justify-center gap-2 bg-zinc-900/50 hover:bg-zinc-800/50 text-white border border-green-500/30 mt-4 transition-all duration-200 disabled:opacity-50 backdrop-blur-sm"
     >
       <Image src={"/google.png"} alt="Google" width={20} height={20} />
       <span>
         {isLoading
           ? "Please wait..."
           : mode === "login"
-          ? "Sign in with Google"
-          : "Sign up with Google"}
+            ? "Sign in with Google"
+            : "Sign up with Google"}
       </span>
     </Button>
   );

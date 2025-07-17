@@ -35,7 +35,7 @@ export default function ForgotPasswordForm({
       } else {
         toast.error(
           result.data.message ||
-            "Failed to process your request. Please try again."
+          "Failed to process your request. Please try again."
         );
       }
     } catch (error) {
@@ -59,7 +59,7 @@ export default function ForgotPasswordForm({
         id="forgot-password-email"
         type="email"
         label="Email"
-        icon={<Mail className="h-4 w-4 text-gray-500" />}
+        icon={<Mail className="h-4 w-4 text-green-500" />}
         register={register}
         name="email"
         errors={errors}

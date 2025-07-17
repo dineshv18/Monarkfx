@@ -57,7 +57,7 @@ export default function RegisterForm({
         id="register-name"
         type="text"
         label="Name"
-        icon={<User className="h-4 w-4 text-gray-500" />}
+        icon={<User className="h-4 w-4 text-green-500" />}
         register={register}
         name="name"
         errors={errors}
@@ -73,7 +73,7 @@ export default function RegisterForm({
         id="register-email"
         type="email"
         label="Email"
-        icon={<Mail className="h-4 w-4 text-gray-500" />}
+        icon={<Mail className="h-4 w-4 text-green-500" />}
         register={register}
         name="email"
         errors={errors}
@@ -89,7 +89,7 @@ export default function RegisterForm({
         id="register-password"
         type="password"
         label="Password"
-        icon={<Lock className="h-4 w-4 text-gray-500" />}
+        icon={<Lock className="h-4 w-4 text-green-500" />}
         register={register}
         name="password"
         errors={errors}
@@ -132,10 +132,10 @@ export default function RegisterForm({
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200"></div>
+          <div className="w-full border-t border-zinc-700"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-transparent text-gray-400">
+          <span className="px-2 bg-zinc-900 text-zinc-400">
             Or continue with
           </span>
         </div>

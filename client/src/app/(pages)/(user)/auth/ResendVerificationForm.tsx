@@ -35,7 +35,7 @@ export default function ResendVerificationForm({
       } else {
         toast.error(
           result.data.message ||
-            "Failed to resend verification email. Please try again."
+          "Failed to resend verification email. Please try again."
         );
       }
     } catch (error) {
@@ -60,7 +60,7 @@ export default function ResendVerificationForm({
           id="resend-verification-email"
           type="email"
           label="Email"
-          icon={<Mail className="h-4 w-4 text-gray-500" />}
+          icon={<Mail className="h-4 w-4 text-green-500" />}
           register={register}
           name="email"
           errors={errors}

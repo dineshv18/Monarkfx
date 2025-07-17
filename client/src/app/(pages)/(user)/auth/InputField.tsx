@@ -33,15 +33,15 @@ export default function InputField<T extends Record<string, unknown>>({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id} className="text-green-400">{label}</Label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500">
           {icon}
         </span>
         <Input
           id={id}
           type={showPasswordToggle && showPassword ? "text" : type}
-          className={`pl-10 ${showPasswordToggle ? "pr-10" : ""}`}
+          className={`pl-10 ${showPasswordToggle ? "pr-10" : ""} bg-zinc-800 border-zinc-700 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500`}
           {...register(name, validationRules)}
         />
         {showPasswordToggle && (

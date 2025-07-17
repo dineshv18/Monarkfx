@@ -96,10 +96,10 @@ export default function LoginForm({
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-gray-200" />
+          <span className="w-full border-t border-zinc-700" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">OR</span>
+          <span className="px-2 bg-zinc-900 text-zinc-400">OR</span>
         </div>
       </div>
 

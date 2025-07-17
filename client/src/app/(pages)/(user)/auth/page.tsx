@@ -15,17 +15,17 @@ export default function AuthPage({
     <div className="min-h-screen flex flex-col md:flex-row bg-black">
       {/* Left Section */}
       <div className="hidden md:block md:w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-600/50 to-black/50 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-green-600/30 via-black/50 to-black/80 z-10" />
         <Image
           src="/bg.jpeg"
           alt="Trading Background"
           fill
-          className="object-cover object-center opacity-90"
+          className="object-cover object-center opacity-85 scale-105"
           sizes="(max-width: 768px) 100vw, 50vw"
           priority
           quality={100}
         />
-        <div className="absolute inset-0 backdrop-blur-[2px] z-20" />
+        <div className="absolute inset-0 backdrop-blur-[1.5px] z-20" />
         <motion.div
           className="absolute inset-0 z-30 flex flex-col items-center justify-center p-12"
           initial={{ opacity: 0, y: 20 }}
@@ -68,14 +68,14 @@ export default function AuthPage({
       </div>
 
       {/* Right Section */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-gradient-to-br from-white via-gray-50 to-red-50">
+      <div className="flex-1 flex items-center justify-center p-6 bg-black">
         <motion.div
           className="w-full max-w-md"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="bg-gray-900 p-8 rounded-2xl shadow-xl border border-green-500/20">
+          <div className="bg-zinc-900 p-8 rounded-2xl shadow-xl border border-green-500/30">
             <AuthComponent courseSlug={courseSlug} />
           </div>
         </motion.div>

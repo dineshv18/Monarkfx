@@ -4,7 +4,7 @@ import { CheckCircle2 } from "lucide-react";
 export default function RegistrationSuccessMessage() {
   return (
     <motion.div
-      className="text-center space-y-6 p-6 bg-gray-900 rounded-xl border border-green-500/20"
+      className="text-center space-y-6 p-6 bg-black/40 backdrop-blur-md rounded-xl border border-green-500/30"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
@@ -18,10 +18,10 @@ export default function RegistrationSuccessMessage() {
       </motion.div>
 
       <div className="space-y-3">
-        <h3 className="text-xl font-semibold text-gray-900">
+        <h3 className="text-xl font-semibold text-white">
           Registration Successful!
         </h3>
-        <p className="text-gray-600">
+        <p className="text-zinc-400">
           Please check your email to verify your account
         </p>
       </div>
