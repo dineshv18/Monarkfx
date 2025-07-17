@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -12,26 +11,30 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 interface User {
+  id: string;
   name: string;
   email: string;
 }
 
 interface ZoomSession {
+  id: string;
   title: string;
+  slug: string;
 }
 
 interface Subscription {
   id: string;
-  user: User;
-  zoomSession: ZoomSession;
   startDate: string;
   endDate: string;
   nextPaymentDate: string;
   status: "ACTIVE" | "CANCELLED" | "EXPIRED";
+  user: User;
+  zoomSession: ZoomSession;
 }
 
 export default function ZoomSubscriptionsTable() {
@@ -55,7 +58,7 @@ export default function ZoomSubscriptionsTable() {
       console.error("Error fetching subscriptions:", error);
       toast({
         title: "Error",
-        description: "Failed to load subscriptions. Please try again.",
+        description: "Failed to load subscription data. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -70,74 +73,111 @@ export default function ZoomSubscriptionsTable() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-green-400" />
       </div>
     );
   }
 
   return (
-    <div className="rounded-md border">
+    <div className="bg-zinc-900 border border-green-500/30 rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead>Session</TableHead>
-            <TableHead>Start Date</TableHead>
-            <TableHead>End Date</TableHead>
-            <TableHead>Next Payment</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
+          <TableRow className="border-green-500/30 hover:bg-green-500/5">
+            <TableHead className="text-green-400 font-semibold">User</TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Session
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Start Date
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              End Date
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Next Payment
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Status
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Actions
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {subscriptions.length > 0 ? (
             subscriptions.map((subscription) => (
-              <TableRow key={subscription.id}>
+              <TableRow
+                key={subscription.id}
+                className="border-green-500/30 hover:bg-green-500/10"
+              >
                 <TableCell>
-                  {subscription.user.name}
-                  <div className="text-xs text-muted-foreground">
-                    {subscription.user.email}
+                  <div>
+                    <p className="font-medium text-white">
+                      {subscription.user.name}
+                    </p>
+                    <p className="text-xs text-zinc-400">
+                      {subscription.user.email}
+                    </p>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-white">
                   {subscription.zoomSession?.title ?? "Unknown Session"}
                 </TableCell>
-                <TableCell>{formatDate(subscription.startDate)}</TableCell>
-                <TableCell>{formatDate(subscription.endDate)}</TableCell>
-                <TableCell>
+                <TableCell className="text-zinc-300">
+                  {formatDate(subscription.startDate)}
+                </TableCell>
+                <TableCell className="text-zinc-300">
+                  {formatDate(subscription.endDate)}
+                </TableCell>
+                <TableCell className="text-zinc-300">
                   {formatDate(subscription.nextPaymentDate)}
                 </TableCell>
                 <TableCell>
                   <span
-                    className={`px-2 py-1 rounded text-xs ${
+                    className={`px-3 py-1 rounded-full text-xs font-bold ${
                       subscription.status === "ACTIVE"
-                        ? "bg-green-100 text-green-800"
+                        ? "bg-green-500/20 text-green-400 border border-green-500/50"
                         : subscription.status === "CANCELLED"
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-red-100 text-red-800"
+                        ? "bg-amber-500/20 text-amber-400 border border-amber-500/50"
+                        : "bg-red-500/20 text-red-400 border border-red-500/50"
                     }`}
                   >
                     {subscription.status}
                   </span>
                 </TableCell>
                 <TableCell>
-                  {subscription.status === "ACTIVE" && (
-                    <Link href={`/dashboard/zoom/cancel/${subscription.id}`}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        title="Cancel Subscription"
-                      >
-                        Cancel
-                      </Button>
-                    </Link>
-                  )}
+                  <div className="flex space-x-2">
+                    {subscription.status === "ACTIVE" && (
+                      <Link href={`/dashboard/zoom/cancel/${subscription.id}`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-red-500/10 border-red-500/50 text-red-400 hover:bg-red-500/20"
+                        >
+                          Cancel
+                        </Button>
+                      </Link>
+                    )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        // View details functionality
+                        console.log("View details for:", subscription.id);
+                      }}
+                      className="bg-blue-500/10 border-blue-500/50 text-blue-400 hover:bg-blue-500/20"
+                    >
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Details
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8">
+              <TableCell colSpan={7} className="text-center py-8 text-zinc-400">
                 No subscriptions found
               </TableCell>
             </TableRow>

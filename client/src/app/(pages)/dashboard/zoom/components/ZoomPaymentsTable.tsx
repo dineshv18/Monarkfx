@@ -10,32 +10,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface User {
+  id: string;
   name: string;
   email: string;
 }
 
-interface ZoomSession {
-  title: string;
-}
-
 interface Subscription {
-  zoomSession: ZoomSession;
+  zoomSession: {
+    title: string;
+  };
 }
 
 interface Payment {
   id: string;
   receiptNumber: string;
-  user: User;
-  subscription: Subscription;
   amount: number;
   razorpay_payment_id: string;
+  status: string;
   createdAt: string;
-  status: "COMPLETED" | "FAILED";
+  user: User;
+  subscription: Subscription;
 }
 
 interface Pagination {
@@ -86,54 +84,81 @@ export default function ZoomPaymentsTable() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-green-400" />
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border">
+      <div className="bg-zinc-900 border border-green-500/30 rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Receipt #</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Session</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Payment ID</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Status</TableHead>
+            <TableRow className="border-green-500/30 hover:bg-green-500/5">
+              <TableHead className="text-green-400 font-semibold">
+                Receipt #
+              </TableHead>
+              <TableHead className="text-green-400 font-semibold">
+                User
+              </TableHead>
+              <TableHead className="text-green-400 font-semibold">
+                Session
+              </TableHead>
+              <TableHead className="text-green-400 font-semibold">
+                Amount
+              </TableHead>
+              <TableHead className="text-green-400 font-semibold">
+                Payment ID
+              </TableHead>
+              <TableHead className="text-green-400 font-semibold">
+                Date
+              </TableHead>
+              <TableHead className="text-green-400 font-semibold">
+                Status
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {payments.length > 0 ? (
               payments.map((payment) => (
-                <TableRow key={payment.id}>
-                  <TableCell>{payment.receiptNumber}</TableCell>
-                  <TableCell>
-                    {payment.user.name}
-                    <div className="text-xs text-muted-foreground">
-                      {payment.user.email}
-                    </div>
+                <TableRow
+                  key={payment.id}
+                  className="border-green-500/30 hover:bg-green-500/10"
+                >
+                  <TableCell className="text-white font-mono">
+                    {payment.receiptNumber}
                   </TableCell>
                   <TableCell>
+                    <div>
+                      <p className="font-medium text-white">
+                        {payment.user.name}
+                      </p>
+                      <p className="text-xs text-zinc-400">
+                        {payment.user.email}
+                      </p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-white">
                     {payment.subscription?.zoomSession?.title ??
                       "Unknown Session"}
                   </TableCell>
-                  <TableCell>₹{payment.amount}</TableCell>
+                  <TableCell className="text-green-400 font-bold">
+                    ₹{payment.amount}
+                  </TableCell>
                   <TableCell>
-                    <span className="text-xs">
+                    <span className="text-xs text-zinc-300 font-mono bg-zinc-800 px-2 py-1 rounded">
                       {payment.razorpay_payment_id}
                     </span>
                   </TableCell>
-                  <TableCell>{formatDate(payment.createdAt)}</TableCell>
+                  <TableCell className="text-zinc-300">
+                    {formatDate(payment.createdAt)}
+                  </TableCell>
                   <TableCell>
                     <span
-                      className={`px-2 py-1 rounded text-xs ${
+                      className={`px-3 py-1 rounded-full text-xs font-bold ${
                         payment.status === "COMPLETED"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
+                          ? "bg-green-500/20 text-green-400 border border-green-500/50"
+                          : "bg-red-500/20 text-red-400 border border-red-500/50"
                       }`}
                     >
                       {payment.status}
@@ -143,39 +168,17 @@ export default function ZoomPaymentsTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8">
-                  No payment records found
+                <TableCell
+                  colSpan={7}
+                  className="text-center py-8 text-zinc-400"
+                >
+                  No payments found
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-
-      {payments.length > 0 && (
-        <div className="flex items-center justify-end space-x-2">
-          <div className="text-sm text-muted-foreground">
-            Page {pagination.page} of {pagination.pages} ({pagination.total}{" "}
-            items)
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fetchPayments(pagination.page - 1)}
-            disabled={pagination.page <= 1}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fetchPayments(pagination.page + 1)}
-            disabled={pagination.page >= pagination.pages}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

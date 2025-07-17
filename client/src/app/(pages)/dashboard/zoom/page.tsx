@@ -14,12 +14,7 @@ import ZoomSubscriptionsTable from "./components/ZoomSubscriptionsTable";
 import ZoomPaymentsTable from "./components/ZoomPaymentsTable";
 import SessionLinks from "./components/SessionLinks";
 
-type TabValue =
-  | "overview"
-  | "classes"
-  | "subscriptions"
-  | "payments"
-  | "links"
+type TabValue = "overview" | "classes" | "subscriptions" | "payments" | "links";
 
 export default function ZoomDashboard() {
   const searchParams = useSearchParams();
@@ -32,14 +27,9 @@ export default function ZoomDashboard() {
     // Set default tab or use tab from URL param
     if (
       tabParam &&
-      [
-        "overview",
-        "classes",
-        "subscriptions",
-        "payments",
-        "links",
-
-      ].includes(tabParam)
+      ["overview", "classes", "subscriptions", "payments", "links"].includes(
+        tabParam
+      )
     ) {
       return tabParam as TabValue;
     }
@@ -55,14 +45,9 @@ export default function ZoomDashboard() {
   useEffect(() => {
     if (
       tabParam &&
-      [
-        "overview",
-        "classes",
-        "subscriptions",
-        "payments",
-        "links",
-
-      ].includes(tabParam)
+      ["overview", "classes", "subscriptions", "payments", "links"].includes(
+        tabParam
+      )
     ) {
       setActiveTab(tabParam as TabValue);
     }
@@ -97,81 +82,109 @@ export default function ZoomDashboard() {
     }
   };
 
-
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="md:text-3xl text-xl font-bold">Live Classes</h1>
-        <div className="flex gap-2">
-          <Link href="/dashboard/zoom/create">
-            <Button className="flex items-center gap-2">
-              <Plus size={18} /> Create Live Class
+    <div className="min-h-screen bg-black text-white">
+      <div className="container mx-auto py-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="md:text-3xl text-xl font-bold text-white">
+            Live Classes
+          </h1>
+          <div className="flex gap-2">
+            <Link href="/dashboard/zoom/create">
+              <Button className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-black font-bold">
+                <Plus size={18} /> Create Live Class
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
+              onClick={fetchData}
+              className="flex items-center gap-2 border-green-500/50 text-green-400 hover:bg-green-500/10 hover:text-green-300"
+            >
+              <RefreshCw size={18} /> Refresh
             </Button>
-          </Link>
-          <Button
-            variant="outline"
-            onClick={fetchData}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw size={18} /> Refresh
-          </Button>
-
-        </div>
-      </div>
-
-      <Tabs
-        defaultValue="overview"
-        value={activeTab}
-        onValueChange={(value: string) => setActiveTab(value as TabValue)}
-      >
-        <TabsList className="grid grid-cols-6 w-full max-w-4xl">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="classes">Live Classes</TabsTrigger>
-          <TabsTrigger value="links">Class Links</TabsTrigger>
-          <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
-
-        </TabsList>
-
-        <TabsContent value="overview" className="mt-6 space-y-6">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : (
-            <ZoomAnalytics analyticsData={analyticsData} />
-          )}
-        </TabsContent>
-
-        <TabsContent value="classes" className="mt-6 space-y-6">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : (
-            <ZoomSessionsTable
-              classes={zoomLiveClasses}
-              refreshData={fetchData}
-            />
-          )}
-        </TabsContent>
-
-        <TabsContent value="links" className="mt-6 space-y-6">
-          <div className="rounded-md border shadow-sm bg-white p-6 overflow-x-auto">
-            <SessionLinks sessions={zoomLiveClasses} refreshData={fetchData} />
           </div>
-        </TabsContent>
+        </div>
 
-        <TabsContent value="subscriptions" className="mt-6 space-y-6">
-          <ZoomSubscriptionsTable />
-        </TabsContent>
+        <Tabs
+          defaultValue="overview"
+          value={activeTab}
+          onValueChange={(value: string) => setActiveTab(value as TabValue)}
+          className="w-full"
+        >
+          <TabsList className="grid grid-cols-5 w-full max-w-4xl bg-zinc-800 border border-green-500/30">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+            >
+              Overview
+            </TabsTrigger>
+            <TabsTrigger
+              value="classes"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+            >
+              Live Classes
+            </TabsTrigger>
+            <TabsTrigger
+              value="links"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+            >
+              Class Links
+            </TabsTrigger>
+            <TabsTrigger
+              value="subscriptions"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+            >
+              Subscriptions
+            </TabsTrigger>
+            <TabsTrigger
+              value="payments"
+              className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+            >
+              Payments
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="payments" className="mt-6 space-y-6">
-          <ZoomPaymentsTable />
-        </TabsContent>
+          <TabsContent value="overview" className="mt-6 space-y-6">
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="h-8 w-8 animate-spin text-green-400" />
+              </div>
+            ) : (
+              <ZoomAnalytics analyticsData={analyticsData} />
+            )}
+          </TabsContent>
 
+          <TabsContent value="classes" className="mt-6 space-y-6">
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="h-8 w-8 animate-spin text-green-400" />
+              </div>
+            ) : (
+              <ZoomSessionsTable
+                classes={zoomLiveClasses}
+                refreshData={fetchData}
+              />
+            )}
+          </TabsContent>
 
-      </Tabs>
+          <TabsContent value="links" className="mt-6 space-y-6">
+            <div className="rounded-lg border border-green-500/30 shadow-lg bg-zinc-900 p-6 overflow-x-auto">
+              <SessionLinks
+                sessions={zoomLiveClasses}
+                refreshData={fetchData}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="subscriptions" className="mt-6 space-y-6">
+            <ZoomSubscriptionsTable />
+          </TabsContent>
+
+          <TabsContent value="payments" className="mt-6 space-y-6">
+            <ZoomPaymentsTable />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

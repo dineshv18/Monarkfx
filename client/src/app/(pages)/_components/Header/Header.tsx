@@ -3,7 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Menu, X, LogIn, User, ChevronDown } from "lucide-react";
+import {
+  Menu,
+  X,
+  LogIn,
+  User,
+  ChevronDown,
+  BookOpen,
+  Video,
+} from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "@/helper/AuthContext";
 import axios from "axios";
@@ -12,16 +20,31 @@ import Cart from "../Cart";
 
 const menuItems = [
   { name: "Home", href: "/" },
-  { name: "Courses", href: "/courses" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
   { name: "Business", href: "/business" },
+];
+
+const courseDropdownItems = [
+  {
+    name: "Online Courses",
+    href: "/courses",
+    icon: BookOpen,
+    description: "Learn at your own pace",
+  },
+  {
+    name: "Live Classes",
+    href: "/live-classes",
+    icon: Video,
+    description: "Real-time trading sessions",
+  },
 ];
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isCourseDropdownOpen, setIsCourseDropdownOpen] = useState(false);
   const [navPosition, setNavPosition] = useState({
     left: 0,
     width: 0,
@@ -29,6 +52,7 @@ const Header = () => {
   });
   const { isAuthenticated, checkAuth } = useAuth();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const courseDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     checkAuth();
@@ -36,6 +60,7 @@ const Header = () => {
       if (window.scrollY > 50) {
         setIsScrolled(true);
         setIsMobileMenuOpen(false);
+        setIsCourseDropdownOpen(false);
       } else {
         setIsScrolled(false);
       }
@@ -45,9 +70,27 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [checkAuth]);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        courseDropdownRef.current &&
+        !courseDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsCourseDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   // Close mobile menu on route change or scroll
   useEffect(() => {
-    const handleRouteChange = () => setIsMobileMenuOpen(false);
+    const handleRouteChange = () => {
+      setIsMobileMenuOpen(false);
+      setIsCourseDropdownOpen(false);
+    };
     window.addEventListener("popstate", handleRouteChange);
     return () => window.removeEventListener("popstate", handleRouteChange);
   }, []);
@@ -134,6 +177,75 @@ const Header = () => {
               {item.name}
             </NavTab>
           ))}
+
+          {/* Courses Dropdown */}
+          <div ref={courseDropdownRef} className="relative">
+            <motion.li
+              onMouseEnter={() => setIsCourseDropdownOpen(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative z-10  cursor-pointer px-4 py-1.5 text-sm uppercase text-white md:py-2 md:text-base transition-colors font-normal flex items-center gap-1"
+            >
+              <span>Courses</span>
+              <ChevronDown
+                className="w-4 h-4 transition-transform duration-200"
+                style={{
+                  transform: isCourseDropdownOpen
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                }}
+              />
+            </motion.li>
+
+            <AnimatePresence>
+              {isCourseDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  onMouseLeave={() => setIsCourseDropdownOpen(false)}
+                  className="absolute top-full left-0 mt-2 w-64 bg-black/90 backdrop-blur-lg rounded-xl border border-green-500/30 shadow-[0_10px_25px_rgba(0,0,0,0.5)] py-2 overflow-hidden"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-b from-green-600/10 to-transparent opacity-60"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.6 }}
+                    exit={{ opacity: 0 }}
+                  />
+                  {courseDropdownItems.map((item, index) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      <Link
+                        href={item.href}
+                        className="relative block px-4 py-3 text-white hover:bg-green-500/20 transition-all duration-300 group"
+                        onClick={() => setIsCourseDropdownOpen(false)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
+                            <item.icon className="w-5 h-5 text-green-400" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-white group-hover:text-green-400 transition-colors">
+                              {item.name}
+                            </p>
+                            <p className="text-sm text-zinc-400 group-hover:text-green-300 transition-colors">
+                              {item.description}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <NavCursor position={navPosition} />
         </ul>
       </div>
@@ -163,7 +275,7 @@ const Header = () => {
                   className="absolute right-0 mt-2 w-48 bg-black/70 backdrop-blur-lg rounded-xl border border-white/10 shadow-[0_5px_15px_rgba(0,0,0,0.3)] py-1 overflow-hidden"
                 >
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-b from-red-600/20 to-transparent opacity-60"
+                    className="absolute inset-0 bg-gradient-to-b from-green-600/20 to-transparent opacity-60"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.6 }}
                     exit={{ opacity: 0 }}
@@ -233,10 +345,66 @@ const Header = () => {
                 </motion.div>
               ))}
 
+              {/* Mobile Courses Dropdown */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: menuItems.length * 0.05 }}
+                className="space-y-2"
+              >
+                <button
+                  onClick={() => setIsCourseDropdownOpen(!isCourseDropdownOpen)}
+                  className="w-full text-left text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300 flex items-center justify-between"
+                >
+                  <span>Courses</span>
+                  <ChevronDown
+                    className="w-4 h-4 transition-transform duration-200"
+                    style={{
+                      transform: isCourseDropdownOpen
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                    }}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {isCourseDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="ml-4 space-y-1"
+                    >
+                      {courseDropdownItems.map((item, index) => (
+                        <motion.div
+                          key={item.name}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <Link
+                            href={item.href}
+                            className=" text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300 flex items-center gap-2"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              setIsCourseDropdownOpen(false);
+                            }}
+                          >
+                            <item.icon className="w-4 h-4 text-green-400" />
+                            <span>{item.name}</span>
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: (menuItems.length + 1) * 0.05 }}
                 className="border-t border-white/10 pt-2 mt-2"
               >
                 {isAuthenticated ? (
@@ -261,7 +429,7 @@ const Header = () => {
                 ) : (
                   <Link
                     href="/auth"
-                    className="flex items-center space-x-2 text-white text-sm bg-gradient-to-r from-red-600 to-red-500 py-2 px-4 rounded-lg my-2"
+                    className="flex items-center space-x-2 text-white text-sm bg-gradient-to-r from-green-600 to-green-500 py-2 px-4 rounded-lg my-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <LogIn className="h-4 w-4" />
@@ -341,7 +509,7 @@ const NavCursor: React.FC<NavCursorProps> = ({ position }) => {
     <motion.div
       animate={position}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="absolute z-0 h-7 rounded-full bg-gradient-to-r from-red-600 to-red-500 shadow-[0_0_10px_rgba(220,38,38,0.3)] md:h-9"
+      className="absolute z-0 h-7 rounded-full bg-gradient-to-r from-green-800 to-green-700 shadow-[0_0_10px_rgba(220,38,38,0.3)] md:h-9"
     />
   );
 };

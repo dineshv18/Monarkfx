@@ -20,17 +20,13 @@ interface User {
   email: string;
 }
 
-interface ZoomSession {
+interface PopularSession {
   id: string;
   title: string;
-  isActive: boolean;
+  subscriptionCount: number;
 }
 
-interface SessionPopularity extends ZoomSession {
-  subscriberCount: number;
-}
-
-interface Payment {
+interface RecentPayment {
   id: string;
   amount: number;
   createdAt: string;
@@ -42,17 +38,13 @@ interface Payment {
   };
 }
 
-interface MonthlyRevenue {
-  [month: string]: number;
-}
-
 interface AnalyticsData {
   totalSessions: number;
   activeSubscriptions: number;
   totalRevenue: number;
-  monthlyRevenue: MonthlyRevenue;
-  sessionPopularity: SessionPopularity[];
-  recentPayments: Payment[];
+  monthlyRevenue: Record<string, number>;
+  popularSessions: PopularSession[];
+  recentPayments: RecentPayment[];
 }
 
 interface ZoomAnalyticsProps {
@@ -63,7 +55,11 @@ export default function ZoomAnalytics({ analyticsData }: ZoomAnalyticsProps) {
   const [activeTab, setActiveTab] = useState<string>("summary");
 
   if (!analyticsData) {
-    return <div>No analytics data available</div>;
+    return (
+      <div className="text-white text-center py-8">
+        No analytics data available
+      </div>
+    );
   }
 
   // Convert monthly revenue object to array for display
@@ -75,39 +71,42 @@ export default function ZoomAnalytics({ analyticsData }: ZoomAnalyticsProps) {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+        <Card className="bg-zinc-900 border border-green-500/30 hover:border-green-500/50 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-white">
               Total Sessions
             </CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-green-400">
               {analyticsData.totalSessions}
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-zinc-900 border border-green-500/30 hover:border-green-500/50 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-sm font-medium text-white">
               Active Subscriptions
             </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-green-400">
               {analyticsData.activeSubscriptions}
             </div>
           </CardContent>
         </Card>
-        <Card>
+
+        <Card className="bg-zinc-900 border border-green-500/30 hover:border-green-500/50 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <IndianRupee className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-white">
+              Total Revenue
+            </CardTitle>
+            <IndianRupee className="h-4 w-4 text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-green-400">
               ₹{analyticsData.totalRevenue.toFixed(2)}
             </div>
           </CardContent>
@@ -119,38 +118,65 @@ export default function ZoomAnalytics({ analyticsData }: ZoomAnalyticsProps) {
         defaultValue="summary"
         value={activeTab}
         onValueChange={setActiveTab}
+        className="w-full"
       >
-        <TabsList>
-          <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="revenue">Revenue</TabsTrigger>
-          <TabsTrigger value="popular">Popular Sessions</TabsTrigger>
-          <TabsTrigger value="recent">Recent Payments</TabsTrigger>
+        <TabsList className="bg-zinc-800 border border-green-500/30">
+          <TabsTrigger
+            value="summary"
+            className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+          >
+            Summary
+          </TabsTrigger>
+          <TabsTrigger
+            value="revenue"
+            className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+          >
+            Revenue
+          </TabsTrigger>
+          <TabsTrigger
+            value="popular"
+            className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+          >
+            Popular Sessions
+          </TabsTrigger>
+          <TabsTrigger
+            value="recent"
+            className="data-[state=active]:bg-green-500 data-[state=active]:text-black text-zinc-300 hover:text-white"
+          >
+            Recent Payments
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="summary" className="space-y-4">
-          <Card>
+        <TabsContent value="summary" className="mt-6">
+          <Card className="bg-zinc-900 border border-green-500/30">
             <CardHeader>
-              <CardTitle>Zoom Classes Overview</CardTitle>
+              <CardTitle className="text-white">
+                Zoom Classes Overview
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h3 className="text-lg font-medium">Sessions</h3>
-                    <p className="text-3xl font-bold">
+                    <h3 className="text-lg font-medium text-white">Sessions</h3>
+                    <p className="text-3xl font-bold text-green-400">
                       {analyticsData.totalSessions}
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium">Subscribers</h3>
-                    <p className="text-3xl font-bold">
+                    <h3 className="text-lg font-medium text-white">
+                      Subscribers
+                    </h3>
+                    <p className="text-3xl font-bold text-green-400">
                       {analyticsData.activeSubscriptions}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium">Total Revenue</h3>
-                  <p className="text-3xl font-bold">
+                  <h3 className="text-lg font-medium text-white">
+                    Total Revenue
+                  </h3>
+                  <p className="text-3xl font-bold text-green-400">
                     ₹{analyticsData.totalRevenue.toFixed(2)}
                   </p>
                 </div>
@@ -159,125 +185,153 @@ export default function ZoomAnalytics({ analyticsData }: ZoomAnalyticsProps) {
           </Card>
         </TabsContent>
 
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
+        <TabsContent value="revenue" className="mt-6">
+          <Card className="bg-zinc-900 border border-green-500/30">
             <CardHeader>
-              <CardTitle>Monthly Revenue</CardTitle>
+              <CardTitle className="text-white">Monthly Revenue</CardTitle>
             </CardHeader>
             <CardContent>
               {monthlyRevenueData.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Month</TableHead>
-                      <TableHead className="text-right">Revenue (₹)</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {monthlyRevenueData.map((item, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{item.month}</TableCell>
-                        <TableCell className="text-right">
-                          {item.amount.toFixed(2)}
-                        </TableCell>
+                <div className="rounded-lg border border-green-500/30 overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-green-500/30">
+                        <TableHead className="text-green-400 font-semibold">
+                          Month
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Revenue
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {monthlyRevenueData.map((data, index) => (
+                        <TableRow
+                          key={index}
+                          className="border-green-500/30 hover:bg-green-500/10"
+                        >
+                          <TableCell className="text-white">
+                            {data.month}
+                          </TableCell>
+                          <TableCell className="text-green-400 font-semibold">
+                            ₹{Number(data.amount).toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               ) : (
-                <p className="text-center py-4">No revenue data available</p>
+                <p className="text-zinc-400 text-center py-4">
+                  No revenue data available
+                </p>
               )}
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="popular" className="space-y-4">
-          <Card>
+        <TabsContent value="popular" className="mt-6">
+          <Card className="bg-zinc-900 border border-green-500/30">
             <CardHeader>
-              <CardTitle>Popular Sessions</CardTitle>
+              <CardTitle className="text-white">Popular Sessions</CardTitle>
             </CardHeader>
             <CardContent>
-              {analyticsData.sessionPopularity &&
-              analyticsData.sessionPopularity.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Session</TableHead>
-                      <TableHead className="text-center">Subscribers</TableHead>
-                      <TableHead className="text-center">Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {analyticsData.sessionPopularity.map((session) => (
-                      <TableRow key={session.id}>
-                        <TableCell>{session.title}</TableCell>
-                        <TableCell className="text-center">
-                          {session.subscriberCount}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <span
-                            className={`px-2 py-1 rounded text-xs ${
-                              session.isActive
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {session.isActive ? "Active" : "Inactive"}
-                          </span>
-                        </TableCell>
+              {analyticsData.popularSessions?.length > 0 ? (
+                <div className="rounded-lg border border-green-500/30 overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-green-500/30">
+                        <TableHead className="text-green-400 font-semibold">
+                          Session Title
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Subscriptions
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {analyticsData.popularSessions.map((session) => (
+                        <TableRow
+                          key={session.id}
+                          className="border-green-500/30 hover:bg-green-500/10"
+                        >
+                          <TableCell className="text-white">
+                            {session.title}
+                          </TableCell>
+                          <TableCell className="text-green-400 font-semibold">
+                            {session.subscriptionCount}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               ) : (
-                <p className="text-center py-4">No session data available</p>
+                <p className="text-zinc-400 text-center py-4">
+                  No popular sessions data available
+                </p>
               )}
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="recent" className="space-y-4">
-          <Card>
+        <TabsContent value="recent" className="mt-6">
+          <Card className="bg-zinc-900 border border-green-500/30">
             <CardHeader>
-              <CardTitle>Recent Payments</CardTitle>
+              <CardTitle className="text-white">Recent Payments</CardTitle>
             </CardHeader>
             <CardContent>
-              {analyticsData.recentPayments &&
-              analyticsData.recentPayments.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>User</TableHead>
-                      <TableHead>Session</TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
-                      <TableHead className="text-right">Date</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {analyticsData.recentPayments.map((payment) => (
-                      <TableRow key={payment.id}>
-                        <TableCell>
-                          {payment.user.name}
-                          <div className="text-xs text-muted-foreground">
-                            {payment.user.email}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          {payment.subscription?.zoomSession?.title ??
-                            "Unknown Session"}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          ₹{payment.amount}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {new Date(payment.createdAt).toLocaleDateString()}
-                        </TableCell>
+              {analyticsData.recentPayments?.length > 0 ? (
+                <div className="rounded-lg border border-green-500/30 overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-green-500/30">
+                        <TableHead className="text-green-400 font-semibold">
+                          User
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Session
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Amount
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Date
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {analyticsData.recentPayments.map((payment) => (
+                        <TableRow
+                          key={payment.id}
+                          className="border-green-500/30 hover:bg-green-500/10"
+                        >
+                          <TableCell className="text-white">
+                            <div>
+                              <p className="font-medium">{payment.user.name}</p>
+                              <p className="text-xs text-zinc-400">
+                                {payment.user.email}
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-white">
+                            {payment.subscription.zoomSession.title}
+                          </TableCell>
+                          <TableCell className="text-green-400 font-semibold">
+                            ₹{payment.amount.toFixed(2)}
+                          </TableCell>
+                          <TableCell className="text-zinc-300">
+                            {new Date(payment.createdAt).toLocaleDateString()}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
               ) : (
-                <p className="text-center py-4">No recent payments</p>
+                <p className="text-zinc-400 text-center py-4">
+                  No recent payments data available
+                </p>
               )}
             </CardContent>
           </Card>

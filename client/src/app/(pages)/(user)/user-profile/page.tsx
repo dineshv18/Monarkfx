@@ -453,12 +453,12 @@ const UserProfile = () => {
     };
 
     return (
-      <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow ">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+      <Card className="overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-zinc-900/90 to-black/90 border-zinc-700 backdrop-blur-sm mb-6">
+        <CardContent className="p-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
             <div className="relative group">
               {user?.profileImage ? (
-                <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-green-500">
+                <div className="relative h-28 w-28 rounded-full overflow-hidden border-3 border-green-500 shadow-lg">
                   <Image
                     src={user.profileImage}
                     alt={user.name}
@@ -469,7 +469,7 @@ const UserProfile = () => {
                       const target = e.target as HTMLElement;
                       const parent = target.parentElement;
                       if (parent) {
-                        parent.innerHTML = `<div class="h-full w-full rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-2xl font-bold">${user?.name.charAt(
+                        parent.innerHTML = `<div class="h-full w-full rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">${user?.name.charAt(
                           0
                         )}</div>`;
                       }
@@ -477,12 +477,12 @@ const UserProfile = () => {
                   />
                 </div>
               ) : (
-                <div className="h-24 w-24 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-2xl font-bold border-2 border-green-500">
+                <div className="h-28 w-28 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white text-3xl font-bold border-3 border-green-500 shadow-lg">
                   {user?.name.charAt(0)}
                 </div>
               )}
               {user?.isVerified && (
-                <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1 border-2 border-white">
+                <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1.5 border-3 border-zinc-900 shadow-lg">
                   <ShieldCheckIcon className="h-4 w-4 text-white" />
                 </div>
               )}
@@ -491,7 +491,7 @@ const UserProfile = () => {
               </div>
             </div>
 
-            <div className="flex-1 space-y-3">
+            <div className="flex-1 space-y-4">
               <div className="flex items-center gap-3">
                 {isEditing ? (
                   <NameEditor
@@ -501,45 +501,66 @@ const UserProfile = () => {
                   />
                 ) : (
                   <>
-                    <h1 className="text-2xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-bold text-white">
                       {user?.name}
                     </h1>
-                    <Button variant="ghost" size="sm" onClick={handleEditStart}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleEditStart}
+                      className="text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                    >
                       <PencilIcon className="h-4 w-4" />
                     </Button>
                   </>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Mail className="h-4 w-4 text-green-500" />
-                  <span>{user?.email}</span>
+              <div className="flex flex-wrap gap-6">
+                <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+                  <div className="p-2 bg-green-500/20 rounded-lg">
+                    <Mail className="h-4 w-4 text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-zinc-400 font-medium">Email</p>
+                    <span className="text-sm font-semibold text-white">
+                      {user?.email}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <UserIcon className="h-4 w-4 text-green-500" />
-                  <Badge
-                    variant="outline"
-                    className="text-sm font-medium bg-black text-green-400 border border-green-500"
-                  >
-                    {user?.role}
-                  </Badge>
+                <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+                  <div className="p-2 bg-blue-500/20 rounded-lg">
+                    <UserIcon className="h-4 w-4 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-zinc-400 font-medium">Role</p>
+                    <Badge
+                      variant="outline"
+                      className="text-sm font-bold bg-green-500/20 text-green-300 border-green-500/30"
+                    >
+                      {user?.role}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <CalendarIcon className="h-4 w-4 text-green-500" />
-                  <span>
-                    Joined{" "}
-                    {format(
-                      new Date(user?.joinedDate || Date.now()),
-                      "MMMM yyyy"
-                    )}
-                  </span>
+                <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
+                  <div className="p-2 bg-purple-500/20 rounded-lg">
+                    <CalendarIcon className="h-4 w-4 text-purple-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-zinc-400 font-medium">Joined</p>
+                    <span className="text-sm font-semibold text-white">
+                      {format(
+                        new Date(user?.joinedDate || Date.now()),
+                        "MMMM yyyy"
+                      )}
+                    </span>
+                  </div>
                 </div>
                 {user?.role === "ADMIN" && (
                   <Button
                     variant="outline"
                     size="sm"
-                    className="ml-auto bg-black hover:bg-gray-800 text-white border-green-500 hover:border-green-400"
+                    className="ml-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
                     onClick={handleAdminDashboard}
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2" />
@@ -555,18 +576,25 @@ const UserProfile = () => {
   };
 
   const EnrolledCoursesContent = () => (
-    <section>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-          <BookOpenIcon className="h-5 w-5 text-green-600" />
-          My Enrolled Courses
-        </h2>
+    <section className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-green-500/20 rounded-xl">
+            <BookOpenIcon className="h-6 w-6 text-green-400" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">
+              My Enrolled Courses
+            </h2>
+            <p className="text-zinc-400 text-sm">Free courses you've joined</p>
+          </div>
+        </div>
         <Button
           variant="outline"
           size="sm"
           onClick={refreshData}
           disabled={isRefreshing}
-          className="flex items-center gap-2 border-green-500 hover:bg-green-50"
+          className="flex items-center gap-2 bg-zinc-900/50 border-zinc-700 text-white hover:bg-zinc-800 hover:border-green-500/50 transition-all duration-300"
         >
           {isRefreshing ? (
             <>
@@ -580,16 +608,25 @@ const UserProfile = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {enrollments.length === 0 ? (
-          <Card className="col-span-full p-8 text-center border-dashed border-2 border-green-200">
-            <p className="text-gray-600 mb-4">
-              You haven't enrolled in any courses yet.
-            </p>
-            <Button
-              className="bg-black hover:bg-gray-800"
-              onClick={() => router.push("/courses")}
-            >
-              Browse Courses
-            </Button>
+          <Card className="col-span-full p-12 text-center border-dashed border-2 border-zinc-700 bg-gradient-to-br from-zinc-900/50 to-black/50">
+            <div className="max-w-md mx-auto">
+              <div className="p-6 bg-zinc-800/50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                <BookOpenIcon className="h-12 w-12 text-zinc-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                No Enrolled Courses Yet
+              </h3>
+              <p className="text-zinc-400 mb-8 leading-relaxed">
+                You haven't enrolled in any courses yet. Start your learning
+                journey today.
+              </p>
+              <Button
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-3"
+                onClick={() => router.push("/courses")}
+              >
+                Browse Courses
+              </Button>
+            </div>
           </Card>
         ) : (
           enrollments.map((enrollment: any) => (
@@ -608,18 +645,25 @@ const UserProfile = () => {
   );
 
   const PurchasedCoursesContent = () => (
-    <section>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-          <ShoppingCartIcon className="h-5 w-5 text-green-600" />
-          Purchased Courses
-        </h2>
+    <section className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-blue-500/20 rounded-xl">
+            <ShoppingCartIcon className="h-6 w-6 text-blue-400" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">Purchased Courses</h2>
+            <p className="text-zinc-400 text-sm">
+              Premium courses you've bought
+            </p>
+          </div>
+        </div>
         <Button
           variant="outline"
           size="sm"
           onClick={refreshData}
           disabled={isRefreshing}
-          className="flex items-center gap-2 border-green-500 hover:bg-green-50"
+          className="flex items-center gap-2 bg-zinc-900/50 border-zinc-700 text-white hover:bg-zinc-800 hover:border-green-500/50 transition-all duration-300"
         >
           {isRefreshing ? (
             <>
@@ -633,14 +677,25 @@ const UserProfile = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {purchases.length === 0 ? (
-          <Card className="col-span-full p-8 text-center border-dashed border-2 border-green-200">
-            <p className="text-gray-600 mb-4">No purchased courses yet.</p>
-            <Button
-              className="bg-black hover:bg-gray-800"
-              onClick={() => router.push("/courses")}
-            >
-              Explore Courses
-            </Button>
+          <Card className="col-span-full p-12 text-center border-dashed border-2 border-zinc-700 bg-gradient-to-br from-zinc-900/50 to-black/50">
+            <div className="max-w-md mx-auto">
+              <div className="p-6 bg-zinc-800/50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                <ShoppingCartIcon className="h-12 w-12 text-zinc-400" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                No Purchased Courses Yet
+              </h3>
+              <p className="text-zinc-400 mb-8 leading-relaxed">
+                You haven't purchased any courses yet. Explore our premium
+                content.
+              </p>
+              <Button
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-3"
+                onClick={() => router.push("/courses")}
+              >
+                Explore Courses
+              </Button>
+            </div>
           </Card>
         ) : (
           purchases.map((purchase: any) => (
@@ -661,54 +716,59 @@ const UserProfile = () => {
   // Dashboard Stats Component
   const DashboardStats = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
-      <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <Card className="overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 group">
         <CardContent className="p-6">
-          <h3 className="text-lg font-medium mb-4 flex items-center">
-            <BookOpenIcon className="h-5 w-5 mr-2 text-green-600" />
-            Course Summary
-          </h3>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-              <span className="text-gray-600">Enrolled Courses</span>
-              <Badge
-                variant="outline"
-                className="bg-green-50 text-green-700 font-medium border-green-200"
-              >
-                {enrollments.length}
-              </Badge>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+              <BookOpenIcon className="h-6 w-6 text-green-400" />
             </div>
-            <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-              <span className="text-gray-600">Purchased Courses</span>
-              <Badge
-                variant="outline"
-                className="bg-green-50 text-green-700 font-medium border-green-200"
-              >
+            <div>
+              <h3 className="text-lg font-bold text-white">Course Summary</h3>
+              <p className="text-zinc-400 text-sm">Your learning overview</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-zinc-700">
+              <span className="text-zinc-300 font-medium">
+                Enrolled Courses
+              </span>
+              <span className="bg-green-500/20 text-green-300 font-bold border-green-500/30 px-2 py-1 rounded-md">
+                {enrollments.length}
+              </span>
+            </div>
+            <div className="flex justify-between items-center pb-3 border-b border-zinc-700">
+              <span className="text-zinc-300 font-medium">
+                Purchased Courses
+              </span>
+              <span className="bg-blue-500/20 text-blue-300 font-bold border-blue-500/30 px-2 py-1 rounded-md">
                 {purchases.length}
-              </Badge>
+              </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Total Resources</span>
-              <Badge
-                variant="outline"
-                className="bg-green-50 text-green-700 font-medium border-green-200"
-              >
+              <span className="text-zinc-300 font-medium">Total Resources</span>
+              <span className="bg-purple-500/20 text-purple-300 font-bold border-purple-500/30 px-2 py-1 rounded-md">
                 {enrollments.length + purchases.length}
-              </Badge>
+              </span>
             </div>
           </div>
         </CardContent>
       </Card>
-      <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-gray-200">
+      <Card className="overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 group">
         <CardContent className="p-6">
-          <h3 className="text-lg font-medium mb-4 flex items-center">
-            <Video className="h-5 w-5 mr-2 text-green-600" />
-            Live Sessions
-          </h3>
-          <p className="text-gray-600 mb-4">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-purple-500/20 rounded-xl group-hover:bg-purple-500/30 transition-colors">
+              <Video className="h-6 w-6 text-purple-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white">Live Sessions</h3>
+              <p className="text-zinc-400 text-sm">Interactive learning</p>
+            </div>
+          </div>
+          <p className="text-zinc-400 mb-6 leading-relaxed">
             Access your upcoming live classes and recorded sessions.
           </p>
           <Button
-            className="w-full bg-black hover:bg-gray-800"
+            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={() => updateTab("live-classes")}
           >
             View Live Classes
@@ -719,7 +779,7 @@ const UserProfile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-slate-50 font-plus-jakarta-sans mt-20 mb-10">
+    <div className="min-h-screen bg-black font-plus-jakarta-sans mt-20 mb-10">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar / Mobile Tabs */}
@@ -732,31 +792,31 @@ const UserProfile = () => {
                 onValueChange={updateTab}
                 className="w-full"
               >
-                <TabsList className="w-full grid grid-cols-4 bg-black shadow-sm rounded-lg p-1">
+                <TabsList className="w-full grid grid-cols-4 bg-zinc-900 border border-zinc-700 shadow-lg rounded-lg p-1">
                   <TabsTrigger
                     value="dashboard"
-                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">Dashboard</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="certificates"
-                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
                   >
                     <GraduationCap className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">Certificates</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="live-classes"
-                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
                   >
                     <Video className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">Live Classes</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="my-courses"
-                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
                   >
                     <BookOpenIcon className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">My Courses</span>
@@ -766,76 +826,78 @@ const UserProfile = () => {
             </div>
 
             {/* Desktop Sidebar */}
-            <Card className="hidden lg:block sticky top-24 shadow-sm overflow-hidden border-gray-200">
-              <div className="p-4 bg-gray-100">
-                <h2 className="font-bold text-lg text-gray-900 flex items-center gap-2">
-                  <UserIcon className="h-5 w-5 text-green-600" />
+            <Card className="hidden lg:block sticky top-24 shadow-xl overflow-hidden bg-gradient-to-br from-zinc-900/90 to-black/90 border-zinc-700 backdrop-blur-sm">
+              <div className="p-6 bg-gradient-to-r from-green-600/20 to-emerald-600/20 border-b border-green-500/30">
+                <h2 className="font-bold text-xl text-white flex items-center gap-3">
+                  <div className="p-2 bg-green-500/20 rounded-lg">
+                    <UserIcon className="h-5 w-5 text-green-400" />
+                  </div>
                   My Dashboard
                 </h2>
               </div>
-              <div className="p-3 space-y-1">
+              <div className="p-4 space-y-2">
                 <Button
                   variant={activeTab === "dashboard" ? "default" : "ghost"}
-                  className={`w-full justify-start font-medium ${
+                  className={`w-full justify-start font-medium transition-all duration-300 ${
                     activeTab === "dashboard"
-                      ? "bg-black hover:bg-gray-800 text-green-400"
-                      : "hover:bg-gray-100 hover:text-black"
+                      ? "bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-white border-zinc-700"
                   }`}
                   onClick={() => updateTab("dashboard")}
                 >
-                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  <LayoutDashboard className="h-4 w-4 mr-3" />
                   Dashboard
                 </Button>
                 <Button
                   variant={activeTab === "certificates" ? "default" : "ghost"}
-                  className={`w-full justify-start font-medium ${
+                  className={`w-full justify-start font-medium transition-all duration-300 ${
                     activeTab === "certificates"
-                      ? "bg-black hover:bg-gray-800 text-green-400"
-                      : "hover:bg-gray-100 hover:text-black"
+                      ? "bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-white border-zinc-700"
                   }`}
                   onClick={() => updateTab("certificates")}
                 >
-                  <GraduationCap className="h-4 w-4 mr-2" />
+                  <GraduationCap className="h-4 w-4 mr-3" />
                   Certificates
                 </Button>
                 <Button
                   variant={activeTab === "live-classes" ? "default" : "ghost"}
-                  className={`w-full justify-start font-medium ${
+                  className={`w-full justify-start font-medium transition-all duration-300 ${
                     activeTab === "live-classes"
-                      ? "bg-black hover:bg-gray-800 text-green-400"
-                      : "hover:bg-gray-100 hover:text-black"
+                      ? "bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-white border-zinc-700"
                   }`}
                   onClick={() => updateTab("live-classes")}
                 >
-                  <Video className="h-4 w-4 mr-2" />
+                  <Video className="h-4 w-4 mr-3" />
                   Live Classes
                 </Button>
                 <Button
                   variant={
                     activeTab === "enrolled-courses" ? "default" : "ghost"
                   }
-                  className={`w-full justify-start font-medium ${
+                  className={`w-full justify-start font-medium transition-all duration-300 ${
                     activeTab === "enrolled-courses"
-                      ? "bg-black hover:bg-gray-800 text-green-400"
-                      : "hover:bg-gray-100 hover:text-black"
+                      ? "bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-white border-zinc-700"
                   }`}
                   onClick={() => updateTab("enrolled-courses")}
                 >
-                  <BookOpenIcon className="h-4 w-4 mr-2" />
+                  <BookOpenIcon className="h-4 w-4 mr-3" />
                   Enrolled Courses
                 </Button>
                 <Button
                   variant={
                     activeTab === "purchased-courses" ? "default" : "ghost"
                   }
-                  className={`w-full justify-start font-medium ${
+                  className={`w-full justify-start font-medium transition-all duration-300 ${
                     activeTab === "purchased-courses"
-                      ? "bg-black hover:bg-gray-800 text-green-400"
-                      : "hover:bg-gray-100 hover:text-black"
+                      ? "bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-white border-zinc-700"
                   }`}
                   onClick={() => updateTab("purchased-courses")}
                 >
-                  <ShoppingCartIcon className="h-4 w-4 mr-2" />
+                  <ShoppingCartIcon className="h-4 w-4 mr-3" />
                   Purchased Courses
                 </Button>
               </div>

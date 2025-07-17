@@ -116,7 +116,6 @@ export default function ZoomSessionsTable({
     return new Date(dateString).toLocaleString();
   };
 
-
   const toggleExpand = (classId: string) => {
     setExpandedSessions((prev) => ({
       ...prev,
@@ -124,8 +123,10 @@ export default function ZoomSessionsTable({
     }));
   };
 
-
-  const handleToggleRegistration = async (classId: string, enabled: boolean) => {
+  const handleToggleRegistration = async (
+    classId: string,
+    enabled: boolean
+  ) => {
     try {
       setUpdatingRegistration(true);
       await axios.post(
@@ -136,7 +137,9 @@ export default function ZoomSessionsTable({
       refreshData();
       toast({
         title: "Success",
-        description: `Registration ${enabled ? "enabled" : "disabled"} successfully`,
+        description: `Registration ${
+          enabled ? "enabled" : "disabled"
+        } successfully`,
       });
     } catch (error) {
       console.error("Error toggling registration:", error);
@@ -179,10 +182,13 @@ export default function ZoomSessionsTable({
     setConfirmAction({
       type: "approve",
       title: "Confirm Approval",
-      message: `Are you sure you want to approve ${selectedUsers.length} selected user(s)? ${selectedClass.courseFeeEnabled
-        ? "They will still need to pay the course fee to access the class."
-        : "They will get immediate access to the class."
-        }`,
+      message: `Are you sure you want to approve ${
+        selectedUsers.length
+      } selected user(s)? ${
+        selectedClass.courseFeeEnabled
+          ? "They will still need to pay the course fee to access the class."
+          : "They will get immediate access to the class."
+      }`,
       action: async () => {
         try {
           setProcessingAction(true);
@@ -298,7 +304,9 @@ export default function ZoomSessionsTable({
       refreshData();
       toast({
         title: "Success",
-        description: `Live class ${enabled ? "started" : "stopped"} successfully`,
+        description: `Live class ${
+          enabled ? "started" : "stopped"
+        } successfully`,
       });
     } catch (error) {
       console.error("Error toggling classroom:", error);
@@ -323,7 +331,7 @@ export default function ZoomSessionsTable({
 
       if (response.data.data.zoomLink) {
         // Open zoom link in new tab
-        window.open(response.data.data.zoomLink, '_blank');
+        window.open(response.data.data.zoomLink, "_blank");
         toast({
           title: "Success",
           description: "Joining class... Zoom should open in a new tab.",
@@ -339,7 +347,8 @@ export default function ZoomSessionsTable({
       console.error("Error joining class:", error);
       toast({
         title: "Error",
-        description: "Failed to join class. Please check if the class is active.",
+        description:
+          "Failed to join class. Please check if the class is active.",
         variant: "destructive",
       });
     } finally {
@@ -348,30 +357,50 @@ export default function ZoomSessionsTable({
   };
 
   return (
-    <div>
+    <div className="bg-zinc-900 border border-green-500/30 rounded-lg overflow-hidden">
       <Table>
-        <TableHeader>          <TableRow>            <TableHead></TableHead>
-          <TableHead>Thumbnail</TableHead>
-          <TableHead>Title</TableHead>
-          <TableHead>Start Time</TableHead>
-          <TableHead>Reg. Fee</TableHead>
-          <TableHead>Course Fee</TableHead>
-          <TableHead>Registration</TableHead>
-          <TableHead className="text-center">
-            <div className="flex items-center justify-center space-x-1">
-              <Video size={14} />
-              <span>Live Status</span>
-            </div>
-          </TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Subscribers</TableHead>
-          <TableHead className="text-center">Actions</TableHead>
-        </TableRow>
+        <TableHeader>
+          <TableRow className="border-green-500/30 hover:bg-green-500/5">
+            <TableHead className="text-green-400 font-semibold"></TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Thumbnail
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Title
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Start Time
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Reg. Fee
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Course Fee
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Registration
+            </TableHead>
+            <TableHead className="text-center text-green-400 font-semibold">
+              <div className="flex items-center justify-center space-x-1">
+                <Video size={14} />
+                <span>Live Status</span>
+              </div>
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Status
+            </TableHead>
+            <TableHead className="text-green-400 font-semibold">
+              Subscribers
+            </TableHead>
+            <TableHead className="text-center text-green-400 font-semibold">
+              Actions
+            </TableHead>
+          </TableRow>
         </TableHeader>
         <TableBody>
           {classes.map((liveClass) => (
             <React.Fragment key={liveClass.id}>
-              <TableRow>
+              <TableRow className="border-green-500/30 hover:bg-green-500/10">
                 <TableCell>
                   <Button
                     variant="ghost"
@@ -380,7 +409,9 @@ export default function ZoomSessionsTable({
                     disabled={
                       !liveClass.hasModules || !liveClass.modules?.length
                     }
-                    className={!liveClass.hasModules ? "opacity-0" : ""}
+                    className={`${
+                      !liveClass.hasModules ? "opacity-0" : ""
+                    } text-green-400 hover:text-green-300 hover:bg-green-500/20`}
                   >
                     {expandedSessions[liveClass.id] ? (
                       <ChevronUp size={16} />
@@ -391,7 +422,7 @@ export default function ZoomSessionsTable({
                 </TableCell>
                 <TableCell>
                   {liveClass.thumbnailUrl ? (
-                    <div className="relative w-12 h-12 rounded-md overflow-hidden">
+                    <div className="relative w-12 h-12 rounded-md overflow-hidden border border-green-500/30">
                       <Image
                         src={liveClass.thumbnailUrl}
                         alt={liveClass.title}
@@ -400,112 +431,119 @@ export default function ZoomSessionsTable({
                       />
                     </div>
                   ) : (
-                    <div className="w-12 h-12 bg-gray-200 rounded-md flex items-center justify-center text-gray-500">
-                      No image
+                    <div className="w-12 h-12 bg-zinc-800 border border-green-500/30 rounded-md flex items-center justify-center">
+                      <span className="text-xs text-zinc-400">No Image</span>
                     </div>
                   )}
                 </TableCell>
                 <TableCell>
-                  {liveClass.title}
-                  {liveClass.hasModules && (
-                    <div className="text-xs text-muted-foreground flex items-center mt-1">
-                      <Layers size={12} className="mr-1" />
-                      {liveClass.modules?.length || 0} modules
-                      {liveClass.isFirstModuleFree && (
-                        <Badge
-                          variant="outline"
-                          className="ml-2 bg-green-50 text-green-700 text-[10px] py-0 px-1"
-                        >
-                          Free first module
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell>{liveClass.startTime}</TableCell>                <TableCell>₹{liveClass.registrationFee}</TableCell>
-                <TableCell>₹{liveClass.courseFee}</TableCell>                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={liveClass.registrationEnabled ?? true}
-                      onCheckedChange={(checked) =>
-                        handleToggleRegistration(liveClass.id, checked)
-                      }
-                      disabled={updatingRegistration}
-                    />
-                    <Label className="text-xs">
-                      {liveClass.registrationEnabled ?? true ? "Open" : "Closed"}
-                    </Label>
-                  </div>
-                </TableCell>                <TableCell className="text-center">
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        checked={liveClass.isOnClassroom ?? false}
-                        onCheckedChange={(checked) =>
-                          handleToggleClassroom(liveClass.id, checked)
-                        }
-                        disabled={updatingRegistration}
-                      />
-                      <Label className={`text-xs font-medium ${liveClass.isOnClassroom ? 'text-green-600' : 'text-gray-500'}`}>
-                        {liveClass.isOnClassroom ? "LIVE" : "Offline"}
-                      </Label>
-                    </div>
-                    {liveClass.isOnClassroom && (
-                      <div className="flex items-center space-x-1">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-xs text-green-600 font-medium">On Air</span>
-                      </div>
+                  <div className="space-y-1">
+                    <h3 className="font-medium text-white">
+                      {liveClass.title}
+                    </h3>
+                    {liveClass.description && (
+                      <p className="text-xs text-zinc-400 line-clamp-2">
+                        {liveClass.description}
+                      </p>
                     )}
                   </div>
                 </TableCell>
-
+                <TableCell className="text-zinc-300">
+                  {formatDate(liveClass.startTime)}
+                </TableCell>
+                <TableCell className="text-green-400 font-semibold">
+                  ₹{liveClass.registrationFee}
+                </TableCell>
                 <TableCell>
-                  <span
-                    className={`px-2 py-1 rounded text-sm ${liveClass.isActive
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                      }`}
+                  {liveClass.courseFeeEnabled ? (
+                    <span className="text-green-400 font-semibold">
+                      ₹{liveClass.courseFee}
+                    </span>
+                  ) : (
+                    <span className="text-zinc-400">No Fee</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      liveClass.registrationEnabled ? "default" : "secondary"
+                    }
+                    className={
+                      liveClass.registrationEnabled
+                        ? "bg-green-500/20 text-green-400 border-green-500/50"
+                        : "bg-zinc-700 text-zinc-300 border-zinc-600"
+                    }
+                  >
+                    {liveClass.registrationEnabled ? "Open" : "Closed"}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-center">
+                  <div className="flex flex-col items-center space-y-2">
+                    <Switch
+                      checked={liveClass.isOnClassroom || false}
+                      onCheckedChange={(checked) =>
+                        handleToggleClassroom(liveClass.id, checked)
+                      }
+                      disabled={updatingRegistration}
+                      className="data-[state=checked]:bg-green-500"
+                    />
+                    {liveClass.isOnClassroom && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAdminJoinClass(liveClass.id)}
+                        disabled={joiningClass === liveClass.id}
+                        className="text-xs bg-green-500/10 border-green-500/50 text-green-400 hover:bg-green-500/20"
+                      >
+                        {joiningClass === liveClass.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          "Join"
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge
+                    variant={liveClass.isActive ? "default" : "secondary"}
+                    className={
+                      liveClass.isActive
+                        ? "bg-green-500/20 text-green-400 border-green-500/50"
+                        : "bg-red-500/20 text-red-400 border-red-500/50"
+                    }
                   >
                     {liveClass.isActive ? "Active" : "Inactive"}
-                  </span>
+                  </Badge>
                 </TableCell>
-                <TableCell>{liveClass.subscriptions?.length || 0}</TableCell>                <TableCell className="text-center">
-                  <div className="flex flex-wrap items-center justify-center gap-1">
+                <TableCell>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewRegistrations(liveClass)}
+                    className="bg-blue-500/10 border-blue-500/50 text-blue-400 hover:bg-blue-500/20"
+                  >
+                    <Users size={14} className="mr-1" />
+                    {liveClass.subscriptions?.length || 0}
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-1">
                     <Link href={`/dashboard/zoom/edit/${liveClass.id}`}>
-                      <Button variant="outline" size="sm" title="Edit Live Class">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-amber-500/10 border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
+                      >
                         <Edit size={14} />
                       </Button>
                     </Link>
                     <Button
                       variant="outline"
                       size="sm"
-                      title="View Registrations"
-                      onClick={() => handleViewRegistrations(liveClass)}
-                    >
-                      <Users size={14} />
-                    </Button>
-
-                    <Button
-                      variant={liveClass.isOnClassroom ? "default" : "outline"}
-                      size="sm"
-                      title={liveClass.isOnClassroom ? "Join Live Class" : "Class Not Started"}
-                      onClick={() => handleAdminJoinClass(liveClass.id)}
-                      disabled={!liveClass.isOnClassroom || joiningClass === liveClass.id}
-                      className={liveClass.isOnClassroom ? "bg-green-600 hover:bg-green-700" : ""}
-                    >
-                      {joiningClass === liveClass.id ? (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                      ) : (
-                        <Video size={14} />
-                      )}
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      title="Delete Live Class"
                       onClick={() => handleDeleteClass(liveClass)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      disabled={isLoading}
+                      className="bg-red-500/10 border-red-500/50 text-red-400 hover:bg-red-500/20"
                     >
                       <Trash2 size={14} />
                     </Button>
@@ -513,11 +551,59 @@ export default function ZoomSessionsTable({
                 </TableCell>
               </TableRow>
 
+              {/* Expanded Modules Row */}
+              {expandedSessions[liveClass.id] && liveClass.modules && (
+                <TableRow className="border-green-500/30">
+                  <TableCell colSpan={11} className="bg-zinc-800/50">
+                    <div className="py-4">
+                      <h4 className="font-medium text-green-400 mb-3 flex items-center">
+                        <Layers size={16} className="mr-2" />
+                        Class Modules ({liveClass.modules.length})
+                      </h4>
+                      <div className="grid gap-2">
+                        {liveClass.modules
+                          .sort((a, b) => a.position - b.position)
+                          .map((module) => (
+                            <div
+                              key={module.id}
+                              className="flex items-center justify-between p-3 bg-zinc-700 border border-green-500/20 rounded-lg"
+                            >
+                              <div>
+                                <span className="font-medium text-white">
+                                  {module.position}. {module.title}
+                                </span>
+                                <div className="text-xs text-zinc-400 mt-1">
+                                  {formatDate(module.startTime)} -{" "}
+                                  {formatDate(module.endTime)}
+                                </div>
+                              </div>
+                              <Badge
+                                variant={
+                                  module.isFree ? "default" : "secondary"
+                                }
+                                className={
+                                  module.isFree
+                                    ? "bg-green-500/20 text-green-400 border-green-500/50"
+                                    : "bg-orange-500/20 text-orange-400 border-orange-500/50"
+                                }
+                              >
+                                {module.isFree ? "Free" : "Paid"}
+                              </Badge>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
             </React.Fragment>
           ))}
           {classes.length === 0 && (
             <TableRow>
-              <TableCell colSpan={10} className="text-center py-8">
+              <TableCell
+                colSpan={11}
+                className="text-center py-8 text-zinc-400"
+              >
                 No zoom live classes found
               </TableCell>
             </TableRow>
@@ -527,10 +613,10 @@ export default function ZoomSessionsTable({
 
       {/* Registration Dialog */}
       {showRegistrationsDialog && selectedClass && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[80vh] overflow-auto">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-zinc-900 border border-green-500/30 rounded-lg p-6 w-full max-w-4xl max-h-[80vh] overflow-auto">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">
+              <h2 className="text-xl font-bold text-white">
                 Registrations: {selectedClass.title}
               </h2>
               <Button
@@ -542,6 +628,7 @@ export default function ZoomSessionsTable({
                   setRegistrations([]);
                   setSelectedUsers([]);
                 }}
+                className="text-zinc-400 hover:text-white hover:bg-red-500/20"
               >
                 ✕
               </Button>
@@ -549,13 +636,13 @@ export default function ZoomSessionsTable({
 
             {loadingRegistrations ? (
               <div className="flex justify-center p-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                <Loader2 className="h-8 w-8 animate-spin text-green-400" />
               </div>
             ) : (
               <>
                 <div className="mb-4 flex justify-between">
                   <div>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-zinc-300">
                       {registrations.length} Registration(s)
                     </span>
                   </div>
@@ -565,6 +652,7 @@ export default function ZoomSessionsTable({
                       size="sm"
                       onClick={handleBulkApprove}
                       disabled={selectedUsers.length === 0}
+                      className="bg-green-500 hover:bg-green-600 text-black font-bold"
                     >
                       Approve Selected
                     </Button>
@@ -573,175 +661,219 @@ export default function ZoomSessionsTable({
                       size="sm"
                       onClick={handleRemoveAccess}
                       disabled={selectedUsers.length === 0}
+                      className="bg-red-500 hover:bg-red-600 text-white"
                     >
                       Remove Access
                     </Button>
                   </div>
                 </div>
 
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[40px]">
-                        <input
-                          type="checkbox"
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedUsers(
-                                registrations.map((reg) => reg.user.id)
-                              );
-                            } else {
-                              setSelectedUsers([]);
-                            }
-                          }}
-                          checked={
-                            selectedUsers.length > 0 &&
-                            selectedUsers.length === registrations.length
-                          }
-                        />
-                      </TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Registration Date</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {registrations.map((reg) => (
-                      <TableRow key={reg.id}>
-                        <TableCell>
+                <div className="bg-zinc-800 border border-green-500/30 rounded-lg overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-green-500/30">
+                        <TableHead className="w-[40px] text-green-400">
                           <input
                             type="checkbox"
-                            checked={selectedUsers.includes(reg.user.id)}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedUsers([
-                                  ...selectedUsers,
-                                  reg.user.id,
-                                ]);
-                              } else {
                                 setSelectedUsers(
-                                  selectedUsers.filter(
-                                    (id) => id !== reg.user.id
-                                  )
+                                  registrations.map((reg) => reg.user.id)
                                 );
+                              } else {
+                                setSelectedUsers([]);
                               }
                             }}
+                            checked={
+                              selectedUsers.length > 0 &&
+                              selectedUsers.length === registrations.length
+                            }
+                            className="accent-green-500"
                           />
-                        </TableCell>
-                        <TableCell>{reg.user.name}</TableCell>
-                        <TableCell>{reg.user.email}</TableCell>
-                        <TableCell>{formatDate(reg.createdAt)}</TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              reg.status === "ACTIVE"
-                                ? "default"
-                                : reg.status === "PENDING"
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Name
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Email
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Registration Date
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Status
+                        </TableHead>
+                        <TableHead className="text-green-400 font-semibold">
+                          Actions
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {registrations.map((reg) => (
+                        <TableRow
+                          key={reg.id}
+                          className="border-green-500/30 hover:bg-green-500/10"
+                        >
+                          <TableCell>
+                            <input
+                              type="checkbox"
+                              checked={selectedUsers.includes(reg.user.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedUsers([
+                                    ...selectedUsers,
+                                    reg.user.id,
+                                  ]);
+                                } else {
+                                  setSelectedUsers(
+                                    selectedUsers.filter(
+                                      (id) => id !== reg.user.id
+                                    )
+                                  );
+                                }
+                              }}
+                              className="accent-green-500"
+                            />
+                          </TableCell>
+                          <TableCell className="text-white">
+                            {reg.user.name}
+                          </TableCell>
+                          <TableCell className="text-zinc-300">
+                            {reg.user.email}
+                          </TableCell>
+                          <TableCell className="text-zinc-300">
+                            {formatDate(reg.createdAt)}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                reg.status === "ACTIVE"
+                                  ? "default"
+                                  : reg.status === "PENDING"
                                   ? "outline"
                                   : "destructive"
-                            }
-                          >
-                            {reg.status}
-                          </Badge>
-                          {reg.hasAccessToLinks && (
-                            <Badge variant="outline" className="ml-2">
-                              Has Access
+                              }
+                              className={
+                                reg.status === "ACTIVE"
+                                  ? "bg-green-500/20 text-green-400 border-green-500/50"
+                                  : reg.status === "PENDING"
+                                  ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/50"
+                                  : "bg-red-500/20 text-red-400 border-red-500/50"
+                              }
+                            >
+                              {reg.status}
                             </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {reg.status !== "ACTIVE" && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={async () => {
-                                try {
-                                  setProcessingAction(true);
-                                  await axios.post(
-                                    `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${selectedClass.id}/approve-registrations`,
-                                    { userIds: [reg.user.id] },
-                                    { withCredentials: true }
-                                  );
+                            {reg.hasAccessToLinks && (
+                              <Badge
+                                variant="outline"
+                                className="ml-2 bg-blue-500/20 text-blue-400 border-blue-500/50"
+                              >
+                                Has Access
+                              </Badge>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {reg.status !== "ACTIVE" && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={async () => {
+                                  try {
+                                    setProcessingAction(true);
+                                    await axios.post(
+                                      `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${selectedClass.id}/approve-registrations`,
+                                      { userIds: [reg.user.id] },
+                                      { withCredentials: true }
+                                    );
 
-                                  toast({
-                                    title: "Success",
-                                    description:
-                                      "Registration approved successfully",
-                                  });
+                                    toast({
+                                      title: "Success",
+                                      description:
+                                        "Registration approved successfully",
+                                    });
 
-                                  await handleViewRegistrations(selectedClass);
-                                } catch (error) {
-                                  console.error(
-                                    "Error approving registration:",
-                                    error
-                                  );
-                                  toast({
-                                    title: "Error",
-                                    description:
-                                      "Failed to approve registration",
-                                    variant: "destructive",
-                                  });
-                                } finally {
-                                  setProcessingAction(false);
-                                }
-                              }}
-                              disabled={processingAction}
-                            >
-                              Approve
-                            </Button>
-                          )}
-                          {reg.status === "ACTIVE" && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={async () => {
-                                try {
-                                  setProcessingAction(true);
-                                  await axios.post(
-                                    `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${selectedClass.id}/remove-access`,
-                                    { userIds: [reg.user.id] },
-                                    { withCredentials: true }
-                                  );
+                                    await handleViewRegistrations(
+                                      selectedClass
+                                    );
+                                  } catch (error) {
+                                    console.error(
+                                      "Error approving registration:",
+                                      error
+                                    );
+                                    toast({
+                                      title: "Error",
+                                      description:
+                                        "Failed to approve registration",
+                                      variant: "destructive",
+                                    });
+                                  } finally {
+                                    setProcessingAction(false);
+                                  }
+                                }}
+                                disabled={processingAction}
+                                className="bg-green-500/10 border-green-500/50 text-green-400 hover:bg-green-500/20"
+                              >
+                                Approve
+                              </Button>
+                            )}
+                            {reg.status === "ACTIVE" && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={async () => {
+                                  try {
+                                    setProcessingAction(true);
+                                    await axios.post(
+                                      `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${selectedClass.id}/remove-access`,
+                                      { userIds: [reg.user.id] },
+                                      { withCredentials: true }
+                                    );
 
-                                  toast({
-                                    title: "Success",
-                                    description: "Access removed successfully",
-                                  });
+                                    toast({
+                                      title: "Success",
+                                      description:
+                                        "Access removed successfully",
+                                    });
 
-                                  await handleViewRegistrations(selectedClass);
-                                } catch (error) {
-                                  console.error(
-                                    "Error removing access:",
-                                    error
-                                  );
-                                  toast({
-                                    title: "Error",
-                                    description: "Failed to remove access",
-                                    variant: "destructive",
-                                  });
-                                } finally {
-                                  setProcessingAction(false);
-                                }
-                              }}
-                              disabled={processingAction}
-                            >
-                              Remove Access
-                            </Button>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                    {registrations.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center py-8">
-                          No registrations found
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+                                    await handleViewRegistrations(
+                                      selectedClass
+                                    );
+                                  } catch (error) {
+                                    console.error(
+                                      "Error removing access:",
+                                      error
+                                    );
+                                    toast({
+                                      title: "Error",
+                                      description: "Failed to remove access",
+                                      variant: "destructive",
+                                    });
+                                  } finally {
+                                    setProcessingAction(false);
+                                  }
+                                }}
+                                disabled={processingAction}
+                                className="bg-red-500/10 border-red-500/50 text-red-400 hover:bg-red-500/20"
+                              >
+                                Remove Access
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                      {registrations.length === 0 && (
+                        <TableRow>
+                          <TableCell
+                            colSpan={6}
+                            className="text-center py-8 text-zinc-400"
+                          >
+                            No registrations found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               </>
             )}
           </div>
@@ -750,30 +882,39 @@ export default function ZoomSessionsTable({
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && confirmAction && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">{confirmAction.title}</h2>
-            <p className="mb-6">{confirmAction.message}</p>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-zinc-900 border border-green-500/30 rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4 text-white">
+              {confirmAction.title}
+            </h2>
+            <p className="mb-6 text-zinc-300">{confirmAction.message}</p>
             <div className="flex justify-end space-x-2">
               <Button
                 variant="outline"
                 onClick={() => setShowConfirmDialog(false)}
                 disabled={processingAction}
+                className="border-zinc-600 text-zinc-300 hover:bg-zinc-800"
               >
                 Cancel
               </Button>
               <Button
                 variant={
                   confirmAction.type === "delete" ||
-                    confirmAction.type === "remove"
+                  confirmAction.type === "remove"
                     ? "destructive"
                     : "default"
                 }
                 onClick={confirmAction.action}
                 disabled={processingAction}
+                className={
+                  confirmAction.type === "delete" ||
+                  confirmAction.type === "remove"
+                    ? "bg-red-500 hover:bg-red-600 text-white"
+                    : "bg-green-500 hover:bg-green-600 text-black font-bold"
+                }
               >
                 {processingAction ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-background"></div>
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   "Confirm"
                 )}
