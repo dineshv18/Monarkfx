@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/helper/AuthContext";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import Image from "next/image";
 
 // UI Components
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,7 @@ import {
   GraduationCap,
   Video,
   LayoutDashboard,
+  Camera,
 } from "lucide-react";
 
 // Types
@@ -48,17 +50,9 @@ type ProcessedPurchase = Purchase & {
 };
 
 interface UserSubscription {
-  type: "ONLINE" | "OFFLINE";
-  startDate: string;
-  endDate: string;
-  fees: number;
-  status: "ACTIVE" | "EXPIRED";
-  lastPayment: string;
-  progress?: number;
-  achievements?: number;
-  attendance?: number;
-  batchTiming?: string;
-  location?: string;
+  tier: string;
+  expiryDate: string;
+  isActive: boolean;
 }
 
 interface ExtendedUserSec extends UserSec {
@@ -69,6 +63,7 @@ interface ExtendedUserSec extends UserSec {
   completedCourses?: number;
   certificatesEarned?: number;
   joinedDate?: string;
+  profileImage?: string;
 }
 
 // Name Editor Component for focused editing
@@ -148,7 +143,7 @@ const NameEditor = ({
 };
 
 const LoadingState = () => (
-  <div className="min-h-screen p-4 md:p-6 bg-gradient-to-br from-white via-red-50 to-gray-50 mt-20">
+  <div className="min-h-screen p-4 md:p-6 bg-gradient-to-br from-gray-50 via-gray-100 to-slate-50 mt-20">
     <div className="max-w-7xl mx-auto">
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="w-full lg:w-64 flex-shrink-0">
@@ -168,21 +163,16 @@ const LoadingState = () => (
 );
 
 const ErrorState = ({ error, retry }: { error: string; retry: () => void }) => (
-  <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-white via-red-50 to-gray-50">
-    <Card className="w-full max-w-md">
-      <CardContent className="p-6 text-center">
-        <AlertCircle className="h-12 w-12 text-red-600 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Oops! Something went wrong
-        </h2>
-        <p className="text-gray-600 mb-6">{error}</p>
-        <Button
-          onClick={retry}
-          className="bg-red-600 hover:bg-red-700 text-white"
-        >
-          Try Again
-        </Button>
-      </CardContent>
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-gray-100 to-slate-50 mt-20">
+    <Card className="p-8 text-center max-w-md mx-auto">
+      <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+      <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        Something went wrong
+      </h2>
+      <p className="text-gray-600 mb-4">{error}</p>
+      <Button onClick={retry} className="bg-black hover:bg-gray-800">
+        Try Again
+      </Button>
     </Card>
   </div>
 );
@@ -209,6 +199,12 @@ const UserProfile = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("tab", tab);
     router.push(`/user-profile?${params.toString()}`, { scroll: false });
+  };
+
+  // Function to handle admin dashboard navigation
+  const handleAdminDashboard = () => {
+    // Use window.location for navigation to avoid hooks issues
+    window.location.href = "/dashboard";
   };
 
   // Sync tab with URL parameter
@@ -457,18 +453,42 @@ const UserProfile = () => {
     };
 
     return (
-      <Card className="  overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow ">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            <div className="relative">
-              <div className="h-24 w-24 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-2xl font-bold">
-                {user?.name.charAt(0)}
-              </div>
+            <div className="relative group">
+              {user?.profileImage ? (
+                <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-green-500">
+                  <Image
+                    src={user.profileImage}
+                    alt={user.name}
+                    fill
+                    className="object-cover"
+                    onError={(e) => {
+                      // Fallback to initials if image fails to load
+                      const target = e.target as HTMLElement;
+                      const parent = target.parentElement;
+                      if (parent) {
+                        parent.innerHTML = `<div class="h-full w-full rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-2xl font-bold">${user?.name.charAt(
+                          0
+                        )}</div>`;
+                      }
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="h-24 w-24 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white text-2xl font-bold border-2 border-green-500">
+                  {user?.name.charAt(0)}
+                </div>
+              )}
               {user?.isVerified && (
-                <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1">
+                <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1 border-2 border-white">
                   <ShieldCheckIcon className="h-4 w-4 text-white" />
                 </div>
               )}
+              <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                <Camera className="h-6 w-6 text-white" />
+              </div>
             </div>
 
             <div className="flex-1 space-y-3">
@@ -500,7 +520,7 @@ const UserProfile = () => {
                   <UserIcon className="h-4 w-4 text-green-500" />
                   <Badge
                     variant="outline"
-                    className="text-sm font-medium bg-black text-green-700 border border-green-500"
+                    className="text-sm font-medium bg-black text-green-400 border border-green-500"
                   >
                     {user?.role}
                   </Badge>
@@ -519,8 +539,8 @@ const UserProfile = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="ml-auto bg-red-50 hover:bg-red-100 text-green-600 border-red-200"
-                    onClick={() => router.push("/dashboard")}
+                    className="ml-auto bg-black hover:bg-gray-800 text-white border-green-500 hover:border-green-400"
+                    onClick={handleAdminDashboard}
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2" />
                     Admin Dashboard
@@ -538,7 +558,7 @@ const UserProfile = () => {
     <section>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-          <BookOpenIcon className="h-5 w-5 text-red-600" />
+          <BookOpenIcon className="h-5 w-5 text-green-600" />
           My Enrolled Courses
         </h2>
         <Button
@@ -546,7 +566,7 @@ const UserProfile = () => {
           size="sm"
           onClick={refreshData}
           disabled={isRefreshing}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 border-green-500 hover:bg-green-50"
         >
           {isRefreshing ? (
             <>
@@ -560,12 +580,12 @@ const UserProfile = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {enrollments.length === 0 ? (
-          <Card className="col-span-full p-8 text-center border-dashed border-2 border-red-200">
+          <Card className="col-span-full p-8 text-center border-dashed border-2 border-green-200">
             <p className="text-gray-600 mb-4">
               You haven't enrolled in any courses yet.
             </p>
             <Button
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-black hover:bg-gray-800"
               onClick={() => router.push("/courses")}
             >
               Browse Courses
@@ -591,7 +611,7 @@ const UserProfile = () => {
     <section>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-          <ShoppingCartIcon className="h-5 w-5 text-red-600" />
+          <ShoppingCartIcon className="h-5 w-5 text-green-600" />
           Purchased Courses
         </h2>
         <Button
@@ -599,7 +619,7 @@ const UserProfile = () => {
           size="sm"
           onClick={refreshData}
           disabled={isRefreshing}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 border-green-500 hover:bg-green-50"
         >
           {isRefreshing ? (
             <>
@@ -613,10 +633,10 @@ const UserProfile = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {purchases.length === 0 ? (
-          <Card className="col-span-full p-8 text-center border-dashed border-2 border-red-200">
+          <Card className="col-span-full p-8 text-center border-dashed border-2 border-green-200">
             <p className="text-gray-600 mb-4">No purchased courses yet.</p>
             <Button
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-black hover:bg-gray-800"
               onClick={() => router.push("/courses")}
             >
               Explore Courses
@@ -644,7 +664,7 @@ const UserProfile = () => {
       <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
         <CardContent className="p-6">
           <h3 className="text-lg font-medium mb-4 flex items-center">
-            <BookOpenIcon className="h-5 w-5 mr-2 text-red-600" />
+            <BookOpenIcon className="h-5 w-5 mr-2 text-green-600" />
             Course Summary
           </h3>
           <div className="space-y-4">
@@ -652,7 +672,7 @@ const UserProfile = () => {
               <span className="text-gray-600">Enrolled Courses</span>
               <Badge
                 variant="outline"
-                className="bg-red-50 text-red-700 font-medium"
+                className="bg-green-50 text-green-700 font-medium border-green-200"
               >
                 {enrollments.length}
               </Badge>
@@ -661,7 +681,7 @@ const UserProfile = () => {
               <span className="text-gray-600">Purchased Courses</span>
               <Badge
                 variant="outline"
-                className="bg-red-50 text-red-700 font-medium"
+                className="bg-green-50 text-green-700 font-medium border-green-200"
               >
                 {purchases.length}
               </Badge>
@@ -670,7 +690,7 @@ const UserProfile = () => {
               <span className="text-gray-600">Total Resources</span>
               <Badge
                 variant="outline"
-                className="bg-red-50 text-red-700 font-medium"
+                className="bg-green-50 text-green-700 font-medium border-green-200"
               >
                 {enrollments.length + purchases.length}
               </Badge>
@@ -678,17 +698,17 @@ const UserProfile = () => {
           </div>
         </CardContent>
       </Card>
-      <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-gray-200">
         <CardContent className="p-6">
           <h3 className="text-lg font-medium mb-4 flex items-center">
-            <Video className="h-5 w-5 mr-2 text-red-600" />
+            <Video className="h-5 w-5 mr-2 text-green-600" />
             Live Sessions
           </h3>
           <p className="text-gray-600 mb-4">
             Access your upcoming live classes and recorded sessions.
           </p>
           <Button
-            className="w-full bg-red-600 hover:bg-red-700"
+            className="w-full bg-black hover:bg-gray-800"
             onClick={() => updateTab("live-classes")}
           >
             View Live Classes
@@ -699,7 +719,7 @@ const UserProfile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50 font-plus-jakarta-sans mt-20 mb-10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-slate-50 font-plus-jakarta-sans mt-20 mb-10">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar / Mobile Tabs */}
@@ -712,31 +732,31 @@ const UserProfile = () => {
                 onValueChange={updateTab}
                 className="w-full"
               >
-                <TabsList className="w-full grid grid-cols-4 bg-white shadow-sm rounded-lg p-1">
+                <TabsList className="w-full grid grid-cols-4 bg-black shadow-sm rounded-lg p-1">
                   <TabsTrigger
                     value="dashboard"
-                    className="data-[state=active]:bg-red-50 data-[state=active]:text-red-600"
+                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">Dashboard</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="certificates"
-                    className="data-[state=active]:bg-red-50 data-[state=active]:text-red-600"
+                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
                   >
                     <GraduationCap className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">Certificates</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="live-classes"
-                    className="data-[state=active]:bg-red-50 data-[state=active]:text-red-600"
+                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
                   >
                     <Video className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">Live Classes</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="my-courses"
-                    className="data-[state=active]:bg-red-50 data-[state=active]:text-red-600"
+                    className="data-[state=active]:bg-black data-[state=active]:text-green-400"
                   >
                     <BookOpenIcon className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">My Courses</span>
@@ -746,10 +766,10 @@ const UserProfile = () => {
             </div>
 
             {/* Desktop Sidebar */}
-            <Card className="hidden lg:block sticky top-24  shadow-sm overflow-hidden">
-              <div className="p-4 bg-red-50">
+            <Card className="hidden lg:block sticky top-24 shadow-sm overflow-hidden border-gray-200">
+              <div className="p-4 bg-gray-100">
                 <h2 className="font-bold text-lg text-gray-900 flex items-center gap-2">
-                  <UserIcon className="h-5 w-5 text-red-600" />
+                  <UserIcon className="h-5 w-5 text-green-600" />
                   My Dashboard
                 </h2>
               </div>
@@ -758,8 +778,8 @@ const UserProfile = () => {
                   variant={activeTab === "dashboard" ? "default" : "ghost"}
                   className={`w-full justify-start font-medium ${
                     activeTab === "dashboard"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "hover:bg-red-50 hover:text-red-600"
+                      ? "bg-black hover:bg-gray-800 text-green-400"
+                      : "hover:bg-gray-100 hover:text-black"
                   }`}
                   onClick={() => updateTab("dashboard")}
                 >
@@ -770,8 +790,8 @@ const UserProfile = () => {
                   variant={activeTab === "certificates" ? "default" : "ghost"}
                   className={`w-full justify-start font-medium ${
                     activeTab === "certificates"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "hover:bg-red-50 hover:text-red-600"
+                      ? "bg-black hover:bg-gray-800 text-green-400"
+                      : "hover:bg-gray-100 hover:text-black"
                   }`}
                   onClick={() => updateTab("certificates")}
                 >
@@ -782,8 +802,8 @@ const UserProfile = () => {
                   variant={activeTab === "live-classes" ? "default" : "ghost"}
                   className={`w-full justify-start font-medium ${
                     activeTab === "live-classes"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "hover:bg-red-50 hover:text-red-600"
+                      ? "bg-black hover:bg-gray-800 text-green-400"
+                      : "hover:bg-gray-100 hover:text-black"
                   }`}
                   onClick={() => updateTab("live-classes")}
                 >
@@ -796,8 +816,8 @@ const UserProfile = () => {
                   }
                   className={`w-full justify-start font-medium ${
                     activeTab === "enrolled-courses"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "hover:bg-red-50 hover:text-red-600"
+                      ? "bg-black hover:bg-gray-800 text-green-400"
+                      : "hover:bg-gray-100 hover:text-black"
                   }`}
                   onClick={() => updateTab("enrolled-courses")}
                 >
@@ -810,8 +830,8 @@ const UserProfile = () => {
                   }
                   className={`w-full justify-start font-medium ${
                     activeTab === "purchased-courses"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "hover:bg-red-50 hover:text-red-600"
+                      ? "bg-black hover:bg-gray-800 text-green-400"
+                      : "hover:bg-gray-100 hover:text-black"
                   }`}
                   onClick={() => updateTab("purchased-courses")}
                 >
