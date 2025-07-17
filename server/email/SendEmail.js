@@ -8,7 +8,8 @@ import {
   getPaymentSuccessTemplate,
   getPaymentFailureTemplate,
   getFeeUpdateTemplate,
-  getCertificateGeneratedTemplate
+  getCertificateGeneratedTemplate,
+  getContactFormTemplate
 } from "../email/temp/EmailTemplate.js";
 
 const transporter = nodemailer.createTransport({
@@ -27,44 +28,47 @@ export const SendEmail = async ({ email, subject, message, emailType, attachment
 
     switch (emailType) {
       case "VERIFY":
-        subject = "Verify your email - MonarkFX";
+        subject = "Verify your email - MonarkFX - Global Trading Excellence ";
         htmlContent = getVerificationTemplate(message);
         break;
       case "DELETE":
-        subject = "Delete your account - MonarkFX";
+        subject = "Delete your account - MonarkFX - Global Trading Excellence ";
         htmlContent = getDeleteTemplate(message);
         break;
       case "RESET":
-        subject = "Reset your password - MonarkFX";
+        subject = "Reset your password - MonarkFX - Global Trading Excellence ";
         htmlContent = getResetTemplate(message);
         break;
       case "FEE_RECEIPT":
-        subject = subject || "Fee Payment Receipt - MonarkFX";
+        subject = subject || "Fee Payment Receipt - MonarkFX - Global Trading Excellence ";
         htmlContent = getFeeReceiptTemplate(message);
         break;
       case "FEE_NOTIFICATION":
-        subject = subject || "New Fee Assignment - MonarkFX";
+        subject = subject || "New Fee Assignment - MonarkFX - Global Trading Excellence ";
         htmlContent = getFeeNotificationTemplate(message);
         break;
       case "PAYMENT_SUCCESS":
-        subject = subject || "Payment Successful - MonarkFX";
+        subject = subject || "Payment Successful - MonarkFX - Global Trading Excellence ";
         htmlContent = getPaymentSuccessTemplate(message);
         break;
       case "PAYMENT_FAILURE":
-        subject = subject || "Payment Failed - MonarkFX";
+        subject = subject || "Payment Failed - MonarkFX - Global Trading Excellence ";
         htmlContent = getPaymentFailureTemplate(message);
         break;
       case "FEE_UPDATE":
-        subject = subject || "Fee Update Notification - MonarkFX";
+        subject = subject || "Fee Update Notification - MonarkFX - Global Trading Excellence ";
         htmlContent = getFeeUpdateTemplate(message);
         break;
       case "CERTIFICATE_GENERATED":
-        subject = "Course Completion Certificate - MonarkFX";
+        subject = "Course Completion Certificate - MonarkFX - Global Trading Excellence ";
         htmlContent = getCertificateGeneratedTemplate(message);
+        break;
+      case "CONTACT_FORM":
+        subject = subject || "New Contact Form Submission - MonarkFX - Global Trading Excellence";
+        htmlContent = getContactFormTemplate(message);
         break;
       default:
         htmlContent = message;
-
     }
 
     const mailOptions = {

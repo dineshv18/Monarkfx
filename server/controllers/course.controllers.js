@@ -3,7 +3,7 @@ import { createSlug } from "../helper/Slug.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import fs from "fs/promises";
+import { deleteFile } from "../middlewares/multer.middlerware.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -32,14 +32,17 @@ const findCourseBySlug = async (slug) => {
 };
 
 const handleFileUpload = (file) => {
-  if (!file?.filename) {
+  if (!file) {
     throw new ApiError(400, "Invalid file upload");
   }
 
   // Validate file type
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
   if (!allowedTypes.includes(file.mimetype)) {
-    throw new ApiError(400, "Invalid file type. Only JPG, PNG and WebP allowed");
+    throw new ApiError(
+      400,
+      "Invalid file type. Only JPG, PNG and WebP allowed"
+    );
   }
 
   // Validate file size (e.g., 5MB limit)
@@ -49,14 +52,6 @@ const handleFileUpload = (file) => {
   }
 
   return file.filename;
-};
-
-const deleteFile = async (filename) => {
-  try {
-    await fs.unlink(path.join(UPLOAD_DIR, filename));
-  } catch (error) {
-    console.error("Failed to delete file:", error);
-  }
 };
 
 const createMetaDescription = (description) => {
@@ -76,8 +71,8 @@ const createMetaDescription = (description) => {
 export const createCourse = asyncHandler(async (req, res) => {
   let uploadedThumbnail = null;
   try {
-    if (req.file) {
-      uploadedThumbnail = handleFileUpload(req.file);
+    if (req.files && req.files.thumbnail && req.files.thumbnail[0]) {
+      uploadedThumbnail = req.files.thumbnail[0].filename;
     }
 
     const {
@@ -95,7 +90,8 @@ export const createCourse = asyncHandler(async (req, res) => {
       isPopular,
       isTrending,
       isBestseller,
-      categoryId
+      categoryId,
+      validityDays,
     } = req.body;
 
     // Get meta fields separately
@@ -114,7 +110,7 @@ export const createCourse = asyncHandler(async (req, res) => {
     }
 
     const category = await prisma.category.findUnique({
-      where: { id: categoryId }
+      where: { id: categoryId },
     });
 
     if (!category) {
@@ -156,7 +152,7 @@ export const createCourse = asyncHandler(async (req, res) => {
         thumbnail: uploadedThumbnail,
         userId: req.user.id,
         isPublished: parseBooleanField(isPublished),
-        language: language?.toLowerCase(),
+        language: language,
         subheading: subheading?.trim(),
         metaTitle: finalMetaTitle.trim(),
         metaDesc: finalMetaDesc.trim(),
@@ -166,7 +162,8 @@ export const createCourse = asyncHandler(async (req, res) => {
         isBestseller: parseBooleanField(isBestseller),
         videoUrl,
         paid: parseBooleanField(paid),
-        categoryId
+        categoryId,
+        validityDays: validityDays ? parseInt(validityDays, 10) : 0,
       },
     });
 
@@ -194,10 +191,10 @@ export const getCourses = asyncHandler(async (req, res) => {
     ...(search && {
       OR: [
         { title: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } }
-      ]
+        { description: { contains: search, mode: "insensitive" } },
+      ],
     }),
-    ...(category && category !== "all" && { categoryId: category })
+    ...(category && category !== "all" && { categoryId: category }),
   };
 
   let orderBy = {};
@@ -206,16 +203,10 @@ export const getCourses = asyncHandler(async (req, res) => {
       orderBy = { createdAt: "asc" };
       break;
     case "price_high":
-      orderBy = [
-        { salePrice: "desc" },
-        { price: "desc" }
-      ];
+      orderBy = [{ salePrice: "desc" }, { price: "desc" }];
       break;
     case "price_low":
-      orderBy = [
-        { salePrice: "asc" },
-        { price: "asc" }
-      ];
+      orderBy = [{ salePrice: "asc" }, { price: "asc" }];
       break;
     default:
       orderBy = { createdAt: "desc" };
@@ -231,12 +222,12 @@ export const getCourses = asyncHandler(async (req, res) => {
         category: {
           select: {
             id: true,
-            name: true
-          }
-        }
-      }
+            name: true,
+          },
+        },
+      },
     }),
-    prisma.course.count({ where })
+    prisma.course.count({ where }),
   ]);
 
   // Sort courses after fetching based on effective price
@@ -252,7 +243,7 @@ export const getCourses = asyncHandler(async (req, res) => {
     new ApiResponsive(200, {
       courses,
       totalPages: Math.ceil(totalCourses / limit),
-      currentPage: page
+      currentPage: page,
     })
   );
 });
@@ -323,6 +314,7 @@ export const getCourse = asyncHandler(async (req, res) => {
       createdAt: true,
       updatedAt: true,
       metaDesc: true,
+      validityDays: true,
       metaTitle: true,
       subheading: true,
       categoryId: true,
@@ -332,8 +324,8 @@ export const getCourse = asyncHandler(async (req, res) => {
       category: {
         select: {
           id: true,
-          name: true
-        }
+          name: true,
+        },
       },
 
       sections: {
@@ -362,13 +354,15 @@ export const getCourse = asyncHandler(async (req, res) => {
               isPublished: true,
               isFree: true,
               slug: true,
+              pdfUrl: true,
+              audioUrl: true,
               sectionId: true,
               createdAt: true,
               updatedAt: true,
             },
           },
         },
-      }
+      },
     },
   });
 
@@ -384,40 +378,86 @@ export const getCourse = asyncHandler(async (req, res) => {
 export const deleteCourse = asyncHandler(async (req, res) => {
   const { slug } = req.params;
 
-  // First, get the course to access its thumbnail
+  // First, get the course with all its sections and chapters to access their files
   const course = await prisma.course.findUnique({
     where: { slug },
-    select: { thumbnail: true } // Only select the thumbnail
+    select: {
+      id: true,
+      thumbnail: true,
+      sections: {
+        select: {
+          id: true,
+          chapters: {
+            select: {
+              id: true,
+              videoUrl: true,
+              pdfUrl: true,
+              audioUrl: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   if (!course) {
     throw new ApiError(404, "Course not found");
   }
 
-  // First, delete related enrollments
-  await prisma.enrollment.deleteMany({
-    where: { courseId: slug }
-  });
+  // Collection of all files to delete
+  const filesToDelete = [];
 
-  // Then, delete related course completions
-  await prisma.courseCompletion.deleteMany({
-    where: { courseId: slug }
-  });
-
-  // Now, delete the course
-  await prisma.course.delete({
-    where: { slug },
-  });
-
-  // Delete thumbnail if it exists
+  // Add course thumbnail if exists
   if (course.thumbnail) {
-    await deleteFile(course.thumbnail);
+    filesToDelete.push(course.thumbnail);
+  }
+
+  // Add all chapter files
+  for (const section of course.sections) {
+    for (const chapter of section.chapters) {
+      if (chapter.videoUrl) filesToDelete.push(chapter.videoUrl);
+      if (chapter.pdfUrl) filesToDelete.push(chapter.pdfUrl);
+      if (chapter.audioUrl) filesToDelete.push(chapter.audioUrl);
+    }
+  }
+
+  // Delete database records
+  await prisma.$transaction(async (tx) => {
+    // First, delete related enrollments
+    await tx.enrollment.deleteMany({
+      where: { courseId: course.id },
+    });
+
+    // Then, delete related course completions
+    await tx.courseCompletion.deleteMany({
+      where: { courseId: course.id },
+    });
+
+    // Delete certificates
+    await tx.certificate.deleteMany({
+      where: { courseId: course.id },
+    });
+
+    // Delete the course (will cascade delete sections and chapters)
+    await tx.course.delete({
+      where: { id: course.id },
+    });
+  });
+
+  // Delete all files from storage
+  for (const file of filesToDelete) {
+    await deleteFile(file).catch((err) =>
+      console.error(`Error deleting file ${file}:`, err)
+    );
   }
 
   return res
     .status(200)
     .json(
-      new ApiResponsive(200, "Course and related enrollments deleted successfully")
+      new ApiResponsive(
+        200,
+        "Course and all related content deleted successfully"
+      )
     );
 });
 
@@ -425,7 +465,7 @@ export const updateCourseImage = asyncHandler(async (req, res) => {
   const { slug } = req.params;
 
   // Check if file exists
-  if (!req.file) {
+  if (!req.files || !req.files.thumbnail || !req.files.thumbnail[0]) {
     throw new ApiError(400, "No image file provided");
   }
 
@@ -434,8 +474,8 @@ export const updateCourseImage = asyncHandler(async (req, res) => {
     where: { slug },
     select: {
       thumbnail: true,
-      id: true
-    }
+      id: true,
+    },
   });
 
   if (!existingCourse) {
@@ -450,26 +490,25 @@ export const updateCourseImage = asyncHandler(async (req, res) => {
         await deleteFile(existingCourse.thumbnail);
       }
 
-      // Handle new file upload
-      const thumbnail = handleFileUpload(req.file);
+      // Get new thumbnail filename
+      const thumbnail = req.files.thumbnail[0].filename;
 
       // Update course with new thumbnail
       return await tx.course.update({
         where: { id: existingCourse.id },
-        data: { thumbnail }
+        data: { thumbnail },
       });
     });
 
     return res.status(200).json(
       new ApiResponsive(200, "Course thumbnail updated successfully", {
-        thumbnail: updatedCourse.thumbnail
+        thumbnail: updatedCourse.thumbnail,
       })
     );
-
   } catch (error) {
     // Clean up uploaded file if transaction fails
-    if (req.file?.filename) {
-      await deleteFile(req.file.filename);
+    if (req.files?.thumbnail?.[0]?.filename) {
+      await deleteFile(req.files.thumbnail[0].filename);
     }
     throw new ApiError(500, "Failed to update course thumbnail");
   }
@@ -488,7 +527,8 @@ export const coursePublishToggle = asyncHandler(async (req, res) => {
     .status(200)
     .json(
       new ApiResponsive(
-        `Course ${updatedCourse.isPublished ? "published" : "unpublished"
+        `Course ${
+          updatedCourse.isPublished ? "published" : "unpublished"
         } successfully`,
         { isPublished: updatedCourse.isPublished },
         200
@@ -562,6 +602,7 @@ export const coursePage = asyncHandler(async (req, res) => {
       isTrending: true,
       isPopular: true,
       isFeatured: true,
+      validityDays: true,
       metaDesc: true,
       metaTitle: true,
       subheading: true,
@@ -609,23 +650,23 @@ export const getFreeChapterVideo = asyncHandler(async (req, res) => {
   const course = await prisma.course.findFirst({
     where: {
       slug: courseSlug,
-      isPublished: true
+      isPublished: true,
     },
     include: {
       sections: {
         where: {
-          isPublished: true
+          isPublished: true,
         },
         include: {
           chapters: {
             where: {
               id: chapterId,
-              isPublished: true
-            }
-          }
-        }
-      }
-    }
+              isPublished: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   if (!course) {
@@ -634,8 +675,8 @@ export const getFreeChapterVideo = asyncHandler(async (req, res) => {
 
   // Find the chapter across all sections
   const chapter = course.sections
-    .flatMap(section => section.chapters)
-    .find(chapter => chapter?.id === chapterId);
+    .flatMap((section) => section.chapters)
+    .find((chapter) => chapter?.id === chapterId);
 
   if (!chapter) {
     throw new ApiError(404, "Chapter not found");
@@ -646,17 +687,23 @@ export const getFreeChapterVideo = asyncHandler(async (req, res) => {
     throw new ApiError(403, "This is a premium chapter");
   }
 
-  return res.status(200).json(
-    new ApiResponsive(
-      200,
-      { videoUrl: chapter.videoUrl },
-      "Chapter video URL retrieved successfully"
-    )
-  );
+  return res
+    .status(200)
+    .json(
+      new ApiResponsive(
+        200,
+        { videoUrl: chapter.videoUrl },
+        "Chapter video URL retrieved successfully"
+      )
+    );
 });
 
 export const updateCourse = asyncHandler(async (req, res) => {
   const { slug } = req.params;
+  console.log("--------------------------------------------------");
+  console.log("UPDATE COURSE REQUEST - Original slug:", slug);
+  console.log("Full request body:", JSON.stringify(req.body, null, 2));
+
   const {
     title,
     description,
@@ -673,25 +720,36 @@ export const updateCourse = asyncHandler(async (req, res) => {
     isPopular,
     isTrending,
     isBestseller,
-    categoryId
+    categoryId,
+    validityDays,
   } = req.body;
+
+  // Get the slug directly from the request body
+  const updatedSlug = req.body.slug;
+  console.log("Requested slug update value:", updatedSlug);
 
   // Verify course exists
   const checkCourse = await prisma.course.findUnique({
     where: { slug },
-    include: { category: true }
+    include: { category: true },
   });
 
   if (!checkCourse) {
     throw new ApiError(404, "Course not found");
   }
 
+  console.log("Found existing course:", {
+    id: checkCourse.id,
+    title: checkCourse.title,
+    currentSlug: checkCourse.slug,
+  });
+
   // Build update data
   const updateData = {};
 
-  if (title !== undefined) updateData.title = title.toLowerCase();
+  if (title !== undefined) updateData.title = title;
   if (description !== undefined) updateData.description = description;
-  if (language !== undefined) updateData.language = language.toLowerCase();
+  if (language !== undefined) updateData.language = language;
   if (subheading !== undefined) updateData.subheading = subheading.trim();
   if (metaTitle !== undefined) updateData.metaTitle = metaTitle;
   if (metaDesc !== undefined) updateData.metaDesc = metaDesc;
@@ -703,13 +761,49 @@ export const updateCourse = asyncHandler(async (req, res) => {
   if (isTrending !== undefined) updateData.isTrending = isTrending;
   if (isBestseller !== undefined) updateData.isBestseller = isBestseller;
   if (price !== undefined) updateData.price = price ? parseFloat(price) : 0;
-  if (salePrice !== undefined) updateData.salePrice = salePrice ? parseFloat(salePrice) : 0;
+  if (salePrice !== undefined)
+    updateData.salePrice = salePrice ? parseFloat(salePrice) : 0;
+  if (validityDays !== undefined)
+    updateData.validityDays = parseInt(validityDays, 10) || 0;
+
+  // Handle slug update - directly use the slug from request
+  if (updatedSlug !== undefined) {
+    console.log(
+      "Processing slug update from:",
+      checkCourse.slug,
+      "to:",
+      updatedSlug
+    );
+
+    // Format the slug
+    const formattedSlug = createSlug(updatedSlug);
+    console.log("Formatted slug:", formattedSlug);
+
+    // Check if the new slug already exists for another course
+    if (formattedSlug !== checkCourse.slug) {
+      const existingCourse = await prisma.course.findUnique({
+        where: { slug: formattedSlug },
+      });
+
+      if (existingCourse && existingCourse.id !== checkCourse.id) {
+        console.log("Slug conflict detected with course:", existingCourse.id);
+        throw new ApiError(400, "Slug already in use by another course");
+      }
+
+      updateData.slug = formattedSlug;
+      console.log("Setting new slug in update data:", formattedSlug);
+    } else {
+      console.log("Formatted slug matches current slug - no change needed");
+    }
+  } else {
+    console.log("No slug update requested");
+  }
 
   // Handle category update
   if (categoryId !== undefined) {
     // Verify category exists
     const category = await prisma.category.findUnique({
-      where: { id: categoryId }
+      where: { id: categoryId },
     });
 
     if (!category) {
@@ -719,18 +813,34 @@ export const updateCourse = asyncHandler(async (req, res) => {
     updateData.categoryId = categoryId;
   }
 
-  // Update course
-  const updatedCourse = await prisma.course.update({
-    where: { slug },
-    data: updateData,
-    include: {
-      category: true
-    }
-  });
+  console.log("Final update data:", JSON.stringify(updateData, null, 2));
 
-  return res
-    .status(200)
-    .json(new ApiResponsive(200, updatedCourse, "Course updated successfully"));
+  try {
+    // Update course
+    const updatedCourse = await prisma.course.update({
+      where: { slug },
+      data: updateData,
+      include: {
+        category: true,
+      },
+    });
+
+    console.log("Successfully updated course:", {
+      id: updatedCourse.id,
+      title: updatedCourse.title,
+      newSlug: updatedCourse.slug,
+    });
+    console.log("--------------------------------------------------");
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponsive(200, updatedCourse, "Course updated successfully")
+      );
+  } catch (error) {
+    console.error("Error updating course:", error);
+    throw new ApiError(500, `Failed to update course: ${error.message}`);
+  }
 });
 
 export const toggleCourseProperty = asyncHandler(async (req, res) => {
@@ -806,10 +916,10 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
       prisma.course.findMany({
         where: {
           isPublished: true,
-          isFeatured: true
+          isFeatured: true,
         },
         take: 4,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           title: true,
@@ -823,20 +933,20 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           language: true,
           category: {
             select: {
-              name: true
-            }
-          }
-        }
+              name: true,
+            },
+          },
+        },
       }),
 
       // Popular Courses
       prisma.course.findMany({
         where: {
           isPublished: true,
-          isPopular: true
+          isPopular: true,
         },
         take: 4,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           title: true,
@@ -850,20 +960,20 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           language: true,
           category: {
             select: {
-              name: true
-            }
-          }
-        }
+              name: true,
+            },
+          },
+        },
       }),
 
       // Trending Courses
       prisma.course.findMany({
         where: {
           isPublished: true,
-          isTrending: true
+          isTrending: true,
         },
         take: 4,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           title: true,
@@ -877,20 +987,20 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           language: true,
           category: {
             select: {
-              name: true
-            }
-          }
-        }
+              name: true,
+            },
+          },
+        },
       }),
 
       // Bestseller Courses
       prisma.course.findMany({
         where: {
           isPublished: true,
-          isBestseller: true
+          isBestseller: true,
         },
         take: 4,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           title: true,
@@ -904,19 +1014,19 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           language: true,
           category: {
             select: {
-              name: true
-            }
-          }
-        }
+              name: true,
+            },
+          },
+        },
       }),
       // Free Courses
       prisma.course.findMany({
         where: {
           isPublished: true,
-          paid: false
+          paid: false,
         },
         take: 4,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           title: true,
@@ -929,11 +1039,11 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           language: true,
           category: {
             select: {
-              name: true
-            }
-          }
-        }
-      })
+              name: true,
+            },
+          },
+        },
+      }),
     ]);
 
     return res.status(200).json(
@@ -942,7 +1052,7 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
         popular: popular.length > 0 ? popular : null,
         trending: trending.length > 0 ? trending : null,
         bestseller: bestseller.length > 0 ? bestseller : null,
-        free: free.length > 0 ? free : null
+        free: free.length > 0 ? free : null,
       })
     );
   } catch (error) {

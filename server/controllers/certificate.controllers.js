@@ -36,7 +36,7 @@ const generateCertificatePDF = async (certificateData) => {
     doc.fontSize(36)
         .font('Times-Bold')
         .fillColor('#002366')
-        .text('MONARK FX-FINANCE MARKET INSTITUTE', {
+        .text('MonarkFX - Global Trading Excellence', {
             align: 'center'
         })
         .moveDown(0.5);

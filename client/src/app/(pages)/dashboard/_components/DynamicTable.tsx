@@ -78,12 +78,15 @@ export function DynamicTable({
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const router = useRouter();
-  const { checkAuth } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
-      const isAuth = await checkAuth();
-      if (!isAuth) {
+      // Wait for auth to complete loading first
+      if (authLoading) return;
+
+      // If not authenticated, don't fetch data
+      if (!isAuthenticated) {
         setLoading(false);
         return;
       }
@@ -121,7 +124,7 @@ export function DynamicTable({
     };
 
     fetchData();
-  }, [apiUrl, checkAuth, currentPage]);
+  }, [apiUrl, currentPage, isAuthenticated, authLoading]);
 
   const handleNavigation = (type: string, slug: string) => {
     switch (type) {
@@ -184,39 +187,35 @@ export function DynamicTable({
   };
 
   const renderLoadingSkeleton = () => (
-    <div className="container mx-auto w-full">
-      <div className="w-full overflow-x-auto">
-        <div className="min-w-full rounded-lg shadow-sm">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableHead key={column.key} className="min-w-[150px]">
-                    <Skeleton className="h-4 w-full" />
-                  </TableHead>
-                ))}
-                <TableHead className="min-w-[100px]">
-                  <Skeleton className="h-4 w-20" />
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {[...Array(5)].map((_, i) => (
-                <TableRow key={i}>
-                  {columns.map((column) => (
-                    <TableCell key={column.key} className="min-w-[150px]">
-                      <Skeleton className="h-4 w-full" />
-                    </TableCell>
-                  ))}
-                  <TableCell className="min-w-[100px]">
-                    <Skeleton className="h-8 w-20" />
-                  </TableCell>
-                </TableRow>
+    <div className="w-full overflow-hidden rounded-lg shadow-sm">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {columns.map((column) => (
+              <TableHead key={column.key}>
+                <Skeleton className="h-4 w-full" />
+              </TableHead>
+            ))}
+            <TableHead>
+              <Skeleton className="h-4 w-20" />
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {[...Array(5)].map((_, i) => (
+            <TableRow key={i}>
+              {columns.map((column) => (
+                <TableCell key={column.key}>
+                  <Skeleton className="h-4 w-full" />
+                </TableCell>
               ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+              <TableCell>
+                <Skeleton className="h-8 w-20" />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 
@@ -232,7 +231,6 @@ export function DynamicTable({
           <DropdownMenuContent align="end" className="w-[200px]">
             <DropdownMenuItem
               onClick={() => {
-                console.log(item);
                 handleNavigation("user", item.slug as string);
               }}
               className="cursor-pointer"
@@ -277,7 +275,15 @@ export function DynamicTable({
     );
   };
 
-  if (loading) return renderLoadingSkeleton();
+  if (loading || authLoading) return renderLoadingSkeleton();
+
+  if (!isAuthenticated) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">Please log in to view this content.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 overflow-hidden">

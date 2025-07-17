@@ -4,80 +4,86 @@ export const getVerificationTemplate = (verificationLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - MonarkFX Trading Platform</title>
+    <title>Verify Your Email - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f5f5f5;
+            color: #e2e2e2;
+            background-color: #000000;
             margin: 0;
             padding: 0;
         }
         .container {
             max-width: 600px;
             margin: 20px auto;
-            background-color: #ffffff;
+            background-color: #0a0a0a;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.1);
         }
         .header {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
+            background: linear-gradient(135deg, #1a1a1a, #000000);
+            border-bottom: 2px solid #ff0000;
             color: #ffffff;
             text-align: center;
             padding: 40px;
         }
         .content {
             padding: 40px;
+            background: linear-gradient(180deg, #0a0a0a, #000000);
         }
         h1 {
             margin: 0;
             font-size: 32px;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
         }
         h2 {
-            color: #1a1a1a;
+            color: #ff0000;
             font-size: 24px;
             margin-top: 0;
         }
         p {
             margin-bottom: 20px;
             font-size: 16px;
-            color: #333333;
+            color: #cccccc;
         }
         .button {
             display: inline-block;
             padding: 15px 35px;
-            background: linear-gradient(135deg, #ff0000, #cc0000);
+            background: linear-gradient(135deg, #ff0000, #990000);
             color: #ffffff;
             text-decoration: none;
-            border-radius: 50px;
+            border-radius: 8px;
             font-weight: bold;
             font-size: 18px;
             text-align: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.3);
         }
         .button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
         }
         .features {
-            background-color: #f8f9fa;
+            background-color: #1a1a1a;
             padding: 30px;
             border-radius: 8px;
             margin-top: 30px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255, 0, 0, 0.1);
         }
         .feature-item {
             margin-bottom: 20px;
             padding-left: 30px;
             position: relative;
+            color: #cccccc;
         }
         .feature-item:before {
-            content: '✓';
+            content: '➜';
             position: absolute;
             left: 0;
             color: #ff0000;
@@ -87,43 +93,41 @@ export const getVerificationTemplate = (verificationLink) => `
             text-align: center;
             padding: 20px;
             font-size: 14px;
-            color: #666666;
-            background-color: #f8f8f8;
+            color: #888888;
+            background-color: #0a0a0a;
+            border-top: 1px solid rgba(255, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Welcome to MonarkFX!</h1>
+            <h1>Welcome to MonarkFX Trading Academy</h1>
         </div>
         <div class="content">
             <h2>Begin Your Trading Journey</h2>
             <p>Dear Valued Trader,</p>
-            <p>Welcome to MonarkFX, your premier platform for stock market trading and financial success. To activate your trading account and ensure security, please verify your email address:</p>
-            <a href="${verificationLink}" class="button">Verify Email & Start Trading</a>
-            <p>Once verified, you'll gain access to:</p>
+            <p>Welcome to MonarkFX - Global Trading Excellence. You're about to join an elite community of traders and investors. Our expert-led programs will guide you through:</p>
+            
             <div class="features">
-                <div class="feature-item">
-                    Real-time market analysis and trading signals
-                </div>
-                <div class="feature-item">
-                    Advanced trading tools and indicators
-                </div>
-                <div class="feature-item">
-                    Professional trading strategies
-                </div>
-                <div class="feature-item">
-                    Expert market insights and research
-                </div>
-                <div class="feature-item">
-                    24/7 trading support and guidance
-                </div>
+                <div class="feature-item">Advanced Stock Market Strategies</div>
+                <div class="feature-item">Professional Forex Trading Techniques</div>
+                <div class="feature-item">Cryptocurrency Market Analysis</div>
+                <div class="feature-item">Risk Management & Portfolio Optimization</div>
+                <div class="feature-item">Real-time Market Analysis Tools</div>
             </div>
-            <p>If you didn't create an account with MonarkFX, please disregard this email.</p>
+
+            <p style="margin-top: 30px;">To begin your journey towards financial mastery, please verify your email address:</p>
+            
+            <center style="margin: 30px 0;">
+                <a href="${verificationLink}" class="button">Verify Email & Start Trading</a>
+            </center>
+            
+            <p>If you didn't create an account with MonarkFX Trading Academy, please disregard this email.</p>
         </div>
         <div class="footer">
-            © 2021 MonarkFX Trading Platform | Terms of Service | Privacy Policy<br>
+            © ${new Date().getFullYear()} MonarkFX - Global Trading Excellence<br>
+            Professional Trading Education & Market Analysis<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>
@@ -137,7 +141,7 @@ export const getDeleteTemplate = (deletionLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Deletion Request - MonarkFX Trading Platform</title>
+    <title>Account Deletion Request - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -237,36 +241,33 @@ export const getDeleteTemplate = (deletionLink) => `
 <body>
     <div class="container">
         <div class="header">
-            <h1>We Value Your Trading Journey</h1>
+            <h1>We Value Your Musical Journey</h1>
         </div>
         <div class="content">
             <h2>Account Deletion Request</h2>
-            <p>Dear Valued Trader,</p>
-            <p>We've received a request to delete your MonarkFX trading account. Before proceeding, we want to ensure this is your intended action, as it will affect your trading access and history.</p>
+            <p>Dear Valued Student,</p>
+            <p>We've received a request to delete your MonarkFX - Global Trading Excellence account. Before proceeding, we want to ensure this is your intended action, as it will affect your access to classes, learning materials, and progress records.</p>
             <p>If you're certain about deleting your account, please click the button below:</p>
             <a href="${deletionLink}" class="button">Confirm Account Deletion</a>
             <div class="warning">
-                <strong>Warning:</strong> This action is irreversible. Once deleted, all your trading history, analysis settings, and personal data will be permanently removed from our systems.
+                <strong>Warning:</strong> This action is irreversible. Once deleted, all your learning history, course progress, and personal data will be permanently removed from our systems.
             </div>
             <div class="alternatives">
                 <h3>Consider these alternatives:</h3>
                 <div class="alternative-item">
-                    Temporarily deactivate your trading account
+                    Temporarily pause your learning journey
                 </div>
                 <div class="alternative-item">
-                    Adjust your trading preferences and alerts
+                    Discuss options with your Guru or instructor
                 </div>
                 <div class="alternative-item">
-                    Consult with our trading experts
-                </div>
-                <div class="alternative-item">
-                    Contact our 24/7 support team
+                    Contact our support team for assistance
                 </div>
             </div>
-            <p>If you didn't request this deletion, please contact our support team immediately at support@monarkfx.com.</p>
+            <p>If you didn't request this deletion, please contact our support team immediately at monarkfx@gmail.com.</p>
         </div>
         <div class="footer">
-            © 2021 MonarkFX Trading Platform | Terms of Service | Privacy Policy<br>
+            © ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>
@@ -280,7 +281,7 @@ export const getResetTemplate = (resetLink) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Your Password - MonarkFX Trading Platform</title>
+    <title>Reset Your Password - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -352,17 +353,17 @@ export const getResetTemplate = (resetLink) => `
 <body>
     <div class="container">
         <div class="header">
-            <h1>Secure Your Trading Account</h1>
+            <h1>Secure Your Account</h1>
         </div>
         <div class="content">
             <h2>Reset Your Password</h2>
-            <p>Dear Valued Trader,</p>
-            <p>We received a request to reset the password for your MonarkFX trading account. To ensure the security of your account and maintain uninterrupted access to your trading activities, please click the button below:</p>
+            <p>Dear Valued Student,</p>
+            <p>We received a request to reset the password for your MonarkFX - Global Trading Excellence account. To ensure the security of your account and maintain uninterrupted access to your music lessons and resources, please click the button below:</p>
             <a href="${resetLink}" class="button">Reset Password</a>
-            <p>If you didn't request this password reset, please contact our security team immediately at security@monarkfx.com.</p>
+            <p>If you didn't request this password reset, please contact our support team immediately at monarkfx@gmail.com</p>
         </div>
         <div class="footer">
-            © 2021 MonarkFX Trading Platform | Terms of Service | Privacy Policy<br>
+            © ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute<br>
             This is an automated message. Please do not reply to this email.
         </div>
     </div>
@@ -376,7 +377,7 @@ export const getFeeReceiptTemplate = (data) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fee Payment Receipt - MonarkFX</title>
+    <title>Fee Payment Receipt - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -453,16 +454,16 @@ export const getFeeReceiptTemplate = (data) => `
         <div class="content">
             <h2>Fee Payment Receipt</h2>
             <p>Dear ${data.userName},</p>
-            <p>Thank you for your payment. Your transaction was successful.</p>
+            <p>Thank you for your payment. Your transaction for music education fees was successful.</p>
             <div class="payment-details">
                 <p><strong>Amount Paid:</strong> ₹${data.amount}</p>
                 <p><strong>Payment ID:</strong> ${data.paymentId}</p>
                 <p><strong>Date:</strong> ${new Date(data.date).toLocaleDateString()}</p>
             </div>
-            <p>Please find your receipt attached to this email.</p>
+            <p>Please find your receipt attached to this email. We look forward to continuing your musical journey with us.</p>
         </div>
         <div class="footer">
-            © ${new Date().getFullYear()} MonarkFX Trading Platform<br>
+            © ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute<br>
             This is an automated message. Please do not reply.
         </div>
     </div>
@@ -476,7 +477,7 @@ export const getFeeNotificationTemplate = (data) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Fee Assignment - MonarkFX</title>
+    <title>New Fee Assignment - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -563,6 +564,12 @@ export const getFeeNotificationTemplate = (data) => `
                     <span>${data.description}</span>
                 </div>
                 ` : ''}
+                ${data.lateFeeDate ? `
+                <div class="fee-item">
+                    <strong>Late Fee After:</strong>
+                    <span class="important">${new Date(data.lateFeeDate).toLocaleDateString()}</span>
+                </div>
+                ` : ''}
                 ${data.lateFeeAmount ? `
                 <div class="fee-item">
                     <strong>Late Fee Amount:</strong>
@@ -570,11 +577,11 @@ export const getFeeNotificationTemplate = (data) => `
                 </div>
                 ` : ''}
             </div>
-            <p>Please ensure timely payment to avoid any late fees.</p>
+            <p>Please ensure timely payment to continue your uninterrupted musical education with us.</p>
             <a href="${process.env.FRONTEND_URL}/dashboard/fees" class="btn">View Fee Details</a>
         </div>
         <div class="footer">
-            <p>© ${new Date().getFullYear()} MonarkFX Trading Platform</p>
+            <p>© ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute</p>
             <p>This is an automated message. Please do not reply to this email.</p>
         </div>
     </div>
@@ -588,7 +595,7 @@ export const getPaymentSuccessTemplate = (data) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Successful - MonarkFX</title>
+    <title>Payment Successful - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -657,7 +664,7 @@ export const getPaymentSuccessTemplate = (data) => `
         </div>
         <div class="content">
             <p>Dear ${data.userName},</p>
-            <p>Your payment has been successfully processed. Here are your transaction details:</p>
+            <p>Your payment for music education fees has been successfully processed. Here are your transaction details:</p>
             
             <div class="payment-details">
                 <div class="detail-row">
@@ -673,17 +680,27 @@ export const getPaymentSuccessTemplate = (data) => `
                     <span>${data.paymentId}</span>
                 </div>
                 <div class="detail-row">
+                    <strong>Date:</strong>
+                    <span>${new Date(data.date).toLocaleString('en-IN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+})}</span>
+                </div>
+                <div class="detail-row">
                     <strong>Fee Type:</strong>
                     <span>${data.feeTitle}</span>
                 </div>
             </div>
 
             <p>Your payment receipt has been attached to this email for your records.</p>
-            <p>Thank you for your prompt payment!</p>
+            <p>Thank you for your prompt payment! We look forward to continuing our musical journey together.</p>
         </div>
         <div class="footer">
-            <p>© ${new Date().getFullYear()} MonarkFX Trading Platform</p>
-            <p>For any queries, please contact our support team at support@monarkfx.com</p>
+            <p>© ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute</p>
+            <p>For any queries, please contact our support team at monarkfx@gmail.com</p>
         </div>
     </div>
 </body>
@@ -696,7 +713,7 @@ export const getPaymentFailureTemplate = (data) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Failed - MonarkFX</title>
+    <title>Payment Failed - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -760,7 +777,7 @@ export const getPaymentFailureTemplate = (data) => `
         </div>
         <div class="content">
             <p>Dear ${data.userName},</p>
-            <p>We're sorry, but your recent payment attempt was unsuccessful.</p>
+            <p>We're sorry, but your recent payment attempt for music education fees was unsuccessful.</p>
             
             <div class="error-box">
                 <h3>Transaction Details:</h3>
@@ -785,8 +802,8 @@ export const getPaymentFailureTemplate = (data) => `
             </a>
         </div>
         <div class="footer">
-            <p>© ${new Date().getFullYear()} MonarkFX Trading Platform</p>
-            <p>Need help? Contact our support team at support@monarkfx.com</p>
+            <p>© ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute</p>
+            <p>Need help? Contact our support team at monarkfx@gmail.com</p>
         </div>
     </div>
 </body>
@@ -814,7 +831,7 @@ export const getFeeUpdateTemplate = ({ name, feeTitle, oldAmount, newAmount, old
         </div>
         <div class="content">
             <p>Dear ${name},</p>
-            <p>This is to inform you that there has been an update to your fee: <strong>${feeTitle}</strong></p>
+            <p>This is to inform you that there has been an update to your music education fee: <strong>${feeTitle}</strong></p>
             
             <div class="details">
                 <h3>Update Details:</h3>
@@ -823,10 +840,10 @@ export const getFeeUpdateTemplate = ({ name, feeTitle, oldAmount, newAmount, old
                 <p><strong>Reason:</strong> ${reason}</p>
             </div>
 
-            <p>If you have any questions, please contact our support team.</p>
+            <p>If you have any questions about this update, please contact our support team.</p>
         </div>
         <div class="footer">
-            <p>MonarkFX - Global Trading Excellence</p>
+            <p>MonarkFX - Global Trading Excellence | Indian Classical Music Institute</p>
             <small>This is an automated message, please do not reply.</small>
         </div>
     </div>
@@ -840,7 +857,7 @@ export const getCertificateGeneratedTemplate = (data) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Generated - MonarkFX</title>
+    <title>Certificate Generated - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -930,26 +947,137 @@ export const getCertificateGeneratedTemplate = (data) => `
             <h1>Congratulations!</h1>
         </div>
         <div class="content">
-            <h2>Course Completion Achievement</h2>
+            <h2>Musical Achievement Accomplished</h2>
             <p>Dear ${data.userName},</p>
             <p>We are delighted to inform you that you have successfully completed the course:</p>
             <h3 style="color: #cc0000;">${data.courseName}</h3>
             
             <div class="certificate-info">
-                <p><strong>Your certificate has been generated!</strong></p>
+                <p><strong>Your certificate of musical excellence has been generated!</strong></p>
                 <p>Certificate ID: <span class="certificate-id">${data.certificateId}</span></p>
-                <p>You can now access and download your certificate from your profile.</p>
+                <p>You can now access and download your certificate from your profile. This marks an important milestone in your musical journey with us.</p>
             </div>
 
             <center>
                 <a href="${process.env.FRONTEND_URL}/user-profile" class="button">View Certificate</a>
             </center>
 
-            <p>This certificate validates your dedication and commitment to learning. Keep up the excellent work!</p>
+            <p>This certificate validates your dedication to Indian classical music and your commitment to learning. Continue on the path of musical excellence!</p>
         </div>
         <div class="footer">
-            © ${new Date().getFullYear()} MonarkFX Trading Platform<br>
+            © ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute<br>
             This is an automated message. Please do not reply to this email.
+        </div>
+    </div>
+</body>
+</html>
+`;
+
+export const getContactFormTemplate = (data) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Form Submission - MonarkFX - Global Trading Excellence</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: #ffffff;
+            text-align: center;
+            padding: 30px;
+        }
+        .content {
+            padding: 30px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        h2 {
+            color: #1a1a1a;
+            font-size: 22px;
+            margin-top: 0;
+        }
+        .message-box {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .contact-details {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #666666;
+            background-color: #f8f8f8;
+        }
+        .detail-row {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-weight: bold;
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Music Inquiry</h1>
+        </div>
+        <div class="content">
+            <h2>${data.subject || 'Inquiry About Music Education'}</h2>
+            
+            <div class="message-box">
+                <p>${data.message}</p>
+            </div>
+            
+            <div class="contact-details">
+                <div class="detail-row">
+                    <span class="detail-label">Name:</span>
+                    <span>${data.name}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span>${data.email}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Phone:</span>
+                    <span>${data.phone}</span>
+                </div>
+            </div>
+            
+            <p>Please respond to this inquiry about our music programs at your earliest convenience.</p>
+        </div>
+        <div class="footer">
+            © ${new Date().getFullYear()} MonarkFX - Global Trading Excellence | Indian Classical Music Institute<br>
+            This is an automated message from your website contact form.
         </div>
     </div>
 </body>

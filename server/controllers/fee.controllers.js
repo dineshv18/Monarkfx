@@ -84,17 +84,17 @@ export const createFee = asyncHandler(async (req, res) => {
         });
 
         // Send email notification
-        // await SendEmail({
-        //     email: student.email,
-        //     subject: "New Fee Assignment",
-        //     message: {
-        //         title: fee.title,
-        //         amount: fee.amount,
-        //         dueDate: fee.dueDate,
-        //         description: fee.description || "No description provided"
-        //     },
-        //     emailType: "FEE_NOTIFICATION"
-        // });
+        await SendEmail({
+            email: student.email,
+            subject: "New Fee Assignment",
+            message: {
+                title: fee.title,
+                amount: fee.amount,
+                dueDate: fee.dueDate,
+                description: fee.description || "No description provided"
+            },
+            emailType: "FEE_NOTIFICATION"
+        });
 
         return res.status(201).json(
             new ApiResponsive(201, fee, "Fee created successfully")
@@ -260,22 +260,22 @@ export const updateFee = asyncHandler(async (req, res) => {
             }
         });
 
-        // await SendEmail({
-        //     email: existingFee.user.email,
-        //     subject: "Fee Details Updated - MonarkFX",
-        //     message: {
-        //         name: existingFee.user.name,
-        //         feeTitle: updatedFee.title,
-        //         oldAmount: existingFee.amount,
-        //         newAmount: updateData.amount || existingFee.amount,
-        //         oldDate: new Date(existingFee.dueDate).toLocaleDateString('en-IN'),
-        //         newDate: updateData.dueDate ?
-        //             new Date(updateData.dueDate).toLocaleDateString('en-IN') :
-        //             new Date(existingFee.dueDate).toLocaleDateString('en-IN'),
-        //         reason: updateData.description || "Fee details have been updated"
-        //     },
-        //     emailType: "FEE_UPDATE"
-        // });
+        await SendEmail({
+            email: existingFee.user.email,
+            subject: "Fee Details Updated - MonarkFX - Global Trading Excellence ",
+            message: {
+                name: existingFee.user.name,
+                feeTitle: updatedFee.title,
+                oldAmount: existingFee.amount,
+                newAmount: updateData.amount || existingFee.amount,
+                oldDate: new Date(existingFee.dueDate).toLocaleDateString('en-IN'),
+                newDate: updateData.dueDate ?
+                    new Date(updateData.dueDate).toLocaleDateString('en-IN') :
+                    new Date(existingFee.dueDate).toLocaleDateString('en-IN'),
+                reason: updateData.description || "Fee details have been updated"
+            },
+            emailType: "FEE_UPDATE"
+        });
 
         // Add validation before sending
         if (!existingFee.user.email || !existingFee.user.name) {
@@ -412,7 +412,7 @@ export const verifyFeePayment = asyncHandler(async (req, res) => {
             email: req.user.email,
             subject: "Payment Confirmation",
             message: {
-                title: "Payment Successful - MonarkFX",
+                title: "Payment Successful - MonarkFX - Global Trading Excellence ",
                 userName: req.user.name,
                 amount: amount,
                 feeTitle: currentFee.title,

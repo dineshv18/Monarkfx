@@ -30,7 +30,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Edit, Trash, Download, Loader2 } from "lucide-react"
+import { Edit, Trash, Download } from "lucide-react"
 import { toast } from "sonner"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
@@ -64,9 +64,6 @@ interface Fee {
     totalPaid: number
     remaining: number
     payments: any[]
-    gracePeriod?: number
-    isRecurring?: boolean
-    recurringDuration?: number
 }
 
 interface Student {
@@ -92,8 +89,6 @@ const EDITABLE_FIELDS: EditableField[] = [
     { key: "description", label: "Description" },
     { key: "lateFeeDate", label: "Late Fee Date" },
     { key: "lateFeeAmount", label: "Late Fee Amount" },
-    { key: "gracePeriod", label: "Grace Period" },
-    { key: "status", label: "Status" },
 ]
 
 // Add this type for custom badge variants
@@ -218,11 +213,10 @@ const FeeAnalytics = () => {
                 </CardContent>
             </Card>
 
-
+            {/* Recent Payments */}
             <Card className="col-span-full">
                 <CardHeader>
                     <CardTitle>Recent Payments</CardTitle>
-                    <CardDescription>Latest fee transactions</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -231,51 +225,16 @@ const FeeAnalytics = () => {
                                 <TableHead>Student</TableHead>
                                 <TableHead>Amount</TableHead>
                                 <TableHead>Fee Type</TableHead>
-                                <TableHead>Payment Date</TableHead>
-                                <TableHead>Status</TableHead>
+                                <TableHead>Date</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {analytics?.recentPayments.map((payment: any) => (
                                 <TableRow key={payment.id}>
-                                    <TableCell>
-                                        <div className="flex flex-col gap-1">
-                                            <span className="font-medium">
-                                                {payment.user.name}
-                                            </span>
-                                            <span className="text-xs text-muted-foreground">
-                                                {payment.user.email}
-                                            </span>
-                                            {payment.user.isOffline && (
-                                                <Badge variant="secondary" className="w-fit text-xs">
-                                                    Offline
-                                                </Badge>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="font-medium">₹{payment.amount}</div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Badge variant="outline">
-                                            {payment.fee.type}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex flex-col">
-                                            <span>{format(new Date(payment.createdAt), "PP")}</span>
-                                            <span className="text-xs text-muted-foreground">
-                                                {format(new Date(payment.createdAt), "p")}
-                                            </span>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <CustomBadge
-                                            variant={payment.status === "SUCCESS" ? "success" : "default"}
-                                        >
-                                            {payment.status}
-                                        </CustomBadge>
-                                    </TableCell>
+                                    <TableCell>{payment.user.name}</TableCell>
+                                    <TableCell>₹{payment.amount}</TableCell>
+                                    <TableCell>{payment.fee.type}</TableCell>
+                                    <TableCell>{new Date(payment.createdAt).toLocaleDateString()}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -285,16 +244,6 @@ const FeeAnalytics = () => {
         </div>
     )
 }
-
-// Add these styles near the top of your file
-const fieldStyles = {
-    container: "bg-white p-4 rounded-lg border border-gray-100 shadow-sm",
-    label: "text-sm font-medium text-gray-700 mb-1",
-    input: "w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary",
-    select: "w-full rounded-md border-gray-300 focus:border-primary focus:ring-primary",
-    error: "text-sm text-red-500 mt-1",
-};
-
 interface FeeFormData {
     title: string
     amount: number
@@ -305,10 +254,6 @@ interface FeeFormData {
     dueDate?: string
     isOfflineFee?: boolean
     userId: string
-    gracePeriod?: number
-    recurringDuration?: number
-    isRecurring?: boolean
-    status?: string
 }
 export default function FeesPage() {
     const [fees, setFees] = useState<Fee[]>([])
@@ -321,8 +266,7 @@ export default function FeesPage() {
         handleSubmit,
         control,
         reset,
-        formState: { errors },
-        watch
+        formState: { errors }
     } = useForm<FeeFormData>({
         defaultValues: {
             title: '',
@@ -331,11 +275,7 @@ export default function FeesPage() {
             description: '',
             lateFeeAmount: 0,
             lateFeeDate: '',
-            dueDate: '',
-            gracePeriod: 0,
-            recurringDuration: 0,
-            isRecurring: false,
-            status: 'PENDING'
+            dueDate: ''
         }
     });
     const [editDate, setEditDate] = useState<Date>()
@@ -347,7 +287,7 @@ export default function FeesPage() {
     const [editFormData, setEditFormData] = useState<any>(null)
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const gracePeriodValue = watch("gracePeriod") ?? 0; // Default to 0 if undefined
+
 
     useEffect(() => {
         fetchFees()
@@ -418,8 +358,7 @@ export default function FeesPage() {
                 description: data.description || null,
                 lateFeeDate: data.lateFeeDate ? format(new Date(data.lateFeeDate), "yyyy-MM-dd") : null,
                 lateFeeAmount: data.lateFeeAmount ? Number.parseFloat(data.lateFeeAmount) : null,
-                isOfflineFee: data.isOfflineFee || false,
-                gracePeriod: data.gracePeriod || 0
+                isOfflineFee: data.isOfflineFee || false
             }
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/fees/create`, {
@@ -446,75 +385,42 @@ export default function FeesPage() {
 
     const handleEditClick = (fee: Fee) => {
         setSelectedFee(fee);
-
-        // Set all form data with existing values
-        reset({
-            title: fee.title,
-            amount: fee.amount,
-            type: fee.type,
-            description: fee.description || "",
-            lateFeeAmount: fee.lateFeeAmount || 0,
-            gracePeriod: fee.gracePeriod || 0,
-            status: fee.status,
-            isRecurring: fee.isRecurring || false,
-            recurringDuration: fee.recurringDuration || 0
-        });
-
-        // Set edit form data for reference
         setEditFormData({
             title: fee.title,
             amount: fee.amount,
+            dueDate: new Date(fee.dueDate),
             type: fee.type,
             description: fee.description || "",
-            lateFeeAmount: fee.lateFeeAmount || 0,
-            gracePeriod: fee.gracePeriod || 0,
-            status: fee.status,
-            isRecurring: fee.isRecurring || false,
-            recurringDuration: fee.recurringDuration || 0
+            lateFeeDate: fee.lateFeeDate ? new Date(fee.lateFeeDate) : undefined,
+            lateFeeAmount: fee.lateFeeAmount || "",
         });
-
-        // Set dates if they exist
-        if (fee.dueDate) setEditDate(new Date(fee.dueDate));
-        if (fee.lateFeeDate) setEditLateFeeDate(new Date(fee.lateFeeDate));
-        // Select all fields by default
-        setSelectedFields(new Set<keyof Fee>([
-            'title',
-            'amount',
-            'type',
-            'description',
-            'dueDate',
-            'lateFeeDate',
-            'lateFeeAmount',
-            'gracePeriod',
-            'status'
-        ]));
-
+        setEditDate(new Date(fee.dueDate));
+        setEditLateFeeDate(fee.lateFeeDate ? new Date(fee.lateFeeDate) : undefined);
+        setSelectedFields(new Set()); // Reset selected fields
         setIsDialogOpen(true);
     };
-    const getSelectedStudent = (studentId: string) => {
-        return students.find(student => student.id === studentId);
-    };
+
     const onSubmitUpdate = async (formData: any) => {
         if (!selectedFee) {
             toast.error("No fee selected");
             return;
         }
 
+        if (selectedFields.size === 0) {
+            toast.error("No fields selected for update");
+            return;
+        }
+
         setIsSubmitting(true);
         try {
-            // Send all form data for selected fields
             const updateData = {
-                title: formData.title,
-                amount: Number(formData.amount),
-                type: formData.type,
-                description: formData.description,
-                dueDate: editDate ? format(editDate, "yyyy-MM-dd") : undefined,
-                lateFeeDate: editLateFeeDate ? format(editLateFeeDate, "yyyy-MM-dd") : undefined,
-                lateFeeAmount: formData.lateFeeAmount ? Number(formData.lateFeeAmount) : undefined,
-                gracePeriod: formData.gracePeriod ? Number(formData.gracePeriod) : undefined,
-                status: formData.status,
-                isRecurring: formData.isRecurring || false,
-                recurringDuration: formData.recurringDuration ? Number(formData.recurringDuration) : undefined
+                ...(selectedFields.has('title') && { title: formData.title }),
+                ...(selectedFields.has('amount') && { amount: Number.parseFloat(formData.amount) }),
+                ...(selectedFields.has('type') && { type: formData.type }),
+                ...(selectedFields.has('description') && { description: formData.description }),
+                ...(selectedFields.has('dueDate') && { dueDate: format(editDate!, "yyyy-MM-dd") }),
+                ...(selectedFields.has('lateFeeDate') && { lateFeeDate: format(editLateFeeDate!, "yyyy-MM-dd") }),
+                ...(selectedFields.has('lateFeeAmount') && { lateFeeAmount: Number.parseFloat(formData.lateFeeAmount) })
             };
 
             const response = await axios.patch(
@@ -522,17 +428,15 @@ export default function FeesPage() {
                 updateData,
                 { withCredentials: true }
             );
-
             if (response.data?.success) {
                 toast.success("Fee updated successfully");
-                setIsDialogOpen(false);
                 await fetchFees();
-            } else {
-                toast.error("Failed to update fee");
+                setIsDialogOpen(false);
+                setEditDate(undefined);
+                reset();
             }
         } catch (error: any) {
-            console.error("Error updating fee:", error);
-            toast.error(error.response?.data?.message || "Failed to update fee");
+            toast.error(error.response?.data?.message || error.message || "Update failed");
         } finally {
             setIsSubmitting(false);
         }
@@ -613,19 +517,6 @@ export default function FeesPage() {
         XLSX.writeFile(wb, `fees_report_${format(new Date(), "dd-MM-yyyy")}.xlsx`)
     }
 
-    // Add this function to handle field selection
-    const handleFieldSelection = (field: keyof Fee) => {
-        setSelectedFields(prev => {
-            const newSet = new Set(prev)
-            if (newSet.has(field)) {
-                newSet.delete(field)
-            } else {
-                newSet.add(field)
-            }
-            return newSet
-        })
-    }
-
     if (loading) return <FeeTableSkeleton />
 
     return (
@@ -671,16 +562,7 @@ export default function FeesPage() {
                                     {fees.map((fee) => (
                                         <TableRow key={fee.id}>
                                             <TableCell className="font-medium">{fee.title}</TableCell>
-                                            <TableCell>
-                                                <div className="flex flex-col group cursor-default">
-                                                    <span className="font-medium group-hover:text-primary transition-colors">
-                                                        {fee.user.name}
-                                                    </span>
-                                                    <span className="text-xs text-muted-foreground group-hover:text-primary/70 transition-colors">
-                                                        {fee.user.email}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
+                                            <TableCell>{fee.user.name}</TableCell>
                                             <TableCell>₹{fee.amount}</TableCell>
                                             <TableCell>
                                                 <div className="flex flex-col">
@@ -691,9 +573,12 @@ export default function FeesPage() {
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                {fee.lateFeeAmount && fee.lateFeeAmount ? (
+                                                {fee.lateFeeAmount ? (
                                                     <div className="flex flex-col gap-1">
                                                         <span>₹{fee.lateFeeAmount}</span>
+                                                        <span className="text-xs text-muted-foreground">
+                                                            After {new Date(fee.lateFeeDate!).toLocaleDateString()}
+                                                        </span>
                                                     </div>
                                                 ) : (
                                                     "N/A"
@@ -724,89 +609,95 @@ export default function FeesPage() {
                                                             <Edit className="h-4 w-4" />
                                                         </Button>
                                                     </DialogTrigger>
-                                                    <DialogContent className="max-w-2xl max-h-[85vh]">
+                                                    <DialogContent className="max-w-md">
                                                         <DialogHeader>
-                                                            <DialogTitle className="text-xl font-semibold text-primary">
-                                                                Edit Fee Details
-                                                            </DialogTitle>
-                                                            <DialogDescription className="text-muted-foreground">
-                                                                Select the fields you want to update for {selectedFee?.user.name}
+                                                            <DialogTitle>Edit Fee Details</DialogTitle>
+                                                            <DialogDescription>
+                                                                Select fields you want to update for {fee.user.name}
                                                             </DialogDescription>
                                                         </DialogHeader>
 
-                                                        <ScrollArea className="max-h-[60vh] px-1">
-                                                            <form onSubmit={handleSubmit(onSubmitUpdate)} className="space-y-6">
-                                                                {/* Field Selection Section */}
-                                                                <div className="bg-gray-50 p-4 rounded-lg mb-6">
-                                                                    <h3 className="text-sm font-medium mb-3">Select Fields to Update</h3>
-                                                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                                                        {EDITABLE_FIELDS.map((field) => (
-                                                                            <div
-                                                                                key={field.key}
-                                                                                className={cn(
-                                                                                    "flex items-center space-x-2 p-2 rounded-md transition-colors",
-                                                                                    selectedFields.has(field.key) ? "bg-primary/10" : "hover:bg-gray-100"
-                                                                                )}
-                                                                            >
-                                                                                <input
-                                                                                    type="checkbox"
-                                                                                    id={`select-${field.key}`}
-                                                                                    checked={selectedFields.has(field.key)}
-                                                                                    onChange={() => handleFieldSelection(field.key)}
-                                                                                    className="rounded border-gray-300 text-primary focus:ring-primary"
-                                                                                />
-                                                                                <Label
-                                                                                    htmlFor={`select-${field.key}`}
-                                                                                    className="text-sm cursor-pointer"
-                                                                                >
-                                                                                    {field.label}
-                                                                                </Label>
-                                                                            </div>
-                                                                        ))}
-                                                                    </div>
+                                                        {selectedFields.size === 0 ? (
+                                                            <div className="space-y-4">
+                                                                <div className="grid grid-cols-2 gap-2">
+                                                                    {EDITABLE_FIELDS.map((field) => (
+                                                                        <Button
+                                                                            key={field.key}
+                                                                            variant="outline"
+                                                                            className={cn(
+                                                                                "justify-start",
+                                                                                selectedFields.has(field.key) && "border-primary"
+                                                                            )}
+                                                                            onClick={() => {
+                                                                                const newFields = new Set(selectedFields)
+                                                                                if (newFields.has(field.key)) {
+                                                                                    newFields.delete(field.key)
+                                                                                } else {
+                                                                                    newFields.add(field.key)
+                                                                                }
+                                                                                setSelectedFields(newFields)
+                                                                            }}
+                                                                            disabled={
+                                                                                field.key === 'amount' && fee.payments.length > 0 ||
+                                                                                fee.status === "PAID"
+                                                                            }
+                                                                        >
+                                                                            <span className="mr-2">
+                                                                                {selectedFields.has(field.key) ? "✓" : ""}
+                                                                            </span>
+                                                                            {field.label}
+                                                                        </Button>
+                                                                    ))}
                                                                 </div>
-
-                                                                {/* Form Fields Section */}
-                                                                <div className="space-y-4">
+                                                                {selectedFields.size > 0 && (
+                                                                    <Button
+                                                                        className="w-full mt-4"
+                                                                        onClick={() => {
+                                                                            // Continue to edit
+                                                                        }}
+                                                                    >
+                                                                        Continue to Edit
+                                                                    </Button>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            <ScrollArea className="max-h-[80vh] px-1">
+                                                                <form onSubmit={handleSubmit(onSubmitUpdate)} className="space-y-4">
                                                                     {selectedFields.has('title') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editTitle" className={fieldStyles.label}>
-                                                                                Title
-                                                                            </Label>
+                                                                        <div>
+                                                                            <Label htmlFor="editTitle">Title</Label>
                                                                             <Input
                                                                                 id="editTitle"
+                                                                                defaultValue={editFormData?.title}
                                                                                 {...register("title")}
-                                                                                className={fieldStyles.input}
+                                                                                className="mt-1"
                                                                             />
                                                                         </div>
                                                                     )}
 
                                                                     {selectedFields.has('amount') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editAmount" className={fieldStyles.label}>
-                                                                                Amount
-                                                                            </Label>
+                                                                        <div>
+                                                                            <Label htmlFor="editAmount">Amount</Label>
                                                                             <Input
                                                                                 id="editAmount"
                                                                                 type="number"
-                                                                                {...register("amount")}
-                                                                                className={fieldStyles.input}
+                                                                                defaultValue={editFormData?.amount}
+                                                                                {...register("amount", { min: 0 })}
+                                                                                className="mt-1"
                                                                                 disabled={fee.payments.length > 0}
                                                                             />
                                                                         </div>
                                                                     )}
 
                                                                     {selectedFields.has('dueDate') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editDueDate" className={fieldStyles.label}>
-                                                                                Due Date
-                                                                            </Label>
+                                                                        <div>
+                                                                            <Label htmlFor="editDueDate">Due Date</Label>
                                                                             <Popover>
                                                                                 <PopoverTrigger asChild>
                                                                                     <Button
                                                                                         variant={"outline"}
                                                                                         className={cn(
-                                                                                            fieldStyles.input,
+                                                                                            "w-full justify-start text-left font-normal mt-1",
                                                                                             !editDate && "text-muted-foreground"
                                                                                         )}
                                                                                     >
@@ -820,7 +711,16 @@ export default function FeesPage() {
                                                                                     <Calendar
                                                                                         mode="single"
                                                                                         selected={editDate}
-                                                                                        onSelect={handleEditDateSelect}
+                                                                                        onSelect={(date) => {
+                                                                                            handleEditDateSelect(date);
+                                                                                            // Also update the form value
+                                                                                            if (date) {
+                                                                                                const formattedDate = format(date, "yyyy-MM-dd");
+                                                                                                register("dueDate").onChange({
+                                                                                                    target: { value: formattedDate }
+                                                                                                });
+                                                                                            }
+                                                                                        }}
                                                                                         initialFocus
                                                                                     />
                                                                                 </PopoverContent>
@@ -829,10 +729,8 @@ export default function FeesPage() {
                                                                     )}
 
                                                                     {selectedFields.has('type') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editType" className={fieldStyles.label}>
-                                                                                Type
-                                                                            </Label>
+                                                                        <div>
+                                                                            <Label htmlFor="editType">Type</Label>
                                                                             <Controller
                                                                                 name="type"
                                                                                 control={control}
@@ -842,7 +740,7 @@ export default function FeesPage() {
                                                                                         onValueChange={field.onChange}
                                                                                         defaultValue={field.value}
                                                                                     >
-                                                                                        <SelectTrigger className={fieldStyles.input}>
+                                                                                        <SelectTrigger className="mt-1">
                                                                                             <SelectValue placeholder="Select fee type" />
                                                                                         </SelectTrigger>
                                                                                         <SelectContent>
@@ -858,30 +756,26 @@ export default function FeesPage() {
                                                                     )}
 
                                                                     {selectedFields.has('description') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editDescription" className={fieldStyles.label}>
-                                                                                Description
-                                                                            </Label>
+                                                                        <div>
+                                                                            <Label htmlFor="editDescription">Description</Label>
                                                                             <Input
                                                                                 id="editDescription"
                                                                                 defaultValue={editFormData?.description}
                                                                                 {...register("description")}
-                                                                                className={fieldStyles.input}
+                                                                                className="mt-1"
                                                                             />
                                                                         </div>
                                                                     )}
 
                                                                     {selectedFields.has('lateFeeDate') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editLateFeeDate" className={fieldStyles.label}>
-                                                                                Late Fee Date
-                                                                            </Label>
+                                                                        <div>
+                                                                            <Label htmlFor="editLateFeeDate">Late Fee Date</Label>
                                                                             <Popover>
                                                                                 <PopoverTrigger asChild>
                                                                                     <Button
                                                                                         variant={"outline"}
                                                                                         className={cn(
-                                                                                            fieldStyles.input,
+                                                                                            "w-full justify-start text-left font-normal mt-1",
                                                                                             !editLateFeeDate && "text-muted-foreground"
                                                                                         )}
                                                                                     >
@@ -904,126 +798,34 @@ export default function FeesPage() {
                                                                     )}
 
                                                                     {selectedFields.has('lateFeeAmount') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editLateFeeAmount" className={fieldStyles.label}>
-                                                                                Late Fee Amount
-                                                                            </Label>
+                                                                        <div>
+                                                                            <Label htmlFor="editLateFeeAmount">Late Fee Amount</Label>
                                                                             <Input
                                                                                 id="editLateFeeAmount"
                                                                                 type="number"
                                                                                 defaultValue={editFormData?.lateFeeAmount}
                                                                                 {...register("lateFeeAmount", { min: 0 })}
-                                                                                className={fieldStyles.input}
+                                                                                className="mt-1"
                                                                             />
                                                                         </div>
                                                                     )}
 
-                                                                    {selectedFields.has('gracePeriod') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editGracePeriod" className={fieldStyles.label}>
-                                                                                Grace Period (days)
-                                                                            </Label>
-                                                                            <Input
-                                                                                id="editGracePeriod"
-                                                                                type="number"
-                                                                                defaultValue={editFormData?.gracePeriod}
-                                                                                {...register("gracePeriod", { min: 0 })}
-                                                                                className={fieldStyles.input}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-
-                                                                    {selectedFields.has('status') && (
-                                                                        <div className={fieldStyles.container}>
-                                                                            <Label htmlFor="editStatus" className={fieldStyles.label}>
-                                                                                Status
-                                                                            </Label>
-                                                                            <Controller
-                                                                                name="status"
-                                                                                control={control}
-                                                                                defaultValue={editFormData?.status}
-                                                                                render={({ field }) => (
-                                                                                    <Select
-                                                                                        onValueChange={field.onChange}
-                                                                                        defaultValue={field.value}
-                                                                                    >
-                                                                                        <SelectTrigger className={fieldStyles.input}>
-                                                                                            <SelectValue placeholder="Select status" />
-                                                                                        </SelectTrigger>
-                                                                                        <SelectContent>
-                                                                                            <SelectItem value="PENDING">Pending</SelectItem>
-                                                                                            <SelectItem value="PARTIAL">Partial</SelectItem>
-                                                                                            <SelectItem value="PAID">Paid</SelectItem>
-                                                                                            <SelectItem value="OVERDUE">Overdue</SelectItem>
-                                                                                        </SelectContent>
-                                                                                    </Select>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    )}
-
-                                                                    <div>
-                                                                        <Label htmlFor="isRecurring">Recurring Fee</Label>
-                                                                        <input
-                                                                            type="checkbox"
-                                                                            id="isRecurring"
-                                                                            {...register("isRecurring")}
-                                                                        />
-                                                                    </div>
-
-                                                                    {watch("isRecurring") && (
-                                                                        <>
-                                                                            <div>
-                                                                                <Label htmlFor="recurringDuration">Duration (months)</Label>
-                                                                                <Input
-                                                                                    type="number"
-                                                                                    id="recurringDuration"
-                                                                                    {...register("recurringDuration", { min: 1 })}
-                                                                                />
-                                                                            </div>
-                                                                            <div>
-                                                                                <Label htmlFor="gracePeriod">Grace Period (days)</Label>
-                                                                                <Input
-                                                                                    id="gracePeriod"
-                                                                                    type="number"
-                                                                                    {...register("gracePeriod", { min: 0 })}
-                                                                                />
-                                                                            </div>
-                                                                        </>
-                                                                    )}
-                                                                </div>
-
-                                                                <DialogFooter className="mt-6 gap-2">
-                                                                    <Button
-                                                                        type="button"
-                                                                        variant="outline"
-                                                                        onClick={() => {
+                                                                    <DialogFooter className="mt-6">
+                                                                        <Button type="button" variant="outline" onClick={() => {
                                                                             setIsDialogOpen(false);
                                                                             setEditDate(undefined);
                                                                             setEditLateFeeDate(undefined);
-                                                                            setSelectedFields(new Set());
-                                                                        }}
-                                                                    >
-                                                                        Cancel
-                                                                    </Button>
+                                                                        }}>
+                                                                            Cancel
+                                                                        </Button>
 
-                                                                    <Button
-                                                                        type="submit"
-                                                                        disabled={isSubmitting || selectedFields.size === 0}
-                                                                        className="bg-primary hover:bg-primary/90"
-                                                                    >
-                                                                        {isSubmitting ? (
-                                                                            <>
-                                                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                                                Updating...
-                                                                            </>
-                                                                        ) : (
-                                                                            "Update Fee"
-                                                                        )}
-                                                                    </Button>
-                                                                </DialogFooter>
-                                                            </form>
-                                                        </ScrollArea>
+                                                                        <Button type="submit" disabled={isSubmitting}>
+                                                                            {isSubmitting ? "Updating..." : "Update Fee"}
+                                                                        </Button>
+                                                                    </DialogFooter>
+                                                                </form>
+                                                            </ScrollArea>
+                                                        )}
                                                     </DialogContent>
                                                 </Dialog>
 
@@ -1070,10 +872,6 @@ export default function FeesPage() {
                             <form onSubmit={handleSubmit(handleAddFee)} className="space-y-4">
                                 <div>
                                     <Label htmlFor="userId">Student *</Label>
-
-
-
-
                                     <Controller
                                         name="userId"
                                         control={control}
@@ -1081,31 +879,13 @@ export default function FeesPage() {
                                         render={({ field, fieldState: { error } }) => (
                                             <div>
                                                 <Select onValueChange={field.onChange}>
-                                                    <SelectTrigger className="w-full">
-                                                        {field.value ? (
-                                                            <div className="flex flex-col items-start">
-                                                                <span className="font-medium">
-                                                                    {getSelectedStudent(field.value)?.name}
-                                                                </span>
-                                                                <span className="text-xs text-muted-foreground">
-                                                                    {getSelectedStudent(field.value)?.email}
-                                                                </span>
-                                                            </div>
-                                                        ) : (
-                                                            <SelectValue placeholder="Select a student" />
-                                                        )}
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select a student" />
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {students.map((student) => (
-                                                            <SelectItem
-                                                                key={student.id}
-                                                                value={student.id}
-                                                                className="flex flex-col items-start py-3"
-                                                            >
-                                                                <div className="flex flex-col">
-                                                                    <span className="font-medium">{student.name}</span>
-                                                                    <span className="text-xs text-muted-foreground">{student.email}</span>
-                                                                </div>
+                                                            <SelectItem key={student.id} value={student.id}>
+                                                                {student.name}
                                                             </SelectItem>
                                                         ))}
                                                     </SelectContent>
@@ -1218,14 +998,6 @@ export default function FeesPage() {
                                         {...register("lateFeeAmount", {
                                             min: { value: 0, message: "Late fee amount must be positive" }
                                         })}
-                                    />
-                                </div>
-                                <div>
-                                    <Label htmlFor="gracePeriod">Grace Period (days)</Label>
-                                    <Input
-                                        id="gracePeriod"
-                                        type="number"
-                                        {...register("gracePeriod", { min: 0 })}
                                     />
                                 </div>
                                 <div className="flex items-center space-x-2">

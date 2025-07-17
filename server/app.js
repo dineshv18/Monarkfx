@@ -18,8 +18,12 @@ import categoryRouter from "./routes/category.routes.js";
 import feeRoutes from "./routes/fee.routes.js";
 import certificateRoutes from "./routes/certificate.routes.js";
 import visibilityRoutes from "./routes/visibility.routes.js";
-import contactRoutes from "./routes/contact.routes.js";
-
+import adminRoutes from "./routes/admin.routes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+import zoomLiveClassRoutes from "./routes/zoomLiveClass.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
+import zoomReviewRoutes from "./routes/zoom-review.routes.js";
+import trackingScriptRoutes from "./routes/trackingScript.routes.js";
 
 const app = express();
 
@@ -29,23 +33,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-const allowedOrigins = process.env.CORS_ORIGIN.split(',');
-
 // CORS Configuration
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      if ([...allowedOrigins, "https://www.googleapis.com",
-        "https://oauth2.googleapis.com",
-        "https://accounts.google.com"].indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: process.env.CORS_ORIGIN.split(","),
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: [
@@ -83,7 +74,7 @@ let razorpay;
 try {
   razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
   });
 
   console.log("Razorpay Initialized Successfully:");
@@ -110,7 +101,12 @@ app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/fees", feeRoutes);
 app.use("/api/v1/certificates", certificateRoutes);
 app.use("/api/v1/visibility", visibilityRoutes);
+app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/contact", contactRoutes);
+app.use("/api/v1/zoom-live-class", zoomLiveClassRoutes);
+app.use("/api/v1/upload", uploadRoutes);
+app.use("/api/v1/zoom-review", zoomReviewRoutes);
+app.use("/api/v1/tracking-scripts", trackingScriptRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

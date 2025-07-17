@@ -54,7 +54,7 @@ export const setCookies = (res, accessToken, refreshToken) => {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
-    domain: ".monarkfx.com",
+    domain: "monarkfx.com",
     path: "/",
     expires: new Date(Date.now() + COOKIE_EXPIRY),
   };
