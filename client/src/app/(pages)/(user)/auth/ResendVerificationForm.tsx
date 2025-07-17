@@ -35,7 +35,7 @@ export default function ResendVerificationForm({
       } else {
         toast.error(
           result.data.message ||
-          "Failed to resend verification email. Please try again."
+            "Failed to resend verification email. Please try again."
         );
       }
     } catch (error) {
@@ -77,7 +77,7 @@ export default function ResendVerificationForm({
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-red-600 hover:bg-red-700 text-white transition-colors duration-200"
+        className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors duration-200"
       >
         {isSubmitting ? (
           <motion.div

@@ -97,13 +97,6 @@ const contactInfo = [
     info: "Visit us for in-person consultations and course enrollments",
   },
   {
-    icon: MapPin,
-    title: "Branch Office",
-    details: "Dashrath Puri, New Delhi, India",
-    link: "https://maps.app.goo.gl/your-second-location-link-here",
-    info: "Our expansion location serving more students in the Delhi region",
-  },
-  {
     icon: Phone,
     title: "Call Us",
     details: "+91 9220797499 / +91 9773927706",
@@ -236,7 +229,7 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
     if (info.copyable) {
       navigator.clipboard.writeText(
         info.rawDetails ||
-          (typeof info.details === "string" ? info.details : "")
+        (typeof info.details === "string" ? info.details : "")
       );
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
@@ -265,15 +258,13 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
       onMouseMove={handleMouseMove}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${
-              (mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
-            }deg) rotateY(${
-              -(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
-            }deg)`
+          ? `perspective(1000px) rotateX(${(mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
+          }deg) rotateY(${-(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
+          }deg)`
           : "perspective(1000px) rotateX(0deg) rotateY(0deg)",
         transition: isHovered ? "none" : "transform 0.5s ease",
       }}
-      className="group bg-white p-8 rounded-2xl shadow-lg border border-red-50 hover:border-red-200 transition-all duration-500 relative overflow-hidden backdrop-blur-sm"
+      className="group bg-gray-900 p-8 rounded-2xl shadow-lg border border-green-500/20 hover:border-green-500/40 transition-all duration-500 relative overflow-hidden backdrop-blur-sm"
     >
       {/* Hover gradient effect */}
       <div
@@ -286,10 +277,10 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
       />
 
       {/* Decorative background element */}
-      <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-red-50 rounded-full opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
+      <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-green-500/10 rounded-full opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
 
       <div className="flex items-start space-x-4 relative z-10">
-        <div className="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-xl text-white shadow-md shadow-red-500/20 group-hover:scale-110 transition-transform duration-300">
+        <div className="p-3 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl text-white shadow-md shadow-red-500/20 group-hover:scale-110 transition-transform duration-300">
           <info.icon className="w-6 h-6" />
         </div>
         <div className="flex-1">
@@ -302,7 +293,7 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
                 onClick={handleCopy}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                className="text-gray-400 hover:text-green-600 transition-colors p-1"
               >
                 {isCopied ? (
                   <Check className="h-5 w-5" />
@@ -317,7 +308,7 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
               href={info.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-600 mt-1 hover:text-red-600 transition-colors flex items-center"
+              className="text-gray-600 mt-1 hover:text-green-600 transition-colors flex items-center"
             >
               {info.details}
               <ExternalLink className="ml-1 h-3 w-3 opacity-70" />
@@ -331,12 +322,12 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
 
       {/* Top corner decoration */}
       <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-        <div className="absolute top-0 right-0 w-0.5 h-7 bg-red-200 group-hover:h-14 transition-all duration-500"></div>
-        <div className="absolute top-0 right-0 w-7 h-0.5 bg-red-200 group-hover:w-14 transition-all duration-500"></div>
+        <div className="absolute top-0 right-0 w-0.5 h-7 bg-green-500/30 group-hover:h-14 transition-all duration-500"></div>
+        <div className="absolute top-0 right-0 w-7 h-0.5 bg-green-500/30 group-hover:w-14 transition-all duration-500"></div>
       </div>
 
       {/* Bottom shine effect on hover */}
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-300 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-0 group-hover:translate-y-[-1px] transition-all duration-700"></div>
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-green-300 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-0 group-hover:translate-y-[-1px] transition-all duration-700"></div>
     </motion.div>
   );
 };
@@ -372,32 +363,28 @@ const SocialCard = ({ platform, index }: { platform: any; index: number }) => {
       onMouseMove={handleMouseMove}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${
-              (mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
-            }deg) rotateY(${
-              -(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
-            }deg) scale(1.02)`
+          ? `perspective(1000px) rotateX(${(mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
+          }deg) rotateY(${-(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
+          }deg) scale(1.02)`
           : "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)",
         transition: isHovered ? "none" : "transform 0.5s ease",
       }}
-      className="group bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-gray-200 transition-all duration-500 relative overflow-hidden backdrop-blur-sm"
+      className="group bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-gray-200 transition-all duration-500 relative overflow-hidden backdrop-blur-sm"
     >
       {/* Hover gradient effect */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
         style={{
           background: isHovered
-            ? `radial-gradient(circle at ${mousePosition.x}px ${
-                mousePosition.y
-              }px, rgba(${
-                platform.name === "Instagram"
-                  ? "225, 48, 108"
-                  : platform.name === "LinkedIn"
-                  ? "0, 119, 181"
-                  : platform.name === "Facebook"
+            ? `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y
+            }px, rgba(${platform.name === "Instagram"
+              ? "225, 48, 108"
+              : platform.name === "LinkedIn"
+                ? "0, 119, 181"
+                : platform.name === "Facebook"
                   ? "24, 119, 242"
                   : "29, 161, 242"
-              }, 0.1) 0%, transparent 70%)`
+            }, 0.1) 0%, transparent 70%)`
             : "none",
         }}
       />
@@ -534,7 +521,7 @@ export default function ContactPage() {
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to send message. Please try again later."
+        "Failed to send message. Please try again later."
       );
     } finally {
       setIsSubmitting(false);
@@ -594,7 +581,7 @@ export default function ContactPage() {
         subtitle="We'd love to hear from you"
       />
 
-      <main className="bg-white overflow-hidden relative">
+      <main className="bg-black overflow-hidden relative">
         {/* Custom cursor */}
         <motion.div
           className="fixed top-0 left-0 rounded-full pointer-events-none z-50 mix-blend-difference hidden md:block"
@@ -659,7 +646,7 @@ export default function ContactPage() {
         <AnimatePresence>
           {isChatOpen && (
             <motion.div
-              className="fixed bottom-24 right-6 z-50 w-80 md:w-96 bg-white rounded-2xl shadow-2xl border border-red-100 overflow-hidden"
+              className="fixed bottom-24 right-6 z-50 w-80 md:w-96 bg-gray-900 rounded-2xl shadow-2xl border border-green-500/20 overflow-hidden"
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -680,7 +667,7 @@ export default function ContactPage() {
               </div>
 
               {/* Chat Messages */}
-              <div className="h-96 overflow-y-auto p-4 bg-gray-50">
+              <div className="h-96 overflow-y-auto p-4 bg-gray-800">
                 <div className="space-y-4">
                   {chatMessages.map((msg, index) => (
                     <motion.div
@@ -688,16 +675,14 @@ export default function ContactPage() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      className={`flex ${
-                        msg.type === "user" ? "justify-end" : "justify-start"
-                      }`}
+                      className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"
+                        }`}
                     >
                       <div
-                        className={`max-w-[80%] p-3 rounded-2xl ${
-                          msg.type === "user"
-                            ? "bg-red-600 text-white rounded-tr-none"
-                            : "bg-white border border-gray-200 text-gray-800 rounded-tl-none shadow-sm"
-                        }`}
+                        className={`max-w-[80%] p-3 rounded-2xl ${msg.type === "user"
+                            ? "bg-green-600 text-white rounded-tr-none"
+                            : "bg-gray-800 border border-gray-600 text-white rounded-tl-none shadow-sm"
+                          }`}
                       >
                         {msg.message}
                       </div>
@@ -711,7 +696,7 @@ export default function ContactPage() {
                       animate={{ opacity: 1, y: 0 }}
                       className="flex justify-start"
                     >
-                      <div className="bg-white border border-gray-200 text-gray-800 p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-sm">
+                      <div className="bg-gray-800 border border-gray-600 text-white p-3 rounded-2xl rounded-tl-none max-w-[80%] shadow-sm">
                         <div className="flex space-x-2">
                           <div
                             className="w-2 h-2 rounded-full bg-gray-300 animate-bounce"
@@ -737,7 +722,7 @@ export default function ContactPage() {
               {/* Chat Input */}
               <form
                 onSubmit={handleChatSubmit}
-                className="p-3 border-t border-gray-200 bg-white"
+                className="p-3 border-t border-gray-600 bg-gray-800"
               >
                 <div className="flex gap-2">
                   <input
@@ -745,7 +730,7 @@ export default function ContactPage() {
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     placeholder="Type your message..."
-                    className="flex-1 px-4 py-2 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none"
+                    className="flex-1 px-4 py-2 bg-gray-800 text-white rounded-xl border border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none"
                   />
                   <button
                     type="submit"
@@ -787,7 +772,7 @@ export default function ContactPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                <span className="px-4 py-2 rounded-full bg-gradient-to-r from-red-50 to-red-100 text-red-600 text-sm font-medium border border-red-200">
+                <span className="px-4 py-2 rounded-full bg-gradient-to-r from-green-500/20 to-green-600/20 text-green-400 text-sm font-medium border border-green-500/30">
                   {greetings[currentGreeting].lang}
                 </span>
               </motion.div>
@@ -795,7 +780,7 @@ export default function ContactPage() {
 
             {/* Add decorative elements */}
             <motion.div
-              className="absolute top-10 left-10 w-32 h-32 bg-red-100/80 rounded-full mix-blend-multiply filter blur-xl"
+              className="absolute top-10 left-10 w-32 h-32 bg-green-500/10 rounded-full mix-blend-multiply filter blur-xl"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.5, 0.7, 0.5],
@@ -837,7 +822,7 @@ export default function ContactPage() {
           {/* Tab Navigation */}
           <div className="flex justify-center mb-16">
             <motion.div
-              className="flex flex-wrap justify-center gap-4 md:gap-8 p-2 bg-white/80 backdrop-blur-sm rounded-full border border-red-100 shadow-sm"
+              className="flex flex-wrap justify-center gap-4 md:gap-8 p-2 bg-gray-900/80 backdrop-blur-sm rounded-full border border-green-500/20 shadow-sm"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.3 }}
@@ -848,7 +833,7 @@ export default function ContactPage() {
                 onClick={() => setActiveTab("contact")}
                 onMouseEnter={handleButtonEnter}
                 onMouseLeave={handleMouseLeave}
-                className="py-3 px-6 rounded-full transition-all hover:bg-red-50"
+                className="py-3 px-6 rounded-full transition-all hover:bg-green-500/10"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -860,7 +845,7 @@ export default function ContactPage() {
                 onClick={() => setActiveTab("social")}
                 onMouseEnter={handleButtonEnter}
                 onMouseLeave={handleMouseLeave}
-                className="py-3 px-6 rounded-full transition-all hover:bg-red-50"
+                className="py-3 px-6 rounded-full transition-all hover:bg-green-500/10"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -872,7 +857,7 @@ export default function ContactPage() {
                 onClick={() => setActiveTab("payment")}
                 onMouseEnter={handleButtonEnter}
                 onMouseLeave={handleMouseLeave}
-                className="py-3 px-6 rounded-full transition-all hover:bg-red-50"
+                className="py-3 px-6 rounded-full transition-all hover:bg-green-500/10"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -884,7 +869,7 @@ export default function ContactPage() {
                 onClick={() => setActiveTab("courses")}
                 onMouseEnter={handleButtonEnter}
                 onMouseLeave={handleMouseLeave}
-                className="py-3 px-6 rounded-full transition-all hover:bg-red-50"
+                className="py-3 px-6 rounded-full transition-all hover:bg-green-500/10"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -940,7 +925,7 @@ export default function ContactPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="bg-white p-10 rounded-2xl shadow-lg border border-red-50 backdrop-blur-sm"
+                  className="bg-gray-900 p-10 rounded-2xl shadow-lg border border-green-500/20 backdrop-blur-sm"
                 >
                   <div className="grid md:grid-cols-2 gap-12">
                     <motion.div
@@ -971,8 +956,8 @@ export default function ContactPage() {
                             onMouseEnter={handleTextEnter}
                             onMouseLeave={handleMouseLeave}
                           >
-                            <div className="p-3 bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 mt-1 group-hover:shadow-md transition-all">
-                              <CreditCard className="w-5 h-5 text-red-600" />
+                            <div className="p-3 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-500/30 mt-1 group-hover:shadow-md transition-all">
+                              <CreditCard className="w-5 h-5 text-green-500" />
                             </div>
                             <div>
                               <h4 className="font-semibold text-lg text-gray-900 mb-1">
@@ -987,18 +972,18 @@ export default function ContactPage() {
                       </ul>
 
                       <motion.div
-                        className="mt-10 p-6 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border border-red-200"
+                        className="mt-10 p-6 bg-gradient-to-r from-green-500/20 to-green-600/20 rounded-xl border border-green-500/30"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.5 }}
                       >
                         <div className="flex items-center gap-2 mb-2">
-                          <Sparkles className="w-5 h-5 text-red-600" />
-                          <p className="text-red-700 font-semibold">
+                          <Sparkles className="w-5 h-5 text-green-500" />
+                          <p className="text-green-400 font-semibold">
                             Special Offer
                           </p>
                         </div>
-                        <p className="text-red-700">
+                        <p className="text-green-300">
                           Payment plans and installment options are available
                           for all courses. Contact our advisors for personalized
                           payment arrangements.
@@ -1012,9 +997,9 @@ export default function ContactPage() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.6, delay: 0.3 }}
                     >
-                      <div className="p-10 bg-white rounded-2xl border-2 border-dashed border-red-200 flex flex-col items-center justify-center shadow-inner">
+                      <div className="p-10 bg-gray-900 rounded-2xl border-2 border-dashed border-green-500/30 flex flex-col items-center justify-center shadow-inner">
                         <motion.div
-                          className="w-56 h-56 bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center rounded-2xl mb-6 relative overflow-hidden"
+                          className="w-56 h-56 bg-gradient-to-br from-green-500/20 to-green-600/20 flex items-center justify-center rounded-2xl mb-6 relative overflow-hidden"
                           whileHover={{
                             boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
                           }}
@@ -1022,7 +1007,7 @@ export default function ContactPage() {
                           onMouseLeave={handleMouseLeave}
                         >
                           {/* Placeholder for QR code */}
-                          <motion.div className="absolute inset-0 bg-gradient-to-br from-red-100/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
+                          <motion.div className="absolute inset-0 bg-gradient-to-br from-green-100/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
                           <span className="text-gray-500 font-medium">
                             QR Code
                           </span>
@@ -1032,7 +1017,7 @@ export default function ContactPage() {
                         <p className="text-center text-gray-700">
                           Scan to make UPI payment
                           <br />
-                          <span className="font-semibold text-red-600">
+                          <span className="font-semibold text-green-500">
                             @monarkfx
                           </span>
                         </p>
@@ -1050,7 +1035,7 @@ export default function ContactPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
-                  className="bg-white p-10 rounded-2xl shadow-lg border border-red-50 backdrop-blur-sm"
+                  className="bg-gray-900 p-10 rounded-2xl shadow-lg border border-green-500/20 backdrop-blur-sm"
                 >
                   <motion.div
                     className="flex items-center gap-3 mb-10"
@@ -1080,13 +1065,13 @@ export default function ContactPage() {
                         }}
                         onMouseEnter={handleTextEnter}
                         onMouseLeave={handleMouseLeave}
-                        className="p-8 rounded-2xl border border-red-100 hover:border-red-300 transition-all bg-gradient-to-br from-white to-red-50 group relative overflow-hidden"
+                        className="p-8 rounded-2xl border border-green-500/30 hover:border-green-500/50 transition-all bg-gradient-to-br from-gray-900 to-gray-800 group relative overflow-hidden"
                       >
                         {/* Decorative background element */}
-                        <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-red-50 rounded-full opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
+                        <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-green-500/10 rounded-full opacity-0 group-hover:opacity-70 transition-opacity duration-500"></div>
 
                         <div className="flex items-start gap-6 relative z-10">
-                          <div className="p-4 bg-red-100 rounded-2xl shadow-md group-hover:shadow-lg transition-all">
+                          <div className="p-4 bg-green-500/10 rounded-2xl shadow-md group-hover:shadow-lg transition-all">
                             {/* Use either actual icon or placeholder */}
                             <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-inner">
                               {course.name.split(" ")[0][0]}
@@ -1101,7 +1086,7 @@ export default function ContactPage() {
                             </p>
 
                             <motion.button
-                              className="mt-6 inline-flex items-center text-red-600 font-medium"
+                              className="mt-6 inline-flex items-center text-green-500 font-medium"
                               whileHover={{ x: 5 }}
                               transition={{
                                 type: "spring",
@@ -1119,13 +1104,13 @@ export default function ContactPage() {
                   </div>
 
                   <motion.div
-                    className="mt-12 p-8 bg-gradient-to-r from-red-50 to-red-100 rounded-2xl border border-red-200 shadow-sm"
+                    className="mt-12 p-8 bg-gradient-to-r from-green-500/20 to-green-600/20 rounded-2xl border border-green-500/30 shadow-sm"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                   >
                     <h4 className="font-bold text-xl text-gray-900 mb-4 flex items-center">
-                      <Users className="w-5 h-5 mr-2 text-red-600" />
+                      <Users className="w-5 h-5 mr-2 text-green-500" />
                       Contact Our Mentors
                     </h4>
                     <p className="text-gray-700 leading-relaxed">
@@ -1146,7 +1131,7 @@ export default function ContactPage() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
-              className="bg-white p-10 rounded-2xl shadow-xl border border-red-50 backdrop-blur-sm relative overflow-hidden"
+              className="bg-gray-900 p-10 rounded-2xl shadow-xl border border-green-500/20 backdrop-blur-sm relative overflow-hidden"
             >
               {/* Decorative elements */}
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-50 rounded-full opacity-40"></div>
@@ -1161,7 +1146,7 @@ export default function ContactPage() {
                   onMouseEnter={handleTextEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <span className="text-sm uppercase tracking-[0.2em] text-red-600 font-medium">
+                  <span className="text-sm uppercase tracking-[0.2em] text-green-500 font-medium">
                     Contact Us
                   </span>
                   <h2 className="text-3xl font-bold text-gray-900 mt-1">
@@ -1192,7 +1177,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="John Doe"
-                        className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none"
+                        className="w-full px-4 py-3 bg-gray-800 text-white rounded-xl border border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none"
                         required
                       />
                     </motion.div>
@@ -1214,7 +1199,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="john@example.com"
-                        className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none"
+                        className="w-full px-4 py-3 bg-gray-800 text-white rounded-xl border border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none"
                         required
                       />
                     </motion.div>
@@ -1238,7 +1223,7 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={handleChange}
                       placeholder="How can we help you?"
-                      className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none"
+                      className="w-full px-4 py-3 bg-gray-800 text-white rounded-xl border border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none"
                       required
                     />
                   </motion.div>
@@ -1261,7 +1246,7 @@ export default function ContactPage() {
                       onChange={handleChange}
                       rows={6}
                       placeholder="Please provide details about your inquiry..."
-                      className="w-full px-4 py-3 bg-gray-50 text-gray-900 rounded-xl border border-gray-200 focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all outline-none resize-none"
+                      className="w-full px-4 py-3 bg-gray-800 text-white rounded-xl border border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none resize-none"
                       required
                     />
                   </motion.div>
@@ -1269,9 +1254,8 @@ export default function ContactPage() {
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`group relative overflow-hidden flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-3 rounded-xl shadow-lg shadow-red-500/20 ${
-                      isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-                    }`}
+                    className={`group relative overflow-hidden flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-3 rounded-xl shadow-lg shadow-red-500/20 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                      }`}
                     whileHover={{
                       scale: isSubmitting ? 1 : 1.02,
                       boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.25)",
@@ -1290,9 +1274,8 @@ export default function ContactPage() {
                       {isSubmitting ? "Sending..." : "Send Message"}
                     </span>
                     <Send
-                      className={`w-4 h-4 relative z-10 ${
-                        isSubmitting ? "" : "group-hover:translate-x-1"
-                      } transition-transform`}
+                      className={`w-4 h-4 relative z-10 ${isSubmitting ? "" : "group-hover:translate-x-1"
+                        } transition-transform`}
                     />
                   </motion.button>
                 </form>
@@ -1304,7 +1287,7 @@ export default function ContactPage() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="bg-white p-10 rounded-2xl shadow-xl border border-red-50 backdrop-blur-sm relative overflow-hidden"
+              className="bg-gray-900 p-10 rounded-2xl shadow-xl border border-green-500/20 backdrop-blur-sm relative overflow-hidden"
             >
               {/* Decorative elements */}
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-red-50 rounded-full opacity-40"></div>
@@ -1319,7 +1302,7 @@ export default function ContactPage() {
                   onMouseEnter={handleTextEnter}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <span className="text-sm uppercase tracking-[0.2em] text-red-600 font-medium">
+                  <span className="text-sm uppercase tracking-[0.2em] text-green-500 font-medium">
                     Locations
                   </span>
                   <h2 className="text-3xl font-bold text-gray-900 mt-1">
@@ -1354,14 +1337,14 @@ export default function ContactPage() {
 
                 <div className="grid grid-cols-2 gap-6">
                   <motion.div
-                    className="p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-100 hover:shadow-md transition-all"
+                    className="p-6 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-500/30 hover:shadow-md transition-all"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.5 }}
                     whileHover={{ y: -5 }}
                   >
                     <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
+                      <MapPin className="w-4 h-4 text-green-500" />
                       Head Branch
                     </h3>
                     <p className="text-sm text-gray-600 mt-2">
@@ -1369,7 +1352,7 @@ export default function ContactPage() {
                     </p>
                     <a
                       href="#"
-                      className="text-sm text-red-600 hover:underline mt-3 inline-flex items-center gap-1 group"
+                      className="text-sm text-green-500 hover:underline mt-3 inline-flex items-center gap-1 group"
                     >
                       Get Directions
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -1377,14 +1360,14 @@ export default function ContactPage() {
                   </motion.div>
 
                   <motion.div
-                    className="p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-100 hover:shadow-md transition-all"
+                    className="p-6 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-500/30 hover:shadow-md transition-all"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.6 }}
                     whileHover={{ y: -5 }}
                   >
                     <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-red-600" />
+                      <MapPin className="w-4 h-4 text-green-500" />
                       Branch Office
                     </h3>
                     <p className="text-sm text-gray-600 mt-2">
@@ -1392,7 +1375,7 @@ export default function ContactPage() {
                     </p>
                     <a
                       href="#"
-                      className="text-sm text-red-600 hover:underline mt-3 inline-flex items-center gap-1 group"
+                      className="text-sm text-green-500 hover:underline mt-3 inline-flex items-center gap-1 group"
                     >
                       Get Directions
                       <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />

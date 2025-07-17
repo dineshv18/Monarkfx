@@ -104,7 +104,7 @@ const Header = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden text-white bg-red-600/20 p-2 rounded-full border border-red-600/30"
+          className="md:hidden text-white bg-green-600/20 p-2 rounded-full border border-green-600/30"
         >
           {isMobileMenuOpen ? (
             <X className="h-5 w-5" />
@@ -146,7 +146,7 @@ const Header = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-              className="flex items-center space-x-1 text-white bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:border-red-500/50 transition-all duration-300"
+              className="flex items-center space-x-1 text-white bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:border-green-500/50 transition-all duration-300"
             >
               <User className="h-4 w-4 mr-1" />
               <span className="text-sm">Profile</span>
@@ -193,7 +193,7 @@ const Header = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-full shadow-[0_0_10px_rgba(220,38,38,0.3)] transition-all duration-300 border border-red-500/50 hover:shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+              className="flex items-center space-x-1 px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-full shadow-[0_0_10px_rgba(34,197,94,0.3)] transition-all duration-300 border border-green-500/50 hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]"
             >
               <LogIn className="h-4 w-4 mr-1" />
               <span className="text-sm">Login</span>
@@ -225,7 +225,7 @@ const Header = () => {
                 >
                   <Link
                     href={item.href}
-                    className="block text-white text-sm hover:text-red-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300"
+                    className="block text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
@@ -243,7 +243,7 @@ const Header = () => {
                   <>
                     <Link
                       href="/user-profile"
-                      className="block text-white text-sm hover:text-red-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
+                      className="block text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Profile
@@ -253,7 +253,7 @@ const Header = () => {
                         handleLogout();
                         setIsMobileMenuOpen(false);
                       }}
-                      className="w-full text-left text-white text-sm hover:text-red-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
+                      className="w-full text-left text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
                     >
                       Logout
                     </button>

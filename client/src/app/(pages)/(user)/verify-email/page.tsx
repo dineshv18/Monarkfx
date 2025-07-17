@@ -17,7 +17,9 @@ import Cookies from "js-cookie";
 
 function VerifyEmailContent() {
   const [loading, setLoading] = useState(true);
-  const [verificationStatus, setVerificationStatus] = useState<"success" | "error" | null>(null);
+  const [verificationStatus, setVerificationStatus] = useState<
+    "success" | "error" | null
+  >(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -56,7 +58,8 @@ function VerifyEmailContent() {
         toast.success("Email verified and logged in successfully!");
 
         const userRole = response.data.data.user.role;
-        const redirectPath = userRole === "ADMIN" ? "/dashboard" : "/user-profile";
+        const redirectPath =
+          userRole === "ADMIN" ? "/dashboard" : "/user-profile";
 
         setTimeout(() => {
           router.push(redirectPath);
@@ -67,7 +70,7 @@ function VerifyEmailContent() {
       setVerificationStatus("error");
       toast.error(
         axiosError.response?.data?.message ||
-        "An error occurred during email verification"
+          "An error occurred during email verification"
       );
     } finally {
       setLoading(false);
@@ -87,13 +90,10 @@ function VerifyEmailContent() {
     };
   }, [verifyEmail]);
 
-
-
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-white p-4">
-      <Card className="w-full max-w-md border border-red-100 shadow-xl hover:shadow-2xl transition-all duration-300">
-        <CardHeader className="space-y-2 text-center pb-6 border-b border-red-100">
+      <Card className="w-full max-w-md border border-green-500/20 shadow-xl hover:shadow-2xl transition-all duration-300">
+        <CardHeader className="space-y-2 text-center pb-6 border-b border-green-500/20">
           <CardTitle className="text-2xl font-bold text-gray-900">
             Email Verification
           </CardTitle>
@@ -101,32 +101,30 @@ function VerifyEmailContent() {
             {loading
               ? "Verifying your email address..."
               : verificationStatus === "success"
-                ? "Great! Your verification is complete"
-                : "Oops! Verification encountered an issue"}
+              ? "Great! Your verification is complete"
+              : "Oops! Verification encountered an issue"}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center space-y-6 pt-6">
           {loading ? (
-            <Loader2 className="h-12 w-12 animate-spin text-red-600" />
+            <Loader2 className="h-12 w-12 animate-spin text-green-600" />
           ) : verificationStatus === "success" ? (
             <div className="text-center space-y-4">
               <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto" />
               <p className="text-green-600 font-medium text-lg">
                 Your email has been verified successfully!
               </p>
-              <p className="text-gray-500">
-                Redirecting you to login page...
-              </p>
+              <p className="text-gray-500">Redirecting you to login page...</p>
             </div>
           ) : (
             <div className="text-center space-y-4">
-              <XCircle className="h-16 w-16 text-red-500 mx-auto" />
-              <p className="text-red-600 font-medium text-lg">
+              <XCircle className="h-16 w-16 text-green-500 mx-auto" />
+              <p className="text-green-600 font-medium text-lg">
                 Email verification failed
               </p>
               <Button
                 onClick={() => router.push("/auth")}
-                className="bg-red-600 hover:bg-red-700 text-white font-medium px-8 py-2 rounded-lg transition-all duration-200 hover:shadow-lg"
+                className="bg-green-600 hover:bg-green-700 text-white font-medium px-8 py-2 rounded-lg transition-all duration-200 hover:shadow-lg"
               >
                 Go to Login
               </Button>
@@ -140,11 +138,13 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-white">
-        <Loader2 className="h-12 w-12 animate-spin text-red-600" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-white">
+          <Loader2 className="h-12 w-12 animate-spin text-green-600" />
+        </div>
+      }
+    >
       <VerifyEmailContent />
     </Suspense>
   );

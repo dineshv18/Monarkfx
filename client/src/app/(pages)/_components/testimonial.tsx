@@ -31,7 +31,7 @@ export const Testimonial = ({
     >
       {/* Background glow effect */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-900/10 rounded-lg opacity-0"
+        className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-green-900/10 rounded-lg opacity-0"
         animate={{
           opacity: isHovered ? 0.6 : 0,
           scale: isHovered ? 1.05 : 1,
@@ -50,7 +50,7 @@ export const Testimonial = ({
         <div className="flex items-center mb-6">
           <div className="relative">
             <motion.div
-              className="absolute inset-0 bg-red-500 rounded-full blur-md"
+              className="absolute inset-0 bg-green-500 rounded-full blur-md"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
                 opacity: isHovered ? 0.5 : 0,
@@ -90,7 +90,7 @@ export const Testimonial = ({
         </motion.p>
 
         <motion.div
-          className="h-[2px] bg-gradient-to-r from-red-500 to-red-800 mt-6 rounded-full"
+          className="h-[2px] bg-gradient-to-r from-green-500 to-green-800 mt-6 rounded-full"
           initial={{ width: "30%", opacity: 0.5 }}
           animate={{
             width: isHovered ? "100%" : "30%",

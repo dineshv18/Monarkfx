@@ -12,7 +12,7 @@ export default function AuthPage({
   const courseSlug = searchParams["course-slug"];
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-white">
+    <div className="min-h-screen flex flex-col md:flex-row bg-black">
       {/* Left Section */}
       <div className="hidden md:block md:w-1/2 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-red-600/50 to-black/50 z-10" />
@@ -56,11 +56,11 @@ export default function AuthPage({
                 Your Gateway to Financial Markets
               </p>
               <div className="flex items-center justify-center space-x-3">
-                <span className="h-[2px] w-12 bg-red-500" />
+                <span className="h-[2px] w-12 bg-green-500" />
                 <span className="text-white/80 text-sm font-medium">
                   ISO 21008:2018 Certified
                 </span>
-                <span className="h-[2px] w-12 bg-red-500" />
+                <span className="h-[2px] w-12 bg-green-500" />
               </div>
             </motion.div>
           </motion.div>
@@ -75,7 +75,7 @@ export default function AuthPage({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="bg-white p-8 rounded-2xl shadow-xl border border-red-100">
+          <div className="bg-gray-900 p-8 rounded-2xl shadow-xl border border-green-500/20">
             <AuthComponent courseSlug={courseSlug} />
           </div>
         </motion.div>

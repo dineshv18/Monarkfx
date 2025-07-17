@@ -35,7 +35,7 @@ export default function ForgotPasswordForm({
       } else {
         toast.error(
           result.data.message ||
-          "Failed to process your request. Please try again."
+            "Failed to process your request. Please try again."
         );
       }
     } catch (error) {
@@ -74,7 +74,7 @@ export default function ForgotPasswordForm({
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-red-600 hover:bg-red-700 text-white transition-colors duration-200"
+        className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors duration-200"
       >
         {isSubmitting ? (
           <motion.div

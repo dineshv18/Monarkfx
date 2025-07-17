@@ -32,13 +32,13 @@ export default function FuturisticButton({
   const getVariantClasses = () => {
     switch (variant) {
       case "primary":
-        return "bg-black text-white hover:bg-red-600/90 border-red-600/40 shadow-red-600/20";
+        return "bg-black text-white hover:bg-green-600/90 border-green-600/40 shadow-green-600/20";
       case "secondary":
         return "bg-white/5 backdrop-blur-md text-white hover:bg-white/10 border-white/20 shadow-white/10";
       case "outline":
-        return "bg-transparent text-white hover:bg-white/5 border-red-600/60 shadow-red-600/20";
+        return "bg-transparent text-white hover:bg-white/5 border-green-600/60 shadow-green-600/20";
       default:
-        return "bg-black text-white hover:bg-red-600/90 border-red-600/40 shadow-red-600/20";
+        return "bg-black text-white hover:bg-green-600/90 border-green-600/40 shadow-green-600/20";
     }
   };
 
@@ -81,7 +81,7 @@ export default function FuturisticButton({
     >
       {/* Animated glow effect */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-white/10 opacity-0"
+        className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-white/10 opacity-0"
         whileHover={{ opacity: 1, scale: 1.1 }}
         transition={{ duration: 0.3 }}
       />

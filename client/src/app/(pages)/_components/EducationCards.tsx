@@ -33,12 +33,7 @@ const educationData: Course[] = [
     href: "/courses?market=forax",
     level: "All Levels",
     marketType: "forex",
-    features: [
-      "Currency Pair Analysis",
-      "Forex Market Hours",
-      "Risk Management",
-      "Live Trading Sessions",
-    ],
+    features: ["Currency Pair Analysis", "Forex Market Hours"],
   },
   {
     title: "Stock Market Pro",
@@ -81,9 +76,9 @@ const EducationCards = () => {
     <div className="w-full bg-gradient-to-b from-white to-gray-50 py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="max-w-7xl mx-auto relative">
         {/* Decorative elements */}
-        <div className="absolute -top-20 right-0 w-64 h-64 bg-red-50 rounded-full opacity-70" />
-        <div className="absolute top-40 -left-20 w-40 h-40 bg-red-50 rounded-full opacity-70" />
-        <div className="absolute bottom-20 right-10 w-20 h-20 bg-red-50 rounded-full opacity-70" />
+        <div className="absolute -top-20 right-0 w-64 h-64 bg-green-50/10 rounded-full opacity-70" />
+        <div className="absolute top-40 -left-20 w-40 h-40 bg-green-50/10 rounded-full opacity-70" />
+        <div className="absolute bottom-20 right-10 w-20 h-20 bg-green-50/10 rounded-full opacity-70" />
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -92,13 +87,13 @@ const EducationCards = () => {
           viewport={{ once: true }}
           className="text-center mb-10 md:mb-20 relative z-10"
         >
-          <span className="inline-block px-4 py-1.5 bg-red-50 text-red-500 rounded-full text-sm font-medium mb-4">
+          <span className="inline-block px-4 py-1.5 bg-green-500/10 text-green-400 rounded-full text-sm font-medium mb-4">
             Expert Courses
           </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 tracking-tight">
             Trading Education
           </h2>
-          <div className="w-20 h-1 bg-red-500 mx-auto my-6 rounded-full"></div>
+          <div className="w-20 h-1 bg-green-500 mx-auto my-6 rounded-full"></div>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             Master trading across multiple markets with our expert courses
           </p>
@@ -123,7 +118,7 @@ const EducationCards = () => {
                 <div className="bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-500 relative md:h-[380px] group-hover:h-[450px] md:group-hover:h-[500px] group-hover:shadow-xl border border-gray-100 h-full">
                   {/* Red ribbon */}
                   <div className="absolute top-5 -right-12 z-10 rotate-45">
-                    <div className="bg-red-500 text-white text-xs uppercase tracking-wider py-1 w-48 text-center font-semibold shadow-md">
+                    <div className="bg-green-500 text-white text-xs uppercase tracking-wider py-1 w-48 text-center font-semibold shadow-md">
                       {course.marketType}
                     </div>
                   </div>
@@ -138,7 +133,7 @@ const EducationCards = () => {
 
                     <div className="absolute bottom-0 left-0 w-full p-4">
                       <div className="inline-flex items-center px-3 py-1.5 bg-white rounded-lg shadow-md">
-                        <course.icon className="h-4 w-4 text-red-500 mr-2" />
+                        <course.icon className="h-4 w-4 text-green-500 mr-2" />
                         <span className="text-sm font-medium text-gray-900">
                           {course.level}
                         </span>
@@ -184,7 +179,7 @@ const EducationCards = () => {
                               }
                               transition={{ duration: 0.3, delay: i * 0.1 }}
                             >
-                              <CheckCircle2 className="h-4 w-4 mr-2 text-red-500 shrink-0" />
+                              <CheckCircle2 className="h-4 w-4 mr-2 text-green-500 shrink-0" />
                               <span>{feature}</span>
                             </motion.li>
                           ))}
@@ -193,9 +188,9 @@ const EducationCards = () => {
                     </div>
 
                     <div className="mt-5 absolute bottom-5 md:bottom-6 left-5 md:left-6 right-5 md:right-6">
-                      <div className="w-full bg-gray-50 hover:bg-red-50 text-gray-900 hover:text-red-600 py-3 px-4 rounded-xl transition-colors font-medium text-sm md:text-base flex justify-between items-center group-hover:shadow-sm">
+                      <div className="w-full bg-gray-50 hover:bg-green-50 text-gray-900 hover:text-green-600 py-3 px-4 rounded-xl transition-colors font-medium text-sm md:text-base flex justify-between items-center group-hover:shadow-sm">
                         <span>Explore Course</span>
-                        <span className="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center group-hover:bg-red-600 transition-colors">
+                        <span className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center group-hover:bg-green-600 transition-colors">
                           <ArrowUpRight className="h-3 w-3 text-white" />
                         </span>
                       </div>
@@ -204,7 +199,7 @@ const EducationCards = () => {
 
                   {/* Side accent */}
                   <div
-                    className={`absolute left-0 top-0 w-1 bg-red-500 transition-all duration-500 ${
+                    className={`absolute left-0 top-0 w-1 bg-green-500 transition-all duration-500 ${
                       hoveredIndex === index ? "h-full" : "h-0"
                     }`}
                   />

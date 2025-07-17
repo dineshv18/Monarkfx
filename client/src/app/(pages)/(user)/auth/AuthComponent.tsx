@@ -29,22 +29,24 @@ export default function AuthComponent({ courseSlug }: AuthComponentProps) {
   const handleLoading = (isLoading: boolean) => setLoading(isLoading);
   const handleRegistrationSuccess = () => setRegistrationSuccess(true);
 
-  const getCardTitle = (mode: AuthMode): string => ({
-    login: "Welcome to Monark FX",
-    register: "Join Monark FX",
-    forgotPassword: "Reset Your Password",
-    resendVerification: "Verify Your Email",
-  }[mode] || "");
+  const getCardTitle = (mode: AuthMode): string =>
+    ({
+      login: "Welcome to Monark FX",
+      register: "Join Monark FX",
+      forgotPassword: "Reset Your Password",
+      resendVerification: "Verify Your Email",
+    }[mode] || "");
 
-  const getCardDescription = (mode: AuthMode): string => ({
-    login: "Access your trading journey",
-    register: "Start your trading journey today",
-    forgotPassword: "We'll help you reset your password",
-    resendVerification: "Verify your email to continue",
-  }[mode] || "");
+  const getCardDescription = (mode: AuthMode): string =>
+    ({
+      login: "Access your trading journey",
+      register: "Start your trading journey today",
+      forgotPassword: "We'll help you reset your password",
+      resendVerification: "Verify your email to continue",
+    }[mode] || "");
 
   return (
-    <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm">
+    <Card className="border-0 shadow-xl bg-gray-900 backdrop-blur-sm">
       <CardHeader className="space-y-2 pb-6">
         <motion.div
           initial={{ opacity: 0, y: -20 }}

@@ -12,7 +12,7 @@ const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ error, onRetry }) => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-red-500">Error</CardTitle>
+          <CardTitle className="text-green-500">Error</CardTitle>
         </CardHeader>
         <CardContent>
           <p>{error}</p>

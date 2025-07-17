@@ -6,9 +6,8 @@ import CourseLoading from "./loading";
 
 const CourseClient = dynamic(() => import("./course-client"), {
   ssr: false,
-  loading: () => <CourseLoading />
+  loading: () => <CourseLoading />,
 });
-
 
 type Props = {
   params: { slug: string };
@@ -26,7 +25,7 @@ async function getCourse(slug: string) {
         next: { revalidate: 3600 },
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json",
+          Accept: "application/json",
         },
       }
     );
@@ -41,8 +40,9 @@ async function getCourse(slug: string) {
     console.error("Error fetching course:", error);
     return {
       error: true,
-      message: error instanceof Error ? error.message : "Failed to fetch course",
-      data: null
+      message:
+        error instanceof Error ? error.message : "Failed to fetch course",
+      data: null,
     };
   }
 }
@@ -50,7 +50,8 @@ async function getCourse(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const courseData = await getCourse(params.slug);
   const defaultTitle = "MonarkFX - Global Trading Excellence";
-  const defaultDesc = "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.";
+  const defaultDesc =
+    "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.";
 
   if (courseData.error || !courseData.data) {
     return {
@@ -69,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: data.title,
       description: data.metaDesc || defaultDesc,
       images: [{ url: ogImage, width: 1200, height: 630, alt: data.title }],
-      type: 'website',
+      type: "website",
     },
     twitter: {
       card: "summary_large_image",
@@ -85,7 +86,7 @@ export default async function CoursePage({ params }: Props) {
 
   if (courseData.error || !courseData.data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 font-plus-jakarta-sans">
+      <div className="min-h-screen flex items-center justify-center bg-black font-plus-jakarta-sans">
         <div className="max-w-md w-full space-y-8 text-center p-6">
           <div className="flex flex-col items-center justify-center">
             <AlertTriangle className="h-16 w-16 text-yellow-400 animate-bounce" />
@@ -111,12 +112,7 @@ export default async function CoursePage({ params }: Props) {
 
   return (
     <Suspense fallback={<CourseLoading />}>
-      <CourseClient
-        initialCourseData={courseData.data}
-        slug={params.slug}
-      />
+      <CourseClient initialCourseData={courseData.data} slug={params.slug} />
     </Suspense>
   );
 }
-
-

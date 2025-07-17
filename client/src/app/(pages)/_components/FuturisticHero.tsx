@@ -42,9 +42,9 @@ export default function FuturisticHero() {
     <div className="relative w-full min-h-screen overflow-hidden bg-black">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden opacity-30">
-        <div className="absolute inset-0 bg-grid" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e15_1px,transparent_1px),linear-gradient(to_bottom,#22c55e15_1px,transparent_1px)] bg-[size:32px_32px]" />
         <motion.div
-          className="absolute -left-20 -top-20 w-96 h-96 bg-red-500/30 rounded-full filter blur-[100px]"
+          className="absolute -left-20 -top-20 w-96 h-96 bg-green-500/30 rounded-full filter blur-[100px]"
           animate={{
             x: [0, 30, 0],
             y: [0, 30, 0],
@@ -57,7 +57,7 @@ export default function FuturisticHero() {
           }}
         />
         <motion.div
-          className="absolute right-1/4 bottom-0 w-72 h-72 bg-red-900/30 rounded-full filter blur-[100px]"
+          className="absolute right-1/4 bottom-0 w-72 h-72 bg-green-600/30 rounded-full filter blur-[100px]"
           animate={{
             x: [0, -30, 0],
             y: [0, -40, 0],
@@ -83,7 +83,7 @@ export default function FuturisticHero() {
           >
             <div className="flex items-center mb-6">
               <motion.div
-                className="h-1 w-10 bg-red-500 mr-4"
+                className="h-1 w-10 bg-green-500 mr-4"
                 initial={{ width: 0 }}
                 animate={{ width: 40 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
@@ -104,8 +104,8 @@ export default function FuturisticHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Master the <span className="text-gradient-red">Markets</span> with
-              Precision
+              Master the <span className="text-gradient-green">Markets</span>{" "}
+              with Precision
             </motion.h1>
 
             <motion.p
@@ -126,13 +126,13 @@ export default function FuturisticHero() {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <motion.button
-                className="relative group overflow-hidden bg-black border border-red-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
+                className="relative group overflow-hidden bg-black border border-green-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
                 <span className="relative z-10">Get Started</span>
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-800"
+                  className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-800"
                   initial={{ x: "-100%" }}
                   whileHover={{ x: 0 }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
@@ -185,7 +185,7 @@ export default function FuturisticHero() {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className="w-4 h-4 text-red-500 fill-current"
+                      className="w-4 h-4 text-green-500 fill-current"
                       viewBox="0 0 24 24"
                     >
                       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
@@ -209,7 +209,7 @@ export default function FuturisticHero() {
           >
             <div className="relative aspect-square max-w-xl mx-auto">
               {/* Glowing effect behind the chart */}
-              <div className="absolute inset-0 bg-red-500/20 rounded-full filter blur-3xl animate-pulse" />
+              <div className="absolute inset-0 bg-green-500/20 rounded-full filter blur-3xl animate-pulse" />
 
               {/* Simulated trading chart */}
               <motion.div
@@ -227,14 +227,14 @@ export default function FuturisticHero() {
                 {/* Chart header */}
                 <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
                   <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-red-500 mr-2" />
+                    <div className="w-3 h-3 rounded-full bg-green-500 mr-2" />
                     <span className="text-white font-medium">BTC/USD</span>
                   </div>
                   <div className="flex items-center text-white text-sm">
-                    <span className="text-red-500 font-semibold">
+                    <span className="text-green-500 font-semibold">
                       36,452.12
                     </span>
-                    <span className="ml-2 text-red-500">-2.34%</span>
+                    <span className="ml-2 text-green-500">-2.34%</span>
                   </div>
                 </div>
 
@@ -351,7 +351,7 @@ export default function FuturisticHero() {
                 }}
               >
                 <div className="flex items-center">
-                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2" />
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2" />
                   <span>Target: 39,800</span>
                 </div>
               </motion.div>
@@ -369,7 +369,7 @@ export default function FuturisticHero() {
       >
         <span className="text-gray-400 text-sm mb-2">Scroll to explore</span>
         <motion.div
-          className="w-1 h-8 bg-gradient-to-b from-red-500 to-transparent rounded-full"
+          className="w-1 h-8 bg-gradient-to-b from-green-500 to-transparent rounded-full"
           animate={{
             scaleY: [1, 1.5, 1],
             opacity: [0.7, 1, 0.7],

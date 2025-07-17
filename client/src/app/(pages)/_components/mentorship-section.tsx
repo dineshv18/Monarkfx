@@ -91,8 +91,8 @@ const benefits = [
   },
   {
     icon: Calendar,
-    title: "Live Trading Sessions",
-    description: "Real-time market analysis and trade execution with mentors",
+    title: "Scheduled Learning Sessions",
+    description: "Regular one-on-one sessions and market analysis with mentors",
   },
   {
     icon: GraduationCap,
@@ -116,38 +116,38 @@ const MentorCard = ({
   rating,
   studentsCount,
 }: MentorCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <motion.div
-      className="bg-white rounded-2xl overflow-hidden shadow-lg relative group"
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="bg-gray-900 rounded-2xl overflow-hidden shadow-lg relative group border border-gray-800"
     >
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-red-600 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100" />
+      {/* Hover effect border */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600 transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100" />
 
-      <div className="relative h-80 overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="absolute inset-0 bg-gray-800 animate-pulse" />
         <Image
           src={image}
           alt={name}
-          width={500}
-          height={600}
-          className={`w-full h-full object-cover transition-transform duration-700 ${
-            isHovered ? "scale-105" : "scale-100"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className={`object-cover transition-all duration-700 group-hover:scale-105 ${
+            imageLoaded ? "opacity-100" : "opacity-0"
           }`}
+          onLoad={() => setImageLoaded(true)}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-        <div className="absolute bottom-0 left-0 w-full p-6 text-white">
+        <div className="absolute bottom-4 left-4 right-4 text-white">
           <h3 className="text-2xl font-bold mb-1">{name}</h3>
           <p className="text-white/80 text-sm mb-2">{role}</p>
-
-          <div className="flex items-center text-sm">
-            <div className="px-3 py-1 bg-red-500 rounded-full mr-2 text-xs font-medium">
+          <div className="flex flex-wrap gap-2">
+            <div className="px-3 py-1 bg-green-500 rounded-full mr-2 text-xs font-medium">
               {specialization}
             </div>
             <div className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs">
@@ -158,186 +158,185 @@ const MentorCard = ({
       </div>
 
       <div className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2">
             <div className="text-yellow-500 text-lg font-bold">{rating}</div>
-            <div className="flex ml-2">
+            <div className="flex space-x-1">
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`h-4 w-4 ${
-                    i < Math.floor(rating) ? "text-yellow-500" : "text-gray-300"
+                  className={`w-4 h-4 ${
+                    i < Math.floor(rating) ? "text-yellow-500" : "text-gray-600"
                   }`}
-                  viewBox="0 0 20 20"
                   fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               ))}
             </div>
           </div>
-          <div className="text-gray-500 text-sm">
-            {studentsCount.toLocaleString()} students
+          <div className="text-gray-400 text-sm">
+            <Users className="w-4 h-4 inline mr-1" />
+            {studentsCount}
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
-            Available for 1-on-1 sessions
-          </div>
-          <Link href="/mentors">
-            <div className="flex items-center text-red-500 font-medium hover:text-red-600 transition-colors">
-              <span>View Profile</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 ml-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
-          </Link>
+        <div className="text-sm text-gray-300">
+          Join thousands of successful traders mentored by {name}
+        </div>
+
+        <div className="flex items-center text-green-500 font-medium hover:text-green-400 transition-colors">
+          <span>View Profile</span>
+          <svg
+            className="w-4 h-4 ml-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
         </div>
       </div>
     </motion.div>
   );
 };
 
-export function MentorshipSection() {
-  const benefitsRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const isBenefitsInView = useInView(benefitsRef, { once: true, amount: 0.2 });
-  const isStatsInView = useInView(statsRef, { once: true, amount: 0.3 });
+const MentorshipSection = () => {
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
-    <section className="w-full bg-gradient-to-b from-gray-50 to-white py-20 overflow-hidden">
-      {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-        <div className="relative">
-          {/* Background decorations */}
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-40 h-40 bg-red-50 rounded-full opacity-60" />
-          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-red-50 rounded-full opacity-60" />
+    <section className="w-full bg-black py-20 overflow-hidden relative">
+      {/* Background grid pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e15_1px,transparent_1px),linear-gradient(to_bottom,#22c55e15_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 relative z-10">
-            <div className="lg:col-span-5 flex flex-col justify-center">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+      {/* Floating background elements */}
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-40 h-40 bg-green-500/10 rounded-full opacity-60" />
+      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-green-600/10 rounded-full opacity-60" />
+
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Hero Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-block px-4 py-1.5 bg-green-500/10 text-green-400 rounded-full text-sm font-medium mb-4">
+              Professional Mentorship
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+              Transform Your Trading with{" "}
+              <span className="text-green-500">Expert Guidance</span>
+            </h1>
+            <p className="text-lg text-gray-300 mb-8 leading-relaxed">
+              Learn directly from industry professionals who have successfully
+              navigated the markets for years. Our mentorship program provides
+              personalized guidance to accelerate your trading journey.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/mentorship"
+                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-black bg-green-500 hover:bg-green-600 transition-colors duration-300 shadow-md hover:shadow-lg"
               >
-                <div className="inline-block px-4 py-1.5 bg-red-50 text-red-500 rounded-full text-sm font-medium mb-4">
-                  Professional Mentorship
+                Start Mentorship
+              </Link>
+              <button className="inline-flex items-center justify-center px-6 py-3 border border-green-500 text-base font-medium rounded-lg text-green-400 bg-transparent hover:bg-green-500/10 transition-colors duration-300">
+                Learn More
+              </button>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/card/c1.jpg"
+                alt="Professional trader mentoring session"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-transparent mix-blend-multiply" />
+            </div>
+
+            {/* Floating stats card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="absolute -bottom-10 -left-8 bg-gray-900 p-6 rounded-xl shadow-xl border border-gray-800 max-w-xs"
+            >
+              <div className="flex items-center">
+                <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center mr-4">
+                  <Trophy className="h-6 w-6 text-green-500" />
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                  Master Trading with{" "}
-                  <span className="text-red-500">Expert Guidance</span>
-                </h1>
-                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Transform your trading journey with personalized mentorship
-                  from industry professionals with years of real market
-                  experience.
-                </p>
-              </motion.div>
-            </div>
-
-            <div className="lg:col-span-7">
-              <div className="relative pl-8">
-                <motion.div
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="relative z-10 rounded-2xl overflow-hidden shadow-2xl"
-                >
-                  <Image
-                    src="/card/c4.jpg"
-                    alt="Trading Mentorship"
-                    width={800}
-                    height={600}
-                    className="w-full h-full object-cover rounded-2xl"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-transparent mix-blend-multiply" />
-                </motion.div>
-
-                {/* Floating stats card */}
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="absolute -bottom-10 -left-8 bg-white p-6 rounded-xl shadow-xl border border-gray-100 max-w-xs"
-                >
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mr-4">
-                      <Trophy className="h-6 w-6 text-red-500" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900">98%</h3>
-                      <p className="text-sm text-gray-600">Success rate</p>
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    Nearly all our students achieve significant improvement in
-                    their trading performance
-                  </p>
-                </motion.div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white">98%</h3>
+                  <p className="text-sm text-gray-400">Success rate</p>
+                </div>
               </div>
-            </div>
-          </div>
+              <p className="text-sm text-gray-400">
+                of our mentored students achieve profitable trading
+              </p>
+            </motion.div>
+          </motion.div>
         </div>
-      </div>
 
-      {/* Stats Section */}
-      <div
-        ref={statsRef}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Stats Section */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-20">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white p-6 rounded-xl shadow-md border border-gray-100"
+              viewport={{ once: true }}
+              className="bg-gray-900 p-6 rounded-xl shadow-md border border-gray-800"
             >
-              <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
-                <stat.icon className="h-6 w-6 text-red-500" />
+              <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center mb-4">
+                <stat.icon className="h-6 w-6 text-green-500" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">
+              <h3 className="text-2xl font-bold text-white mb-1">
                 {stat.value}
               </h3>
-              <p className="text-sm font-medium text-gray-800 mb-2">
+              <p className="text-sm font-medium text-gray-300 mb-2">
                 {stat.label}
               </p>
-              <p className="text-sm text-gray-600">{stat.description}</p>
+              <p className="text-sm text-gray-400">{stat.description}</p>
             </motion.div>
           ))}
         </div>
-      </div>
 
-      {/* Mentors Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="text-center mb-12">
+        {/* Mentors Section */}
+        <div ref={sectionRef}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
+            className="text-center mb-12"
           >
-            <div className="inline-block px-4 py-1.5 bg-red-50 text-red-500 rounded-full text-sm font-medium mb-4">
+            <div className="inline-block px-4 py-1.5 bg-green-500/10 text-green-400 rounded-full text-sm font-medium mb-4">
               Our Trading Mentors
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Learn from the Best in the Industry
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
               Our mentors have years of real-world trading experience and are
               committed to helping you succeed in your trading journey.
             </p>
@@ -350,130 +349,113 @@ export function MentorshipSection() {
           ))}
         </div>
 
-        {/* <div className="mt-12 text-center">
-          <Link href="/mentors">
-            <div className="inline-flex items-center justify-center px-6 py-3 border border-red-200 text-base font-medium rounded-lg text-red-500 bg-red-50 hover:bg-red-100 transition-colors duration-300">
-              View All Mentors
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 ml-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
-            </div>
-          </Link>
-        </div> */}
-      </div>
-
-      {/* Benefits Section */}
-      <div
-        ref={benefitsRef}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-5">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isBenefitsInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5 }}
+        <div className="text-center mt-12">
+          <Link
+            href="/instructors"
+            className="inline-flex items-center justify-center px-6 py-3 border border-green-500 text-base font-medium rounded-lg text-green-400 bg-transparent hover:bg-green-500/10 transition-colors duration-300"
+          >
+            View All Mentors
+            <svg
+              className="ml-2 w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <div className="inline-block px-4 py-1.5 bg-red-50 text-red-500 rounded-full text-sm font-medium mb-4">
-                Why Choose Our Mentorship
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Benefits of Professional Trading Guidance
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Our mentorship program is designed to provide you with the
-                skills, knowledge, and support you need to succeed in the
-                competitive world of trading.
-              </p>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </Link>
+        </div>
 
-              <Link href="/apply">
-                <div className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-red-500 hover:bg-red-600 transition-colors duration-300 shadow-md hover:shadow-lg">
-                  Apply for Mentorship
-                </div>
-              </Link>
-            </motion.div>
-          </div>
-
-          <div className="lg:col-span-7">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {benefits.map((benefit, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isBenefitsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow"
-                >
-                  <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-4">
-                    <benefit.icon className="h-6 w-6 text-red-500" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-600">{benefit.description}</p>
-                </motion.div>
-              ))}
+        {/* Benefits Section */}
+        <div className="mt-32">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <div className="inline-block px-4 py-1.5 bg-green-500/10 text-green-400 rounded-full text-sm font-medium mb-4">
+              Mentorship Benefits
             </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Why Choose Our Mentorship Program?
+            </h2>
+            <p className="text-lg text-gray-300 mb-8">
+              Personalized guidance that adapts to your learning style and goals
+            </p>
+            <div className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-black bg-green-500 hover:bg-green-600 transition-colors duration-300 shadow-md hover:shadow-lg">
+              Start Your Journey Today
+            </div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-gray-900 p-6 rounded-xl shadow-md border border-gray-800 hover:shadow-lg transition-shadow"
+              >
+                <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center mb-4">
+                  <benefit.icon className="h-6 w-6 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-gray-300">{benefit.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* CTA Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* CTA Section */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-red-500 to-red-600 rounded-2xl overflow-hidden shadow-xl"
+          className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl overflow-hidden shadow-xl relative"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="p-8 md:p-12 flex flex-col justify-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Ready to Transform Your Trading Journey?
-              </h2>
-              <p className="text-white/80 text-lg mb-8">
-                Join our mentorship program today and gain access to expert
-                guidance, proven strategies, and a supportive community.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link href="/apply">
-                  <div className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-red-600 bg-white hover:bg-gray-100 transition-colors duration-300 shadow-md">
-                    Get Started Today
-                  </div>
-                </Link>
-                <Link href="/contact">
-                  <div className="inline-flex items-center justify-center px-6 py-3 border border-white text-base font-medium rounded-lg text-white hover:bg-white/10 transition-colors duration-300">
-                    Contact Us
-                  </div>
-                </Link>
+          <div className="p-8 md:p-12 text-center relative z-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Start Your Mentorship Journey?
+            </h2>
+            <p className="text-white/80 text-lg mb-8">
+              Join thousands of successful traders who transformed their careers
+              with our expert mentorship program.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-green-600 bg-white hover:bg-gray-100 transition-colors duration-300 shadow-md">
+                Get Started Now
+              </div>
+              <div className="inline-flex items-center justify-center px-6 py-3 border border-white text-base font-medium rounded-lg text-white hover:bg-white/10 transition-colors duration-300">
+                Schedule a Call
               </div>
             </div>
+          </div>
 
-            <div className="relative hidden lg:block">
-              <Image
-                src="/card/c3.jpg"
-                alt="Get Started"
-                width={600}
-                height={600}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-l from-transparent to-red-600/50" />
-            </div>
+          <div className="absolute right-0 top-0 w-1/3 h-full">
+            <Image
+              src="/card/c2.jpg"
+              alt="Mentorship program"
+              fill
+              sizes="33vw"
+              className="object-cover opacity-30"
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent to-green-600/50" />
           </div>
         </motion.div>
       </div>
     </section>
   );
-}
+};
+
+export default MentorshipSection;

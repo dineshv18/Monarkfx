@@ -155,7 +155,7 @@ export default function LoginForm({
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-red-600 hover:bg-red-700 text-white transition-colors duration-200"
+          className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors duration-200"
         >
           {isLoading ? (
             <motion.div
@@ -170,8 +170,6 @@ export default function LoginForm({
             "Login"
           )}
         </Button>
-
-
       </form>
     </motion.div>
   );

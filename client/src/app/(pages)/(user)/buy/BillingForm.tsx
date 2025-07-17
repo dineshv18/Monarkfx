@@ -19,7 +19,7 @@ export default function BillingForm({
           <Input
             id="fullName"
             placeholder="John Doe"
-            className="mt-1 bg-gray-50"
+            className="mt-1 bg-gray-800"
             defaultValue={user?.name || ""}
             {...register("fullName", { required: "Full name is required" })}
           />
@@ -37,7 +37,7 @@ export default function BillingForm({
             id="email"
             type="email"
             placeholder="john@example.com"
-            className="mt-1 bg-gray-50"
+            className="mt-1 bg-gray-800"
             defaultValue={user?.email || ""}
             {...register("email", {
               required: "Email is required",
@@ -48,7 +48,9 @@ export default function BillingForm({
             })}
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            <p className="text-green-500 text-sm mt-1">
+              {errors.email.message}
+            </p>
           )}
         </div>
         <div>
@@ -78,7 +80,7 @@ export default function BillingForm({
             {...register("city", { required: "City is required" })}
           />
           {errors.city && (
-            <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>
+            <p className="text-green-500 text-sm mt-1">{errors.city.message}</p>
           )}
         </div>
         <div>
@@ -98,7 +100,9 @@ export default function BillingForm({
             })}
           />
           {errors.state && (
-            <p className="text-red-500 text-sm mt-1">{errors.state.message}</p>
+            <p className="text-green-500 text-sm mt-1">
+              {errors.state.message}
+            </p>
           )}
         </div>
         <div>
@@ -140,7 +144,7 @@ export default function BillingForm({
           )}
         </div>
       </div>
-      <div className="flex items-center space-x-2 bg-gray-50 p-4 rounded-lg">
+      <div className="flex items-center space-x-2 bg-gray-800 p-4 rounded-lg">
         <Checkbox
           id="saveAddress"
           className="h-5 w-5"

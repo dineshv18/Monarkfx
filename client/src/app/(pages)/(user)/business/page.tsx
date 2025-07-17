@@ -100,7 +100,7 @@ const courses = [
       "F&O Trading Techniques",
       "Options Strategies",
       "Multi-timeframe Analysis",
-      "Live Trading Sessions",
+
       "Risk Management",
     ],
     levels: [
@@ -200,9 +200,9 @@ const businessProcess = [
   },
   {
     number: "04",
-    title: "Live Trading",
+    title: "Advanced Training",
     description:
-      "Apply your skills in live trading sessions with direct mentorship from professional traders.",
+      "Apply your skills through advanced trading simulations and practical exercises with direct mentorship from professional traders.",
   },
   {
     number: "05",
@@ -287,7 +287,7 @@ const FeatureCard = ({ feature, index }: { feature: any; index: number }) => {
       <div
         className={`absolute inset-0 bg-gradient-to-br ${feature.color} rounded-2xl blur-md opacity-80 group-hover:opacity-100 transition-opacity duration-300`}
       />
-      <div className="relative bg-white rounded-2xl p-8 h-full border border-white/50 shadow-xl">
+      <div className="relative bg-gray-900 rounded-2xl p-8 h-full border border-gray-700 shadow-xl">
         <div
           className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center text-white mb-4 shadow-lg`}
         >
@@ -334,7 +334,7 @@ const CourseCard = ({ course, index }: { course: any; index: number }) => {
               <p className="text-white/80">{course.tagline}</p>
             </div>
             <div className="bg-white/20 h-16 w-16 rounded-full flex items-center justify-center p-1">
-              <div className="bg-white/90 h-full w-full rounded-full flex items-center justify-center text-red-600 font-bold text-xl">
+              <div className="bg-white/90 h-full w-full rounded-full flex items-center justify-center text-green-600 font-bold text-xl">
                 {course.shortName}
               </div>
             </div>
@@ -362,7 +362,7 @@ const CourseCard = ({ course, index }: { course: any; index: number }) => {
             className="w-full py-3 bg-white text-gray-900 rounded-xl font-semibold flex items-center justify-center space-x-2 shadow-lg"
           >
             <span>View Course Details</span>
-            <ChevronRight className="w-4 h-4 text-red-600" />
+            <ChevronRight className="w-4 h-4 text-green-600" />
           </motion.button>
         </div>
       </div>
@@ -372,12 +372,12 @@ const CourseCard = ({ course, index }: { course: any; index: number }) => {
         initial={{ height: 0, opacity: 0 }}
         whileHover={{ height: "auto", opacity: 1 }}
         transition={{ duration: 0.3 }}
-        className="bg-white/90 backdrop-blur-sm rounded-b-2xl overflow-hidden shadow-xl border border-t-0 border-gray-100"
+        className="bg-gray-800 backdrop-blur-sm rounded-b-2xl overflow-hidden shadow-xl border border-t-0 border-gray-700"
       >
         <div className="p-6 space-y-4">
           <h4 className="font-bold text-gray-900">Course Structure</h4>
           {course.levels.map((level: any, i: number) => (
-            <div key={i} className="border-l-4 border-red-500 pl-4 py-2">
+            <div key={i} className="border-l-4 border-green-500 pl-4 py-2">
               <h5 className="font-semibold text-gray-900">{level.name}</h5>
               <p className="text-sm text-gray-600">{level.duration}</p>
               <p className="text-sm mt-1 text-gray-700">{level.description}</p>
@@ -439,7 +439,7 @@ const BusinessPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       {/* Add CSS for grid pattern */}
       <style jsx global>{`
         .bg-dot-pattern {
@@ -510,7 +510,7 @@ const BusinessPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <span className="text-red-600 font-medium tracking-wide uppercase text-sm">
+              <span className="text-green-500 font-medium tracking-wide uppercase text-sm">
                 Financial Market Education
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mt-4 mb-6">
@@ -539,7 +539,7 @@ const BusinessPage = () => {
                   href="/about"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="bg-white text-red-600 border border-red-200 px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-md transition-shadow flex items-center justify-center"
+                  className="bg-white text-green-600 border border-green-500/30 px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-md transition-shadow flex items-center justify-center"
                 >
                   Learn More
                 </motion.a>
@@ -548,19 +548,19 @@ const BusinessPage = () => {
               {/* Trust indicators */}
               <div className="mt-12 flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-2">
-                  <Award className="h-5 w-5 text-red-600" />
+                  <Award className="h-5 w-5 text-green-500" />
                   <span className="text-gray-600 font-medium">
                     ISO Certified
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-red-600" />
+                  <Users className="h-5 w-5 text-green-500" />
                   <span className="text-gray-600 font-medium">
                     250+ Students
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-red-600" />
+                  <Star className="h-5 w-5 text-green-500" />
                   <span className="text-gray-600 font-medium">
                     4.7/5 Rating
                   </span>
@@ -587,7 +587,7 @@ const BusinessPage = () => {
 
                   {/* Floating elements */}
                   <motion.div
-                    className="absolute top-10 -right-8 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg"
+                    className="absolute top-10 -right-8 bg-gray-900 backdrop-blur-sm p-4 rounded-xl shadow-lg"
                     animate={{ y: [0, -10, 0] }}
                     transition={{
                       duration: 5,
@@ -595,10 +595,10 @@ const BusinessPage = () => {
                       ease: "easeInOut",
                     }}
                   >
-                    <LineChart className="h-8 w-8 text-red-600" />
+                    <LineChart className="h-8 w-8 text-green-500" />
                   </motion.div>
                   <motion.div
-                    className="absolute bottom-16 -left-8 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg"
+                    className="absolute bottom-16 -left-8 bg-gray-900 backdrop-blur-sm p-4 rounded-xl shadow-lg"
                     animate={{ y: [0, 10, 0] }}
                     transition={{
                       duration: 5,
@@ -607,7 +607,7 @@ const BusinessPage = () => {
                       delay: 1,
                     }}
                   >
-                    <Zap className="h-8 w-8 text-red-600" />
+                    <Zap className="h-8 w-8 text-green-500" />
                   </motion.div>
                 </div>
               </motion.div>
@@ -627,7 +627,7 @@ const BusinessPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <span className="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium tracking-wide mb-3">
+              <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
                 TRADING EXPERTISE
               </span>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
@@ -663,7 +663,7 @@ const BusinessPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <span className="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium tracking-wide mb-3">
+              <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
                 PREMIUM COURSES
               </span>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
@@ -694,7 +694,7 @@ const BusinessPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <span className="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium tracking-wide mb-3">
+              <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
                 OUR METHODOLOGY
               </span>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
@@ -826,7 +826,7 @@ const BusinessPage = () => {
               href="/about"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block bg-white text-red-600 px-8 py-4 rounded-xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-shadow"
+              className="inline-block bg-white text-green-600 px-8 py-4 rounded-xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-shadow"
             >
               Read More Success Stories
             </motion.a>
@@ -844,7 +844,7 @@ const BusinessPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <span className="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium tracking-wide mb-3">
+              <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
                 WHY CHOOSE US
               </span>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
@@ -902,7 +902,7 @@ const BusinessPage = () => {
 
               {/* Floating achievement card */}
               <motion.div
-                className="absolute -bottom-8 -right-8 bg-white rounded-xl p-6 shadow-xl border border-red-100 max-w-xs"
+                className="absolute -bottom-8 -right-8 bg-gray-900 rounded-xl p-6 shadow-xl border border-green-500/20 max-w-xs"
                 animate={{ y: [0, -15, 0] }}
                 transition={{
                   duration: 6,
@@ -911,7 +911,7 @@ const BusinessPage = () => {
                 }}
               >
                 <div className="flex items-center mb-3">
-                  <Award className="h-8 w-8 text-red-600 mr-3" />
+                  <Award className="h-8 w-8 text-green-500 mr-3" />
                   <h3 className="text-xl font-bold text-gray-900">
                     ISO Certified
                   </h3>
@@ -924,7 +924,7 @@ const BusinessPage = () => {
 
               {/* Floating review card */}
               <motion.div
-                className="absolute -top-8 -left-8 bg-white rounded-xl p-6 shadow-xl border border-red-100 max-w-xs"
+                className="absolute -top-8 -left-8 bg-gray-900 rounded-xl p-6 shadow-xl border border-green-500/20 max-w-xs"
                 animate={{ y: [0, 15, 0] }}
                 transition={{
                   duration: 6,
@@ -959,19 +959,19 @@ const BusinessPage = () => {
       <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
-            className="absolute -right-40 -bottom-40 w-96 h-96 rounded-full border border-red-200 opacity-50"
+            className="absolute -right-40 -bottom-40 w-96 h-96 rounded-full border border-green-500/30 opacity-50"
             animate={{ rotate: 360 }}
             transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
           />
           <motion.div
-            className="absolute -left-20 -top-20 w-64 h-64 rounded-full border border-red-200 opacity-30"
+            className="absolute -left-20 -top-20 w-64 h-64 rounded-full border border-green-500/30 opacity-30"
             animate={{ rotate: -360 }}
             transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
           />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-red-100">
+          <div className="bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-green-500/20">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="p-12 lg:p-16 flex flex-col justify-center">
                 <motion.div
@@ -1002,13 +1002,13 @@ const BusinessPage = () => {
                       href="/about"
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      className="block sm:inline-block sm:ml-4 border border-red-200 text-red-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-red-50 transition-colors w-full sm:w-auto text-center"
+                      className="block sm:inline-block sm:ml-4 border border-green-500/30 text-green-400 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-green-500/10 transition-colors w-full sm:w-auto text-center"
                     >
                       Explore Programs
                     </motion.a>
                   </div>
 
-                  <div className="mt-10 p-4 bg-red-50 rounded-lg text-sm text-red-700 border border-red-100">
+                  <div className="mt-10 p-4 bg-green-500/10 rounded-lg text-sm text-green-300 border border-green-500/30">
                     <p className="flex items-start">
                       <Lock className="h-5 w-5 mr-2 shrink-0 mt-0.5" />
                       <span>

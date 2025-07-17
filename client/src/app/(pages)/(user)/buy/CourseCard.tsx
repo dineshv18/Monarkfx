@@ -14,11 +14,13 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
     ? Math.round(((course.price - course.salePrice) / course.price) * 100)
     : 0;
 
-  const displayPrice = (course.salePrice ?? 0) > 0 ? course.salePrice! : course.price;
-  const showOriginalPrice = (course.salePrice ?? 0) > 0 && (course.salePrice ?? 0) < course.price;
+  const displayPrice =
+    (course.salePrice ?? 0) > 0 ? course.salePrice! : course.price;
+  const showOriginalPrice =
+    (course.salePrice ?? 0) > 0 && (course.salePrice ?? 0) < course.price;
 
   return (
-    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg bg-white border border-red-100/50 rounded-lg">
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg bg-gray-900 border border-green-500/20 rounded-lg">
       {/* Image Container with Overlay */}
       <div className="relative h-32 overflow-hidden">
         <Image
@@ -31,7 +33,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
 
         {/* Discount Badge */}
         {discount > 0 && (
-          <Badge className="absolute top-2 right-2 bg-red-600 text-white border-0 text-xs px-2">
+          <Badge className="absolute top-2 right-2 bg-green-600 text-white border-0 text-xs px-2">
             {discount}% OFF
           </Badge>
         )}
@@ -45,7 +47,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
 
         {/* Price Section */}
         <div className="flex items-baseline gap-2">
-          <span className="text-base font-bold text-red-600">
+          <span className="text-base font-bold text-green-500">
             {formatPrice(displayPrice)}
           </span>
           {showOriginalPrice && (

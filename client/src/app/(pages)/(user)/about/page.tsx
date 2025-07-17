@@ -191,9 +191,9 @@ const About = () => {
     },
     {
       icon: Briefcase,
-      title: "Live Trading Sessions",
+      title: "Professional Trading Training",
       description:
-        "Real-time market analysis and trading demonstrations with professional traders",
+        "Comprehensive market analysis and trading strategies with professional traders",
     },
     {
       icon: Award,
@@ -218,7 +218,7 @@ const About = () => {
 
   return (
     <ReactLenis root options={{ smoothWheel: true, duration: 1.2 }}>
-      <main className="bg-white overflow-hidden relative" ref={container}>
+      <main className="bg-black overflow-hidden relative" ref={container}>
         {/* Custom cursor */}
         <motion.div
           className="fixed top-0 left-0 rounded-full pointer-events-none z-50 mix-blend-difference hidden md:block"
@@ -292,13 +292,13 @@ const About = () => {
                 {/* Decorative elements */}
                 <motion.div
                   style={{ rotate: rotate1 }}
-                  className="absolute -bottom-10 -right-10 w-80 h-80 border border-red-100 rounded-full -z-0 opacity-70"
+                  className="absolute -bottom-10 -right-10 w-80 h-80 border border-green-500/30 rounded-full -z-0 opacity-70"
                 ></motion.div>
                 <motion.div
                   style={{
                     rotate: useTransform(scrollYProgress, [0, 1], [0, -10]),
                   }}
-                  className="absolute -top-8 -left-8 w-40 h-40 border border-red-200 rounded-full -z-0 opacity-70"
+                  className="absolute -top-8 -left-8 w-40 h-40 border border-green-500/30 rounded-full -z-0 opacity-70"
                 ></motion.div>
               </motion.div>
 
@@ -314,7 +314,7 @@ const About = () => {
                   >
                     <div className="mb-8">
                       <motion.span
-                        className="text-sm uppercase tracking-[0.2em] font-semibold text-red-600 inline-block"
+                        className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block"
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
@@ -324,9 +324,9 @@ const About = () => {
                       </motion.span>
                       <h2 className="text-4xl md:text-6xl font-bold text-gray-800 mt-2">
                         Our Legacy in{" "}
-                        <span className="text-red-600 relative">
+                        <span className="text-green-500 relative">
                           Financial
-                          <span className="absolute -bottom-2 left-0 w-full h-1 bg-red-600/20"></span>
+                          <span className="absolute -bottom-2 left-0 w-full h-1 bg-green-500/20"></span>
                         </span>{" "}
                         Education
                       </h2>
@@ -347,14 +347,14 @@ const About = () => {
                     </motion.p>
 
                     <motion.div
-                      className="p-6 bg-gradient-to-r from-red-50 to-transparent border-l-4 border-red-500 rounded-r-xl shadow-sm"
+                      className="p-6 bg-gradient-to-r from-green-500/20 to-transparent border-l-4 border-green-500 rounded-r-xl shadow-sm"
                       initial={{ opacity: 0, x: 20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: 0.5 }}
                       viewport={{ once: true }}
                       whileHover={{ x: 5 }}
                     >
-                      <p className="italic text-red-700 font-medium">
+                      <p className="italic text-green-400 font-medium">
                         "At Monark FX, we don't just teach trading; we build
                         traders who transform markets."
                       </p>
@@ -405,7 +405,7 @@ const About = () => {
               onMouseLeave={handleMouseLeave}
             >
               <motion.span
-                className="text-sm uppercase tracking-[0.2em] font-semibold text-red-600 inline-block mb-3"
+                className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-3"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
@@ -414,9 +414,9 @@ const About = () => {
                 Our Evolution
               </motion.span>
               <h2 className="text-5xl font-bold text-center text-gray-800 relative inline-block">
-                Our <span className="text-red-600">Journey</span>
+                Our <span className="text-green-500">Journey</span>
                 <motion.div
-                  className="absolute -bottom-3 left-0 w-full h-1 bg-red-100"
+                  className="absolute -bottom-3 left-0 w-full h-1 bg-green-500/20"
                   initial={{ width: 0 }}
                   whileInView={{ width: "100%" }}
                   transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
@@ -456,11 +456,11 @@ const About = () => {
                       className={`p-8 rounded-2xl shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] backdrop-blur-sm
                         ${
                           index % 2 === 0
-                            ? "text-right md:mr-10 border-r-4 border-red-500 bg-gradient-to-br from-white to-red-50"
-                            : "md:ml-10 border-l-4 border-red-500 bg-gradient-to-br from-white to-red-50"
+                            ? "text-right md:mr-10 border-r-4 border-green-500 bg-gradient-to-br from-gray-900 to-gray-800"
+                            : "md:ml-10 border-l-4 border-green-500 bg-gradient-to-br from-gray-900 to-gray-800"
                         } transition-all duration-300`}
                     >
-                      <h3 className="text-2xl font-bold text-red-600 mb-3">
+                      <h3 className="text-2xl font-bold text-green-500 mb-3">
                         {item.title}
                       </h3>
                       <p className="text-gray-600 leading-relaxed">
@@ -506,7 +506,7 @@ const About = () => {
         </section>
 
         {/* Vision & Mission Section */}
-        <section className="py-32 relative bg-white overflow-hidden">
+        <section className="py-32 relative bg-black overflow-hidden">
           {/* Background decorative elements */}
           <motion.div
             ref={parallaxRef2}
@@ -533,7 +533,7 @@ const About = () => {
               onMouseLeave={handleMouseLeave}
             >
               <motion.span
-                className="text-sm uppercase tracking-[0.2em] font-semibold text-red-600 inline-block mb-3"
+                className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-3"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
@@ -561,12 +561,12 @@ const About = () => {
                 }}
                 onMouseEnter={handleTextEnter}
                 onMouseLeave={handleMouseLeave}
-                className="bg-white p-10 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-2xl transition-all duration-500 border border-red-50 backdrop-blur-sm relative z-10"
+                className="bg-gray-900 p-10 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-2xl transition-all duration-500 border border-green-500/20 backdrop-blur-sm relative z-10"
               >
                 <div className="relative mb-8">
                   <div className="absolute -top-6 -left-6 w-12 h-12 bg-red-50 rounded-full"></div>
                   <div className="bg-gradient-to-br from-red-50 to-red-100 p-5 rounded-2xl relative">
-                    <Star className="h-10 w-10 text-red-600" />
+                    <Star className="h-10 w-10 text-green-500" />
                   </div>
                 </div>
 
@@ -605,12 +605,12 @@ const About = () => {
                 }}
                 onMouseEnter={handleTextEnter}
                 onMouseLeave={handleMouseLeave}
-                className="bg-white p-10 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-2xl transition-all duration-500 border border-red-50 backdrop-blur-sm relative z-10"
+                className="bg-gray-900 p-10 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-2xl transition-all duration-500 border border-green-500/20 backdrop-blur-sm relative z-10"
               >
                 <div className="relative mb-8">
                   <div className="absolute -top-6 -left-6 w-12 h-12 bg-red-50 rounded-full"></div>
                   <div className="bg-gradient-to-br from-red-50 to-red-100 p-5 rounded-2xl relative">
-                    <Target className="h-10 w-10 text-red-600" />
+                    <Target className="h-10 w-10 text-green-500" />
                   </div>
                 </div>
 
@@ -642,7 +642,7 @@ const About = () => {
         </section>
 
         {/* Expertise Section */}
-        <section className="py-32 bg-white relative overflow-hidden">
+        <section className="py-32 bg-black relative overflow-hidden">
           {/* Background decorative elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <svg
@@ -680,7 +680,7 @@ const About = () => {
               onMouseLeave={handleMouseLeave}
             >
               <motion.span
-                className="text-sm uppercase tracking-[0.2em] font-semibold text-red-600 inline-block mb-3"
+                className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-3"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
@@ -689,7 +689,7 @@ const About = () => {
                 What We Offer
               </motion.span>
               <h2 className="text-5xl font-bold text-gray-800 mb-5">
-                Our <span className="text-red-600">Expertise</span>
+                Our <span className="text-green-500">Expertise</span>
               </h2>
               <motion.p
                 className="text-gray-600 max-w-2xl mx-auto text-lg"
@@ -721,14 +721,14 @@ const About = () => {
                     }}
                     onMouseEnter={handleButtonEnter}
                     onMouseLeave={handleMouseLeave}
-                    className="group bg-white backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-red-50 hover:border-red-200 transition-all duration-500 relative overflow-hidden"
+                    className="group bg-gray-900 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-green-500/20 hover:border-green-500/40 transition-all duration-500 relative overflow-hidden"
                   >
                     {/* Decorative background element */}
                     <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-red-50 rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
 
                     <div className="relative">
                       <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500">
-                        <IconComponent className="text-red-600 h-8 w-8" />
+                        <IconComponent className="text-green-500 h-8 w-8" />
                       </div>
 
                       <h3 className="text-xl font-bold text-gray-800 mb-3">
@@ -740,7 +740,7 @@ const About = () => {
 
                       {/* Animated arrow on hover */}
                       <motion.div
-                        className="absolute bottom-0 right-0 p-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        className="absolute bottom-0 right-0 p-2 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         animate={{ x: [0, 5, 0] }}
                         transition={{
                           duration: 1.5,
@@ -754,8 +754,8 @@ const About = () => {
 
                     {/* Top corner decoration */}
                     <div className="absolute top-0 left-0 w-10 h-10 overflow-hidden">
-                      <div className="absolute top-0 left-0 w-0.5 h-5 bg-red-200 group-hover:h-10 transition-all duration-500"></div>
-                      <div className="absolute top-0 left-0 w-5 h-0.5 bg-red-200 group-hover:w-10 transition-all duration-500"></div>
+                      <div className="absolute top-0 left-0 w-0.5 h-5 bg-green-500/30 group-hover:h-10 transition-all duration-500"></div>
+                      <div className="absolute top-0 left-0 w-5 h-0.5 bg-green-500/30 group-hover:w-10 transition-all duration-500"></div>
                     </div>
                   </motion.div>
                 );
@@ -887,7 +887,7 @@ const About = () => {
         </section>
 
         {/* Call to Action */}
-        <section className="py-32 bg-white relative overflow-hidden">
+        <section className="py-32 bg-black relative overflow-hidden">
           {/* Background decorative elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             {/* Animated subtle gradient */}
@@ -904,8 +904,8 @@ const About = () => {
             />
 
             {/* Decorative shapes */}
-            <div className="absolute -bottom-32 -right-32 w-96 h-96 border border-red-100 rounded-full opacity-30"></div>
-            <div className="absolute -top-20 -left-20 w-64 h-64 border border-red-100 rounded-full opacity-30"></div>
+            <div className="absolute -bottom-32 -right-32 w-96 h-96 border border-green-500/30 rounded-full opacity-30"></div>
+            <div className="absolute -top-20 -left-20 w-64 h-64 border border-green-500/30 rounded-full opacity-30"></div>
           </div>
 
           <div className="container mx-auto px-4 text-center relative z-10">
@@ -914,7 +914,7 @@ const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="max-w-3xl mx-auto backdrop-blur-sm p-12 rounded-3xl border border-red-50 shadow-[0_10px_50px_-12px_rgba(249,0,0,0.1)]"
+              className="max-w-3xl mx-auto backdrop-blur-sm p-12 rounded-3xl border border-green-500/20 shadow-[0_10px_50px_-12px_rgba(34,197,94,0.1)]"
               onMouseEnter={handleTextEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -926,7 +926,7 @@ const About = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 Ready to Start Your{" "}
-                <span className="text-red-600">Trading Journey</span>?
+                <span className="text-green-500">Trading Journey</span>?
               </motion.h2>
 
               <motion.p

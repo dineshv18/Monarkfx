@@ -84,7 +84,7 @@ export default function SectionHeader({
       {subtitle && (
         <motion.p
           className={cn(
-            "text-red-500 font-medium uppercase tracking-wider text-sm",
+            "text-green-500 font-medium uppercase tracking-wider text-sm",
             subtitleClassName
           )}
           variants={itemVariants}
@@ -108,7 +108,7 @@ export default function SectionHeader({
         {accent && (
           <motion.div
             className={cn(
-              "h-1 bg-gradient-to-r from-red-500 to-red-600 mt-4",
+              "h-1 bg-gradient-to-r from-green-500 to-green-600 mt-4",
               align === "center" ? "w-16 mx-auto" : "w-16"
             )}
             initial={{ width: 0, opacity: 0 }}

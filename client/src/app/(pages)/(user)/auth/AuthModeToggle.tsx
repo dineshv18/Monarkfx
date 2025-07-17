@@ -18,7 +18,7 @@ export default function AuthModeToggle({
         <Button
           variant="ghost"
           onClick={() => setAuthMode("login")}
-          className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200"
+          className="text-green-500 hover:text-green-600 hover:bg-green-500/10 transition-colors duration-200"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           <span>Back to Login</span>
@@ -28,7 +28,7 @@ export default function AuthModeToggle({
           <Button
             variant="ghost"
             onClick={() => setAuthMode("register")}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors duration-200"
+            className="text-green-500 hover:text-green-600 hover:bg-green-500/10 transition-colors duration-200"
           >
             Need an account? <span className="font-semibold ml-1">Register</span>
           </Button>
@@ -36,7 +36,7 @@ export default function AuthModeToggle({
             <Button
               variant="link"
               onClick={() => setAuthMode("forgotPassword")}
-              className="text-gray-500 hover:text-red-600 transition-colors duration-200"
+              className="text-gray-500 hover:text-green-500 transition-colors duration-200"
             >
               Forgot Password?
             </Button>
@@ -44,7 +44,7 @@ export default function AuthModeToggle({
             <Button
               variant="link"
               onClick={() => setAuthMode("resendVerification")}
-              className="text-gray-500 hover:text-red-600 transition-colors duration-200"
+              className="text-gray-500 hover:text-green-500 transition-colors duration-200"
             >
               Resend Verification
             </Button>

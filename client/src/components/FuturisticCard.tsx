@@ -66,7 +66,7 @@ export default function FuturisticCard({
       className={cn(
         "relative rounded-xl overflow-hidden cursor-pointer bg-black/90 border border-gray-800/60",
         getAspectRatioClass(),
-        borderGlow ? "group-hover:border-red-500/50" : "",
+        borderGlow ? "group-hover:border-green-500/50" : "",
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -96,7 +96,7 @@ export default function FuturisticCard({
       {/* Border glow effect */}
       {borderGlow && (
         <motion.div
-          className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-900 rounded-xl blur-sm opacity-0 group-hover:opacity-50 transition duration-500"
+          className="absolute -inset-0.5 bg-gradient-to-r from-green-600 to-green-900 rounded-xl blur-sm opacity-0 group-hover:opacity-50 transition duration-500"
           animate={{
             opacity: isHovered ? 0.5 : 0,
           }}
@@ -122,7 +122,7 @@ export default function FuturisticCard({
         {/* Badge */}
         {badge && (
           <div className="absolute top-3 right-3 z-30">
-            <span className="inline-flex items-center rounded-md bg-red-600/90 px-2 py-1 text-xs font-medium text-white">
+            <span className="inline-flex items-center rounded-md bg-green-600/90 px-2 py-1 text-xs font-medium text-white">
               {badge}
             </span>
           </div>
@@ -138,7 +138,7 @@ export default function FuturisticCard({
           <div>
             <h3 className="text-lg font-bold text-white mb-1">{title}</h3>
             {subtitle && (
-              <p className="text-sm font-medium text-red-500 mb-2">
+              <p className="text-sm font-medium text-green-500 mb-2">
                 {subtitle}
               </p>
             )}

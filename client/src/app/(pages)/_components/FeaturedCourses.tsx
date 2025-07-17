@@ -45,7 +45,7 @@ const CourseSection = ({
         className={`container mx-auto px-4 max-w-7xl overflow-x-hidden  ${containerClassName}`}
       >
         <div className="flex items-center gap-2 mb-8">
-          <Icon className="h-7 w-7 text-red-500" />
+          <Icon className="h-7 w-7 text-green-500" />
           <div>
             <h2
               className={`text-3xl font-bold text-gray-900 ${headingClassName}`}
@@ -66,7 +66,7 @@ const CourseSection = ({
           <div className="flex justify-center mt-12">
             <Link
               href="/courses"
-              className="px-8 py-3 bg-red-500 text-white rounded-full font-semibold hover:bg-red-600 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              className="px-8 py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-colors duration-300 shadow-lg hover:shadow-xl"
             >
               Explore More Courses
             </Link>
@@ -145,7 +145,7 @@ const FeaturedCourses = ({
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>;
+    return <div className="text-center text-green-500">{error}</div>;
   }
 
   const sections = [

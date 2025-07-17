@@ -130,7 +130,7 @@ export default function FuturisticTestimonialShowcase({
 
   return (
     <div
-      className="w-full bg-[#090909] min-h-screen relative overflow-hidden"
+      className="w-full bg-black min-h-screen relative overflow-hidden"
       ref={containerRef}
     >
       {/* Custom cursor */}
@@ -146,9 +146,9 @@ export default function FuturisticTestimonialShowcase({
         className="absolute inset-0 w-full h-full opacity-30"
         style={{ y: backgroundY }}
       >
-        <div className="absolute inset-0 bg-grid" />
-        <div className="absolute top-20 left-1/4 w-64 h-64 bg-red-600/20 rounded-full filter blur-3xl animate-blob"></div>
-        <div className="absolute bottom-32 right-1/4 w-80 h-80 bg-red-800/20 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e15_1px,transparent_1px),linear-gradient(to_bottom,#22c55e15_1px,transparent_1px)] bg-[size:32px_32px]" />
+        <div className="absolute top-20 left-1/4 w-64 h-64 bg-green-500/20 rounded-full filter blur-3xl animate-blob"></div>
+        <div className="absolute bottom-32 right-1/4 w-80 h-80 bg-green-600/20 rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
       </motion.div>
 
       {/* Content Container */}
@@ -166,9 +166,10 @@ export default function FuturisticTestimonialShowcase({
             onMouseLeave={leaveButton}
           >
             <span className="relative">
-              Trader <span className="text-gradient-red">Success Stories</span>
+              Trader{" "}
+              <span className="text-gradient-green">Success Stories</span>
               <motion.span
-                className="absolute -bottom-2 left-0 w-full h-1 bg-red-500"
+                className="absolute -bottom-2 left-0 w-full h-1 bg-green-500"
                 initial={{ width: 0 }}
                 whileInView={{ width: "100%" }}
                 viewport={{ once: true }}

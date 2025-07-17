@@ -4,7 +4,6 @@ import { Metadata } from "next";
 import CourseLayout from "./components/CourseLayout";
 import { CourseDataNew } from "@/type";
 
-
 type Props = {
   params: { slug: string };
 };
@@ -31,7 +30,7 @@ export default async function CoursePage({ params }: Props) {
     return <CourseLayout initialCourseData={courseData} slug={params.slug} />;
   } catch {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12 font-plus-jakarta-sans">
+      <div className="min-h-screen flex items-center justify-center bg-black px-4 py-12 font-plus-jakarta-sans">
         <div className="max-w-md w-full space-y-8 text-center">
           <div className="flex flex-col items-center justify-center">
             <AlertTriangle className="h-16 w-16 text-yellow-400 animate-bounce" />
@@ -45,7 +44,7 @@ export default async function CoursePage({ params }: Props) {
             <div className="mt-8 space-x-4">
               <a
                 href="/courses"
-                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium bg-red-600 hover:bg-red-700 hover:text-white text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium bg-green-600 hover:bg-green-700 hover:text-white text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 Browse Courses
               </a>

@@ -55,7 +55,7 @@ export default function InputField<T extends Record<string, unknown>>({
         )}
       </div>
       {errors[name] && (
-        <p className="text-red-500 text-sm">
+        <p className="text-green-500 text-sm">
           {errors[name]?.message as string}
         </p>
       )}

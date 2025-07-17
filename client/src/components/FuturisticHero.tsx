@@ -75,10 +75,10 @@ export default function FuturisticHero({
         style={{ y, scale, filter: blurFilter, opacity }}
       >
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-gray-50/80 to-white z-10" />
 
         {/* Grid pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] z-20"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ef444415_1px,transparent_1px),linear-gradient(to_bottom,#ef444415_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] z-20"></div>
 
         {/* Background image */}
         <Image

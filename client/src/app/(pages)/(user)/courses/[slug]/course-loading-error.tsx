@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const LoadingSkeleton = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black">
       {/* Header Skeleton */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800">
         <div className="container mx-auto px-4 py-8">
@@ -15,26 +15,26 @@ export const LoadingSkeleton = () => {
               {/* Badges Skeleton */}
               <div className="flex gap-2">
                 {[1, 2, 3].map((i) => (
-                  <Skeleton key={i} className="h-6 w-20 bg-white/20" />
+                  <Skeleton key={i} className="h-6 w-20 bg-gray-700" />
                 ))}
               </div>
               {/* Title Skeleton */}
-              <Skeleton className="h-12 w-3/4 bg-white/20" />
+              <Skeleton className="h-12 w-3/4 bg-gray-700" />
               {/* Description Skeleton */}
               <div className="space-y-2">
-                <Skeleton className="h-4 w-full bg-white/20" />
-                <Skeleton className="h-4 w-5/6 bg-white/20" />
-                <Skeleton className="h-4 w-4/6 bg-white/20" />
+                <Skeleton className="h-4 w-full bg-gray-700" />
+                <Skeleton className="h-4 w-5/6 bg-gray-700" />
+                <Skeleton className="h-4 w-4/6 bg-gray-700" />
               </div>
               {/* Stats Skeleton */}
               <div className="flex gap-4">
-                <Skeleton className="h-8 w-24 bg-white/20" />
-                <Skeleton className="h-8 w-24 bg-white/20" />
+                <Skeleton className="h-8 w-24 bg-gray-700" />
+                <Skeleton className="h-8 w-24 bg-gray-700" />
               </div>
             </div>
             {/* Right Column - Video/Image Skeleton */}
             <div>
-              <Skeleton className="aspect-video w-full bg-white/20 rounded-lg" />
+              <Skeleton className="aspect-video w-full bg-gray-700 rounded-lg" />
             </div>
           </div>
         </div>
@@ -92,10 +92,10 @@ export const LoadingSkeleton = () => {
 
 export const ErrorComponent = ({ error }: { error: string | null }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-black p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-red-600">
+          <CardTitle className="flex items-center gap-2 text-green-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"

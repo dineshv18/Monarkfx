@@ -75,29 +75,9 @@ export default function FuturisticFeatures() {
       description:
         "Master proven risk management techniques that protect your capital and optimize your risk-reward ratios.",
     },
+
     {
       id: 4,
-      icon: (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-          />
-        </svg>
-      ),
-      title: "Live Trading Sessions",
-      description:
-        "Watch professional traders execute strategies in real-time market conditions and learn by observation.",
-    },
-    {
-      id: 5,
       icon: (
         <svg
           className="w-6 h-6"
@@ -167,9 +147,9 @@ export default function FuturisticFeatures() {
     <div className="py-24 bg-black relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 opacity-30 z-0">
-        <div className="absolute inset-0 bg-grid" />
-        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-red-600/20 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
-        <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-red-800/20 rounded-full filter blur-3xl animate-blob"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e15_1px,transparent_1px),linear-gradient(to_bottom,#22c55e15_1px,transparent_1px)] bg-[size:32px_32px]" />
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-green-500/20 rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-green-600/20 rounded-full filter blur-3xl animate-blob"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -182,7 +162,7 @@ export default function FuturisticFeatures() {
           transition={{ duration: 0.7 }}
         >
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Features That <span className="text-gradient-red">Elevate</span>{" "}
+            Features That <span className="text-gradient-green">Elevate</span>{" "}
             Your Trading
           </h2>
           <p className="text-lg text-gray-300 max-w-3xl mx-auto">
@@ -213,14 +193,14 @@ export default function FuturisticFeatures() {
                   scale: hoveredFeature === feature.id ? 1.02 : 1,
                   borderColor:
                     hoveredFeature === feature.id
-                      ? "rgba(239, 68, 68, 0.5)"
+                      ? "rgba(34, 197, 94, 0.5)"
                       : "rgba(255, 255, 255, 0.1)",
                 }}
                 transition={{ duration: 0.3 }}
               >
                 {/* Background glow effect */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-red-600/10 to-red-900/5 rounded-lg opacity-0"
+                  className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-green-900/5 rounded-lg opacity-0"
                   animate={{
                     opacity: hoveredFeature === feature.id ? 0.8 : 0,
                   }}
@@ -233,10 +213,10 @@ export default function FuturisticFeatures() {
                   animate={{
                     borderColor:
                       hoveredFeature === feature.id
-                        ? "rgba(239, 68, 68, 0.8)"
+                        ? "rgba(34, 197, 94, 0.8)"
                         : "rgba(255, 255, 255, 0.2)",
                     color:
-                      hoveredFeature === feature.id ? "#ef4444" : "#ffffff",
+                      hoveredFeature === feature.id ? "#22c55e" : "#ffffff",
                   }}
                   transition={{ duration: 0.3 }}
                 >
@@ -249,7 +229,7 @@ export default function FuturisticFeatures() {
                     className="text-xl font-semibold text-white mb-3"
                     animate={{
                       color:
-                        hoveredFeature === feature.id ? "#ef4444" : "#ffffff",
+                        hoveredFeature === feature.id ? "#22c55e" : "#ffffff",
                     }}
                     transition={{ duration: 0.3 }}
                   >
@@ -260,7 +240,7 @@ export default function FuturisticFeatures() {
 
                 {/* Accent line */}
                 <motion.div
-                  className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-red-500 to-red-800 rounded-full"
+                  className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-green-500 to-green-800 rounded-full"
                   initial={{ width: "30%" }}
                   animate={{
                     width: hoveredFeature === feature.id ? "100%" : "30%",
@@ -282,13 +262,13 @@ export default function FuturisticFeatures() {
           transition={{ duration: 0.7, delay: 0.4 }}
         >
           <motion.button
-            className="relative group overflow-hidden bg-black border border-red-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
+            className="relative group overflow-hidden bg-black border border-green-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
           >
             <span className="relative z-10">Explore All Features</span>
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-800"
+              className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600"
               initial={{ x: "-100%" }}
               whileHover={{ x: 0 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
