@@ -2,15 +2,39 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 type CursorType = "default" | "link" | "expanded" | "success" | "danger";
 
 export default function FuturisticCursor() {
+  const pathname = usePathname();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [visible, setVisible] = useState(false);
   const [cursorType, setCursorType] = useState<CursorType>("default");
   const [clicked, setClicked] = useState(false);
   const [hasTrail, setHasTrail] = useState(false);
+
+  // Don't render futuristic cursor on dashboard pages, but ensure normal cursor is visible
+  useEffect(() => {
+    if (pathname?.startsWith("/dashboard")) {
+      document.body.style.cursor = "auto";
+      document.documentElement.style.cursor = "auto";
+    } else {
+      document.body.style.cursor = "none";
+      document.documentElement.style.cursor = "none";
+    }
+
+    return () => {
+      // Cleanup on unmount
+      document.body.style.cursor = "auto";
+      document.documentElement.style.cursor = "auto";
+    };
+  }, [pathname]);
+
+  // Don't render futuristic cursor on dashboard pages
+  if (pathname?.startsWith("/dashboard")) {
+    return null;
+  }
 
   useEffect(() => {
     const updatePosition = (e: MouseEvent) => {
@@ -249,7 +273,10 @@ export default function FuturisticCursor() {
           x: position.x - 50,
           y: position.y - 50,
           opacity: cursorType === "link" ? 0.1 : 0,
-          backgroundColor: cursorType === "danger" ? "rgba(255, 0, 0, 0.05)" : "rgba(0, 255, 0, 0.05)",
+          backgroundColor:
+            cursorType === "danger"
+              ? "rgba(255, 0, 0, 0.05)"
+              : "rgba(0, 255, 0, 0.05)",
         }}
         transition={{
           type: "spring",
@@ -280,8 +307,15 @@ export default function FuturisticCursor() {
                 height: 20,
                 x: position.x - 10,
                 y: position.y - 10,
-                backgroundColor: cursorType === "danger" ? "rgba(255, 0, 0, 0.2)" : "rgba(0, 255, 0, 0.2)",
-                border: `1px solid ${cursorType === "danger" ? "rgba(255, 0, 0, 0.3)" : "rgba(0, 255, 0, 0.3)"}`,
+                backgroundColor:
+                  cursorType === "danger"
+                    ? "rgba(255, 0, 0, 0.2)"
+                    : "rgba(0, 255, 0, 0.2)",
+                border: `1px solid ${
+                  cursorType === "danger"
+                    ? "rgba(255, 0, 0, 0.3)"
+                    : "rgba(0, 255, 0, 0.3)"
+                }`,
               }}
             />
           ))}
