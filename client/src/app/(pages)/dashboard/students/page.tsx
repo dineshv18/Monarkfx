@@ -301,11 +301,20 @@ const AdminUsersPage: React.FC = () => {
   );
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="p-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-center">User Management</h1>
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            User Management
+          </h1>
+          <p className="text-gray-400">Manage and monitor user accounts</p>
+        </div>
         <Link href="/dashboard/students/import-users">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700"
+          >
             Import Users
           </Button>
         </Link>
@@ -313,36 +322,36 @@ const AdminUsersPage: React.FC = () => {
 
       {/* User Statistics Card */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100">
+        <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium text-blue-700">
+            <CardTitle className="text-lg font-medium text-green-400">
               Total Users
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-blue-800">{totalUsers}</p>
+            <p className="text-3xl font-bold text-white">{totalUsers}</p>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-100">
+        <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium text-green-700">
+            <CardTitle className="text-lg font-medium text-green-400">
               Verified Users
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-green-800">
+            <p className="text-3xl font-bold text-white">
               {users.filter((user) => user.isVerified).length}
             </p>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-100">
+        <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium text-purple-700">
+            <CardTitle className="text-lg font-medium text-green-400">
               Admins
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-purple-800">
+            <p className="text-3xl font-bold text-white">
               {users.filter((user) => user.role === "ADMIN").length}
             </p>
           </CardContent>

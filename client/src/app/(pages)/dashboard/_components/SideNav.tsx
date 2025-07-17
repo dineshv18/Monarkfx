@@ -121,7 +121,8 @@ const navItems: NavItem[] = [
     title: "Live Classes",
     href: "/dashboard/zoom",
     icon: Video,
-  }, {
+  },
+  {
     title: "Contact Form",
     href: "/dashboard/contacts",
     icon: MessageSquare,
@@ -209,7 +210,8 @@ const navGroups: NavGroups = {
         icon: MapPinHouse,
       },
     ],
-  }, feedback: {
+  },
+  feedback: {
     title: "Feedback & Support",
     items: [
       {
@@ -259,7 +261,7 @@ export function Sidenav() {
           <Button
             variant="ghost"
             size="icon"
-            className="fixed top-4 left-4 z-40 md:hidden hover:bg-red-500/10"
+            className="fixed top-4 left-4 z-40 md:hidden hover:bg-gray-800/10 text-white"
           >
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
@@ -267,23 +269,23 @@ export function Sidenav() {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="w-60 p-0 bg-gradient-to-b from-red-50 to-white"
+          className="w-60 p-0 bg-gradient-to-b from-gray-900 to-black border-r border-gray-800"
         >
           <MobileNav />
         </SheetContent>
       </Sheet>
-      <nav className="hidden md:block fixed top-0 left-0 h-full w-60 bg-gradient-to-b from-red-50 to-white border-r border-red-100/40 shadow-sm">
+      <nav className="hidden md:block fixed top-0 left-0 h-full w-60 bg-gradient-to-b from-gray-900 to-black border-r border-gray-800 shadow-xl">
         <ScrollArea className="h-full">
           <div className="px-6 py-8">
             <div className="flex items-center gap-2 mb-8">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-200">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/20">
                 <GraduationCap className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
+                <h1 className="text-xl font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">
                   Admin Portal
                 </h1>
-                <p className="text-xs text-red-600/80">Manage your courses</p>
+                <p className="text-xs text-green-400/80">Manage your courses</p>
               </div>
             </div>
             <SidenavItems />
@@ -312,7 +314,7 @@ function SidenavItems() {
       <div className="space-y-6">
         {Object.entries(navGroups).map(([key, group]) => (
           <div key={key} className="space-y-2">
-            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <h3 className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
               {group.title}
             </h3>
             <div className="space-y-1">
@@ -325,8 +327,8 @@ function SidenavItems() {
                         className={cn(
                           "group flex items-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out w-full",
                           pathname.startsWith(item.href)
-                            ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-200"
-                            : "text-gray-600 hover:bg-red-100/50 hover:text-red-600 hover:shadow-sm"
+                            ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/20"
+                            : "text-gray-300 hover:bg-gray-800/50 hover:text-green-400 hover:shadow-sm"
                         )}
                       >
                         <item.icon
@@ -334,7 +336,7 @@ function SidenavItems() {
                             "mr-3 h-4 w-4 transition-transform duration-200 ease-in-out group-hover:scale-110",
                             pathname.startsWith(item.href)
                               ? "text-white"
-                              : "text-gray-400 group-hover:text-red-500"
+                              : "text-gray-400 group-hover:text-green-400"
                           )}
                         />
                         <span>{item.title}</span>
@@ -353,8 +355,8 @@ function SidenavItems() {
                                 className={cn(
                                   "group flex items-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
                                   pathname === child.href
-                                    ? "bg-red-100 text-red-600"
-                                    : "text-gray-600 hover:bg-red-50 hover:text-red-600"
+                                    ? "bg-green-500/20 text-green-400"
+                                    : "text-gray-400 hover:bg-gray-800/30 hover:text-green-400"
                                 )}
                               >
                                 {child.title}
@@ -370,8 +372,8 @@ function SidenavItems() {
                         className={cn(
                           "group flex items-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out",
                           pathname === item.href
-                            ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-200"
-                            : "text-gray-600 hover:bg-red-100/50 hover:text-red-600 hover:shadow-sm"
+                            ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/20"
+                            : "text-gray-300 hover:bg-gray-800/50 hover:text-green-400 hover:shadow-sm"
                         )}
                       >
                         <item.icon
@@ -379,7 +381,7 @@ function SidenavItems() {
                             "mr-3 h-4 w-4 transition-transform duration-200 ease-in-out group-hover:scale-110",
                             pathname === item.href
                               ? "text-white"
-                              : "text-gray-400 group-hover:text-red-500"
+                              : "text-gray-400 group-hover:text-green-400"
                           )}
                         />
                         <span>{item.title}</span>
@@ -399,23 +401,24 @@ function SidenavItems() {
         <div className="relative">
           <button
             onClick={() => setIsCoursesDropdownOpen(!isCoursesDropdownOpen)}
-            className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-red-50 to-red-100/50 text-red-600 hover:from-red-100 hover:to-red-200/50 transition-colors shadow-sm"
+            className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-gray-800 to-gray-700 text-green-400 hover:from-gray-700 hover:to-gray-600 transition-colors shadow-sm"
           >
             <div className="flex items-center">
               <GraduationCap className="mr-3 h-5 w-5" />
               <span>View All Courses</span>
             </div>
             <ChevronDown
-              className={`h-4 w-4 transform transition-transform duration-200 ${isCoursesDropdownOpen ? "rotate-180" : ""
-                }`}
+              className={`h-4 w-4 transform transition-transform duration-200 ${
+                isCoursesDropdownOpen ? "rotate-180" : ""
+              }`}
             />
           </button>
 
           {isCoursesDropdownOpen && (
-            <div className="mt-2 rounded-xl overflow-hidden bg-white shadow-md border border-red-100/50">
+            <div className="mt-2 rounded-xl overflow-hidden bg-gray-800 shadow-md border border-gray-700">
               {courseLinks.map((link) => (
                 <Link key={link.href} href={link.href}>
-                  <div className="px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">
+                  <div className="px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-green-400 transition-colors">
                     {link.name}
                   </div>
                 </Link>
@@ -426,7 +429,7 @@ function SidenavItems() {
 
         <button
           onClick={handleLogout}
-          className="w-full flex items-center rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-red-100 to-red-200/70 text-red-600 hover:from-red-200 hover:to-red-300/70 transition-colors shadow-sm"
+          className="w-full flex items-center rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-gray-800 to-gray-700 text-green-400 hover:from-gray-700 hover:to-gray-600 transition-colors shadow-sm border border-gray-700"
         >
           <LogOut className="mr-3 h-5 w-5" />
           <span>Logout</span>
@@ -453,21 +456,21 @@ function MobileNav() {
     <ScrollArea className="h-full">
       <div className="px-6 py-8">
         <div className="flex items-center gap-2 mb-8">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-200">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/20">
             <GraduationCap className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">
               Admin Portal
             </h1>
-            <p className="text-xs text-red-600/80">Manage your courses</p>
+            <p className="text-xs text-green-400/80">Manage your courses</p>
           </div>
         </div>
 
         <div className="space-y-6">
           {Object.entries(navGroups).map(([key, group]) => (
             <div key={key} className="space-y-2">
-              <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <h3 className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                 {group.title}
               </h3>
               <div className="space-y-1">
@@ -480,8 +483,8 @@ function MobileNav() {
                           className={cn(
                             "group flex items-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out w-full",
                             pathname.startsWith(item.href)
-                              ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-200"
-                              : "text-gray-600 hover:bg-red-100/50 hover:text-red-600 hover:shadow-sm"
+                              ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/20"
+                              : "text-gray-300 hover:bg-gray-800/50 hover:text-green-400 hover:shadow-sm"
                           )}
                         >
                           <item.icon
@@ -489,7 +492,7 @@ function MobileNav() {
                               "mr-3 h-4 w-4 transition-transform duration-200 ease-in-out group-hover:scale-110",
                               pathname.startsWith(item.href)
                                 ? "text-white"
-                                : "text-gray-400 group-hover:text-red-500"
+                                : "text-gray-400 group-hover:text-green-400"
                             )}
                           />
                           <span>{item.title}</span>
@@ -508,8 +511,8 @@ function MobileNav() {
                                   className={cn(
                                     "group flex items-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
                                     pathname === child.href
-                                      ? "bg-red-100 text-red-600"
-                                      : "text-gray-600 hover:bg-red-50 hover:text-red-600"
+                                      ? "bg-green-500/20 text-green-400"
+                                      : "text-gray-400 hover:bg-gray-800/30 hover:text-green-400"
                                   )}
                                 >
                                   {child.title}
@@ -525,8 +528,8 @@ function MobileNav() {
                           className={cn(
                             "group flex items-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out",
                             pathname === item.href
-                              ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-200"
-                              : "text-gray-600 hover:bg-red-100/50 hover:text-red-600 hover:shadow-sm"
+                              ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/20"
+                              : "text-gray-300 hover:bg-gray-800/50 hover:text-green-400 hover:shadow-sm"
                           )}
                         >
                           <item.icon
@@ -534,7 +537,7 @@ function MobileNav() {
                               "mr-3 h-4 w-4 transition-transform duration-200 ease-in-out group-hover:scale-110",
                               pathname === item.href
                                 ? "text-white"
-                                : "text-gray-400 group-hover:text-red-500"
+                                : "text-gray-400 group-hover:text-green-400"
                             )}
                           />
                           <span>{item.title}</span>
@@ -554,23 +557,24 @@ function MobileNav() {
           <div className="relative">
             <button
               onClick={() => setIsCoursesDropdownOpen(!isCoursesDropdownOpen)}
-              className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-red-50 to-red-100/50 text-red-600 hover:from-red-100 hover:to-red-200/50 transition-colors shadow-sm"
+              className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-gray-800 to-gray-700 text-green-400 hover:from-gray-700 hover:to-gray-600 transition-colors shadow-sm"
             >
               <div className="flex items-center">
                 <GraduationCap className="mr-3 h-5 w-5" />
                 <span>View All Courses</span>
               </div>
               <ChevronDown
-                className={`h-4 w-4 transform transition-transform duration-200 ${isCoursesDropdownOpen ? "rotate-180" : ""
-                  }`}
+                className={`h-4 w-4 transform transition-transform duration-200 ${
+                  isCoursesDropdownOpen ? "rotate-180" : ""
+                }`}
               />
             </button>
 
             {isCoursesDropdownOpen && (
-              <div className="mt-2 rounded-xl overflow-hidden bg-white shadow-md border border-red-100/50">
+              <div className="mt-2 rounded-xl overflow-hidden bg-gray-800 shadow-md border border-gray-700">
                 {courseLinks.map((link) => (
                   <Link key={link.href} href={link.href}>
-                    <div className="px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors">
+                    <div className="px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-green-400 transition-colors">
                       {link.name}
                     </div>
                   </Link>
@@ -581,7 +585,7 @@ function MobileNav() {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-red-100 to-red-200/70 text-red-600 hover:from-red-200 hover:to-red-300/70 transition-colors shadow-sm"
+            className="w-full flex items-center rounded-xl px-4 py-3 text-sm font-medium bg-gradient-to-r from-gray-800 to-gray-700 text-green-400 hover:from-gray-700 hover:to-gray-600 transition-colors shadow-sm border border-gray-700"
           >
             <LogOut className="mr-3 h-5 w-5" />
             <span>Logout</span>
@@ -594,6 +598,6 @@ function MobileNav() {
 
 function Separator() {
   return (
-    <div className="h-px bg-gradient-to-r from-red-100/50 via-red-200/50 to-red-100/50 my-4" />
+    <div className="h-px bg-gradient-to-r from-gray-700/50 via-gray-600/50 to-gray-700/50 my-4" />
   );
 }

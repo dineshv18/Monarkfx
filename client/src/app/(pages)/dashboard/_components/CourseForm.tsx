@@ -389,12 +389,19 @@ const CourseForm = ({
   }
 
   return (
-    <div className="container max-w-4xl mx-auto py-8 px-4">
-      <Card className="shadow-lg bg-white dark:bg-gray-800">
-        <CardHeader className="flex flex-row items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-t-lg">
-          <CardTitle className="text-2xl font-bold text-gray-800 dark:text-white">
-            {isEditing ? "Edit Course" : "Create New Course"}
-          </CardTitle>
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <Card className="shadow-xl bg-gray-900 border-gray-800">
+        <CardHeader className="flex flex-row items-center justify-between bg-gray-800 border-b border-gray-700 rounded-t-lg">
+          <div>
+            <CardTitle className="text-3xl font-bold text-white mb-2">
+              {isEditing ? "Edit Course" : "Create New Course"}
+            </CardTitle>
+            <p className="text-gray-400">
+              {isEditing
+                ? "Update your course details and content"
+                : "Fill in the details to create a new course"}
+            </p>
+          </div>
           {isEditing && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -421,18 +428,18 @@ const CourseForm = ({
             </AlertDialog>
           )}
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-6 bg-gray-900">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Course Status */}
-            <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+            <div className="flex items-center justify-between bg-gray-800 border border-gray-700 p-4 rounded-lg">
               <div className="flex flex-col">
                 <Label
                   htmlFor="isPublished"
-                  className="text-lg font-semibold text-gray-700 dark:text-gray-200"
+                  className="text-lg font-semibold text-green-400"
                 >
                   Publication Status
                 </Label>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-400">
                   {watch("isPublished")
                     ? "Published - Visible to students"
                     : "Draft - Not visible to students"}
@@ -469,15 +476,15 @@ const CourseForm = ({
             </div>
 
             {/* Course Type */}
-            <div className="flex items-center justify-between bg-gray-100  p-4 rounded-lg">
+            <div className="flex items-center justify-between bg-gray-800 border border-gray-700 p-4 rounded-lg">
               <div className="flex flex-col">
                 <Label
                   htmlFor="paid"
-                  className="text-lg font-semibold text-gray-700"
+                  className="text-lg font-semibold text-green-400"
                 >
                   Payment Type
                 </Label>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-400">
                   {watch("paid")
                     ? "Premium Course (Paid Access)"
                     : "Free Course (Open Access)"}
@@ -517,19 +524,22 @@ const CourseForm = ({
               type="single"
               collapsible
               defaultValue="basic-info"
-              className="bg-white dark:bg-gray-800 rounded-lg shadow"
+              className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl"
             >
               {/* Basic Information */}
-              <AccordionItem value="basic-info">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+              <AccordionItem
+                value="basic-info"
+                className="border-b border-gray-700"
+              >
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
                   Basic Information
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 p-4">
+                <AccordionContent className="space-y-4 p-4 bg-gray-900">
                   {/* Title */}
                   <div>
                     <Label
                       htmlFor="title"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Title
                     </Label>
@@ -537,10 +547,10 @@ const CourseForm = ({
                       id="title"
                       {...register("title", { required: "Title is required" })}
                       placeholder="Course title"
-                      className="mt-1"
+                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
                     {errors.title && (
-                      <span className="text-red-500 text-sm">
+                      <span className="text-red-400 text-sm">
                         {errors.title.message}
                       </span>
                     )}
@@ -550,7 +560,7 @@ const CourseForm = ({
                   <div>
                     <Label
                       htmlFor="slug"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       URL Slug
                     </Label>
@@ -563,12 +573,12 @@ const CourseForm = ({
                           ? "Edit URL slug"
                           : "Generate from title if empty"
                       }
-                      className="mt-1"
+                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-400 mt-1">
                       URL identifier (e.g., "bansuri-beginner-course").
                       {currentSlug && (
-                        <span className="font-mono block mt-1">
+                        <span className="font-mono block mt-1 text-green-400">
                           Current: {currentSlug}
                         </span>
                       )}
@@ -581,7 +591,7 @@ const CourseForm = ({
                   <div className="flex flex-col space-y-2">
                     <Label
                       htmlFor="description"
-                      className="text-sm font-medium text-gray-700"
+                      className="text-sm font-medium text-green-400"
                     >
                       Description
                     </Label>
@@ -745,7 +755,7 @@ const CourseForm = ({
                       />
                     </div>
                     {errors.description && (
-                      <span className="text-red-500 text-sm mt-1">
+                      <span className="text-red-400 text-sm mt-1">
                         {errors.description.message}
                       </span>
                     )}
@@ -755,7 +765,7 @@ const CourseForm = ({
                   <div>
                     <Label
                       htmlFor="validityDays"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Validity Period (Days)
                     </Label>
@@ -770,18 +780,18 @@ const CourseForm = ({
                             message: "Validity must be 0 or greater",
                           },
                         })}
-                        className="pl-2"
+                        className="pl-2 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                         placeholder="0 (unlimited access)"
                         type="number"
                         min="0"
                       />
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-400 mt-1">
                       Enter 0 for unlimited access, or number of days for
                       limited access
                     </p>
                     {errors.validityDays && (
-                      <span className="text-red-500 text-sm">
+                      <span className="text-red-400 text-sm">
                         {errors.validityDays.message}
                       </span>
                     )}
@@ -792,12 +802,12 @@ const CourseForm = ({
                     <div>
                       <Label
                         htmlFor="price"
-                        className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                        className="text-sm font-medium text-green-400"
                       >
                         Regular Price (₹)
                       </Label>
                       <div className="relative mt-1">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                           ₹
                         </span>
                         <Input
@@ -809,14 +819,14 @@ const CourseForm = ({
                               message: "Price must be greater than 0",
                             },
                           })}
-                          className="pl-8"
+                          className="pl-8 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                           placeholder="499.00"
                           type="number"
                           step="0.01"
                         />
                       </div>
                       {errors.price && (
-                        <span className="text-red-500 text-sm">
+                        <span className="text-red-400 text-sm">
                           {errors.price.message}
                         </span>
                       )}
@@ -827,12 +837,12 @@ const CourseForm = ({
                     <div>
                       <Label
                         htmlFor="salePrice"
-                        className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                        className="text-sm font-medium text-green-400"
                       >
                         Sale Price (Optional) (₹)
                       </Label>
                       <div className="relative mt-1">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                           ₹
                         </span>
                         <Input
@@ -861,7 +871,7 @@ const CourseForm = ({
                               },
                             },
                           })}
-                          className="pl-8"
+                          className="pl-8 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                           placeholder="299.00"
                           type="number"
                           step="0.01"
@@ -869,7 +879,7 @@ const CourseForm = ({
                         />
                       </div>
                       {errors.salePrice && (
-                        <span className="text-red-500 text-sm">
+                        <span className="text-red-400 text-sm">
                           {errors.salePrice.message}
                         </span>
                       )}
@@ -880,7 +890,7 @@ const CourseForm = ({
                   <div>
                     <Label
                       htmlFor="language"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Language
                     </Label>
@@ -890,10 +900,10 @@ const CourseForm = ({
                         required: "Language is required",
                       })}
                       placeholder="Course language"
-                      className="mt-1"
+                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
                     {errors.language && (
-                      <span className="text-red-500 text-sm">
+                      <span className="text-red-400 text-sm">
                         {errors.language.message}
                       </span>
                     )}
@@ -903,7 +913,7 @@ const CourseForm = ({
                   <div>
                     <Label
                       htmlFor="categoryId"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Category
                     </Label>
@@ -930,7 +940,7 @@ const CourseForm = ({
                       )}
                     />
                     {errors.categoryId && (
-                      <span className="text-red-500 text-sm">
+                      <span className="text-red-400 text-sm">
                         {errors.categoryId.message}
                       </span>
                     )}
@@ -940,7 +950,7 @@ const CourseForm = ({
                   <div>
                     <Label
                       htmlFor="subheading"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Subheading
                     </Label>
@@ -948,22 +958,22 @@ const CourseForm = ({
                       id="subheading"
                       {...register("subheading")}
                       placeholder="Course subheading"
-                      className="mt-1"
+                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
               {/* SEO Settings */}
-              <AccordionItem value="seo">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+              <AccordionItem value="seo" className="border-b border-gray-700">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
                   SEO Settings
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 p-4">
+                <AccordionContent className="space-y-4 p-4 bg-gray-900">
                   <div>
                     <Label
                       htmlFor="metaTitle"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Meta Title
                     </Label>
@@ -971,14 +981,14 @@ const CourseForm = ({
                       id="metaTitle"
                       {...register("metaTitle")}
                       placeholder="SEO Meta title"
-                      className="mt-1"
+                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
                   </div>
 
                   <div>
                     <Label
                       htmlFor="metaDesc"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Meta Description
                     </Label>
@@ -986,31 +996,36 @@ const CourseForm = ({
                       id="metaDesc"
                       {...register("metaDesc")}
                       placeholder="SEO Meta description"
-                      className="mt-1"
+                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
               {/* Course Settings */}
-              <AccordionItem value="settings">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+              <AccordionItem
+                value="settings"
+                className="border-b border-gray-700"
+              >
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
                   Course Settings
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 p-4">
+                <AccordionContent className="space-y-4 p-4 bg-gray-900">
                   <div className="grid grid-cols-2 gap-4">
                     {["featured", "popular", "trending", "bestseller"].map(
                       (type) => (
                         <div
                           key={type}
-                          className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg"
+                          className="flex items-center justify-between bg-gray-800 border border-gray-700 p-3 rounded-lg"
                         >
-                          <Label className="capitalize text-sm font-medium text-gray-700 dark:text-gray-200">
+                          <Label className="capitalize text-sm font-medium text-green-400">
                             {type}
                           </Label>
                           <Controller
                             name={
-                              `is${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof CourseDataNew
+                              `is${
+                                type.charAt(0).toUpperCase() + type.slice(1)
+                              }` as keyof CourseDataNew
                             }
                             control={control}
                             render={({ field }) => (
@@ -1020,7 +1035,10 @@ const CourseForm = ({
                                   field.onChange(checked);
                                   if (isEditing) {
                                     handleToggle(
-                                      `is${type.charAt(0).toUpperCase() + type.slice(1)}` as keyof CourseDataNew
+                                      `is${
+                                        type.charAt(0).toUpperCase() +
+                                        type.slice(1)
+                                      }` as keyof CourseDataNew
                                     );
                                   }
                                 }}
@@ -1035,15 +1053,18 @@ const CourseForm = ({
               </AccordionItem>
 
               {/* Course Thumbnail */}
-              <AccordionItem value="thumbnail">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+              <AccordionItem
+                value="thumbnail"
+                className="border-b border-gray-700"
+              >
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
                   Course Thumbnail
                 </AccordionTrigger>
 
-                <AccordionContent className="p-4">
+                <AccordionContent className="p-4 bg-gray-900">
                   <div
                     {...getRootProps()}
-                    className="border-2 border-dashed rounded-lg p-4 text-center cursor-pointer hover:border-red-500 transition-colors duration-200"
+                    className="border-2 border-dashed border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-green-500 transition-colors duration-200"
                   >
                     <input {...getInputProps()} />
                     {thumbnailPreview ? (
@@ -1080,7 +1101,7 @@ const CourseForm = ({
                     ) : (
                       <div className="py-8">
                         <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-gray-400">
                           Drag & drop or click to select thumbnail
                         </p>
                       </div>
@@ -1090,15 +1111,15 @@ const CourseForm = ({
               </AccordionItem>
 
               {/* Thumbnail Video */}
-              <AccordionItem value="video">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+              <AccordionItem value="video" className="border-b border-gray-700">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
                   Thumbnail Video
                 </AccordionTrigger>
-                <AccordionContent className="p-4">
+                <AccordionContent className="p-4 bg-gray-900">
                   <div>
                     <Label
                       htmlFor="videoUrl"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      className="text-sm font-medium text-green-400"
                     >
                       Video URL
                     </Label>
@@ -1106,7 +1127,7 @@ const CourseForm = ({
                       id="videoUrl"
                       {...register("videoUrl")}
                       placeholder="https://www.your-video-url.com"
-                      className="mt-1"
+                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
                     />
                   </div>
                 </AccordionContent>
@@ -1116,7 +1137,7 @@ const CourseForm = ({
             <div className="flex flex-col space-y-4">
               {Object.keys(errors).length > 0 && (
                 <div
-                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-h-40 overflow-y-auto"
+                  className="bg-red-900/20 border border-red-500 text-red-400 px-4 py-3 rounded relative max-h-40 overflow-y-auto"
                   role="alert"
                 >
                   <strong className="font-bold">
@@ -1132,13 +1153,13 @@ const CourseForm = ({
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-red-500 hover:bg-red-600 
+                className="w-full bg-green-600 hover:bg-green-700 
                 text-white font-semibold py-3 px-6 rounded-lg 
                 transition-all duration-300 
                 disabled:opacity-70 disabled:cursor-not-allowed
                 shadow-lg hover:shadow-xl active:transform 
                 active:scale-[0.99] focus:outline-none 
-                focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-2">

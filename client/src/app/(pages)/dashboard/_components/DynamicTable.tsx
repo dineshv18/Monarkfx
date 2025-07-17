@@ -145,10 +145,11 @@ export function DynamicTable({
       return (
         <Badge
           variant="outline"
-          className={`${item.paid
-            ? "bg-green-50 text-green-700 border-green-200"
-            : "bg-blue-50 text-blue-700 border-blue-200"
-            } px-2 py-1 text-xs font-medium rounded-md`}
+          className={`${
+            item.paid
+              ? "bg-green-500/20 text-green-400 border-green-500"
+              : "bg-gray-700 text-gray-300 border-gray-600"
+          } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.paid ? "Paid" : "Free"}
         </Badge>
@@ -159,10 +160,11 @@ export function DynamicTable({
       return (
         <Badge
           variant="outline"
-          className={`${item.isVerified
-            ? "bg-green-50 text-green-700 border-green-200"
-            : "bg-yellow-50 text-yellow-700 border-yellow-200"
-            } px-2 py-1 text-xs font-medium rounded-md`}
+          className={`${
+            item.isVerified
+              ? "bg-green-500/20 text-green-400 border-green-500"
+              : "bg-yellow-500/20 text-yellow-400 border-yellow-500"
+          } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isVerified ? "Verified" : "Unverified"}
         </Badge>
@@ -175,10 +177,11 @@ export function DynamicTable({
       return (
         <Badge
           variant="outline"
-          className={`${item.isPublished
-            ? "bg-green-50 text-green-700 border-green-200"
-            : "bg-yellow-50 text-yellow-700 border-yellow-200"
-            } px-2 py-1 text-xs font-medium rounded-md`}
+          className={`${
+            item.isPublished
+              ? "bg-green-500/20 text-green-400 border-green-500"
+              : "bg-yellow-500/20 text-yellow-400 border-yellow-500"
+          } px-2 py-1 text-xs font-medium rounded-md`}
         >
           {item.isPublished ? "Published" : "Draft"}
         </Badge>
@@ -280,29 +283,29 @@ export function DynamicTable({
   if (!isAuthenticated) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">Please log in to view this content.</p>
+        <p className="text-gray-400">Please log in to view this content.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4 overflow-hidden">
-      <div className="rounded-lg border border-gray-200 shadow-sm overflow-x-auto">
+      <div className="rounded-lg border border-gray-800 bg-gray-900 shadow-xl overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50 ">
+            <TableRow className="bg-gray-800 border-b border-gray-700">
               {columns.map((column) => (
                 <TableHead
                   key={column.key}
-                  className="py-3 px-4 font-semibold text-gray-900"
+                  className="py-3 px-4 font-semibold text-green-400"
                 >
                   {column.label}
                 </TableHead>
               ))}
-              <TableHead className="py-3 px-4 font-semibold text-gray-900">
+              <TableHead className="py-3 px-4 font-semibold text-green-400">
                 Status
               </TableHead>
-              <TableHead className="py-3 px-4 font-semibold text-gray-900">
+              <TableHead className="py-3 px-4 font-semibold text-green-400">
                 Actions
               </TableHead>
             </TableRow>
@@ -311,17 +314,20 @@ export function DynamicTable({
             {data.map((item) => (
               <TableRow
                 key={item.id}
-                className="hover:bg-gray-50 transition-colors"
+                className="hover:bg-gray-800 transition-colors border-b border-gray-700"
               >
                 {columns.map((column) => (
-                  <TableCell key={column.key} className="py-3 px-4">
+                  <TableCell
+                    key={column.key}
+                    className="py-3 px-4 text-gray-300"
+                  >
                     {column.key === "description" ? (
                       truncateDescription(String(item[column.key] || ""))
                     ) : column.key === "price" ? (
                       <div className="flex flex-col">
                         {(item as Course).salePrice ? (
                           <>
-                            <span className="text-[#290b34] font-semibold">
+                            <span className="text-green-400 font-semibold">
                               {formatPrice(Number((item as Course).salePrice))}
                             </span>
                             <span className="text-gray-500 line-through text-sm">
@@ -329,7 +335,7 @@ export function DynamicTable({
                             </span>
                           </>
                         ) : (
-                          <span className="text-[#601b79] font-semibold">
+                          <span className="text-green-400 font-semibold">
                             {formatPrice(Number(item[column.key]))}
                           </span>
                         )}
@@ -370,7 +376,7 @@ export function DynamicTable({
 
       {totalItems > 12 && (
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 px-2">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-400">
             Showing {(currentPage - 1) * 12 + 1} to{" "}
             {Math.min(currentPage * 12, totalItems)} of {totalItems} entries
           </p>

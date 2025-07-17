@@ -11,18 +11,38 @@ export default function CoursesPage() {
   ];
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-5">
-        <h1 className="text-2xl font-bold">Courses</h1>
-        <div className="flex flex-wrap gap-2">
+    <div className="py-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">Courses</h1>
+          <p className="text-gray-400">
+            Manage and organize your course content
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-3">
           <Link href="/dashboard/create-course">
-            <Button variant="outline">Add Course</Button>
+            <Button
+              variant="outline"
+              className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700"
+            >
+              Add Course
+            </Button>
           </Link>
           <Link href="/dashboard/draft-courses">
-            <Button variant="outline">Draft Course</Button>
+            <Button
+              variant="outline"
+              className="bg-gray-800 hover:bg-gray-700 text-gray-300 border-gray-700 hover:border-gray-600"
+            >
+              Draft Course
+            </Button>
           </Link>
           <Link href="/dashboard/access-course">
-            <Button variant="outline">Course Access</Button>
+            <Button
+              variant="outline"
+              className="bg-gray-800 hover:bg-gray-700 text-gray-300 border-gray-700 hover:border-gray-600"
+            >
+              Course Access
+            </Button>
           </Link>
         </div>
       </div>
