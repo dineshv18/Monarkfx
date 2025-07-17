@@ -5,6 +5,7 @@ import { Space_Grotesk } from "next/font/google";
 import ClientProviders from "@/helper/Providers";
 import Script from "next/script";
 import FuturisticCursor from "@/components/FuturisticCursor";
+import TrackingScripts from "@/components/TrackingScripts";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -47,6 +48,9 @@ export default function RootLayout({
       >
         {/* Custom Cursor */}
         <FuturisticCursor />
+
+        {/* Global Tracking Scripts */}
+        <TrackingScripts />
 
         <ClientProviders>{children}</ClientProviders>
 
