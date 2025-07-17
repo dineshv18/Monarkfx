@@ -16,6 +16,9 @@ import {
   Lock,
   Folder,
   Check,
+  TrendingUp,
+  Flame,
+  Star,
 } from "lucide-react";
 import parse from "html-react-parser";
 import { Element } from "domhandler";
@@ -347,190 +350,192 @@ const CourseClient: React.FC<CourseClientProps> = ({
   return (
     <div className="min-h-screen bg-black font-plus-jakarta-sans">
       {/* Course Header */}
-      <div className="bg-gradient-to-t from-[#ef5252] to-[#000000c1] text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+      <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
             }}
           />
         </div>
 
-        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Course Info */}
-            <div className="order-2 md:order-1 space-y-6">
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2">
-                {course.isBestseller && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-yellow-400/20 text-yellow-200 border-yellow-400/40"
-                  >
-                    <Award className="w-4 h-4 mr-1" /> Bestseller
-                  </Badge>
-                )}
-                {course.isTrending && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-blue-400/20 text-blue-200 border-blue-400/40"
-                  >
-                    📈 Trending
-                  </Badge>
-                )}
-                {course.isPopular && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-400/20 text-green-200 border-green-400/40"
-                  >
-                    🔥 Popular
-                  </Badge>
-                )}
-                {course.isFeatured && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-purple-400/20 text-purple-200 border-purple-400/40"
-                  >
-                    ⭐ Featured
-                  </Badge>
-                )}
-              </div>
-              {/* Title & Subheading */}
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10">              <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Course Info */}
+          <div className="order-2 md:order-1 space-y-8">
+            {/* Badges */}
+            <div className="flex flex-wrap gap-2">
+              {course.isBestseller && (
+                <Badge
+                  variant="secondary"
+                  className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 text-yellow-200 border-yellow-500/30 px-3 py-1.5"
+                >
+                  <Award className="w-4 h-4 mr-1.5" /> Bestseller
+                </Badge>
+              )}
+              {course.isTrending && (
+                <Badge
+                  variant="secondary"
+                  className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-200 border-blue-500/30 px-3 py-1.5"
+                >
+                  <TrendingUp className="w-4 h-4 mr-1.5" /> Trending
+                </Badge>
+              )}
+              {course.isPopular && (
+                <Badge
+                  variant="secondary"
+                  className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-200 border-green-500/30 px-3 py-1.5"
+                >
+                  <Flame className="w-4 h-4 mr-1.5" /> Popular
+                </Badge>
+              )}
+              {course.isFeatured && (
+                <Badge
+                  variant="secondary"
+                  className="bg-gradient-to-r from-purple-500/20 to-fuchsia-500/20 text-purple-200 border-purple-500/30 px-3 py-1.5"
+                >
+                  <Star className="w-4 h-4 mr-1.5" /> Featured
+                </Badge>
+              )}
+            </div>
+            {/* Title & Subheading */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-4 md:space-y-6"
+            >
+              <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold capitalize leading-tight tracking-tight">
+                <span className="inline-block">{course.title}</span>
+              </h1>
+              {course.subheading && (
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                  className="text-base sm:text-lg md:text-xl text-white/80 font-medium max-w-3xl leading-relaxed"
+                >
+                  {course.subheading}
+                </motion.p>
+              )}
+            </motion.div>
+
+            {/* Course Meta Info */}
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {/* Language Card */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-4 md:space-y-6"
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-4 border border-green-500/20 hover:border-green-500/30 hover:bg-zinc-900/70 transition-all duration-300"
               >
-                <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold capitalize leading-tight tracking-tight">
-                  <span className="inline-block">{course.title}</span>
-                </h1>
-                {course.subheading && (
-                  <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    className="text-base sm:text-lg md:text-xl text-white/80 font-medium max-w-3xl leading-relaxed"
-                  >
-                    {course.subheading}
-                  </motion.p>
-                )}
+                <div className="flex flex-col items-center text-center gap-2">
+                  <div className="p-2.5 bg-black/30 rounded-lg">
+                    <Languages className="w-6 h-6 text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-zinc-400">Language</p>
+                    <span className="text-base font-semibold text-white capitalize">
+                      {course.language}
+                    </span>
+                  </div>
+                </div>
               </motion.div>
 
-              {/* Course Meta Info */}
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                {/* Language Card */}
+              {/* Category Card */}
+              {course.category && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                  className="bg-white/10 rounded-xl p-4 md:p-5 backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300"
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                  className="bg-zinc-900/50 backdrop-blur-sm rounded-xl p-4 border border-green-500/20 hover:border-green-500/30 hover:bg-zinc-900/70 transition-all duration-300"
                 >
-                  <div className="flex items-center gap-2 md:gap-3">
-                    <div className="p-2 bg-white/10 rounded-lg">
-                      <Languages className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
+                  <div className="flex flex-col items-center text-center gap-2">
+                    <div className="p-2.5 bg-black/30 rounded-lg">
+                      <Folder className="w-6 h-6 text-green-400" />
                     </div>
-                    <div className="space-y-0.5 md:space-y-1">
-                      <span className="text-xl md:text-2xl font-bold capitalize truncate">
-                        {course.language}
+                    <div>
+                      <p className="text-sm font-medium text-zinc-400">Category</p>
+                      <span className="text-base font-semibold text-white capitalize">
+                        {course.category.name}
                       </span>
-                      <p className="text-xs md:text-sm text-white/70">
-                        Language
-                      </p>
                     </div>
                   </div>
                 </motion.div>
-
-                {/* Category Card */}
-                {course.category && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    className="bg-white/10 rounded-xl p-4 md:p-5 backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300"
-                  >
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Folder className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
-                      </div>
-                      <div className="space-y-0.5 md:space-y-1">
-                        <span className="text-xl md:text-2xl font-bold truncate">
-                          {course.category.name}
-                        </span>
-                        <p className="text-xs md:text-sm text-white/70">
-                          Category
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </div>
-
-            {/* Video/Thumbnail */}
-            <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/20">
-              {/* Thumbnail Image - Always visible when not playing */}
-              <div
-                className={`absolute inset-0 transition-opacity duration-300 ${
-                  isPlaying ? "opacity-0" : "opacity-100"
-                }`}
-              >
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
-                  alt={course.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-300 hover:scale-105"
-                  unoptimized
-                />
-              </div>
-
-              {/* Video Player - Only visible when playing and video URL exists */}
-              {isClient && course.videoUrl && (
-                <div
-                  className={`absolute inset-0 transition-opacity duration-300 ${
-                    isPlaying ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  <ReactPlayer
-                    url={course.videoUrl}
-                    width="100%"
-                    height="100%"
-                    playing={isPlaying}
-                    controls={false}
-                    onPause={() => setIsPlaying(false)}
-                    onPlay={() => setIsPlaying(true)}
-                    onError={() => setVideoError(true)}
-                    className="rounded-xl overflow-hidden"
-                    fallback={<div className="absolute inset-0 bg-gray-200" />}
-                  />
-                </div>
-              )}
-
-              {/* Play/Pause Overlay - Only show if video URL exists */}
-              {!videoError && course.videoUrl && (
-                <button
-                  onClick={togglePlayPause}
-                  className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
-                >
-                  {isPlaying ? (
-                    <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
-                  ) : (
-                    <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
-                  )}
-                </button>
-              )}
-
-              {/* Error Message */}
-              {videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-                  <p>Sorry, the video could not be played.</p>
-                </div>
               )}
             </div>
           </div>
+
+          {/* Video/Thumbnail */}
+          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl ring-1 ring-green-500/20 group">
+            {/* Thumbnail Image - Always visible when not playing */}
+            <div
+              className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-0 scale-110" : "opacity-100 scale-100"
+                }`}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
+              <Image
+                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
+                alt={course.title}
+                layout="fill"
+                objectFit="cover"
+                className="transition-transform duration-700 group-hover:scale-110"
+                unoptimized
+                priority
+              />
+              {!isPlaying && (
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                  <div className="p-4 rounded-full bg-green-500/20 backdrop-blur-sm border border-green-500/30 transition-transform duration-300 group-hover:scale-110">
+                    <PlayCircle className="w-12 h-12 text-green-400" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Video Player - Only visible when playing and video URL exists */}
+            {isClient && course.videoUrl && (
+              <div
+                className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-100 scale-100" : "opacity-0 scale-90"
+                  }`}
+              >
+                <ReactPlayer
+                  url={course.videoUrl}
+                  width="100%"
+                  height="100%"
+                  playing={isPlaying}
+                  controls={false}
+                  onPause={() => setIsPlaying(false)}
+                  onPlay={() => setIsPlaying(true)}
+                  onError={() => setVideoError(true)}
+                  className="rounded-xl overflow-hidden"
+                  fallback={<div className="absolute inset-0 bg-gray-200" />}
+                />
+              </div>
+            )}
+
+            {/* Play/Pause Overlay - Only show if video URL exists */}
+            {!videoError && course.videoUrl && (
+              <button
+                onClick={togglePlayPause}
+                className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
+              >
+                {isPlaying ? (
+                  <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                ) : (
+                  <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                )}
+              </button>
+            )}
+
+            {/* Error Message */}
+            {videoError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
+                <p>Sorry, the video could not be played.</p>
+              </div>
+            )}
+          </div>
+        </div>
         </div>
       </div>
 
@@ -551,19 +556,19 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     <div className="prose prose-lg dark:prose-invert">
                       {course.description
                         ? parse(cleanHtml(course.description), {
-                            replace: (domNode) => {
-                              if (
-                                domNode instanceof Element &&
-                                (!domNode.children?.length ||
-                                  (domNode.children.length === 1 &&
-                                    "data" in domNode.children[0] &&
-                                    !domNode.children[0].data?.trim()))
-                              ) {
-                                return <></>;
-                              }
-                              return domNode;
-                            },
-                          })
+                          replace: (domNode) => {
+                            if (
+                              domNode instanceof Element &&
+                              (!domNode.children?.length ||
+                                (domNode.children.length === 1 &&
+                                  "data" in domNode.children[0] &&
+                                  !domNode.children[0].data?.trim()))
+                            ) {
+                              return <></>;
+                            }
+                            return domNode;
+                          },
+                        })
                         : "No description available"}
                     </div>
                   </TabsContent>
@@ -592,36 +597,38 @@ const CourseClient: React.FC<CourseClientProps> = ({
                               </div>
                             </AccordionTrigger>
                             <AccordionContent>
-                              <div className="space-y-2 p-4">
+                              <div className="space-y-3 p-4">
                                 {section.chapters.map((chapter) => (
                                   <div
                                     key={chapter.id}
-                                    className={`flex flex-col gap-2 p-3 rounded-lg transition-all duration-200 border ${
-                                      (!course.paid && isEnrolled) ||
+                                    className={`group flex flex-col gap-2 p-4 rounded-xl transition-all duration-300 ${(!course.paid && isEnrolled) ||
                                       chapter.isFree ||
                                       hasPurchased
-                                        ? "hover:bg-gray-800 cursor-pointer"
-                                        : "opacity-90 bg-gray-800"
-                                    }`}
+                                      ? "hover:bg-zinc-800/50 cursor-pointer bg-zinc-900/30 border border-zinc-800/50 hover:border-green-500/30"
+                                      : "bg-zinc-900/50 border border-zinc-800/50"
+                                      }`}
                                     onClick={() => handleChapterClick(chapter)}
                                   >
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-3">
                                         {chapter.isFree ||
-                                        (course.paid && hasPurchased) ||
-                                        (!course.paid && isEnrolled) ? (
-                                          <PlayCircle className="w-5 h-5 text-green-600" />
+                                          (course.paid && hasPurchased) ||
+                                          (!course.paid && isEnrolled) ? (
+                                          <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
+                                            <PlayCircle className="w-4 h-4 text-green-500" />
+                                          </div>
                                         ) : (
-                                          <Lock className="w-5 h-5 text-gray-400" />
+                                          <div className="p-2 rounded-lg bg-zinc-800/50">
+                                            <Lock className="w-4 h-4 text-zinc-500" />
+                                          </div>
                                         )}
                                         <span
-                                          className={`font-medium ${
-                                            chapter.isFree ||
+                                          className={`font-medium ${chapter.isFree ||
                                             (course.paid && hasPurchased) ||
                                             (!course.paid && isEnrolled)
-                                              ? ""
-                                              : "text-gray-800"
-                                          }`}
+                                            ? "text-white group-hover:text-green-400 transition-colors duration-300"
+                                            : "text-zinc-400"
+                                            }`}
                                         >
                                           {chapter.title}
                                         </span>
@@ -632,24 +639,24 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                             ? "secondary"
                                             : (course.paid && hasPurchased) ||
                                               (!course.paid && isEnrolled)
-                                            ? "default"
-                                            : "outline"
+                                              ? "default"
+                                              : "outline"
                                         }
                                         className={
                                           chapter.isFree
-                                            ? "bg-green-100 text-green-800"
+                                            ? "bg-green-500/20 text-green-300 border-green-500/30"
                                             : (course.paid && hasPurchased) ||
                                               (!course.paid && isEnrolled)
-                                            ? "bg-green-600 text-white"
-                                            : "text-gray-700"
+                                              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0"
+                                              : "border-zinc-700 text-zinc-400 bg-zinc-800/50"
                                         }
                                       >
                                         {chapter.isFree
                                           ? "Free"
                                           : (course.paid && hasPurchased) ||
                                             (!course.paid && isEnrolled)
-                                          ? "Enrolled"
-                                          : "Premium"}
+                                            ? "Enrolled"
+                                            : "Premium"}
                                       </Badge>
                                     </div>
                                   </div>
@@ -694,7 +701,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                 <CardHeader className="space-y-4 relative">
                   <CardTitle className="space-y-4">
                     {(course.paid && hasPurchased) ||
-                    (!course.paid && isEnrolled) ? (
+                      (!course.paid && isEnrolled) ? (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -738,7 +745,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                     {Math.round(
                                       ((course.price - course.salePrice) /
                                         course.price) *
-                                        100
+                                      100
                                     )}
                                     %
                                   </Badge>
@@ -800,7 +807,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                   className="space-y-4"
                 >
                   {(!course.paid && isEnrolled) ||
-                  (course.paid && hasPurchased) ? (
+                    (course.paid && hasPurchased) ? (
                     <div className="space-y-4">
                       <h3 className="font-semibold text-gray-800">
                         Course Progress

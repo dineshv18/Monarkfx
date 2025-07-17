@@ -14,6 +14,9 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useCustomDebounce } from "@/hooks/useCustomDebounce";
 
 const Courses = () => {
+  const backgroundStyle = {
+    background: "linear-gradient(to bottom, #000000, #111111)",
+  };
   const searchParams = useSearchParams();
   const marketParam = searchParams.get('market');
 
@@ -115,82 +118,91 @@ const Courses = () => {
   const { title, subtitle } = getBackgroundTitle();
 
   return (
-    <>
-      <Background
-        title={title}
-        highlightedText="Courses"
-        subtitle={subtitle}
-      />
+    <div style={backgroundStyle} className="min-h-screen">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-b from-black to-zinc-900/50 border-b border-zinc-800/50">
+        <div className="container mx-auto px-4 py-16 max-w-7xl text-center">
+          <h1 className="text-4xl md:text-5xl font-bold">
+            <span className="text-white">{title}</span>
+            <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text"> Courses</span>
+          </h1>
+          <p className="mt-4 text-zinc-400 text-lg max-w-2xl mx-auto">{subtitle}</p>
+        </div>
+      </div>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="flex flex-col gap-4 mb-8">
-          <div className="w-full">
-            <div className="relative">
-              <Input
-                placeholder="Search courses..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="pl-10 w-full"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 w-full">
-            <div className="flex flex-col sm:flex-row gap-4 flex-grow">
-              <Select
-                value={selectedCategory}
-                onValueChange={(value) => {
-                  setSelectedCategory(value);
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={sortBy}
-                onValueChange={(value) => {
-                  setSortBy(value);
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="oldest">Oldest First</SelectItem>
-                  <SelectItem value="price_high">Price: High to Low</SelectItem>
-                  <SelectItem value="price_low">Price: Low to High</SelectItem>
-                </SelectContent>
-              </Select>
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        {/* Filters Section */}
+        <div className="bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800/50 p-6 mb-12 shadow-xl">
+          <div className="flex flex-col gap-6">
+            <div className="w-full">
+              <div className="relative">
+                <Input
+                  placeholder="Search courses..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="pl-10 w-full bg-black/50 border-zinc-800 text-white placeholder:text-zinc-500 focus:border-green-500"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 h-5 w-5" />
+              </div>
             </div>
 
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="w-full sm:w-auto"
-            >
-              <SlidersHorizontal className="mr-2 h-4 w-4" />
-              Reset Filters
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+              <div className="flex flex-col sm:flex-row gap-4 flex-grow">
+                <Select
+                  value={selectedCategory}
+                  onValueChange={(value) => {
+                    setSelectedCategory(value);
+                    setCurrentPage(1);
+                  }}
+                >
+                  <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-800 text-white">
+                    <SelectValue placeholder="All Categories" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id} className="text-white">
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={sortBy}
+                  onValueChange={(value) => {
+                    setSortBy(value);
+                    setCurrentPage(1);
+                  }}
+                >
+                  <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-800 text-white">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-zinc-800">
+                    <SelectItem value="newest" className="text-white">Newest First</SelectItem>
+                    <SelectItem value="oldest" className="text-white">Oldest First</SelectItem>
+                    <SelectItem value="price_high" className="text-white">Price: High to Low</SelectItem>
+                    <SelectItem value="price_low" className="text-white">Price: Low to High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button
+                variant="outline"
+                onClick={handleReset}
+                className="w-full sm:w-auto border-green-500/30 text-green-400 hover:bg-green-500/10"
+              >
+                <SlidersHorizontal className="mr-2 h-4 w-4" />
+                Reset Filters
+              </Button>
+            </div>
           </div>
         </div>
 
+        {/* Content Section */}
         {isLoading && <SkeletonCardGrid />}
 
         {!isLoading && courses.length > 0 && (
@@ -203,13 +215,13 @@ const Courses = () => {
         )}
 
         {!isLoading && courses.length === 0 && (
-          <div className="text-center py-12">
-            <h3 className="text-xl font-semibold text-gray-700">No courses found</h3>
-            <p className="text-gray-500 mt-2">Try adjusting your search or filters</p>
+          <div className="text-center py-12 bg-zinc-900/50 backdrop-blur-sm rounded-xl border border-zinc-800/50">
+            <h3 className="text-xl font-semibold text-white">No courses found</h3>
+            <p className="text-zinc-400 mt-2">Try adjusting your search or filters</p>
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
