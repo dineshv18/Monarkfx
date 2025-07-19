@@ -23,11 +23,24 @@ import {
   Layers,
   Video,
   Loader2,
+  Eye,
+  Play,
+  Pause,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // Type definitions
 interface User {
@@ -77,7 +90,10 @@ interface ZoomLiveClass {
   subscriptions?: User[];
   modules?: Module[];
   slug: string;
-  isOnClassroom?: boolean; // Add this field
+  isOnClassroom?: boolean;
+  zoomLink?: string | null;
+  zoomMeetingId?: string | null;
+  zoomPassword?: string | null;
 }
 
 interface ZoomLiveClassTableProps {
@@ -116,6 +132,58 @@ export default function ZoomSessionsTable({
     return new Date(dateString).toLocaleString();
   };
 
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(amount);
+  };
+
+  const getStatusBadge = (isActive: boolean, isOnClassroom: boolean) => {
+    if (isOnClassroom) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+          <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-1"></div>
+          LIVE
+        </span>
+      );
+    }
+
+    if (isActive) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white border border-green-500">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Active
+        </span>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-600 text-white border border-zinc-500">
+        <XCircle className="h-3 w-3 mr-1" />
+        Inactive
+      </span>
+    );
+  };
+
+  const getRegistrationStatusBadge = (enabled: boolean) => {
+    if (enabled) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white border border-green-500">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Open
+        </span>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+        <XCircle className="h-3 w-3 mr-1" />
+        Closed
+      </span>
+    );
+  };
+
   const toggleExpand = (classId: string) => {
     setExpandedSessions((prev) => ({
       ...prev,
@@ -152,6 +220,7 @@ export default function ZoomSessionsTable({
       setUpdatingRegistration(false);
     }
   };
+
   const handleViewRegistrations = async (liveClass: ZoomLiveClass) => {
     try {
       setSelectedClass(liveClass);
@@ -200,11 +269,12 @@ export default function ZoomSessionsTable({
 
           toast({
             title: "Success",
-            description: "Selected registrations approved successfully",
+            description: `${selectedUsers.length} user(s) approved successfully`,
           });
 
-          await handleViewRegistrations(selectedClass);
+          setShowRegistrationsDialog(false);
           setSelectedUsers([]);
+          refreshData();
         } catch (error) {
           console.error("Error approving registrations:", error);
           toast({
@@ -214,7 +284,6 @@ export default function ZoomSessionsTable({
           });
         } finally {
           setProcessingAction(false);
-          setShowConfirmDialog(false);
         }
       },
     });
@@ -227,7 +296,7 @@ export default function ZoomSessionsTable({
     setConfirmAction({
       type: "remove",
       title: "Confirm Access Removal",
-      message: `Are you sure you want to remove access for ${selectedUsers.length} selected user(s)? They will need to be approved again to regain access.`,
+      message: `Are you sure you want to remove access for ${selectedUsers.length} selected user(s)?`,
       action: async () => {
         try {
           setProcessingAction(true);
@@ -239,11 +308,12 @@ export default function ZoomSessionsTable({
 
           toast({
             title: "Success",
-            description: "Access removed for selected users",
+            description: `Access removed for ${selectedUsers.length} user(s)`,
           });
 
-          await handleViewRegistrations(selectedClass);
+          setShowRegistrationsDialog(false);
           setSelectedUsers([]);
+          refreshData();
         } catch (error) {
           console.error("Error removing access:", error);
           toast({
@@ -253,7 +323,6 @@ export default function ZoomSessionsTable({
           });
         } finally {
           setProcessingAction(false);
-          setShowConfirmDialog(false);
         }
       },
     });
@@ -263,30 +332,31 @@ export default function ZoomSessionsTable({
   const handleDeleteClass = async (liveClass: ZoomLiveClass) => {
     setConfirmAction({
       type: "delete",
-      title: "Confirm Delete",
+      title: "Confirm Deletion",
       message: `Are you sure you want to delete "${liveClass.title}"? This action cannot be undone.`,
       action: async () => {
         try {
-          setIsLoading(true);
+          setProcessingAction(true);
           await axios.delete(
             `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${liveClass.id}`,
             { withCredentials: true }
           );
+
           toast({
             title: "Success",
             description: "Class deleted successfully",
           });
+
           refreshData();
         } catch (error) {
           console.error("Error deleting class:", error);
           toast({
             title: "Error",
-            description: "Failed to delete class. Please try again.",
+            description: "Failed to delete class",
             variant: "destructive",
           });
         } finally {
-          setIsLoading(false);
-          setShowConfirmDialog(false);
+          setProcessingAction(false);
         }
       },
     });
@@ -295,7 +365,7 @@ export default function ZoomSessionsTable({
 
   const handleToggleClassroom = async (classId: string, enabled: boolean) => {
     try {
-      setUpdatingRegistration(true);
+      setIsLoading(true);
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${classId}/toggle-classroom`,
         { isOnClassroom: enabled },
@@ -304,51 +374,40 @@ export default function ZoomSessionsTable({
       refreshData();
       toast({
         title: "Success",
-        description: `Live class ${
-          enabled ? "started" : "stopped"
-        } successfully`,
+        description: `Class ${enabled ? "started" : "stopped"} successfully`,
       });
     } catch (error) {
       console.error("Error toggling classroom:", error);
       toast({
         title: "Error",
-        description: "Failed to update live class status",
+        description: "Failed to update class status",
         variant: "destructive",
       });
     } finally {
-      setUpdatingRegistration(false);
+      setIsLoading(false);
     }
   };
 
   const handleAdminJoinClass = async (classId: string) => {
     try {
       setJoiningClass(classId);
-
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${classId}/join`,
         { withCredentials: true }
       );
 
       if (response.data.data.zoomLink) {
-        // Open zoom link in new tab
         window.open(response.data.data.zoomLink, "_blank");
         toast({
           title: "Success",
-          description: "Joining class... Zoom should open in a new tab.",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "No zoom link available for this class",
-          variant: "destructive",
+          description: "Opening Zoom meeting...",
         });
       }
     } catch (error) {
       console.error("Error joining class:", error);
       toast({
         title: "Error",
-        description:
-          "Failed to join class. Please check if the class is active.",
+        description: "Failed to join class",
         variant: "destructive",
       });
     } finally {
@@ -357,572 +416,574 @@ export default function ZoomSessionsTable({
   };
 
   return (
-    <div className="bg-zinc-900 border border-green-500/30 rounded-lg overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow className="border-green-500/30 hover:bg-green-500/5">
-            <TableHead className="text-green-400 font-semibold"></TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Thumbnail
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Title
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Start Time
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Reg. Fee
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Course Fee
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Registration
-            </TableHead>
-            <TableHead className="text-center text-green-400 font-semibold">
-              <div className="flex items-center justify-center space-x-1">
-                <Video size={14} />
-                <span>Live Status</span>
-              </div>
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Status
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Subscribers
-            </TableHead>
-            <TableHead className="text-center text-green-400 font-semibold">
-              Actions
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {classes.map((liveClass) => (
-            <React.Fragment key={liveClass.id}>
-              <TableRow className="border-green-500/30 hover:bg-green-500/10">
-                <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toggleExpand(liveClass.id)}
-                    disabled={
-                      !liveClass.hasModules || !liveClass.modules?.length
-                    }
-                    className={`${
-                      !liveClass.hasModules ? "opacity-0" : ""
-                    } text-green-400 hover:text-green-300 hover:bg-green-500/20`}
-                  >
-                    {expandedSessions[liveClass.id] ? (
-                      <ChevronUp size={16} />
-                    ) : (
-                      <ChevronDown size={16} />
-                    )}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  {liveClass.thumbnailUrl ? (
-                    <div className="relative w-12 h-12 rounded-md overflow-hidden border border-green-500/30">
-                      <Image
-                        src={liveClass.thumbnailUrl}
-                        alt={liveClass.title}
-                        fill
-                        style={{ objectFit: "cover" }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-12 h-12 bg-zinc-800 border border-green-500/30 rounded-md flex items-center justify-center">
-                      <span className="text-xs text-zinc-400">No Image</span>
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-1">
-                    <h3 className="font-medium text-white">
-                      {liveClass.title}
-                    </h3>
-                    {liveClass.description && (
-                      <p className="text-xs text-zinc-400 line-clamp-2">
-                        {liveClass.description}
-                      </p>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-zinc-300">
-                  {formatDate(liveClass.startTime)}
-                </TableCell>
-                <TableCell className="text-green-400 font-semibold">
-                  ₹{liveClass.registrationFee}
-                </TableCell>
-                <TableCell>
-                  {liveClass.courseFeeEnabled ? (
-                    <span className="text-green-400 font-semibold">
-                      ₹{liveClass.courseFee}
-                    </span>
-                  ) : (
-                    <span className="text-zinc-400">No Fee</span>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      liveClass.registrationEnabled ? "default" : "secondary"
-                    }
-                    className={
-                      liveClass.registrationEnabled
-                        ? "bg-green-500/20 text-green-400 border-green-500/50"
-                        : "bg-zinc-700 text-zinc-300 border-zinc-600"
-                    }
-                  >
-                    {liveClass.registrationEnabled ? "Open" : "Closed"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-center">
-                  <div className="flex flex-col items-center space-y-2">
-                    <Switch
-                      checked={liveClass.isOnClassroom || false}
-                      onCheckedChange={(checked) =>
-                        handleToggleClassroom(liveClass.id, checked)
-                      }
-                      disabled={updatingRegistration}
-                      className="data-[state=checked]:bg-green-500"
-                    />
-                    {liveClass.isOnClassroom && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleAdminJoinClass(liveClass.id)}
-                        disabled={joiningClass === liveClass.id}
-                        className="text-xs bg-green-500/10 border-green-500/50 text-green-400 hover:bg-green-500/20"
-                      >
-                        {joiningClass === liveClass.id ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                        ) : (
-                          "Join"
-                        )}
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant={liveClass.isActive ? "default" : "secondary"}
-                    className={
-                      liveClass.isActive
-                        ? "bg-green-500/20 text-green-400 border-green-500/50"
-                        : "bg-red-500/20 text-red-400 border-red-500/50"
-                    }
-                  >
-                    {liveClass.isActive ? "Active" : "Inactive"}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleViewRegistrations(liveClass)}
-                    className="bg-blue-500/10 border-blue-500/50 text-blue-400 hover:bg-blue-500/20"
-                  >
-                    <Users size={14} className="mr-1" />
-                    {liveClass.subscriptions?.length || 0}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <div className="flex space-x-1">
-                    <Link href={`/dashboard/zoom/edit/${liveClass.id}`}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-amber-500/10 border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
-                      >
-                        <Edit size={14} />
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteClass(liveClass)}
-                      disabled={isLoading}
-                      className="bg-red-500/10 border-red-500/50 text-red-400 hover:bg-red-500/20"
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  </div>
-                </TableCell>
+    <div className="space-y-6">
+      {classes.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="text-zinc-400 mb-4">No live classes found</div>
+          <div className="text-sm text-zinc-500">
+            Start by creating your first live class
+          </div>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-zinc-700 hover:bg-zinc-800/50">
+                <TableHead className="text-zinc-300">Class</TableHead>
+                <TableHead className="text-zinc-300">Date & Time</TableHead>
+                <TableHead className="text-zinc-300">Status</TableHead>
+                <TableHead className="text-zinc-300">Registration</TableHead>
+                <TableHead className="text-zinc-300">Fees</TableHead>
+                <TableHead className="text-zinc-300">Participants</TableHead>
+                <TableHead className="text-zinc-300">Actions</TableHead>
               </TableRow>
+            </TableHeader>
+            <TableBody>
+              {classes.map((liveClass) => (
+                <React.Fragment key={liveClass.id}>
+                  <TableRow className="border-zinc-700 hover:bg-zinc-800/50">
+                    <TableCell className="font-medium text-white">
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-12 h-8 rounded overflow-hidden bg-zinc-800">
+                          {liveClass.thumbnailUrl ? (
+                            <Image
+                              src={liveClass.thumbnailUrl}
+                              alt={liveClass.title}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <Video className="h-4 w-4 text-zinc-600" />
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-white">
+                            {liveClass.title}
+                          </div>
+                          <div className="text-sm text-zinc-400">
+                            {liveClass.description?.substring(0, 50)}
+                            {liveClass.description &&
+                              liveClass.description.length > 50 &&
+                              "..."}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-zinc-300">
+                      {formatDate(liveClass.startTime)}
+                    </TableCell>
+                    <TableCell>
+                      {getStatusBadge(
+                        liveClass.isActive,
+                        liveClass.isOnClassroom || false
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {getRegistrationStatusBadge(
+                        liveClass.registrationEnabled
+                      )}
+                    </TableCell>
+                    <TableCell className="text-zinc-300">
+                      <div className="space-y-1">
+                        <div className="text-sm">
+                          Reg: {formatCurrency(liveClass.registrationFee)}
+                        </div>
+                        {liveClass.courseFeeEnabled && (
+                          <div className="text-sm">
+                            Course: {formatCurrency(liveClass.courseFee)}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-zinc-300">
+                      {liveClass.subscriptions?.length || 0}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleViewRegistrations(liveClass)}
+                          className="text-blue-400 hover:text-blue-300"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Link href={`/dashboard/zoom/edit/${liveClass.id}`}>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-green-400 hover:text-green-300"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleDeleteClass(liveClass)}
+                          className="text-red-400 hover:text-red-300"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
 
-              {/* Expanded Modules Row */}
-              {expandedSessions[liveClass.id] && liveClass.modules && (
-                <TableRow className="border-green-500/30">
-                  <TableCell colSpan={11} className="bg-zinc-800/50">
-                    <div className="py-4">
-                      <h4 className="font-medium text-green-400 mb-3 flex items-center">
-                        <Layers size={16} className="mr-2" />
-                        Class Modules ({liveClass.modules.length})
-                      </h4>
-                      <div className="grid gap-2">
-                        {liveClass.modules
-                          .sort((a, b) => a.position - b.position)
-                          .map((module) => (
-                            <div
-                              key={module.id}
-                              className="flex items-center justify-between p-3 bg-zinc-700 border border-green-500/20 rounded-lg"
-                            >
+                  {/* Live Class Controls Row */}
+                  <TableRow className="border-zinc-700 bg-zinc-800/20">
+                    <TableCell colSpan={7}>
+                      <div className="p-3 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-zinc-400">
+                                Live Status:
+                              </span>
+                              <Switch
+                                checked={liveClass.isOnClassroom || false}
+                                onCheckedChange={(enabled) =>
+                                  handleToggleClassroom(liveClass.id, enabled)
+                                }
+                                disabled={isLoading}
+                                className="data-[state=checked]:bg-green-500"
+                              />
+                              <span className="text-sm text-zinc-300">
+                                {liveClass.isOnClassroom ? "ON" : "OFF"}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-zinc-400">
+                                Registration:
+                              </span>
+                              <Switch
+                                checked={liveClass.registrationEnabled}
+                                onCheckedChange={(enabled) =>
+                                  handleToggleRegistration(
+                                    liveClass.id,
+                                    enabled
+                                  )
+                                }
+                                disabled={updatingRegistration}
+                                className="data-[state=checked]:bg-blue-500"
+                              />
+                              <span className="text-sm text-zinc-300">
+                                {liveClass.registrationEnabled
+                                  ? "Open"
+                                  : "Closed"}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            {liveClass.isOnClassroom ? (
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  handleAdminJoinClass(liveClass.id)
+                                }
+                                className="bg-green-600 hover:bg-green-700 text-white"
+                                disabled={joiningClass === liveClass.id}
+                              >
+                                {joiningClass === liveClass.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                ) : (
+                                  <Play className="h-4 w-4 mr-2" />
+                                )}
+                                Join Live Class
+                              </Button>
+                            ) : (
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  handleToggleClassroom(liveClass.id, true)
+                                }
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                disabled={isLoading}
+                              >
+                                <Video className="h-4 w-4 mr-2" />
+                                Start Class
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Zoom Meeting Details */}
+                        {liveClass.zoomLink && (
+                          <div className="bg-zinc-700/50 p-3 rounded-lg">
+                            <h4 className="text-sm font-semibold text-white mb-2">
+                              Zoom Meeting Details
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                               <div>
-                                <span className="font-medium text-white">
-                                  {module.position}. {module.title}
+                                <span className="text-zinc-400">
+                                  Meeting ID:
                                 </span>
-                                <div className="text-xs text-zinc-400 mt-1">
-                                  {formatDate(module.startTime)} -{" "}
-                                  {formatDate(module.endTime)}
+                                <div className="text-white font-mono">
+                                  {liveClass.zoomMeetingId}
                                 </div>
                               </div>
-                              <Badge
-                                variant={
-                                  module.isFree ? "default" : "secondary"
-                                }
-                                className={
-                                  module.isFree
-                                    ? "bg-green-500/20 text-green-400 border-green-500/50"
-                                    : "bg-orange-500/20 text-orange-400 border-orange-500/50"
-                                }
-                              >
-                                {module.isFree ? "Free" : "Paid"}
-                              </Badge>
+                              <div>
+                                <span className="text-zinc-400">Password:</span>
+                                <div className="text-white font-mono">
+                                  {liveClass.zoomPassword}
+                                </div>
+                              </div>
+                              <div>
+                                <span className="text-zinc-400">
+                                  Join Link:
+                                </span>
+                                <div className="text-blue-400 font-mono text-xs truncate">
+                                  {liveClass.zoomLink}
+                                </div>
+                              </div>
                             </div>
-                          ))}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </React.Fragment>
-          ))}
-          {classes.length === 0 && (
-            <TableRow>
-              <TableCell
-                colSpan={11}
-                className="text-center py-8 text-zinc-400"
-              >
-                No zoom live classes found
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+                    </TableCell>
+                  </TableRow>
 
-      {/* Registration Dialog */}
-      {showRegistrationsDialog && selectedClass && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-zinc-900 border border-green-500/30 rounded-lg p-6 w-full max-w-4xl max-h-[80vh] overflow-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-white">
-                Registrations: {selectedClass.title}
-              </h2>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setShowRegistrationsDialog(false);
-                  setSelectedClass(null);
-                  setRegistrations([]);
-                  setSelectedUsers([]);
-                }}
-                className="text-zinc-400 hover:text-white hover:bg-red-500/20"
-              >
-                ✕
-              </Button>
-            </div>
+                  {/* Expanded Details */}
+                  {expandedSessions[liveClass.id] && (
+                    <TableRow className="border-zinc-700 bg-zinc-800/30">
+                      <TableCell colSpan={7}>
+                        <div className="p-4 space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <h4 className="font-semibold text-white mb-2">
+                                Class Details
+                              </h4>
+                              <div className="space-y-2 text-sm text-zinc-300">
+                                <div>Title: {liveClass.title}</div>
+                                <div>Description: {liveClass.description}</div>
+                                <div>
+                                  Start Time: {formatDate(liveClass.startTime)}
+                                </div>
+                                <div>
+                                  Registration Fee:{" "}
+                                  {formatCurrency(liveClass.registrationFee)}
+                                </div>
+                                {liveClass.courseFeeEnabled && (
+                                  <div>
+                                    Course Fee:{" "}
+                                    {formatCurrency(liveClass.courseFee)}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-white mb-2">
+                                Settings
+                              </h4>
+                              <div className="space-y-2 text-sm text-zinc-300">
+                                <div className="flex items-center justify-between">
+                                  <span>Registration Enabled:</span>
+                                  <Switch
+                                    checked={liveClass.registrationEnabled}
+                                    onCheckedChange={(enabled) =>
+                                      handleToggleRegistration(
+                                        liveClass.id,
+                                        enabled
+                                      )
+                                    }
+                                    disabled={updatingRegistration}
+                                  />
+                                </div>
+                                <div>
+                                  Has Modules:{" "}
+                                  {liveClass.hasModules ? "Yes" : "No"}
+                                </div>
+                                <div>
+                                  First Module Free:{" "}
+                                  {liveClass.isFirstModuleFree ? "Yes" : "No"}
+                                </div>
+                                {liveClass.currentRaga && (
+                                  <div>
+                                    Current Raga: {liveClass.currentRaga}
+                                  </div>
+                                )}
+                                {liveClass.currentOrientation && (
+                                  <div>
+                                    Orientation: {liveClass.currentOrientation}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
 
-            {loadingRegistrations ? (
-              <div className="flex justify-center p-8">
-                <Loader2 className="h-8 w-8 animate-spin text-green-400" />
-              </div>
-            ) : (
-              <>
-                <div className="mb-4 flex justify-between">
-                  <div>
-                    <span className="text-sm text-zinc-300">
-                      {registrations.length} Registration(s)
-                    </span>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={handleBulkApprove}
-                      disabled={selectedUsers.length === 0}
-                      className="bg-green-500 hover:bg-green-600 text-black font-bold"
-                    >
-                      Approve Selected
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={handleRemoveAccess}
-                      disabled={selectedUsers.length === 0}
-                      className="bg-red-500 hover:bg-red-600 text-white"
-                    >
-                      Remove Access
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="bg-zinc-800 border border-green-500/30 rounded-lg overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-green-500/30">
-                        <TableHead className="w-[40px] text-green-400">
-                          <input
-                            type="checkbox"
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedUsers(
-                                  registrations.map((reg) => reg.user.id)
-                                );
-                              } else {
-                                setSelectedUsers([]);
-                              }
-                            }}
-                            checked={
-                              selectedUsers.length > 0 &&
-                              selectedUsers.length === registrations.length
-                            }
-                            className="accent-green-500"
-                          />
-                        </TableHead>
-                        <TableHead className="text-green-400 font-semibold">
-                          Name
-                        </TableHead>
-                        <TableHead className="text-green-400 font-semibold">
-                          Email
-                        </TableHead>
-                        <TableHead className="text-green-400 font-semibold">
-                          Registration Date
-                        </TableHead>
-                        <TableHead className="text-green-400 font-semibold">
-                          Status
-                        </TableHead>
-                        <TableHead className="text-green-400 font-semibold">
-                          Actions
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {registrations.map((reg) => (
-                        <TableRow
-                          key={reg.id}
-                          className="border-green-500/30 hover:bg-green-500/10"
-                        >
-                          <TableCell>
-                            <input
-                              type="checkbox"
-                              checked={selectedUsers.includes(reg.user.id)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedUsers([
-                                    ...selectedUsers,
-                                    reg.user.id,
-                                  ]);
-                                } else {
-                                  setSelectedUsers(
-                                    selectedUsers.filter(
-                                      (id) => id !== reg.user.id
-                                    )
-                                  );
-                                }
-                              }}
-                              className="accent-green-500"
-                            />
-                          </TableCell>
-                          <TableCell className="text-white">
-                            {reg.user.name}
-                          </TableCell>
-                          <TableCell className="text-zinc-300">
-                            {reg.user.email}
-                          </TableCell>
-                          <TableCell className="text-zinc-300">
-                            {formatDate(reg.createdAt)}
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
-                                reg.status === "ACTIVE"
-                                  ? "default"
-                                  : reg.status === "PENDING"
-                                  ? "outline"
-                                  : "destructive"
-                              }
-                              className={
-                                reg.status === "ACTIVE"
-                                  ? "bg-green-500/20 text-green-400 border-green-500/50"
-                                  : reg.status === "PENDING"
-                                  ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/50"
-                                  : "bg-red-500/20 text-red-400 border-red-500/50"
-                              }
-                            >
-                              {reg.status}
-                            </Badge>
-                            {reg.hasAccessToLinks && (
-                              <Badge
-                                variant="outline"
-                                className="ml-2 bg-blue-500/20 text-blue-400 border-blue-500/50"
-                              >
-                                Has Access
-                              </Badge>
+                          {liveClass.modules &&
+                            liveClass.modules.length > 0 && (
+                              <div>
+                                <h4 className="font-semibold text-white mb-2">
+                                  Modules
+                                </h4>
+                                <div className="space-y-2">
+                                  {liveClass.modules.map((module) => (
+                                    <div
+                                      key={module.id}
+                                      className="flex items-center justify-between p-2 bg-zinc-700/50 rounded"
+                                    >
+                                      <div>
+                                        <div className="font-medium text-white">
+                                          {module.title}
+                                        </div>
+                                        <div className="text-sm text-zinc-400">
+                                          {formatDate(module.startTime)} -{" "}
+                                          {formatDate(module.endTime)}
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                        {module.isFree && (
+                                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-600 text-white">
+                                            Free
+                                          </span>
+                                        )}
+                                        <span className="text-sm text-zinc-400">
+                                          Position: {module.position}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
                             )}
-                          </TableCell>
-                          <TableCell>
-                            {reg.status !== "ACTIVE" && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={async () => {
-                                  try {
-                                    setProcessingAction(true);
-                                    await axios.post(
-                                      `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${selectedClass.id}/approve-registrations`,
-                                      { userIds: [reg.user.id] },
-                                      { withCredentials: true }
-                                    );
-
-                                    toast({
-                                      title: "Success",
-                                      description:
-                                        "Registration approved successfully",
-                                    });
-
-                                    await handleViewRegistrations(
-                                      selectedClass
-                                    );
-                                  } catch (error) {
-                                    console.error(
-                                      "Error approving registration:",
-                                      error
-                                    );
-                                    toast({
-                                      title: "Error",
-                                      description:
-                                        "Failed to approve registration",
-                                      variant: "destructive",
-                                    });
-                                  } finally {
-                                    setProcessingAction(false);
-                                  }
-                                }}
-                                disabled={processingAction}
-                                className="bg-green-500/10 border-green-500/50 text-green-400 hover:bg-green-500/20"
-                              >
-                                Approve
-                              </Button>
-                            )}
-                            {reg.status === "ACTIVE" && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={async () => {
-                                  try {
-                                    setProcessingAction(true);
-                                    await axios.post(
-                                      `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${selectedClass.id}/remove-access`,
-                                      { userIds: [reg.user.id] },
-                                      { withCredentials: true }
-                                    );
-
-                                    toast({
-                                      title: "Success",
-                                      description:
-                                        "Access removed successfully",
-                                    });
-
-                                    await handleViewRegistrations(
-                                      selectedClass
-                                    );
-                                  } catch (error) {
-                                    console.error(
-                                      "Error removing access:",
-                                      error
-                                    );
-                                    toast({
-                                      title: "Error",
-                                      description: "Failed to remove access",
-                                      variant: "destructive",
-                                    });
-                                  } finally {
-                                    setProcessingAction(false);
-                                  }
-                                }}
-                                disabled={processingAction}
-                                className="bg-red-500/10 border-red-500/50 text-red-400 hover:bg-red-500/20"
-                              >
-                                Remove Access
-                              </Button>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                      {registrations.length === 0 && (
-                        <TableRow>
-                          <TableCell
-                            colSpan={6}
-                            className="text-center py-8 text-zinc-400"
-                          >
-                            No registrations found
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </>
-            )}
-          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       )}
 
-      {/* Confirmation Dialog */}
-      {showConfirmDialog && confirmAction && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-zinc-900 border border-green-500/30 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4 text-white">
-              {confirmAction.title}
-            </h2>
-            <p className="mb-6 text-zinc-300">{confirmAction.message}</p>
-            <div className="flex justify-end space-x-2">
+      {/* Registrations Dialog */}
+      <Dialog
+        open={showRegistrationsDialog}
+        onOpenChange={setShowRegistrationsDialog}
+      >
+        <DialogContent className="bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700 max-w-4xl">
+          <DialogHeader>
+            <DialogTitle className="text-white">
+              Registrations - {selectedClass?.title}
+            </DialogTitle>
+          </DialogHeader>
+
+          {loadingRegistrations ? (
+            <div className="flex justify-center items-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-zinc-400">
+                  {registrations.length} registration(s) found
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleBulkApprove}
+                    disabled={selectedUsers.length === 0 || processingAction}
+                    className="bg-green-600 hover:bg-green-700"
+                  >
+                    {processingAction ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                    )}
+                    Approve Selected ({selectedUsers.length})
+                  </Button>
+                  <Button
+                    onClick={handleRemoveAccess}
+                    disabled={selectedUsers.length === 0 || processingAction}
+                    variant="outline"
+                    className="border-red-500 text-red-400 hover:bg-red-500/10"
+                  >
+                    <XCircle className="h-4 w-4 mr-2" />
+                    Remove Access
+                  </Button>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-zinc-700">
+                      <TableHead className="text-zinc-300">
+                        <input
+                          type="checkbox"
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedUsers(
+                                registrations.map((r) => r.user.id)
+                              );
+                            } else {
+                              setSelectedUsers([]);
+                            }
+                          }}
+                          checked={
+                            selectedUsers.length === registrations.length
+                          }
+                          className="rounded border-zinc-600 bg-zinc-800"
+                        />
+                      </TableHead>
+                      <TableHead className="text-zinc-300">Name</TableHead>
+                      <TableHead className="text-zinc-300">Email</TableHead>
+                      <TableHead className="text-zinc-300">Status</TableHead>
+                      <TableHead className="text-zinc-300">
+                        Registered
+                      </TableHead>
+                      <TableHead className="text-zinc-300">Access</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {registrations.map((registration) => (
+                      <TableRow
+                        key={registration.id}
+                        className="border-zinc-700"
+                      >
+                        <TableCell>
+                          <input
+                            type="checkbox"
+                            checked={selectedUsers.includes(
+                              registration.user.id
+                            )}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedUsers([
+                                  ...selectedUsers,
+                                  registration.user.id,
+                                ]);
+                              } else {
+                                setSelectedUsers(
+                                  selectedUsers.filter(
+                                    (id) => id !== registration.user.id
+                                  )
+                                );
+                              }
+                            }}
+                            className="rounded border-zinc-600 bg-zinc-800"
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium text-white">
+                          {registration.user.name}
+                        </TableCell>
+                        <TableCell className="text-zinc-300">
+                          {registration.user.email}
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              registration.status === "ACTIVE"
+                                ? "bg-green-600 text-white border border-green-500"
+                                : registration.status === "PENDING_APPROVAL"
+                                ? "bg-yellow-600 text-white border border-yellow-500"
+                                : "bg-red-600 text-white border border-red-500"
+                            }`}
+                          >
+                            {registration.status === "ACTIVE" && (
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                            )}
+                            {registration.status === "PENDING_APPROVAL" && (
+                              <Clock className="h-3 w-3 mr-1" />
+                            )}
+                            {registration.status === "REJECTED" && (
+                              <XCircle className="h-3 w-3 mr-1" />
+                            )}
+                            {registration.status}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              registration.isRegistered
+                                ? "bg-green-600 text-white border border-green-500"
+                                : "bg-red-600 text-white border border-red-500"
+                            }`}
+                          >
+                            {registration.isRegistered ? (
+                              <>
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Yes
+                              </>
+                            ) : (
+                              <>
+                                <XCircle className="h-3 w-3 mr-1" />
+                                No
+                              </>
+                            )}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              registration.hasAccessToLinks
+                                ? "bg-green-600 text-white border border-green-500"
+                                : "bg-red-600 text-white border border-red-500"
+                            }`}
+                          >
+                            {registration.hasAccessToLinks ? (
+                              <>
+                                <CheckCircle className="h-3 w-3 mr-1" />
+                                Granted
+                              </>
+                            ) : (
+                              <>
+                                <XCircle className="h-3 w-3 mr-1" />
+                                Denied
+                              </>
+                            )}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirm Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700">
+          <DialogHeader>
+            <DialogTitle className="text-white">
+              {confirmAction?.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-zinc-300">{confirmAction?.message}</p>
+            <div className="flex justify-end gap-2">
               <Button
                 variant="outline"
                 onClick={() => setShowConfirmDialog(false)}
-                disabled={processingAction}
-                className="border-zinc-600 text-zinc-300 hover:bg-zinc-800"
+                className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
               >
                 Cancel
               </Button>
               <Button
-                variant={
-                  confirmAction.type === "delete" ||
-                  confirmAction.type === "remove"
-                    ? "destructive"
-                    : "default"
-                }
-                onClick={confirmAction.action}
+                onClick={confirmAction?.action}
                 disabled={processingAction}
-                className={
-                  confirmAction.type === "delete" ||
-                  confirmAction.type === "remove"
-                    ? "bg-red-500 hover:bg-red-600 text-white"
-                    : "bg-green-500 hover:bg-green-600 text-black font-bold"
-                }
+                className={`${
+                  confirmAction?.type === "delete"
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-green-600 hover:bg-green-700"
+                }`}
               >
                 {processingAction ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  "Confirm"
-                )}
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
+                {confirmAction?.type === "delete" ? "Delete" : "Confirm"}
               </Button>
             </div>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

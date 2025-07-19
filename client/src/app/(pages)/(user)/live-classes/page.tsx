@@ -80,11 +80,6 @@ export default function LiveClasses() {
 
   // Calculate stats
   const totalClasses = classes.length;
-  const upcomingClasses = classes.filter((cls: any) => {
-    const classDate = new Date(cls.startTime);
-    return classDate > new Date();
-  }).length;
-  const activeClasses = classes.filter((cls: any) => cls.isOnline).length;
 
   // Filter classes based on search and status
   const filteredClasses = classes.filter((cls: any) => {
@@ -115,7 +110,7 @@ export default function LiveClasses() {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
+        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
@@ -155,8 +150,8 @@ export default function LiveClasses() {
               </button>
             </div>
 
-            {/* Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            {/* Stats Section - Simplified */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="flex items-center justify-center gap-3 mb-3">
@@ -174,34 +169,6 @@ export default function LiveClasses() {
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-blue-500/20 rounded-lg">
-                      <Calendar className="h-5 w-5 text-blue-400" />
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold text-white mb-1">
-                    {upcomingClasses}
-                  </div>
-                  <div className="text-sm text-zinc-400">Upcoming</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-purple-500/20 rounded-lg">
-                      <Users className="h-5 w-5 text-purple-400" />
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold text-white mb-1">
-                    {activeClasses}
-                  </div>
-                  <div className="text-sm text-zinc-400">Live Now</div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
                     <div className="p-2 bg-yellow-500/20 rounded-lg">
                       <IndianRupee className="h-5 w-5 text-yellow-400" />
                     </div>
@@ -212,45 +179,6 @@ export default function LiveClasses() {
                   <div className="text-sm text-zinc-400">Success Rate</div>
                 </CardContent>
               </Card>
-            </div>
-
-            {/* Trading Features Section */}
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <div className="text-center p-6 bg-gradient-to-br from-zinc-900/50 to-black/50 rounded-xl border border-zinc-700">
-                <div className="p-3 bg-green-500/20 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <BarChart3 className="h-8 w-8 text-green-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">
-                  Technical Analysis
-                </h3>
-                <p className="text-zinc-400 text-sm">
-                  Master chart patterns, indicators, and market psychology
-                </p>
-              </div>
-
-              <div className="text-center p-6 bg-gradient-to-br from-zinc-900/50 to-black/50 rounded-xl border border-zinc-700">
-                <div className="p-3 bg-blue-500/20 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Target className="h-8 w-8 text-blue-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">
-                  Risk Management
-                </h3>
-                <p className="text-zinc-400 text-sm">
-                  Learn proper position sizing and stop-loss strategies
-                </p>
-              </div>
-
-              <div className="text-center p-6 bg-gradient-to-br from-zinc-900/50 to-black/50 rounded-xl border border-zinc-700">
-                <div className="p-3 bg-purple-500/20 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <BookOpen className="h-8 w-8 text-purple-400" />
-                </div>
-                <h3 className="text-lg font-bold text-white mb-2">
-                  Market Education
-                </h3>
-                <p className="text-zinc-400 text-sm">
-                  Understand market fundamentals and trading psychology
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -309,7 +237,7 @@ export default function LiveClasses() {
             </Card>
           </div>
 
-          {/* Classes Grid */}
+          {/* Classes Grid - Responsive */}
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <div className="text-center">
@@ -334,7 +262,7 @@ export default function LiveClasses() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredClasses.map((classItem: any) => (
                 <ClassCard
                   key={classItem.id || classItem.slug}

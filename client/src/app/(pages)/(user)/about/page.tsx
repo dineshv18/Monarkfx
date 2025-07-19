@@ -169,7 +169,7 @@ const About = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
+        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
           <motion.div
             ref={heroRef}
             initial={{ opacity: 0, y: 20 }}

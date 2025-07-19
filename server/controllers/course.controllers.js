@@ -895,11 +895,16 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           paid: true,
           description: true,
           isFeatured: true,
+          isPopular: true,
+          isTrending: true,
+          isBestseller: true,
           price: true,
           salePrice: true,
           language: true,
+          validityDays: true,
           category: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -921,12 +926,17 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           paid: true,
           thumbnail: true,
           description: true,
+          isFeatured: true,
           isPopular: true,
+          isTrending: true,
+          isBestseller: true,
           price: true,
           salePrice: true,
           language: true,
+          validityDays: true,
           category: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -948,12 +958,17 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           slug: true,
           thumbnail: true,
           description: true,
+          isFeatured: true,
+          isPopular: true,
           isTrending: true,
+          isBestseller: true,
           price: true,
           salePrice: true,
           language: true,
+          validityDays: true,
           category: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -975,12 +990,17 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           paid: true,
           description: true,
           thumbnail: true,
+          isFeatured: true,
+          isPopular: true,
+          isTrending: true,
           isBestseller: true,
           price: true,
           salePrice: true,
           language: true,
+          validityDays: true,
           category: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -1001,11 +1021,17 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
           paid: true,
           thumbnail: true,
           description: true,
+          isFeatured: true,
+          isPopular: true,
+          isTrending: true,
+          isBestseller: true,
           price: true,
           salePrice: true,
           language: true,
+          validityDays: true,
           category: {
             select: {
+              id: true,
               name: true,
             },
           },
@@ -1013,15 +1039,15 @@ export const getFeaturedSections = asyncHandler(async (req, res) => {
       }),
     ]);
 
-    return res.status(200).json(
-      new ApiResponsive(200, {
-        featured: featured.length > 0 ? featured : null,
-        popular: popular.length > 0 ? popular : null,
-        trending: trending.length > 0 ? trending : null,
-        bestseller: bestseller.length > 0 ? bestseller : null,
-        free: free.length > 0 ? free : null,
-      })
-    );
+    const result = {
+      featured: featured.length > 0 ? featured : null,
+      popular: popular.length > 0 ? popular : null,
+      trending: trending.length > 0 ? trending : null,
+      bestseller: bestseller.length > 0 ? bestseller : null,
+      free: free.length > 0 ? free : null,
+    };
+
+    return res.status(200).json(new ApiResponsive(200, result));
   } catch (error) {
     console.error("Featured sections error:", error);
     throw new ApiError(500, "Failed to fetch featured sections");

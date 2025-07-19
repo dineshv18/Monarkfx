@@ -11,7 +11,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Loader2, ExternalLink } from "lucide-react";
+import {
+  Loader2,
+  ExternalLink,
+  CheckCircle,
+  XCircle,
+  Clock,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
@@ -32,7 +38,10 @@ interface Subscription {
   startDate: string;
   endDate: string;
   nextPaymentDate: string;
-  status: "ACTIVE" | "CANCELLED" | "EXPIRED";
+  status: "ACTIVE" | "CANCELLED" | "EXPIRED" | "PENDING_APPROVAL";
+  isApproved: boolean;
+  isRegistered: boolean;
+  hasAccessToLinks: boolean;
   user: User;
   zoomSession: ZoomSession;
 }
@@ -67,41 +76,105 @@ export default function ZoomSubscriptionsTable() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const getStatusBadge = (status: string, isApproved: boolean) => {
+    if (status === "ACTIVE") {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white border border-green-500">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Active
+        </span>
+      );
+    }
+
+    if (status === "PENDING_APPROVAL") {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-600 text-white border border-yellow-500">
+          <Clock className="h-3 w-3 mr-1" />
+          Pending
+        </span>
+      );
+    }
+
+    if (status === "CANCELLED") {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+          <XCircle className="h-3 w-3 mr-1" />
+          Cancelled
+        </span>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-600 text-white border border-zinc-500">
+        {status}
+      </span>
+    );
+  };
+
+  const getRegistrationBadge = (isRegistered: boolean) => {
+    if (isRegistered) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white border border-green-500">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Registered
+        </span>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+        <XCircle className="h-3 w-3 mr-1" />
+        Not Registered
+      </span>
+    );
+  };
+
+  const getAccessBadge = (hasAccess: boolean) => {
+    if (hasAccess) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white border border-green-500">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Granted
+        </span>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+        <XCircle className="h-3 w-3 mr-1" />
+        Denied
+      </span>
+    );
   };
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-green-400" />
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-zinc-900 border border-green-500/30 rounded-lg overflow-hidden">
+    <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="border-green-500/30 hover:bg-green-500/5">
-            <TableHead className="text-green-400 font-semibold">User</TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Session
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Start Date
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              End Date
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Next Payment
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Status
-            </TableHead>
-            <TableHead className="text-green-400 font-semibold">
-              Actions
-            </TableHead>
+          <TableRow className="border-zinc-700 hover:bg-zinc-800/50">
+            <TableHead className="text-zinc-300">User</TableHead>
+            <TableHead className="text-zinc-300">Session</TableHead>
+            <TableHead className="text-zinc-300">Status</TableHead>
+            <TableHead className="text-zinc-300">Registration</TableHead>
+            <TableHead className="text-zinc-300">Access</TableHead>
+            <TableHead className="text-zinc-300">Start Date</TableHead>
+            <TableHead className="text-zinc-300">End Date</TableHead>
+            <TableHead className="text-zinc-300">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -109,7 +182,7 @@ export default function ZoomSubscriptionsTable() {
             subscriptions.map((subscription) => (
               <TableRow
                 key={subscription.id}
-                className="border-green-500/30 hover:bg-green-500/10"
+                className="border-zinc-700 hover:bg-zinc-800/50"
               >
                 <TableCell>
                   <div>
@@ -124,52 +197,44 @@ export default function ZoomSubscriptionsTable() {
                 <TableCell className="text-white">
                   {subscription.zoomSession?.title ?? "Unknown Session"}
                 </TableCell>
+                <TableCell>
+                  {getStatusBadge(subscription.status, subscription.isApproved)}
+                </TableCell>
+                <TableCell>
+                  {getRegistrationBadge(subscription.isRegistered)}
+                </TableCell>
+                <TableCell>
+                  {getAccessBadge(subscription.hasAccessToLinks)}
+                </TableCell>
                 <TableCell className="text-zinc-300">
                   {formatDate(subscription.startDate)}
                 </TableCell>
                 <TableCell className="text-zinc-300">
                   {formatDate(subscription.endDate)}
                 </TableCell>
-                <TableCell className="text-zinc-300">
-                  {formatDate(subscription.nextPaymentDate)}
-                </TableCell>
                 <TableCell>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      subscription.status === "ACTIVE"
-                        ? "bg-green-500/20 text-green-400 border border-green-500/50"
-                        : subscription.status === "CANCELLED"
-                        ? "bg-amber-500/20 text-amber-400 border border-amber-500/50"
-                        : "bg-red-500/20 text-red-400 border border-red-500/50"
-                    }`}
-                  >
-                    {subscription.status}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
+                  <div className="flex items-center gap-2">
                     {subscription.status === "ACTIVE" && (
                       <Link href={`/dashboard/zoom/cancel/${subscription.id}`}>
                         <Button
-                          variant="outline"
                           size="sm"
-                          className="bg-red-500/10 border-red-500/50 text-red-400 hover:bg-red-500/20"
+                          variant="outline"
+                          className="border-red-500 text-red-400 hover:bg-red-500/10"
                         >
                           Cancel
                         </Button>
                       </Link>
                     )}
                     <Button
-                      variant="outline"
                       size="sm"
+                      variant="ghost"
                       onClick={() => {
                         // View details functionality
                         console.log("View details for:", subscription.id);
                       }}
-                      className="bg-blue-500/10 border-blue-500/50 text-blue-400 hover:bg-blue-500/20"
+                      className="text-blue-400 hover:text-blue-300"
                     >
-                      <ExternalLink className="h-3 w-3 mr-1" />
-                      Details
+                      <ExternalLink className="h-4 w-4" />
                     </Button>
                   </div>
                 </TableCell>
@@ -177,7 +242,7 @@ export default function ZoomSubscriptionsTable() {
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8 text-zinc-400">
+              <TableCell colSpan={8} className="text-center py-8 text-zinc-400">
                 No subscriptions found
               </TableCell>
             </TableRow>

@@ -9,30 +9,30 @@ import {
 
 const SkeletonCard = () => {
   return (
-    <Card className="flex flex-col h-full bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <Card className="flex flex-col h-full bg-gray-950 shadow-lg hover:shadow-xl transition-shadow duration-300">
       <CardHeader className="p-0">
-        <Skeleton className="bg-gray-300 w-full h-40 object-cover rounded-t-lg" />
+        <Skeleton className="bg-gray-800 w-full h-40 object-cover rounded-t-lg" />
       </CardHeader>
       <CardContent className="flex-grow p-4">
-        <Skeleton className="bg-gray-300 h-6 w-3/4 mb-2" />
+        <Skeleton className="bg-gray-800 h-6 w-3/4 mb-2" />
         <div className="flex items-center text-sm text-gray-600 mb-2">
-          <Skeleton className="bg-gray-300 h-4 w-4 mr-1" />
-          <Skeleton className="bg-gray-300 h-4 w-1/4" />
+          <Skeleton className="bg-gray-800 h-4 w-4 mr-1" />
+          <Skeleton className="bg-gray-800 h-4 w-1/4" />
         </div>
         <div className="flex items-center text-sm text-gray-600 mb-2">
-          <Skeleton className="bg-gray-300 h-4 w-4 mr-1" />
-          <Skeleton className="bg-gray-300 h-4 w-1/4" />
+          <Skeleton className="bg-gray-800 h-4 w-4 mr-1" />
+          <Skeleton className="bg-gray-800 h-4 w-1/4" />
         </div>
         <div className="flex items-center text-sm text-gray-600">
-          <Skeleton className="bg-gray-300 h-4 w-4 mr-1" />
-          <Skeleton className="bg-gray-300 h-4 w-1/4" />
+          <Skeleton className="bg-gray-800 h-4 w-4 mr-1" />
+          <Skeleton className="bg-gray-800 h-4 w-1/4" />
         </div>
       </CardContent>
-      <CardFooter className="px-3 py-2 bg-gray-50 rounded-b-lg">
+      <CardFooter className="px-3 py-2  rounded-b-lg border-t border-gray-800 bg-black">
         <div className="flex items-center justify-between w-full">
-          <Skeleton className="bg-gray-300 h-4 w-16 rounded-md" />
+          <Skeleton className="bg-gray-800 h-4 w-16 rounded-md" />
 
-          <Skeleton className="bg-gray-300 h-10 w-28" />
+          <Skeleton className="bg-gray-800 h-10 w-28" />
         </div>
       </CardFooter>
     </Card>

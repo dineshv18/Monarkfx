@@ -66,7 +66,7 @@ export default function Home(): JSX.Element {
 
         <section
           ref={sectionRef}
-          className="relative text-white w-full bg-black py-20 md:py-32 overflow-hidden"
+          className="relative text-white w-full bg-black py-20 md:pt-32 overflow-hidden"
         >
           {/* Dark background elements */}
           <div className="absolute inset-0">

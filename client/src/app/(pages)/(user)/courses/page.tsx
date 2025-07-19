@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { CourseDataNew } from "@/type";
@@ -22,9 +22,11 @@ import {
   TrendingUp,
   Users,
   Star,
+  Loader2,
 } from "lucide-react";
 import { useCustomDebounce } from "@/hooks/useCustomDebounce";
 import { Card, CardContent } from "@/components/ui/card";
+import SecureChainCourseCard from "../../_components/SecureChainCourseCard";
 
 const Courses = () => {
   const searchParams = useSearchParams();
@@ -34,12 +36,17 @@ const Courses = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
   );
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadingRef = useRef<HTMLDivElement>(null);
 
   const debouncedSearch = useCustomDebounce(searchQuery, 500);
 
@@ -68,49 +75,102 @@ const Courses = () => {
     }
   };
 
-  const fetchCourses = useCallback(async () => {
-    try {
-      const queryParams = new URLSearchParams({
-        page: currentPage.toString(),
-        ...(debouncedSearch && { search: debouncedSearch }),
-        ...(selectedCategory !== "all" && { category: selectedCategory }),
-        ...(sortBy && { sort: sortBy }),
-        ...(marketParam && { market: marketParam }),
-      });
+  const fetchCourses = useCallback(
+    async (page: number, append: boolean = false) => {
+      try {
+        if (page === 1) {
+          setIsLoading(true);
+        } else {
+          setIsLoadingMore(true);
+        }
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/course/get-courses?${queryParams}`
+        const queryParams = new URLSearchParams({
+          page: page.toString(),
+          ...(debouncedSearch && { search: debouncedSearch }),
+          ...(selectedCategory !== "all" && { category: selectedCategory }),
+          ...(sortBy && { sort: sortBy }),
+          ...(marketParam && { market: marketParam }),
+        });
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/course/get-courses?${queryParams}`
+        );
+
+        if (!response.ok) throw new Error("Failed to fetch courses");
+
+        const data = await response.json();
+        if (data.success) {
+          if (append) {
+            setCourses((prev) => [...prev, ...data.data.courses]);
+          } else {
+            setCourses(data.data.courses);
+          }
+          setTotalPages(data.data.totalPages);
+          setHasMore(page < data.data.totalPages);
+        }
+      } catch (error) {
+        toast.error("An error occurred while fetching courses");
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+        setIsLoadingMore(false);
+      }
+    },
+    [debouncedSearch, selectedCategory, sortBy, marketParam]
+  );
+
+  // Infinite scroll observer
+  const lastElementRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (isLoading || isLoadingMore) return;
+
+      if (observerRef.current) observerRef.current.disconnect();
+
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasMore) {
+            const nextPage = currentPage + 1;
+            setCurrentPage(nextPage);
+            fetchCourses(nextPage, true);
+          }
+        },
+        {
+          rootMargin: "100px",
+        }
       );
 
-      if (!response.ok) throw new Error("Failed to fetch courses");
-
-      const data = await response.json();
-      if (data.success) {
-        setCourses(data.data.courses);
-        setTotalPages(data.data.totalPages);
-      }
-    } catch (error) {
-      toast.error("An error occurred while fetching courses");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentPage, debouncedSearch, selectedCategory, sortBy, marketParam]);
+      if (node) observerRef.current.observe(node);
+    },
+    [isLoading, isLoadingMore, hasMore, currentPage, fetchCourses]
+  );
 
   useEffect(() => {
     fetchCategories();
   }, [marketParam]);
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchCourses();
+    setCurrentPage(1);
+    setCourses([]);
+    setHasMore(true);
+    fetchCourses(1, false);
   }, [fetchCourses]);
+
+  // Cleanup observer on unmount
+  useEffect(() => {
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
 
   const handleReset = () => {
     setSearchQuery("");
     setSelectedCategory("all");
     setSortBy("newest");
     setCurrentPage(1);
+    setCourses([]);
+    setHasMore(true);
   };
 
   const getBackgroundTitle = () => {
@@ -171,7 +231,7 @@ const Courses = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
+        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
@@ -239,7 +299,7 @@ const Courses = () => {
       </div>
 
       {/* Content Section */}
-      <div className="bg-black py-20">
+      <div className="bg-black py-10">
         <div className="container mx-auto px-4 max-w-7xl">
           {/* Filters Section */}
           <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-zinc-700 p-6 mb-12 shadow-xl">
@@ -252,6 +312,8 @@ const Courses = () => {
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
                       setCurrentPage(1);
+                      setCourses([]);
+                      setHasMore(true);
                     }}
                     className="pl-10 w-full bg-black/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-green-500"
                   />
@@ -266,6 +328,8 @@ const Courses = () => {
                     onValueChange={(value) => {
                       setSelectedCategory(value);
                       setCurrentPage(1);
+                      setCourses([]);
+                      setHasMore(true);
                     }}
                   >
                     <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-700 text-white">
@@ -290,6 +354,8 @@ const Courses = () => {
                     onValueChange={(value) => {
                       setSortBy(value);
                       setCurrentPage(1);
+                      setCourses([]);
+                      setHasMore(true);
                     }}
                   >
                     <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-700 text-white">
@@ -328,12 +394,41 @@ const Courses = () => {
           {isLoading && <SkeletonCardGrid />}
 
           {!isLoading && courses.length > 0 && (
-            <CourseCards
-              courses={courses}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {courses.map((course, index) => {
+                // Add ref to last element for infinite scroll
+                if (courses.length === index + 1) {
+                  return (
+                    <div key={course.id} ref={lastElementRef}>
+                      <SecureChainCourseCard course={course} />
+                    </div>
+                  );
+                } else {
+                  return (
+                    <SecureChainCourseCard key={course.id} course={course} />
+                  );
+                }
+              })}
+            </div>
+          )}
+
+          {/* Loading More Indicator */}
+          {isLoadingMore && (
+            <div className="flex justify-center items-center py-8">
+              <div className="flex items-center gap-3 text-green-400">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <span>Loading more courses...</span>
+              </div>
+            </div>
+          )}
+
+          {/* No More Courses Indicator */}
+          {!isLoading && !hasMore && courses.length > 0 && (
+            <div className="text-center py-8">
+              <div className="text-zinc-500 text-sm">
+                You've reached the end of all courses
+              </div>
+            </div>
           )}
 
           {!isLoading && courses.length === 0 && (

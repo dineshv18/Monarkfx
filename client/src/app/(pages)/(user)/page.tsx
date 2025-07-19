@@ -7,6 +7,10 @@ export default function Home() {
     <>
       <HeroSection />
       <FeaturedCourses sectionType="trending" />
+      <FeaturedCourses sectionType="featured" />
+      <FeaturedCourses sectionType="bestseller" />
+      <FeaturedCourses sectionType="popular" />
+      <FeaturedCourses sectionType="free" />
       <Scroll />
     </>
   );

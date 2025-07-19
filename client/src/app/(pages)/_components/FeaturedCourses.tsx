@@ -15,9 +15,11 @@ import {
   Clock,
   Zap,
   AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
-import EnhancedCourseCard from "./EnhancedCourseCard";
+import SecureChainCourseCard from "./SecureChainCourseCard";
 import { CourseDataNew } from "@/type";
 import { motion, useInView } from "framer-motion";
 
@@ -100,7 +102,10 @@ const CourseSection = ({
     sectionColors.featured;
 
   return (
-    <section ref={sectionRef} className="py-20 relative overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="py-20 relative overflow-hidden bg-black"
+    >
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div
@@ -167,15 +172,9 @@ const CourseSection = ({
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className={`text-4xl md:text-5xl font-bold text-white mb-6 ${headingClassName}`}
+            className={`text-4xl md:text-5xl font-bold text-green-400 mb-6 ${headingClassName}`}
           >
             {title}
-            <motion.div
-              className={`absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r ${colors.gradient}`}
-              initial={{ width: 0 }}
-              animate={isInView ? { width: "100px" } : {}}
-              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-            />
           </motion.h2>
 
           <motion.p
@@ -207,7 +206,7 @@ const CourseSection = ({
               }}
               whileHover={{ y: -8 }}
             >
-              <EnhancedCourseCard course={course} />
+              <SecureChainCourseCard course={course} />
             </motion.div>
           ))}
         </motion.div>
@@ -237,7 +236,7 @@ const CourseSection = ({
 };
 
 const SectionSkeleton = () => (
-  <section className="py-20">
+  <section className="py-20 bg-black">
     <div className="container mx-auto px-4 max-w-7xl">
       <div className="text-center mb-16">
         <Skeleton className="h-16 w-16 mx-auto mb-6 rounded-2xl" />
@@ -290,11 +289,16 @@ const FeaturedCourses = ({
     const fetchFeaturedSections = async () => {
       try {
         setIsLoading(true);
+
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/course/featured-sections`
         );
+
         if (response.data.success) {
           setData(response.data.data);
+        } else {
+          console.error("API returned success: false");
+          setError("Failed to load courses");
         }
       } catch (error) {
         console.error("Error fetching featured sections:", error);
@@ -389,7 +393,7 @@ const FeaturedCourses = ({
 
   // Otherwise show all sections
   return (
-    <div className="space-y-0">
+    <div className="space-y-0 bg-black">
       {sections.map(
         (section) =>
           section.data && (

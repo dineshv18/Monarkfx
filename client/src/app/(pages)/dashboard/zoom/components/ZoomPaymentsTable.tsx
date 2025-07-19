@@ -10,7 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, CheckCircle, XCircle, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface User {
@@ -30,7 +31,9 @@ interface Payment {
   receiptNumber: string;
   amount: number;
   razorpay_payment_id: string;
+  razorpay_order_id: string;
   status: string;
+  paymentType: string;
   createdAt: string;
   user: User;
   subscription: Subscription;
@@ -78,44 +81,94 @@ export default function ZoomPaymentsTable() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }).format(amount);
+  };
+
+  const getStatusBadge = (status: string) => {
+    if (status === "COMPLETED") {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white border border-green-500">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Completed
+        </span>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+        <XCircle className="h-3 w-3 mr-1" />
+        Failed
+      </span>
+    );
+  };
+
+  const getPaymentTypeBadge = (type: string) => {
+    if (type === "REGISTRATION") {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white border border-blue-500">
+          Registration
+        </span>
+      );
+    }
+
+    if (type === "COURSE_ACCESS") {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-600 text-white border border-purple-500">
+          Course Access
+        </span>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-600 text-white border border-zinc-500">
+        {type}
+      </span>
+    );
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied!",
+      description: "Payment ID copied to clipboard",
+    });
   };
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-green-400" />
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div className="bg-zinc-900 border border-green-500/30 rounded-lg overflow-hidden">
+      <div className="overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="border-green-500/30 hover:bg-green-500/5">
-              <TableHead className="text-green-400 font-semibold">
-                Receipt #
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                User
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Session
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Amount
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Payment ID
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Date
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Status
-              </TableHead>
+            <TableRow className="border-zinc-700 hover:bg-zinc-800/50">
+              <TableHead className="text-zinc-300">Receipt #</TableHead>
+              <TableHead className="text-zinc-300">User</TableHead>
+              <TableHead className="text-zinc-300">Session</TableHead>
+              <TableHead className="text-zinc-300">Amount</TableHead>
+              <TableHead className="text-zinc-300">Type</TableHead>
+              <TableHead className="text-zinc-300">Payment ID</TableHead>
+              <TableHead className="text-zinc-300">Date</TableHead>
+              <TableHead className="text-zinc-300">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -123,7 +176,7 @@ export default function ZoomPaymentsTable() {
               payments.map((payment) => (
                 <TableRow
                   key={payment.id}
-                  className="border-green-500/30 hover:bg-green-500/10"
+                  className="border-zinc-700 hover:bg-zinc-800/50"
                 >
                   <TableCell className="text-white font-mono">
                     {payment.receiptNumber}
@@ -142,34 +195,39 @@ export default function ZoomPaymentsTable() {
                     {payment.subscription?.zoomSession?.title ??
                       "Unknown Session"}
                   </TableCell>
-                  <TableCell className="text-green-400 font-bold">
-                    ₹{payment.amount}
+                  <TableCell className="text-green-400 font-semibold">
+                    {formatCurrency(payment.amount)}
                   </TableCell>
                   <TableCell>
-                    <span className="text-xs text-zinc-300 font-mono bg-zinc-800 px-2 py-1 rounded">
-                      {payment.razorpay_payment_id}
-                    </span>
+                    {getPaymentTypeBadge(payment.paymentType)}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-zinc-300 font-mono bg-zinc-800 px-2 py-1 rounded">
+                        {payment.razorpay_payment_id}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() =>
+                          copyToClipboard(payment.razorpay_payment_id)
+                        }
+                        className="text-blue-400 hover:text-blue-300"
+                      >
+                        <Copy className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </TableCell>
                   <TableCell className="text-zinc-300">
                     {formatDate(payment.createdAt)}
                   </TableCell>
-                  <TableCell>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        payment.status === "COMPLETED"
-                          ? "bg-green-500/20 text-green-400 border border-green-500/50"
-                          : "bg-red-500/20 text-red-400 border border-red-500/50"
-                      }`}
-                    >
-                      {payment.status}
-                    </span>
-                  </TableCell>
+                  <TableCell>{getStatusBadge(payment.status)}</TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={7}
+                  colSpan={8}
                   className="text-center py-8 text-zinc-400"
                 >
                   No payments found
@@ -179,6 +237,35 @@ export default function ZoomPaymentsTable() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination */}
+      {pagination.pages > 1 && (
+        <div className="flex justify-center items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => fetchPayments(Math.max(1, pagination.page - 1))}
+            disabled={pagination.page === 1}
+            className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+          >
+            Previous
+          </Button>
+          <span className="text-zinc-300">
+            Page {pagination.page} of {pagination.pages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              fetchPayments(Math.min(pagination.pages, pagination.page + 1))
+            }
+            disabled={pagination.page === pagination.pages}
+            className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

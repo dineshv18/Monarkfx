@@ -15,6 +15,17 @@ import {
   Users,
   Calendar,
   TrendingUp,
+  Eye,
+  Edit,
+  Trash2,
+  Play,
+  Pause,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertCircle,
+  Info,
+  HelpCircle,
 } from "lucide-react";
 import ZoomSessionsTable from "./components/ZoomSessionsTable";
 import { useToast } from "@/hooks/use-toast";
@@ -23,6 +34,13 @@ import ZoomSubscriptionsTable from "./components/ZoomSubscriptionsTable";
 import ZoomPaymentsTable from "./components/ZoomPaymentsTable";
 import SessionLinks from "./components/SessionLinks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type TabValue = "overview" | "classes" | "subscriptions" | "payments" | "links";
 
@@ -141,6 +159,47 @@ export default function ZoomDashboard() {
             </p>
           </div>
           <div className="flex gap-3">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-green-600 hover:bg-green-700 text-white">
+                  <Info className="h-4 w-4 mr-2" />
+                  Help
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700 max-w-4xl">
+                <DialogHeader>
+                  <DialogTitle className="text-white">
+                    Live Classes Management Guide
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                    <h3 className="text-lg font-semibold text-green-400 mb-3">
+                      🎯 Live Class Features
+                    </h3>
+                    <ul className="space-y-2 text-zinc-300">
+                      <li>• Create and manage live Zoom sessions</li>
+                      <li>• Set registration and course fees</li>
+                      <li>• Manage participant registrations</li>
+                      <li>• Track attendance and analytics</li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                    <h3 className="text-lg font-semibold text-green-400 mb-3">
+                      📊 Admin Management
+                    </h3>
+                    <ul className="space-y-2 text-zinc-300">
+                      <li>• View all live classes and their status</li>
+                      <li>• Approve/reject participant registrations</li>
+                      <li>• Start/stop live sessions</li>
+                      <li>• Monitor payments and subscriptions</li>
+                    </ul>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Link href="/dashboard/zoom/create">
               <Button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold">
                 <Plus size={18} /> Create Live Class
@@ -199,7 +258,7 @@ export default function ZoomDashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-zinc-400 text-sm">Upcoming</p>
+                  <p className="text-zinc-400 text-sm">Upcoming Classes</p>
                   <p className="text-2xl font-bold text-white">
                     {stats.upcomingClasses}
                   </p>
@@ -230,90 +289,111 @@ export default function ZoomDashboard() {
 
         {/* Tabs */}
         <Tabs
-          defaultValue="overview"
           value={activeTab}
-          onValueChange={(value: string) => setActiveTab(value as TabValue)}
-          className="w-full"
+          onValueChange={(value) => setActiveTab(value as TabValue)}
+          className="space-y-6"
         >
-          <TabsList className="grid grid-cols-5 w-full max-w-4xl bg-zinc-900 border border-zinc-700">
+          <TabsList className="bg-zinc-900 border border-zinc-700">
             <TabsTrigger
               value="overview"
-              className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-zinc-300 hover:text-white"
+              className="data-[state=active]:bg-green-600"
             >
               Overview
             </TabsTrigger>
             <TabsTrigger
               value="classes"
-              className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-zinc-300 hover:text-white"
+              className="data-[state=active]:bg-green-600"
             >
               Live Classes
             </TabsTrigger>
             <TabsTrigger
-              value="links"
-              className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-zinc-300 hover:text-white"
-            >
-              Class Links
-            </TabsTrigger>
-            <TabsTrigger
               value="subscriptions"
-              className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-zinc-300 hover:text-white"
+              className="data-[state=active]:bg-green-600"
             >
               Subscriptions
             </TabsTrigger>
             <TabsTrigger
               value="payments"
-              className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-zinc-300 hover:text-white"
+              className="data-[state=active]:bg-green-600"
             >
               Payments
             </TabsTrigger>
+            <TabsTrigger
+              value="links"
+              className="data-[state=active]:bg-green-600"
+            >
+              Session Links
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6 space-y-6">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin text-green-400" />
-              </div>
-            ) : (
-              <ZoomAnalytics analyticsData={analyticsData} />
-            )}
-          </TabsContent>
-
-          <TabsContent value="classes" className="mt-6 space-y-6">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin text-green-400" />
-              </div>
-            ) : (
-              <ZoomSessionsTable
-                classes={zoomLiveClasses}
-                refreshData={fetchData}
-              />
-            )}
-          </TabsContent>
-
-          <TabsContent value="links" className="mt-6 space-y-6">
+          <TabsContent value="overview" className="space-y-6">
             <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <Link2 className="h-5 w-5" />
-                  Class Links
-                </CardTitle>
+                <CardTitle className="text-white">Analytics Overview</CardTitle>
               </CardHeader>
               <CardContent>
-                <SessionLinks
-                  sessions={zoomLiveClasses}
-                  refreshData={fetchData}
-                />
+                {analyticsData ? (
+                  <ZoomAnalytics data={analyticsData} />
+                ) : (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="subscriptions" className="mt-6 space-y-6">
-            <ZoomSubscriptionsTable />
+          <TabsContent value="classes" className="space-y-6">
+            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+              <CardHeader>
+                <CardTitle className="text-white">Live Classes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+                  </div>
+                ) : (
+                  <ZoomSessionsTable
+                    classes={zoomLiveClasses}
+                    refreshData={fetchData}
+                  />
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="payments" className="mt-6 space-y-6">
-            <ZoomPaymentsTable />
+          <TabsContent value="subscriptions" className="space-y-6">
+            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+              <CardHeader>
+                <CardTitle className="text-white">Subscriptions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ZoomSubscriptionsTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="payments" className="space-y-6">
+            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+              <CardHeader>
+                <CardTitle className="text-white">Payments</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ZoomPaymentsTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="links" className="space-y-6">
+            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+              <CardHeader>
+                <CardTitle className="text-white">Session Links</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SessionLinks />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

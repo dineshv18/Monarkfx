@@ -4,8 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { CourseCardsProps } from "@/type";
-import EnhancedCourseCard from "./EnhancedCourseCard";
-
+import SecureChainCourseCard from "./SecureChainCourseCard";
 
 export default function CourseCards({
   courses,
@@ -17,7 +16,7 @@ export default function CourseCards({
     <div className="container px-4 py-8 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {courses.map((course) => (
-          <EnhancedCourseCard key={course.id} course={course} />
+          <SecureChainCourseCard key={course.id} course={course} />
         ))}
       </div>
 
@@ -41,7 +40,9 @@ export default function CourseCards({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage(Math.min(currentPage + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
               className="border-green-500/30 text-green-400 hover:bg-green-500/10 disabled:opacity-50"
             >
