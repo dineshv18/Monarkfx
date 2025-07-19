@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { ReactLenis } from "@studio-freight/react-lenis";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import MentorshipSection from "./mentorship-section";
 import FuturisticTestimonialShowcase from "./FuturisticTestimonialShowcase";
 import EducationCards from "./EducationCards";
@@ -18,11 +18,6 @@ interface Course {
   category: string;
 }
 
-interface CourseCardProps extends Course {
-  scrollYProgress: any;
-  index: number;
-}
-
 interface NewCourseCardProps {
   title: string;
   subtitle: string;
@@ -34,7 +29,6 @@ interface NewCourseCardProps {
 }
 
 export default function Home(): JSX.Element {
-  const cardsRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [cursorText, setCursorText] = useState<string>("");
 
@@ -58,11 +52,6 @@ export default function Home(): JSX.Element {
       category: "FCH Course",
     },
   ];
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
 
   return (
     <ReactLenis root>
