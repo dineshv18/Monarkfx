@@ -173,12 +173,12 @@ export function Sidenav() {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="w-60 p-0 bg-gradient-to-b from-gray-900 to-black border-r border-gray-800"
+          className="w-60 p-0 bg-gradient-to-b from-gray-900 to-black border-r border-gray-800 z-50"
         >
           <MobileNav />
         </SheetContent>
       </Sheet>
-      <nav className="hidden md:block fixed top-0 left-0 h-full w-60 bg-gradient-to-b from-gray-900 to-black border-r border-gray-800 shadow-xl">
+      <nav className="hidden md:block fixed top-0 left-0 h-full w-60 bg-gradient-to-b from-gray-900 to-black border-r border-gray-800 shadow-xl z-50">
         <ScrollArea className="h-full">
           <div className="px-6 py-8">
             <div className="flex items-center gap-2 mb-8">
@@ -271,27 +271,31 @@ function SidenavItems() {
                       {openSubMenus.includes(item.href) && (
                         <div className="ml-6 mt-1 space-y-1">
                           {item.children.map((child) => (
-                            <Link key={child.href} href={child.href}>
-                              <span
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              className="block"
+                            >
+                              <div
                                 className={cn(
-                                  "group flex items-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out",
+                                  "group flex items-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ease-in-out cursor-pointer",
                                   pathname === child.href
                                     ? "bg-green-500/20 text-green-400"
                                     : "text-gray-400 hover:bg-gray-800/30 hover:text-green-400"
                                 )}
                               >
                                 {child.title}
-                              </span>
+                              </div>
                             </Link>
                           ))}
                         </div>
                       )}
                     </>
                   ) : (
-                    <Link href={item.href}>
-                      <span
+                    <Link href={item.href} className="block">
+                      <div
                         className={cn(
-                          "group flex items-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out",
+                          "group flex items-center rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ease-in-out cursor-pointer",
                           pathname === item.href
                             ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/20"
                             : "text-gray-300 hover:bg-gray-800/50 hover:text-green-400 hover:shadow-sm"
@@ -306,7 +310,7 @@ function SidenavItems() {
                           )}
                         />
                         <span>{item.title}</span>
-                      </span>
+                      </div>
                     </Link>
                   )}
                 </div>
@@ -338,8 +342,8 @@ function SidenavItems() {
           {isCoursesDropdownOpen && (
             <div className="mt-2 rounded-xl overflow-hidden bg-gray-800 shadow-md border border-gray-700">
               {courseLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  <div className="px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-green-400 transition-colors">
+                <Link key={link.href} href={link.href} className="block">
+                  <div className="px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-700 hover:text-green-400 transition-colors cursor-pointer">
                     {link.name}
                   </div>
                 </Link>

@@ -441,6 +441,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
   });
@@ -512,14 +513,15 @@ export default function ContactPage() {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/contact/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}/contact/submit`,
         formData
       );
-      if (response.data?.message) {
-        toast.success(response.data.data || "Message sent successfully!");
+      if (response.data?.success) {
+        toast.success(response.data.message || "Message sent successfully!");
         setFormData({
           name: "",
           email: "",
+          phone: "",
           subject: "",
           message: "",
         });
@@ -1212,6 +1214,29 @@ export default function ContactPage() {
                       />
                     </motion.div>
                   </div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.45 }}
+                  >
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="+91 98765 43210"
+                      className="w-full px-4 py-3 bg-gray-800 text-white rounded-xl border border-gray-600 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none"
+                      required
+                    />
+                  </motion.div>
 
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}

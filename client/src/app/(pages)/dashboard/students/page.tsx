@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/helper/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,10 +30,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Pencil,
+  Trash2,
+  Users,
+  UserCheck,
+  Shield,
+  Plus,
+  Search,
+  Filter,
+  Download,
+  Upload,
+  ArrowRight,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Calendar,
+} from "lucide-react";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { motion, useInView } from "framer-motion";
 
 interface NewUser {
   name: string;
@@ -77,6 +96,19 @@ const AdminUsersPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [userChanges, setUserChanges] = useState<UserChanges>({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState<string>("all");
+
+  // Animation refs
+  const headerRef = useRef(null);
+  const statsRef = useRef(null);
+  const tableRef = useRef(null);
+  const formRef = useRef(null);
+
+  const isHeaderInView = useInView(headerRef, { once: true });
+  const isStatsInView = useInView(statsRef, { once: true });
+  const isTableInView = useInView(tableRef, { once: true });
+  const isFormInView = useInView(formRef, { once: true });
 
   useEffect(() => {
     const init = async () => {
@@ -257,238 +289,256 @@ const AdminUsersPage: React.FC = () => {
     }).format(date);
   };
 
+  // Filter users based on search and filter
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterRole === "all" || user.role === filterRole;
+    return matchesSearch && matchesFilter;
+  });
+
   const UserTableSkeleton = () => (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
-          <TableHead>Verified</TableHead>
-          <TableHead>Created At</TableHead>
-          <TableHead>Updated At</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {[...Array(5)].map((_, index) => (
-          <TableRow key={index}>
-            <TableCell>
-              <Skeleton className="h-4 w-[150px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-4 w-[180px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-4 w-[80px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-4 w-[50px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-4 w-[120px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-4 w-[120px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="h-8 w-[100px]" />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="space-y-4">
+      {[...Array(5)].map((_, index) => (
+        <div
+          key={index}
+          className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl p-4"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[150px]" />
+                <Skeleton className="h-3 w-[100px]" />
+              </div>
+            </div>
+            <div className="flex space-x-2">
+              <Skeleton className="h-8 w-16" />
+              <Skeleton className="h-8 w-16" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 
   return (
-    <div className="p-4">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            User Management
-          </h1>
-          <p className="text-gray-400">Manage and monitor user accounts</p>
+    <div className="space-y-8">
+      {/* Animated Header */}
+      <motion.div
+        ref={headerRef}
+        initial={{ opacity: 0, y: 20 }}
+        animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
+        className="text-center"
+      >
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-sm font-medium mb-4">
+          <Users className="h-4 w-4" />
+          Student Management
         </div>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          Manage Your Students
+        </h1>
+        <p className="text-xl text-zinc-300 max-w-2xl mx-auto">
+          Create, edit, and monitor student accounts with comprehensive user
+          management tools
+        </p>
+      </motion.div>
+
+      {/* Quick Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+      >
         <Link href="/dashboard/students/import-users">
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700"
-          >
+          <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2">
+            <Upload className="h-5 w-5" />
             Import Users
           </Button>
         </Link>
-      </div>
+        <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-indigo-600 hover:to-blue-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2">
+          <Download className="h-5 w-5" />
+          Export Data
+        </Button>
+      </motion.div>
 
-      {/* User Statistics Card */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium text-green-400">
-              Total Users
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-white">{totalUsers}</p>
+      {/* Animated Stats Cards */}
+      <motion.div
+        ref={statsRef}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+      >
+        <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 hover:border-green-500/30 transition-all duration-300 group">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-zinc-400 mb-1">
+                  Total Users
+                </p>
+                <p className="text-3xl font-bold text-white">{totalUsers}</p>
+              </div>
+              <div className="p-3 bg-green-500/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                <Users className="h-6 w-6 text-green-400" />
+              </div>
+            </div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium text-green-400">
-              Verified Users
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-white">
-              {users.filter((user) => user.isVerified).length}
-            </p>
+
+        <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 hover:border-green-500/30 transition-all duration-300 group">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-zinc-400 mb-1">
+                  Verified Users
+                </p>
+                <p className="text-3xl font-bold text-white">
+                  {users.filter((user) => user.isVerified).length}
+                </p>
+              </div>
+              <div className="p-3 bg-blue-500/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                <UserCheck className="h-6 w-6 text-blue-400" />
+              </div>
+            </div>
           </CardContent>
         </Card>
-        <Card className="bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium text-green-400">
-              Admins
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-white">
-              {users.filter((user) => user.role === "ADMIN").length}
-            </p>
+
+        <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 hover:border-green-500/30 transition-all duration-300 group">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-zinc-400 mb-1">Admins</p>
+                <p className="text-3xl font-bold text-white">
+                  {users.filter((user) => user.role === "ADMIN").length}
+                </p>
+              </div>
+              <div className="p-3 bg-purple-500/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                <Shield className="h-6 w-6 text-purple-400" />
+              </div>
+            </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>User List</CardTitle>
-          <CardDescription>Manage existing users</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <UserTableSkeleton />
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Verified</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead>Updated</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
+      {/* Search and Filter */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="flex flex-col sm:flex-row gap-4"
+      >
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <Input
+            placeholder="Search users by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-zinc-900/80 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
+          />
+        </div>
+        <Select value={filterRole} onValueChange={setFilterRole}>
+          <SelectTrigger className="w-full sm:w-48 bg-zinc-900/80 border-zinc-700 text-white">
+            <Filter className="h-4 w-4 mr-2" />
+            <SelectValue placeholder="Filter by role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Roles</SelectItem>
+            <SelectItem value="STUDENT">Students</SelectItem>
+            <SelectItem value="ADMIN">Admins</SelectItem>
+          </SelectContent>
+        </Select>
+      </motion.div>
 
-                <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.id}>
-                      {/* Name Cell */}
-                      <TableCell>
-                        {editingUser === user.id ? (
-                          <Input
-                            value={user.name}
-                            onChange={(e) =>
-                              handleUserChange(user.id, "name", e.target.value)
-                            }
-                          />
-                        ) : (
-                          user.name
-                        )}
-                      </TableCell>
+      {/* Users Table */}
+      <motion.div
+        ref={tableRef}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isTableInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
+      >
+        <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              User List ({filteredUsers.length} users)
+            </CardTitle>
+            <CardDescription className="text-zinc-400">
+              Manage existing users and their permissions
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <UserTableSkeleton />
+            ) : (
+              <div className="space-y-4">
+                {filteredUsers.map((user, index) => (
+                  <motion.div
+                    key={user.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="bg-gradient-to-br from-zinc-800/50 to-black/50 border border-zinc-700 hover:border-green-500/30 transition-all duration-300 rounded-xl p-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="h-12 w-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-semibold">
+                          {user.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-white">
+                            {user.name}
+                          </h3>
+                          <p className="text-zinc-400">{user.email}</p>
+                        </div>
+                      </div>
 
-                      {/* Email Cell - Read Only */}
-                      <TableCell>{user.email}</TableCell>
-
-                      {/* Role Cell */}
-                      <TableCell>
-                        {editingUser === user.id ? (
-                          <Select
-                            value={user.role}
-                            onValueChange={(value) =>
-                              handleUserChange(user.id, "role", value)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="STUDENT">Student</SelectItem>
-                              <SelectItem value="ADMIN">Admin</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        ) : (
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2">
                           <span
-                            className={`px-2 py-1 rounded-full text-xs ${
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${
                               user.role === "ADMIN"
-                                ? "bg-purple-100 text-purple-800"
-                                : "bg-blue-100 text-blue-800"
+                                ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
+                                : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
                             }`}
                           >
                             {user.role}
                           </span>
-                        )}
-                      </TableCell>
-
-                      {/* Verification Status Cell */}
-                      <TableCell>
-                        {editingUser === user.id ? (
-                          <Select
-                            value={user.isVerified.toString()}
-                            onValueChange={(value) =>
-                              handleUserChange(
-                                user.id,
-                                "isVerified",
-                                value === "true"
-                              )
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="true">Verified</SelectItem>
-                              <SelectItem value="false">
-                                Not Verified
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        ) : (
                           <span
-                            className={`px-2 py-1 rounded-full text-xs ${
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${
                               user.isVerified
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
+                                ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                                : "bg-red-500/20 text-red-400 border border-red-500/30"
                             }`}
                           >
-                            {user.isVerified ? "Yes" : "No"}
+                            {user.isVerified ? (
+                              <span className="flex items-center gap-1">
+                                <CheckCircle className="h-3 w-3" />
+                                Verified
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1">
+                                <XCircle className="h-3 w-3" />
+                                Not Verified
+                              </span>
+                            )}
                           </span>
-                        )}
-                      </TableCell>
+                        </div>
 
-                      {/* Created At Cell */}
-                      <TableCell>
-                        <span className="text-xs text-gray-600">
-                          {formatDate(user.createdAt)}
-                        </span>
-                      </TableCell>
+                        <div className="flex items-center space-x-2 text-zinc-400 text-sm">
+                          <Calendar className="h-4 w-4" />
+                          <span>{formatDate(user.createdAt)}</span>
+                        </div>
 
-                      {/* Updated At Cell */}
-                      <TableCell>
-                        <span className="text-xs text-gray-600">
-                          {formatDate(user.updatedAt)}
-                        </span>
-                      </TableCell>
-
-                      {/* Actions Cell */}
-                      <TableCell>
                         <div className="flex space-x-2">
                           {editingUser === user.id ? (
                             <Button
                               onClick={() => handleUpdate(user.slug, user.id)}
                               size="sm"
-                              variant="outline"
+                              className="bg-green-600 hover:bg-green-700 text-white"
                               disabled={!userChanges[user.id]}
                             >
                               Save
@@ -498,6 +548,7 @@ const AdminUsersPage: React.FC = () => {
                               onClick={() => setEditingUser(user.id)}
                               size="sm"
                               variant="outline"
+                              className="border-zinc-600 hover:border-green-500 text-zinc-300 hover:text-white"
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
@@ -506,120 +557,221 @@ const AdminUsersPage: React.FC = () => {
                             onClick={() => handleDelete(user.slug)}
                             size="sm"
                             variant="destructive"
+                            className="bg-red-600 hover:bg-red-700"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                      </div>
+                    </div>
 
-      <Card className="mt-8">
-        <CardHeader>
-          <CardTitle>Create New User</CardTitle>
-          <CardDescription>Enter the details of the new user</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={newUser.name}
-                  onChange={handleInputChange}
-                  required
-                />
+                    {/* Edit Form (when editing) */}
+                    {editingUser === user.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-4 pt-4 border-t border-zinc-700"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <Label className="text-zinc-300">Name</Label>
+                            <Input
+                              value={user.name}
+                              onChange={(e) =>
+                                handleUserChange(
+                                  user.id,
+                                  "name",
+                                  e.target.value
+                                )
+                              }
+                              className="mt-1 bg-zinc-800 border-zinc-700 text-white"
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-zinc-300">Role</Label>
+                            <Select
+                              value={user.role}
+                              onValueChange={(value) =>
+                                handleUserChange(user.id, "role", value)
+                              }
+                            >
+                              <SelectTrigger className="mt-1 bg-zinc-800 border-zinc-700 text-white">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="STUDENT">Student</SelectItem>
+                                <SelectItem value="ADMIN">Admin</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label className="text-zinc-300">
+                              Verification
+                            </Label>
+                            <Select
+                              value={user.isVerified.toString()}
+                              onValueChange={(value) =>
+                                handleUserChange(
+                                  user.id,
+                                  "isVerified",
+                                  value === "true"
+                                )
+                              }
+                            >
+                              <SelectTrigger className="mt-1 bg-zinc-800 border-zinc-700 text-white">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="true">Verified</SelectItem>
+                                <SelectItem value="false">
+                                  Not Verified
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ))}
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={newUser.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
+            )}
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Create New User Form */}
+      <motion.div
+        ref={formRef}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isFormInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6 }}
+      >
+        <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              Create New User
+            </CardTitle>
+            <CardDescription className="text-zinc-400">
+              Add a new student or admin to the system
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-zinc-300">
+                    Full Name
+                  </Label>
                   <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={newUser.password}
+                    id="name"
+                    name="name"
+                    value={newUser.name}
                     onChange={handleInputChange}
                     required
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
+                    placeholder="Enter full name"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-zinc-300">
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={newUser.email}
+                    onChange={handleInputChange}
+                    required
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
+                    placeholder="Enter email address"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-zinc-300">
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={newUser.password}
+                      onChange={handleInputChange}
+                      required
+                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 pr-10"
+                      placeholder="Enter password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-white transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role" className="text-zinc-300">
+                    Role
+                  </Label>
+                  <Select
+                    name="role"
+                    value={newUser.role}
+                    onValueChange={(value) => handleSelectChange("role", value)}
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-gray-500" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-gray-500" />
-                    )}
-                  </button>
+                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="STUDENT">Student</SelectItem>
+                      <SelectItem value="ADMIN">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="usertype" className="text-zinc-300">
+                    User Type
+                  </Label>
+                  <Select
+                    name="usertype"
+                    value={newUser.usertype}
+                    onValueChange={(value) =>
+                      handleSelectChange("usertype", value)
+                    }
+                  >
+                    <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
+                      <SelectValue placeholder="Select user type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ONLINE">Online</SelectItem>
+                      <SelectItem value="OFFLINE">Offline</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="role">Role</Label>
-                <Select
-                  name="role"
-                  value={newUser.role}
-                  onValueChange={(value) => handleSelectChange("role", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="STUDENT">Student</SelectItem>
-                    <SelectItem value="ADMIN">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="usertype">User Type</Label>
-                <Select
-                  name="usertype"
-                  value={newUser.usertype}
-                  onValueChange={(value) =>
-                    handleSelectChange("usertype", value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select user type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ONLINE">Online</SelectItem>
-                    <SelectItem value="OFFLINE">Offline</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter>
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            disabled={!newUser.name || !newUser.email || !newUser.password}
-          >
-            Create User
-          </Button>
-        </CardFooter>
-      </Card>
+            </form>
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              disabled={!newUser.name || !newUser.email || !newUser.password}
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+            >
+              <Plus className="h-5 w-5" />
+              Create User
+            </Button>
+          </CardFooter>
+        </Card>
+      </motion.div>
     </div>
   );
 };
