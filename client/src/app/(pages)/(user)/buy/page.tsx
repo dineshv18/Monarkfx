@@ -4,7 +4,8 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
-import { useForm, SubmitHandler } from "react-hook-form";
+import Cookies from "js-cookie";
+
 import Script from "next/script";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,15 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import BillingForm from "./BillingForm";
 import CouponForm from "./CouponForm";
 import { useAuth } from "@/helper/AuthContext";
-import {
-  AddressData,
-  BillingDetails,
-  CouponDetails,
-  CourseDataNew,
-  PaymentVerificationData,
-  RazorpayResponse,
-  UserData,
-} from "@/type";
+import { AddressData, CouponDetails, CourseDataNew, UserData } from "@/type";
 import CourseCard from "./CourseCard";
 import AddressList from "./AddressList";
 
@@ -53,17 +46,19 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [addresses, setAddresses] = useState<AddressData[]>([]);
+  const [referralCode, setReferralCode] = useState<string>("");
+
+  // Get referral code from URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get("ref");
+    if (refCode) {
+      setReferralCode(refCode);
+    }
+  }, []);
 
   const { checkAuth } = useAuth();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<BillingDetails>();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [discountedPrice, setDiscountedPrice] = useState<number | null>(null);
   const [appliedCoupon, setAppliedCoupon] = useState<CouponDetails | null>(
     null
@@ -101,7 +96,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
         `${process.env.NEXT_PUBLIC_API_URL}/user/get-user`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
           },
         }
       );
@@ -112,7 +107,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
         `${process.env.NEXT_PUBLIC_API_URL}/billing/addresses`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
           },
         }
       );
@@ -144,131 +139,8 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
   };
 
   const handleAddressSelect = (address: AddressData) => {
-    setValue("fullName", address.fullName);
-    setValue("email", address.email);
-    setValue("address", address.address);
-    setValue("city", address.city);
-    setValue("state", address.state);
-    setValue("country", address.country);
-    setValue("zipCode", address.zipCode);
-    toast.success("Address selected");
-  };
-
-  const onSubmit: SubmitHandler<BillingDetails> = async (data) => {
-    setIsSubmitting(true);
-    try {
-      // Save billing details first
-      const billingResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/billing`,
-        {
-          ...data,
-          courseIds: courses.map((course) => course.id),
-          saveAddress: data.saveAddress,
-        }
-      );
-
-      if (!billingResponse.data.success) {
-        throw new Error("Failed to save billing details");
-      }
-
-      // Get Razorpay Key
-      const keyResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/getkey`
-      );
-      const key = keyResponse.data.key;
-
-      // Create Razorpay order
-      const amountUSDupees =
-        discountedPrice ||
-        courses.reduce(
-          (total, course) => total + (course.salePrice || course.price),
-          0
-        );
-      // const amountInPaise = Math.round(amountUSDupees * 100);
-      const amountInPaise = Math.round(amountUSDupees * 100);
-      const orderResponse = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/payment/checkout`,
-        { amount: amountInPaise }
-      );
-      const order = orderResponse.data.data;
-
-      const options = {
-        key: key,
-        amount: order.amount,
-        currency: "INR",
-        name: "MonarkFX - Global Trading Excellence",
-        description:
-          "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
-        order_id: order.id,
-        image: "/logo.png",
-        handler: async function (response: RazorpayResponse) {
-          try {
-            const courseDetails = courses.map((course) => {
-              const basePrice = course.salePrice || course.price;
-              let finalPrice = basePrice;
-
-              if (appliedCoupon && discountedPrice) {
-                const discountRatio = discountedPrice / currentTotalPrice;
-                finalPrice = basePrice * discountRatio;
-              }
-
-              return {
-                id: course.id,
-                price: basePrice,
-                discountedPrice: finalPrice !== basePrice ? finalPrice : null,
-              };
-            });
-            const verificationData: PaymentVerificationData = {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              courseIds: courses.map((course) => course.id),
-              billingId: billingResponse.data.data.id,
-              couponDetails: appliedCoupon,
-              courseDetails,
-            };
-
-            const res = await axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/payment/payment-verification`,
-              verificationData
-            );
-
-            if (res.data.success) {
-              toast.success("Payment successful!");
-              router.push("/user-profile");
-            } else {
-              throw new Error(
-                res.data.message || "Payment verification failed"
-              );
-            }
-          } catch (error) {
-            console.error("Payment verification error:", error);
-            if (axios.isAxiosError(error)) {
-              toast.error(
-                error.response?.data?.message || "Payment verification failed"
-              );
-            } else {
-              toast.error("Payment verification failed");
-            }
-          }
-        },
-        prefill: {
-          name: data.fullName,
-          email: data.email,
-        },
-        theme: {
-          color: "#10B981",
-        },
-      };
-
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
-    } catch (error) {
-      console.error("Checkout error:", error);
-      toast.error("Failed to initiate checkout");
-    } finally {
-      setIsSubmitting(false);
-    }
+    // This function is now handled by the BillingForm component
+    toast.success("Address selected - please fill the form manually");
   };
 
   if (isLoading) {
@@ -295,10 +167,6 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
 
   return (
     <div className="min-h-screen bg-black py-12 px-4 sm:px-6 lg:px-8 font-plus-jakarta-sans">
-      <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        strategy="lazyOnload"
-      />
       <div className="max-w-7xl mx-auto">
         <div className="bg-zinc-900 rounded-2xl shadow-2xl border border-green-500/20">
           <div className="p-6 md:p-8 lg:p-10">
@@ -319,19 +187,34 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
 
             <div className="grid lg:grid-cols-2 gap-8">
               <div>
-                <h2 className="text-2xl font-semibold text-white mb-6">
-                  Billing Details
-                </h2>
-                <BillingForm register={register} errors={errors} user={user} />
-                <AddressList
+                <div className="flex items-center mb-6">
+                  <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-blue-500 rounded-full mr-4"></div>
+                  <h2 className="text-2xl font-semibold text-white">
+                    Complete Your Purchase
+                  </h2>
+                </div>
+                <BillingForm
+                  courseId={courses[0]?.id || ""}
+                  courseTitle={courses[0]?.title || ""}
+                  coursePrice={discountedPrice || currentTotalPrice}
+                  onSuccess={() => {
+                    toast.success("Purchase completed successfully!");
+                    router.push("/dashboard");
+                  }}
+                  referralCode={referralCode}
                   addresses={addresses}
                   onAddressSelect={handleAddressSelect}
+                  appliedCoupon={appliedCoupon}
+                  originalPrice={originalTotalPrice}
                 />
               </div>
               <div>
-                <h2 className="text-2xl font-semibold text-white mb-6">
-                  Order Summary
-                </h2>
+                <div className="flex items-center mb-6">
+                  <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full mr-4"></div>
+                  <h2 className="text-2xl font-semibold text-white">
+                    Order Summary
+                  </h2>
+                </div>
                 <Card className="bg-zinc-800 border border-green-500/30">
                   <CardContent className="p-6">
                     <CouponForm
@@ -348,7 +231,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                     <div className="space-y-4 mt-6">
                       <div className="flex justify-between text-zinc-300">
                         <span>Subtotal:</span>
-                        <span>{formatPrice(currentTotalPrice)}</span>
+                        <span>{formatPrice(originalTotalPrice)}</span>
                       </div>
                       {currentTotalPrice < originalTotalPrice && (
                         <div className="flex justify-between text-green-400">
@@ -397,13 +280,12 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                         </div>
                       )}
                     </div>
-                    <Button
-                      onClick={handleSubmit(onSubmit)}
-                      className="w-full mt-8 py-6 text-lg font-semibold text-black bg-green-500 hover:bg-green-600 transition-colors"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Processing..." : "Proceed to Checkout"}
-                    </Button>
+                    <div className="mt-8 p-4 bg-green-500/10 rounded-lg border border-green-500/30">
+                      <p className="text-green-400 text-center text-sm">
+                        Complete your purchase using the billing form on the
+                        left
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
               </div>

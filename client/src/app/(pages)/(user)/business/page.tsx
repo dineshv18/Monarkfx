@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { toast } from "sonner";
 import {
   motion,
   useScroll,
@@ -9,419 +10,539 @@ import {
   useInView,
 } from "framer-motion";
 import {
-  Award,
   CheckCircle,
-  Mail,
-  MapPin,
   Phone,
-  Target,
   Users,
-  Zap,
   ArrowRight,
-  Lock,
-  ChevronRight,
-  Sparkles,
-  LineChart,
-  BrainCircuit,
-  GraduationCap,
   BarChart2,
-  Rocket,
-  PieChart,
-  CreditCard,
   Star,
+  TrendingUp,
+  Share2,
+  Globe,
+  Smartphone,
+  Headphones,
+  BookOpen,
+  X,
+  IndianRupee,
+  Info,
+  HelpCircle,
 } from "lucide-react";
 import Image from "next/image";
-import Background from "../../_components/Background";
+import { Card, CardContent } from "@/components/ui/card";
+import { Toaster } from "sonner";
 
-// Placeholder image content to be used when images don't exist
-const DEFAULT_HERO_IMAGE = "/placeholder.jpeg";
-const DEFAULT_COURSE_IMAGE = "/placeholder.jpeg";
 const DEFAULT_AVATAR_IMAGE = "/placeholder.jpeg";
-const DEFAULT_MENTORSHIP_IMAGE = "/placeholder.jpeg";
 
-// Business features
-const features = [
+// Affiliate benefits
+const affiliateBenefits = [
   {
-    icon: LineChart,
-    title: "Market Analysis",
-    description:
-      "Learn advanced chart patterns and technical analysis methods to identify high-probability trading setups.",
-    color: "from-red-500 to-orange-500",
+    icon: IndianRupee,
+    title: "15% Commission",
+    description: "Earn 15% commission on every course sale you generate",
+    color: "from-green-500 to-emerald-500",
   },
   {
-    icon: BrainCircuit,
-    title: "Trading Psychology",
-    description:
-      "Master emotional discipline and develop a trader's mindset to make rational decisions under pressure.",
-    color: "from-orange-500 to-amber-500",
+    icon: TrendingUp,
+    title: "High Conversion",
+    description: "Premium trading courses with proven high conversion rates",
+    color: "from-emerald-500 to-teal-500",
   },
   {
-    icon: Target,
-    title: "Risk Management",
-    description:
-      "Implement proven risk control strategies to protect your capital and maximize long-term profitability.",
-    color: "from-amber-500 to-yellow-500",
+    icon: Share2,
+    title: "Easy Sharing",
+    description: "Get unique affiliate links and marketing materials",
+    color: "from-teal-500 to-cyan-500",
   },
   {
-    icon: GraduationCap,
-    title: "Institutional Methods",
-    description:
-      "Discover how professional traders and market makers operate, and align your strategy with smart money.",
-    color: "from-yellow-500 to-lime-500",
+    icon: Globe,
+    title: "Global Reach",
+    description: "Access to international markets and diverse audience",
+    color: "from-cyan-500 to-blue-500",
   },
   {
-    icon: BarChart2,
-    title: "Multi-Timeframe Trading",
-    description:
-      "Analyze markets across different timeframes to confirm trends and find optimal entry and exit points.",
-    color: "from-lime-500 to-green-500",
+    icon: Smartphone,
+    title: "Mobile Friendly",
+    description: "All courses work perfectly on mobile devices",
+    color: "from-blue-500 to-indigo-500",
   },
   {
-    icon: Rocket,
-    title: "Performance Tracking",
-    description:
-      "Measure your progress with advanced metrics and analytics to continuously improve your trading results.",
-    color: "from-green-500 to-teal-500",
+    icon: Headphones,
+    title: "24/7 Support",
+    description: "Dedicated support team to help you succeed",
+    color: "from-indigo-500 to-purple-500",
   },
 ];
 
-// Trading courses
-const courses = [
-  {
-    title: "SMART TRADER PROFILE",
-    shortName: "STP",
-    price: "₹19,999",
-    category: "STOCK MARKET MASTERY",
-    duration: "2 Months",
-    tagline: "Master the Indian stock market with professional strategies",
-    color: "from-red-600 to-orange-600",
-    features: [
-      "Price Action Mastery",
-      "F&O Trading Techniques",
-      "Options Strategies",
-      "Multi-timeframe Analysis",
+// Affiliate registration form data
+const initialFormData = {
+  name: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+  state: "",
+  country: "India",
+  pincode: "",
+  bankName: "",
+  accountNumber: "",
+  ifscCode: "",
+  accountHolderName: "",
+  upiId: "",
+  notes: "",
+};
 
-      "Risk Management",
-    ],
-    levels: [
-      {
-        name: "Level 1: Price Action Foundation",
-        duration: "2 weeks",
-        description:
-          "Master the core principles of price action, chart patterns, and market structure",
-      },
-      {
-        name: "Level 2: Advanced Trading Mechanics",
-        duration: "2 weeks",
-        description:
-          "Learn institutional trading methods including orderblocks, liquidity, and market cycles",
-      },
-      {
-        name: "Level 3: Derivatives Trading",
-        duration: "2 weeks",
-        description:
-          "Develop expertise in F&O trading with options greeks, strategies, and hedging techniques",
-      },
-      {
-        name: "Level 4: Professional Integration",
-        duration: "2 weeks",
-        description:
-          "Apply all concepts in live trading sessions with mentorship and performance tracking",
-      },
-    ],
-    icon: DEFAULT_COURSE_IMAGE,
-  },
-  {
-    title: "FOREX CRYPTO HUSTLER",
-    shortName: "FCH",
-    price: "₹20,999",
-    category: "GLOBAL MARKETS MASTERY",
-    duration: "2 Months",
-    tagline:
-      "Trade the global forex and cryptocurrency markets with confidence",
-    color: "from-blue-600 to-indigo-600",
-    features: [
-      "Crypto Fundamentals",
-      "Blockchain Analysis",
-      "Forex Trading",
-      "Global Market Correlations",
-      "Portfolio Management",
-      "Risk Optimization",
-    ],
-    levels: [
-      {
-        name: "Level 1: Crypto Fundamentals",
-        duration: "2 weeks",
-        description:
-          "Understand blockchain technology, cryptocurrency analysis, and fundamental value drivers",
-      },
-      {
-        name: "Level 2: Technical Trading Systems",
-        duration: "2 weeks",
-        description:
-          "Develop a complete technical trading system with psychology, risk management and positioning",
-      },
-      {
-        name: "Level 3: Forex Mastery",
-        duration: "2 weeks",
-        description:
-          "Master forex market fundamentals, currency pairs, and macroeconomic influences",
-      },
-      {
-        name: "Level 4: Advanced Trading Applications",
-        duration: "2 weeks",
-        description:
-          "Apply strategies in live trading with professional guidance and portfolio construction",
-      },
-    ],
-    icon: DEFAULT_COURSE_IMAGE,
-  },
-];
-
-// Business process steps
-const businessProcess = [
+// How it works steps
+const howItWorks = [
   {
     number: "01",
-    title: "Assessment",
-    description:
-      "We begin with a comprehensive assessment of your current trading knowledge and goals.",
+    title: "Sign Up",
+    description: "Register as an affiliate and get your unique tracking links",
   },
   {
     number: "02",
-    title: "Customized Learning",
-    description:
-      "Based on your assessment, we create a tailored learning plan addressing your specific needs.",
+    title: "Promote",
+    description: "Share our premium trading courses with your audience",
   },
   {
     number: "03",
-    title: "Practical Training",
-    description:
-      "You'll learn through a combination of theory and hands-on practice in real market conditions.",
+    title: "Earn",
+    description: "Get 15% commission on every successful sale you generate",
   },
   {
     number: "04",
-    title: "Advanced Training",
+    title: "Withdraw",
     description:
-      "Apply your skills through advanced trading simulations and practical exercises with direct mentorship from professional traders.",
-  },
-  {
-    number: "05",
-    title: "Performance Review",
-    description:
-      "Regular performance reviews help identify areas for improvement and refine your strategy.",
-  },
-  {
-    number: "06",
-    title: "Certification",
-    description:
-      "Upon successful completion, receive ISO certification recognizing your trading proficiency.",
+      "Withdraw your earnings anytime through multiple payment methods",
   },
 ];
 
-// Testimonials
-const testimonials = [
+// Success stories
+const successStories = [
   {
     name: "Rahul Sharma",
-    role: "Stock Trader",
+    role: "Financial Blogger",
+    earnings: "₹45,000",
     content:
-      "The STP program completely transformed my approach to trading. The institutional concepts I learned at Monark FX helped me develop a consistent edge in the markets.",
+      "I've been promoting MonarkFX courses for 6 months and earned over ₹45,000 in commissions. The courses sell themselves!",
     image: DEFAULT_AVATAR_IMAGE,
   },
   {
     name: "Priya Patel",
-    role: "Crypto Investor",
+    role: "Trading Coach",
+    earnings: "₹78,000",
     content:
-      "As someone new to cryptocurrency trading, the FCH program provided the perfect foundation. The mentors are incredibly knowledgeable and patient with beginners.",
+      "As a trading coach, I recommend these courses to my students. The 15% commission is a great bonus to my income.",
     image: DEFAULT_AVATAR_IMAGE,
   },
   {
     name: "Vikram Singh",
-    role: "Options Trader",
+    role: "YouTuber",
+    earnings: "₹1,25,000",
     content:
-      "The options strategies taught in the advanced modules gave me a completely new perspective on risk management and position sizing. Highly recommended!",
+      "My audience loves the quality of MonarkFX courses. I've earned ₹1,25,000 in just 8 months of affiliate marketing.",
     image: DEFAULT_AVATAR_IMAGE,
   },
 ];
 
-// Benefits of working with us
-const benefits = [
+// Marketing tools
+const marketingTools = [
   {
-    icon: Users,
-    title: "Expert Mentorship",
+    icon: BookOpen,
+    title: "Course Materials",
     description:
-      "Learn directly from professional traders with years of market experience",
+      "Get access to course previews, testimonials, and marketing copy",
   },
   {
-    icon: PieChart,
-    title: "Data-Driven Methods",
-    description:
-      "Our strategies are based on statistical edge and proven market principles",
+    icon: Share2,
+    title: "Social Media Kit",
+    description: "Ready-to-use social media posts, graphics, and videos",
   },
   {
-    icon: CreditCard,
-    title: "Flexible Payment",
-    description:
-      "Choose from various payment options including installment plans",
+    icon: Globe,
+    title: "Landing Pages",
+    description: "High-converting landing pages optimized for your audience",
   },
   {
-    icon: CheckCircle,
-    title: "ISO Certification",
-    description:
-      "Receive internationally recognized certification upon course completion",
+    icon: BarChart2,
+    title: "Analytics Dashboard",
+    description: "Track your performance, clicks, and earnings in real-time",
   },
 ];
 
-// Feature card with gradient background
 const FeatureCard = ({ feature, index }: { feature: any; index: number }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative group"
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="group relative"
     >
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${feature.color} rounded-2xl blur-md opacity-80 group-hover:opacity-100 transition-opacity duration-300`}
-      />
-      <div className="relative bg-gray-900 rounded-2xl p-8 h-full border border-gray-700 shadow-xl">
+      <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 hover:border-green-500/30 transition-all duration-300 rounded-2xl p-8 h-full">
         <div
-          className={`w-14 h-14 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center text-white mb-4 shadow-lg`}
+          className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${feature.color} mb-6 group-hover:scale-110 transition-transform duration-300`}
         >
-          <feature.icon size={24} />
+          <feature.icon className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-2">
-          {feature.title}
-        </h3>
-        <p className="text-gray-600">{feature.description}</p>
+        <h3 className="text-xl font-bold text-white mb-4">{feature.title}</h3>
+        <p className="text-zinc-300 leading-relaxed">{feature.description}</p>
       </div>
     </motion.div>
   );
 };
 
-// Course card with gradient background
-const CourseCard = ({ course, index }: { course: any; index: number }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+// Affiliate Registration Modal Component
+const AffiliateRegistrationModal = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  const [formData, setFormData] = useState(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState(1);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Show loading toast
+    const loadingToast = toast.loading("Submitting your application...");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/affiliate/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.dismiss(loadingToast);
+        toast.success(
+          "Affiliate registration submitted successfully! We will contact you soon."
+        );
+        setFormData(initialFormData);
+        setStep(1);
+        onClose();
+      } else {
+        toast.dismiss(loadingToast);
+        toast.error(data.message || "Registration failed. Please try again.");
+      }
+    } catch (error) {
+      toast.dismiss(loadingToast);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const nextStep = () => {
+    if (step === 1 && (!formData.name || !formData.email || !formData.phone)) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    setStep(step + 1);
+  };
+  const prevStep = () => {
+    setStep(step - 1);
+  };
+
+  if (!isOpen) return null;
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.6, delay: index * 0.2 }}
-      className="group"
-    >
-      <div
-        className={`bg-gradient-to-r ${course.color} rounded-2xl p-8 shadow-xl group-hover:shadow-2xl transition-all duration-300 overflow-hidden relative`}
-      >
-        {/* Background pattern */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mt-10 -mr-10 z-0" />
-        <div className="absolute bottom-0 left-0 w-40 h-40 bg-black/5 rounded-full -mb-10 -ml-10 z-0" />
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-gradient-to-br from-zinc-900/95 to-black/95 border border-zinc-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-white">
+              Become Our Affiliate
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
 
-        <div className="relative z-10">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <span className="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-medium inline-block mb-3">
-                {course.category}
-              </span>
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-1">
-                {course.title}
-              </h3>
-              <p className="text-white/80">{course.tagline}</p>
+          {/* Progress Steps */}
+          <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center space-x-4">
+              {[1, 2, 3].map((stepNumber) => (
+                <div key={stepNumber} className="flex items-center">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                      step >= stepNumber
+                        ? "bg-green-500 text-white"
+                        : "bg-zinc-700 text-zinc-400"
+                    }`}
+                  >
+                    {stepNumber}
+                  </div>
+                  {stepNumber < 3 && (
+                    <div
+                      className={`w-12 h-1 mx-2 ${
+                        step > stepNumber ? "bg-green-500" : "bg-zinc-700"
+                      }`}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
-            <div className="bg-white/20 h-16 w-16 rounded-full flex items-center justify-center p-1">
-              <div className="bg-white/90 h-full w-full rounded-full flex items-center justify-center text-green-600 font-bold text-xl">
-                {course.shortName}
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            {step === 1 && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Personal Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name *"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email Address *"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone Number *"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    name="country"
+                    placeholder="Country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    disabled={
+                      !formData.name || !formData.email || !formData.phone
+                    }
+                    className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
+            )}
 
-          <div className="flex items-baseline justify-between mb-6">
-            <span className="text-3xl font-bold text-white">
-              {course.price}
-            </span>
-            <span className="text-white/80">{course.duration}</span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 mb-8">
-            {course.features.map((feature: string, i: number) => (
-              <div key={i} className="flex items-center">
-                <CheckCircle className="text-white/90 h-4 w-4 mr-2 flex-shrink-0" />
-                <span className="text-white/90 text-sm">{feature}</span>
+            {step === 2 && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Address Information
+                </h3>
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="Full Address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input
+                      type="text"
+                      name="city"
+                      placeholder="City"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                    />
+                    <input
+                      type="text"
+                      name="state"
+                      placeholder="State"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                    />
+                    <input
+                      type="text"
+                      name="pincode"
+                      placeholder="Pincode"
+                      value={formData.pincode}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="px-6 py-3 bg-zinc-700 text-white rounded-xl font-semibold hover:bg-zinc-600 transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
-            ))}
-          </div>
+            )}
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full py-3 bg-white text-gray-900 rounded-xl font-semibold flex items-center justify-center space-x-2 shadow-lg"
-          >
-            <span>View Course Details</span>
-            <ChevronRight className="w-4 h-4 text-green-600" />
-          </motion.button>
+            {step === 3 && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">
+                  Payment Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="bankName"
+                    placeholder="Bank Name"
+                    value={formData.bankName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    name="accountNumber"
+                    placeholder="Account Number"
+                    value={formData.accountNumber}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    name="ifscCode"
+                    placeholder="IFSC Code"
+                    value={formData.ifscCode}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    name="accountHolderName"
+                    placeholder="Account Holder Name"
+                    value={formData.accountHolderName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    name="upiId"
+                    placeholder="UPI ID (Optional)"
+                    value={formData.upiId}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
+                </div>
+                <textarea
+                  name="notes"
+                  placeholder="Additional Notes (Optional)"
+                  value={formData.notes}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none resize-none"
+                />
+                <div className="flex justify-between">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="px-6 py-3 bg-zinc-700 text-white rounded-xl font-semibold hover:bg-zinc-600 transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="h-4 w-4" />
+                        Submit Application
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </form>
         </div>
       </div>
-
-      {/* Course levels - shown on hover */}
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        whileHover={{ height: "auto", opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="bg-gray-800 backdrop-blur-sm rounded-b-2xl overflow-hidden shadow-xl border border-t-0 border-gray-700"
-      >
-        <div className="p-6 space-y-4">
-          <h4 className="font-bold text-gray-900">Course Structure</h4>
-          {course.levels.map((level: any, i: number) => (
-            <div key={i} className="border-l-4 border-green-500 pl-4 py-2">
-              <h5 className="font-semibold text-gray-900">{level.name}</h5>
-              <p className="text-sm text-gray-600">{level.duration}</p>
-              <p className="text-sm mt-1 text-gray-700">{level.description}</p>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-    </motion.div>
+    </div>
   );
 };
 
-// Process step card
 const ProcessCard = ({ step, index }: { step: any; index: number }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative z-10"
+      initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.2 }}
+      className="flex items-start gap-6"
     >
-      <div className="flex items-start gap-4">
-        <div className="shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-red-700 text-white flex items-center justify-center font-bold shadow-lg">
-          {step.number}
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
-          <p className="text-gray-600">{step.description}</p>
-        </div>
+      <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+        {step.number}
       </div>
-
-      {/* Connector line */}
-      {index < businessProcess.length - 1 && (
-        <div className="absolute left-6 top-12 w-0.5 h-16 bg-gradient-to-b from-red-500 to-red-200"></div>
-      )}
+      <div>
+        <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
+        <p className="text-zinc-300">{step.description}</p>
+      </div>
     </motion.div>
   );
 };
 
 const BusinessPage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { scrollYProgress } = useScroll();
   const y = useSpring(useTransform(scrollYProgress, [0, 1], [0, 300]), {
     stiffness: 100,
@@ -439,7 +560,7 @@ const BusinessPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black font-plus-jakarta-sans">
       {/* Add CSS for grid pattern */}
       <style jsx global>{`
         .bg-dot-pattern {
@@ -454,12 +575,12 @@ const BusinessPage = () => {
         .bg-grid-pattern {
           background-image: linear-gradient(
               to right,
-              rgba(249, 59, 59, 0.1) 1px,
+              rgba(34, 197, 94, 0.1) 1px,
               transparent 1px
             ),
             linear-gradient(
               to bottom,
-              rgba(249, 59, 59, 0.1) 1px,
+              rgba(34, 197, 94, 0.1) 1px,
               transparent 1px
             );
           background-size: 20px 20px;
@@ -467,17 +588,21 @@ const BusinessPage = () => {
       `}</style>
 
       {/* Hero Section with Animated Elements */}
-      <div className="relative overflow-hidden bg-gradient-to-b from-gray-50 to-white">
-        <Background
-          title="Business"
-          highlightedText="Solutions"
-          subtitle="Comprehensive trading education for financial markets"
-        />
+      <div className="relative bg-gradient-to-b from-zinc-900 via-black to-black overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
+        </div>
 
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <motion.div
-            className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-red-500/5 to-orange-500/5 blur-3xl"
+            className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-3xl"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.3, 0.5, 0.3],
@@ -489,7 +614,7 @@ const BusinessPage = () => {
             }}
           />
           <motion.div
-            className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-blue-500/5 to-purple-500/5 blur-2xl"
+            className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-2xl"
             animate={{
               scale: [1, 1.3, 1],
               opacity: [0.2, 0.4, 0.2],
@@ -503,121 +628,260 @@ const BusinessPage = () => {
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <span className="text-green-500 font-medium tracking-wide uppercase text-sm">
-                Financial Market Education
+        <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
+                <IndianRupee className="h-8 w-8 text-green-400" />
+              </div>
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              Become Our{" "}
+              <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+                Affiliate
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mt-4 mb-6">
-                Transform Your{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-800">
-                  Trading Skills
-                </span>
-              </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Our premium trading education programs offer expert mentorship,
-                institutional trading methods, and practical market strategies
-                to help you excel in today's dynamic financial markets.
-              </p>
+            </h1>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <motion.a
-                  href="/contact"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg flex items-center justify-center group"
-                >
-                  Get Started
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </motion.a>
-                <motion.a
-                  href="/about"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="bg-white text-green-600 border border-green-500/30 px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-md transition-shadow flex items-center justify-center"
-                >
-                  Learn More
-                </motion.a>
-              </div>
+            <p className="text-xl md:text-2xl text-zinc-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+              Earn 15% commission on every course sale. Join our affiliate
+              program and start earning while helping others master trading.
+            </p>
 
-              {/* Trust indicators */}
-              <div className="mt-12 flex flex-wrap items-center gap-6">
-                <div className="flex items-center gap-2">
-                  <Award className="h-5 w-5 text-green-500" />
-                  <span className="text-gray-600 font-medium">
-                    ISO Certified
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="h-5 w-5 text-green-500" />
-                  <span className="text-gray-600 font-medium">
-                    250+ Students
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-green-500" />
-                  <span className="text-gray-600 font-medium">
-                    4.7/5 Rating
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-
-            <div className="relative h-[500px] hidden lg:block">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute inset-0"
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <motion.button
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
               >
-                <div className="relative h-full w-full overflow-hidden rounded-2xl shadow-2xl">
-                  <Image
-                    src={DEFAULT_HERO_IMAGE}
-                    alt="Trading Education"
-                    fill
-                    priority
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-red-900/40 to-transparent"></div>
+                <ArrowRight className="h-5 w-5" />
+                Join Affiliate Program
+              </motion.button>
 
-                  {/* Floating elements */}
-                  <motion.div
-                    className="absolute top-10 -right-8 bg-gray-900 backdrop-blur-sm p-4 rounded-xl shadow-lg"
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <LineChart className="h-8 w-8 text-green-500" />
-                  </motion.div>
-                  <motion.div
-                    className="absolute bottom-16 -left-8 bg-gray-900 backdrop-blur-sm p-4 rounded-xl shadow-lg"
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{
-                      duration: 5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 1,
-                    }}
-                  >
-                    <Zap className="h-8 w-8 text-green-500" />
-                  </motion.div>
-                </div>
-              </motion.div>
+              <motion.a
+                href="/contact"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="group flex items-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-6 py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
+              >
+                <span>Contact Us</span>
+              </motion.a>
+            </div>
+
+            {/* Stats Section */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="p-2 bg-green-500/20 rounded-lg">
+                      <IndianRupee className="h-5 w-5 text-green-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-white mb-1">15%</div>
+                  <div className="text-sm text-zinc-400">Commission Rate</div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="p-2 bg-blue-500/20 rounded-lg">
+                      <Users className="h-5 w-5 text-blue-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-white mb-1">500+</div>
+                  <div className="text-sm text-zinc-400">Active Affiliates</div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="p-2 bg-purple-500/20 rounded-lg">
+                      <TrendingUp className="h-5 w-5 text-purple-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-white mb-1">
+                    ₹25L+
+                  </div>
+                  <div className="text-sm text-zinc-400">
+                    Paid to Affiliates
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
+                <CardContent className="p-6 text-center">
+                  <div className="flex items-center justify-center gap-3 mb-3">
+                    <div className="p-2 bg-yellow-500/20 rounded-lg">
+                      <Star className="h-5 w-5 text-yellow-400" />
+                    </div>
+                  </div>
+                  <div className="text-2xl font-bold text-white mb-1">
+                    4.8/5
+                  </div>
+                  <div className="text-sm text-zinc-400">Course Rating</div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Features Section */}
-      <section className="py-20 relative overflow-hidden">
+      {/* How It Works - Information Section */}
+      <section className="py-16 bg-gradient-to-br from-zinc-900 to-black relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-sm font-medium mb-4">
+                <Info className="h-4 w-4" />
+                How Affiliate System Works
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Complete Guide to Earning with Us
+              </h2>
+              <p className="text-xl text-zinc-300">
+                Understand how the affiliate system works and start earning
+                commissions
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-2xl p-8"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-blue-500/20 rounded-xl">
+                  <Users className="h-6 w-6 text-blue-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  1. Register as Affiliate
+                </h3>
+              </div>
+              <p className="text-zinc-300 mb-4">
+                Fill out the registration form with your details. We'll review
+                your application and approve qualified affiliates.
+              </p>
+              <ul className="text-sm text-zinc-400 space-y-2">
+                <li>• Complete registration form</li>
+                <li>• Provide bank details for payments</li>
+                <li>• Wait for admin approval</li>
+                <li>• Get your unique referral code</li>
+              </ul>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-2xl p-8"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-green-500/20 rounded-xl">
+                  <Share2 className="h-6 w-6 text-green-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  2. Share Your Code
+                </h3>
+              </div>
+              <p className="text-zinc-300 mb-4">
+                Use your unique referral code (like XVFXYO) to promote our
+                courses. Share it on social media, blogs, or directly with
+                potential customers.
+              </p>
+              <ul className="text-sm text-zinc-400 space-y-2">
+                <li>• Get unique referral code (e.g., XVFXYO)</li>
+                <li>• Share on social media platforms</li>
+                <li>• Use in blog posts and content</li>
+                <li>• Direct sharing with customers</li>
+              </ul>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-2xl p-8"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-purple-500/20 rounded-xl">
+                  <IndianRupee className="h-6 w-6 text-purple-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  3. Earn Commissions
+                </h3>
+              </div>
+              <p className="text-zinc-300 mb-4">
+                When customers purchase courses using your referral code, you
+                earn 15% commission on every sale. Track your earnings in
+                real-time.
+              </p>
+              <ul className="text-sm text-zinc-400 space-y-2">
+                <li>• 15% commission on every sale</li>
+                <li>• Works for all courses and classes</li>
+                <li>• Real-time tracking dashboard</li>
+                <li>• Monthly commission payments</li>
+              </ul>
+            </motion.div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-gradient-to-br from-green-600/20 to-emerald-600/20 border border-green-500/30 rounded-2xl p-8"
+            >
+              <h3 className="text-2xl font-bold text-white mb-4">
+                💡 Pro Tips for Success
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                <div>
+                  <h4 className="text-lg font-semibold text-green-400 mb-3">
+                    🎯 What You Can Promote
+                  </h4>
+                  <ul className="text-zinc-300 space-y-2">
+                    <li>• Online trading courses (₹19,999 - ₹20,999)</li>
+                    <li>• Live trading classes and sessions</li>
+                    <li>• Mentorship programs</li>
+                    <li>• Any course on our platform</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold text-green-400 mb-3">
+                    📈 Earning Potential
+                  </h4>
+                  <ul className="text-zinc-300 space-y-2">
+                    <li>• ₹2,999 - ₹3,149 per course sale</li>
+                    <li>• No limit on number of sales</li>
+                    <li>• Passive income opportunity</li>
+                    <li>• Monthly payment cycles</li>
+                  </ul>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 relative overflow-hidden bg-black">
         <div className="absolute inset-0 bg-dot-pattern opacity-5 pointer-events-none"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -628,33 +892,28 @@ const BusinessPage = () => {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
-                TRADING EXPERTISE
+                AFFILIATE BENEFITS
               </span>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                What You'll Learn
+              <h2 className="text-4xl font-bold text-white mb-6">
+                Why Choose Our Affiliate Program?
               </h2>
-              <p className="text-xl text-gray-600">
-                Our comprehensive curriculum covers every aspect of successful
-                trading, from technical analysis to psychological mastery.
+              <p className="text-xl text-zinc-300">
+                Join thousands of successful affiliates who are earning while
+                helping others learn trading.
               </p>
             </motion.div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <FeatureCard key={index} feature={feature} index={index} />
+            {affiliateBenefits.map((benefit, index) => (
+              <FeatureCard key={index} feature={benefit} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Course Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-red-50 to-transparent rounded-full blur-3xl opacity-70 transform translate-x-1/2 -translate-y-1/2"></div>
-          <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-blue-50 to-transparent rounded-full blur-3xl opacity-70 transform -translate-x-1/2 translate-y-1/2"></div>
-        </div>
-
+      {/* How It Works Section */}
+      <section className="py-20 relative overflow-hidden bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <motion.div
@@ -664,59 +923,27 @@ const BusinessPage = () => {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
-                PREMIUM COURSES
+                GET STARTED
               </span>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Trading Education Services
+              <h2 className="text-4xl font-bold text-white mb-6">
+                How It Works
               </h2>
-              <p className="text-xl text-gray-600">
-                Choose from our specialized training programs designed to
-                develop your skills in specific market segments.
-              </p>
-            </motion.div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {courses.map((course, index) => (
-              <CourseCard key={index} course={course} index={index} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Process Section */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
-                OUR METHODOLOGY
-              </span>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                How We Transform Traders
-              </h2>
-              <p className="text-xl text-gray-600">
-                Our proven process takes you from trading basics to professional
-                implementation in six comprehensive steps.
+              <p className="text-xl text-zinc-300">
+                Start earning commissions in just 4 simple steps.
               </p>
             </motion.div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-            {businessProcess.map((step, index) => (
+            {howItWorks.map((step, index) => (
               <ProcessCard key={index} step={step} index={index} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-gradient-to-br from-red-600 to-red-800 text-white relative overflow-hidden">
+      {/* Success Stories Section */}
+      <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 text-white relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <svg
@@ -770,16 +997,18 @@ const BusinessPage = () => {
               <span className="inline-block px-3 py-1 bg-white/20 text-white rounded-full text-sm font-medium tracking-wide mb-3">
                 SUCCESS STORIES
               </span>
-              <h2 className="text-4xl font-bold mb-6">What Our Students Say</h2>
+              <h2 className="text-4xl font-bold mb-6">
+                What Our Affiliates Say
+              </h2>
               <p className="text-xl text-white/80">
-                Hear from traders who have transformed their approach to markets
-                through our education.
+                Hear from successful affiliates who are earning big with our
+                program.
               </p>
             </motion.div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
+            {successStories.map((testimonial, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
@@ -800,289 +1029,142 @@ const BusinessPage = () => {
                 <p className="text-white mb-6 italic">
                   "{testimonial.content}"
                 </p>
-                <div className="flex items-center">
-                  <div className="h-12 w-12 rounded-full bg-white/20 overflow-hidden mr-4">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      width={48}
-                      height={48}
-                      className="object-cover"
-                    />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="h-12 w-12 rounded-full bg-white/20 overflow-hidden mr-4">
+                      <Image
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        width={48}
+                        height={48}
+                        className="object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-white/70 text-sm">
+                        {testimonial.role}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-white">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-white/70 text-sm">{testimonial.role}</p>
+                  <div className="text-right">
+                    <p className="text-green-300 font-bold text-lg">
+                      {testimonial.earnings}
+                    </p>
+                    <p className="text-white/70 text-sm">Total Earnings</p>
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
-
-          <div className="mt-16 text-center">
-            <motion.a
-              href="/about"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-block bg-white text-green-600 px-8 py-4 rounded-xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-shadow"
-            >
-              Read More Success Stories
-            </motion.a>
-          </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 relative overflow-hidden">
+      {/* Marketing Tools Section */}
+      <section className="py-20 bg-black relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="text-center max-w-3xl mx-auto mb-16">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
               <span className="inline-block px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-medium tracking-wide mb-3">
-                WHY CHOOSE US
+                MARKETING TOOLS
               </span>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Unmatched Trading Education
+              <h2 className="text-4xl font-bold text-white mb-6">
+                Everything You Need to Succeed
               </h2>
-              <p className="text-xl text-gray-600 mb-8">
-                When you choose Monark FX, you gain access to benefits that set
-                us apart from other trading education providers.
+              <p className="text-xl text-zinc-300">
+                We provide all the tools and resources you need to promote our
+                courses effectively.
               </p>
-
-              <div className="space-y-6">
-                {benefits.map((benefit, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="flex items-start"
-                  >
-                    <div className="shrink-0 mr-4 w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white shadow-lg">
-                      <benefit.icon size={24} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-1">
-                        {benefit.title}
-                      </h3>
-                      <p className="text-gray-600">{benefit.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
             </motion.div>
+          </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative h-[600px] hidden lg:block"
-            >
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-red-100 to-red-50 rounded-3xl overflow-hidden">
-                <div className="absolute inset-0 bg-grid-pattern opacity-30"></div>
-              </div>
-
-              <div className="absolute top-8 left-8 right-8 bottom-8 overflow-hidden rounded-2xl shadow-2xl">
-                <Image
-                  src={DEFAULT_MENTORSHIP_IMAGE}
-                  alt="Trading Mentorship"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-red-900/40 to-transparent"></div>
-              </div>
-
-              {/* Floating achievement card */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {marketingTools.map((tool, index) => (
               <motion.div
-                className="absolute -bottom-8 -right-8 bg-gray-900 rounded-xl p-6 shadow-xl border border-green-500/20 max-w-xs"
-                animate={{ y: [0, -15, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="text-center"
               >
-                <div className="flex items-center mb-3">
-                  <Award className="h-8 w-8 text-green-500 mr-3" />
-                  <h3 className="text-xl font-bold text-gray-900">
-                    ISO Certified
+                <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 hover:border-green-500/30 transition-all duration-300 rounded-2xl p-8 h-full">
+                  <div className="inline-flex p-4 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 mb-6">
+                    <tool.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4">
+                    {tool.title}
                   </h3>
+                  <p className="text-zinc-300">{tool.description}</p>
                 </div>
-                <p className="text-gray-600">
-                  Our ISO 21008:2018 certification ensures that our trading
-                  education meets international quality standards.
-                </p>
               </motion.div>
-
-              {/* Floating review card */}
-              <motion.div
-                className="absolute -top-8 -left-8 bg-gray-900 rounded-xl p-6 shadow-xl border border-green-500/20 max-w-xs"
-                animate={{ y: [0, 15, 0] }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 2,
-                }}
-              >
-                <div className="flex items-center mb-3">
-                  <Sparkles className="h-6 w-6 text-yellow-500 mr-3" />
-                  <div className="flex">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className="h-5 w-5 text-yellow-500"
-                        fill="currentColor"
-                      />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-gray-600 italic">
-                  "The best trading education I've ever received. Worth every
-                  penny!"
-                </p>
-              </motion.div>
-            </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            className="absolute -right-40 -bottom-40 w-96 h-96 rounded-full border border-green-500/30 opacity-50"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div
-            className="absolute -left-20 -top-20 w-64 h-64 rounded-full border border-green-500/30 opacity-30"
-            animate={{ rotate: -360 }}
-            transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
-          />
+          <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-white/10 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-green-500/20">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="p-12 lg:p-16 flex flex-col justify-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                    Start Your Trading Journey Today
-                  </h2>
-                  <p className="text-xl text-gray-600 mb-10">
-                    Join our premium trading education programs and gain the
-                    skills, knowledge, and confidence to succeed in the
-                    financial markets.
-                  </p>
-
-                  <div className="space-y-4">
-                    <motion.a
-                      href="/contact"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="block sm:inline-block bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto text-center"
-                    >
-                      Book a Consultation
-                    </motion.a>
-                    <motion.a
-                      href="/about"
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="block sm:inline-block sm:ml-4 border border-green-500/30 text-green-400 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-green-500/10 transition-colors w-full sm:w-auto text-center"
-                    >
-                      Explore Programs
-                    </motion.a>
-                  </div>
-
-                  <div className="mt-10 p-4 bg-green-500/10 rounded-lg text-sm text-green-300 border border-green-500/30">
-                    <p className="flex items-start">
-                      <Lock className="h-5 w-5 mr-2 shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="font-bold">
-                          Trading Disclaimer:
-                        </strong>{" "}
-                        Trading involves capital risk. All trades are for
-                        educational purposes only. Trade wisely at your own
-                        risk.
-                      </span>
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="relative h-96 lg:h-auto">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-600 to-red-800">
-                  <div className="absolute inset-0 bg-grid-pattern opacity-30"></div>
-                </div>
-
-                <div className="relative h-full flex flex-col justify-center p-12 lg:p-16 text-white">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                  >
-                    <h3 className="text-2xl font-bold mb-6 flex items-center">
-                      <Phone className="mr-3 h-6 w-6" />
-                      Contact Information
-                    </h3>
-
-                    <div className="space-y-4 mb-8">
-                      <div className="flex items-start">
-                        <MapPin className="h-6 w-6 mr-3 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium">Visit Our Branches</p>
-                          <p className="text-white/80">
-                            Uttam Nagar, New Delhi
-                          </p>
-                          <p className="text-white/80">
-                            Dashrath Puri, New Delhi
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start">
-                        <Phone className="h-6 w-6 mr-3 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium">Call Us</p>
-                          <p className="text-white/80">+91 9220797499</p>
-                          <p className="text-white/80">+91 9773927706</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start">
-                        <Mail className="h-6 w-6 mr-3 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-medium">Email Us</p>
-                          <p className="text-white/80">service@monarkfx.com</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="inline-block px-4 py-2 bg-white/10 rounded-lg text-sm backdrop-blur-sm border border-white/20">
-                      Working Hours: Mon - Sat: 9AM to 6PM
-                    </div>
-                  </motion.div>
-                </div>
-              </div>
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to Start Earning?
+            </h2>
+            <p className="text-xl text-white/80 mb-8">
+              Join our affiliate program today and start earning 15% commission
+              on every sale.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.button
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-green-600 px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <ArrowRight className="h-5 w-5" />
+                Join Now - It's Free!
+              </motion.button>
+              <motion.a
+                href="/contact"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-green-600 transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <Phone className="h-5 w-5" />
+                Talk to Our Team
+              </motion.a>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
+
+      {/* Affiliate Registration Modal */}
+      <AffiliateRegistrationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+
+      {/* Toaster for notifications */}
+      <Toaster position="top-right" richColors closeButton duration={4000} />
     </div>
   );
 };

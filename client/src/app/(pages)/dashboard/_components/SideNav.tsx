@@ -26,6 +26,7 @@ import {
   ChevronDown,
   LucideIcon,
   Code,
+  Lock,
 } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -51,113 +52,11 @@ interface NavGroups {
   [key: string]: NavGroup;
 }
 
-const navItems: NavItem[] = [
-  {
-    title: "My Courses",
-    href: "/dashboard",
-    icon: BookOpen,
-  },
-  {
-    title: "Course Access",
-    href: "/dashboard/access-course",
-    icon: KeyRound,
-  },
-  {
-    title: "Categories",
-    href: "/dashboard/categories",
-    icon: Folder,
-  },
-  {
-    title: "Student List",
-    href: "/dashboard/students",
-    icon: School,
-  },
-  {
-    title: "Reviews",
-    href: "/dashboard/reviews",
-    icon: MessageSquare,
-    children: [
-      {
-        title: "Course Reviews",
-        href: "/dashboard/reviews",
-      },
-      {
-        title: "L",
-        href: "/dashboard/live-reviews",
-      },
-    ],
-  },
-  {
-    title: "New Course",
-    href: "/dashboard/create-course",
-    icon: FilePlus,
-  },
-  {
-    title: "Saved Drafts",
-    href: "/dashboard/draft-courses",
-    icon: FileText,
-  },
-  {
-    title: "Coupons",
-    href: "/dashboard/coupons",
-    icon: Puzzle,
-  },
-  {
-    title: "Location",
-    href: "/dashboard/address",
-    icon: MapPinHouse,
-  },
-  {
-    title: "Sales History",
-    href: "/dashboard/purchase",
-    icon: ShoppingBasket,
-  },
-  {
-    title: "Certificates",
-    href: "/dashboard/certificates",
-    icon: Award,
-  },
-  {
-    title: "Live Classes",
-    href: "/dashboard/zoom",
-    icon: Video,
-  },
-  {
-    title: "Contact Form",
-    href: "/dashboard/contacts",
-    icon: MessageSquare,
-  },
-  {
-    title: "Tracking Scripts",
-    href: "/dashboard/tracking-scripts",
-    icon: Code,
-  },
-];
-
 // Course links for dropdown
 const courseLinks = [
-  { name: "Online Courses", href: "/online-courses" },
+  { name: "Online Courses", href: "/courses" },
   { name: "Live Classes", href: "/live-classes" },
-  { name: "Offline Batches", href: "/offline-batches" },
 ];
-
-// Logout handler function
-const handleLogout = async () => {
-  try {
-    const accessToken = Cookies.get("accessToken");
-    if (!accessToken) return;
-
-    await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
-      {},
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
-    Cookies.remove("accessToken");
-    window.location.href = "/auth";
-  } catch (error) {
-    console.error("Logout error:", error);
-  }
-};
 
 // Group navigation items by category
 const navGroups: NavGroups = {
@@ -208,6 +107,11 @@ const navGroups: NavGroups = {
         title: "Location",
         href: "/dashboard/address",
         icon: MapPinHouse,
+      },
+      {
+        title: "Affiliates",
+        href: "/dashboard/affiliates",
+        icon: Lock,
       },
     ],
   },
@@ -300,6 +204,23 @@ function SidenavItems() {
   const pathname = usePathname();
   const [isCoursesDropdownOpen, setIsCoursesDropdownOpen] = useState(false);
   const [openSubMenus, setOpenSubMenus] = useState<string[]>([]);
+
+  const handleLogout = async () => {
+    try {
+      const accessToken = Cookies.get("accessToken");
+      if (!accessToken) return;
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
+        {},
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      Cookies.remove("accessToken");
+      window.location.href = "/auth";
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   const toggleSubMenu = (href: string) => {
     setOpenSubMenus((prev) =>
@@ -443,6 +364,23 @@ function MobileNav() {
   const pathname = usePathname();
   const [openSubMenus, setOpenSubMenus] = useState<string[]>([]);
   const [isCoursesDropdownOpen, setIsCoursesDropdownOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      const accessToken = Cookies.get("accessToken");
+      if (!accessToken) return;
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/logout`,
+        {},
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      Cookies.remove("accessToken");
+      window.location.href = "/auth";
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   const toggleSubMenu = (href: string) => {
     setOpenSubMenus((prev) =>

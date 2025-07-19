@@ -20,9 +20,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { Loader2 } from "lucide-react";
+import {
+  Loader2,
+  Users,
+  BookOpen,
+  Key,
+  ArrowLeft,
+  Search,
+  Plus,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { User, Course, DashboardResponse } from "./admin.type";
+import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function AccessCoursePage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -162,7 +174,7 @@ export default function AccessCoursePage() {
   );
 
   const renderDialogContent = (user: User) => (
-    <DialogContent className="max-w-2xl bg-gray-900 border-gray-800">
+    <DialogContent className="max-w-2xl bg-gradient-to-br from-zinc-900/95 to-black/95 border border-zinc-700">
       <DialogHeader>
         <DialogTitle className="text-xl font-semibold text-white">
           Manage Course Access for {user.name}
@@ -172,12 +184,14 @@ export default function AccessCoursePage() {
         {courses.map((course) => {
           const isEnrolled = isUserEnrolled(user, course.id);
           return (
-            <div
+            <motion.div
               key={course.id}
-              className={`flex items-center justify-between p-4 border rounded-lg transition-colors ${
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`flex items-center justify-between p-4 border rounded-lg transition-all duration-300 ${
                 isEnrolled
-                  ? "bg-green-900/30 border-green-600"
-                  : "bg-gray-800 border-gray-700 hover:bg-gray-700"
+                  ? "bg-gradient-to-r from-green-900/30 to-emerald-900/30 border-green-600/50"
+                  : "bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-zinc-700 hover:border-green-500/50 hover:bg-zinc-700/70"
               }`}
             >
               <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -204,17 +218,18 @@ export default function AccessCoursePage() {
                   <p className="font-medium text-white truncate">
                     {course.title}
                     {isEnrolled && (
-                      <span className="ml-2 text-xs text-green-400">
-                        (Already Enrolled)
+                      <span className="ml-2 text-xs text-green-400 flex items-center gap-1">
+                        <CheckCircle className="h-3 w-3" />
+                        Enrolled
                       </span>
                     )}
                   </p>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-zinc-400">
                     {course.category.name} • {course.language}
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
@@ -222,14 +237,14 @@ export default function AccessCoursePage() {
         <Button
           variant="outline"
           onClick={() => setSelectedCourses([])}
-          className="bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700 hover:border-gray-600"
+          className="bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-green-500/50 hover:text-green-400 transition-all duration-300"
         >
           Clear Selection
         </Button>
         <Button
           onClick={() => assignMultipleCourses(user.id)}
           disabled={selectedCourses.length === 0 || assigning === "multiple"}
-          className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700"
+          className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
         >
           {assigning === "multiple" ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -243,132 +258,212 @@ export default function AccessCoursePage() {
     </DialogContent>
   );
 
+  // Stats data
+  const stats = [
+    {
+      title: "Total Users",
+      value: users.length.toString(),
+      icon: Users,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      title: "Total Courses",
+      value: courses.length.toString(),
+      icon: BookOpen,
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      title: "Active Enrollments",
+      value: users
+        .reduce((acc, user) => acc + user.enrollments.length, 0)
+        .toString(),
+      icon: Key,
+      color: "from-purple-500 to-pink-500",
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div className="py-10">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="py-10">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">
-          User Course Management
-        </h1>
-        <p className="text-gray-400">
-          Assign and manage course access for users
-        </p>
+      {/* Header Section */}
+      <div className="mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <Link href="/dashboard">
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 bg-gradient-to-r from-zinc-800 to-zinc-700 rounded-lg hover:from-zinc-700 hover:to-zinc-600 transition-all duration-300"
+              >
+                <ArrowLeft className="h-5 w-5 text-zinc-300" />
+              </motion.div>
+            </Link>
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                Course{" "}
+                <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+                  Access
+                </span>
+              </h1>
+              <p className="text-xl text-zinc-300 max-w-3xl">
+                Manage user access to courses and track enrollment status
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
-      <Card className="bg-gray-900 border-gray-800 shadow-lg">
-        <CardHeader className="space-y-6 border-b border-gray-800">
-          <CardTitle className="text-2xl font-bold text-white">
-            Course Access Control
-          </CardTitle>
-          <div className="flex items-center space-x-4">
-            <Input
-              placeholder="Search users by name or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 focus:border-green-600 focus:ring-green-600"
-            />
-            <Button
-              variant="outline"
-              onClick={() => setSearchTerm("")}
-              className="bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700 hover:border-gray-600"
-            >
-              Clear
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="flex justify-center items-center py-10">
-              <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {stats.map((stat, index) => (
+          <motion.div
+            key={stat.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+          >
+            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 hover:border-green-500/30 transition-all duration-300 group">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div
+                    className={`p-3 rounded-xl bg-gradient-to-r ${stat.color} group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <stat.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-white">
+                      {stat.value}
+                    </div>
+                    <div className="text-sm text-zinc-400">{stat.title}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Search and Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="mb-8"
+      >
+        <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                <Input
+                  type="text"
+                  placeholder="Search users by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 focus:ring-green-500"
+                />
+              </div>
+              <div className="flex items-center gap-2 text-sm text-zinc-400">
+                <span>{filteredUsers.length} users found</span>
+              </div>
             </div>
-          ) : (
-            <div className="relative overflow-x-auto">
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Users Table */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+      >
+        <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-white">
+                  User Course Management
+                </h3>
+                <p className="text-zinc-400">
+                  Assign and manage course access for users
+                </p>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-gray-800 hover:bg-gray-800/50">
-                    <TableHead className="w-[200px] text-green-400 font-semibold">
-                      Name
+                  <TableRow className="border-zinc-700 hover:bg-zinc-800/50">
+                    <TableHead className="text-zinc-300 font-semibold">
+                      User
                     </TableHead>
-                    <TableHead className="w-[250px] text-green-400 font-semibold">
+                    <TableHead className="text-zinc-300 font-semibold">
                       Email
                     </TableHead>
-                    <TableHead className="w-[100px] text-green-400 font-semibold">
-                      Type
+                    <TableHead className="text-zinc-300 font-semibold">
+                      Enrollments
                     </TableHead>
-                    <TableHead className="w-[200px] text-green-400 font-semibold">
-                      Purchased
-                    </TableHead>
-                    <TableHead className="w-[200px] text-green-400 font-semibold">
-                      Enrolled
-                    </TableHead>
-                    <TableHead className="w-[150px] text-right text-green-400 font-semibold">
+                    <TableHead className="text-zinc-300 font-semibold">
                       Actions
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredUsers.length === 0 ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={6}
-                        className="text-center py-10 text-gray-400"
-                      >
-                        No users found
+                  {filteredUsers.map((user) => (
+                    <TableRow
+                      key={user.id}
+                      className="border-zinc-700 hover:bg-zinc-800/30 transition-colors"
+                    >
+                      <TableCell className="text-white font-medium">
+                        {user.name}
+                      </TableCell>
+                      <TableCell className="text-zinc-300">
+                        {user.email}
+                      </TableCell>
+                      <TableCell className="text-zinc-300">
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-400 font-medium">
+                            {user.enrollments.length + user.purchases.length}
+                          </span>
+                          <span className="text-zinc-500">courses</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white border-0 transition-all duration-300"
+                            >
+                              <Plus className="h-4 w-4 mr-2" />
+                              Manage Access
+                            </Button>
+                          </DialogTrigger>
+                          {renderDialogContent(user)}
+                        </Dialog>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    filteredUsers.map((user) => (
-                      <TableRow
-                        key={user.id}
-                        className="border-gray-800 hover:bg-gray-800/30"
-                      >
-                        <TableCell className="font-medium text-white">
-                          {user.name}
-                        </TableCell>
-                        <TableCell className="text-gray-300">
-                          {user.email}
-                        </TableCell>
-                        <TableCell>
-                          <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-900/30 text-green-400 border border-green-600">
-                            {user.usertype}
-                          </span>
-                        </TableCell>
-                        <TableCell className="max-w-[200px] truncate text-gray-300">
-                          {user.purchases.length > 0
-                            ? user.purchases
-                                .map((p) => p.course.title)
-                                .join(", ")
-                            : "No purchases"}
-                        </TableCell>
-                        <TableCell className="max-w-[200px] truncate text-gray-300">
-                          {user.enrollments.length > 0
-                            ? user.enrollments
-                                .map((e) => e.course.title)
-                                .join(", ")
-                            : "Not enrolled"}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 hover:bg-green-700 text-white border-green-600 hover:border-green-700"
-                              >
-                                Manage Access
-                              </Button>
-                            </DialogTrigger>
-                            {renderDialogContent(user)}
-                          </Dialog>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
+                  ))}
                 </TableBody>
               </Table>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }

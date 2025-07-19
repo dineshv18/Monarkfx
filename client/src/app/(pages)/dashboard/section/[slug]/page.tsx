@@ -34,9 +34,14 @@ import {
   PlusCircle,
   Book,
   Pencil,
+  ArrowLeft,
+  Plus,
+  Layers,
 } from "lucide-react";
 import { Chapter } from "@/type";
 import { useAuth } from "@/helper/AuthContext";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import {
   DndContext,
   closestCenter,
@@ -124,24 +129,28 @@ const SortableRow = ({
     }
   };
   return (
-    <TableRow ref={setNodeRef} style={style}>
+    <TableRow
+      ref={setNodeRef}
+      style={style}
+      className="border-zinc-700 hover:bg-zinc-800/30 transition-colors"
+    >
       <TableCell>
         <button
-          className="cursor-grab focus:cursor-grabbing"
+          className="cursor-grab focus:cursor-grabbing text-zinc-400 hover:text-green-400 transition-colors"
           {...attributes}
           {...listeners}
         >
-          <GripVertical className="h-4 w-4 text-gray-400" />
+          <GripVertical className="h-4 w-4" />
         </button>
       </TableCell>
-      <TableCell>{section.position}</TableCell>
-      <TableCell className="font-medium">
+      <TableCell className="text-zinc-300">{section.position}</TableCell>
+      <TableCell className="font-medium text-white">
         {isEditing ? (
           <div className="flex items-center gap-2">
             <Input
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
-              className="w-full"
+              className="w-full bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleUpdate();
                 if (e.key === "Escape") {
@@ -151,7 +160,12 @@ const SortableRow = ({
               }}
               autoFocus
             />{" "}
-            <Button onClick={handleUpdate} size="sm" disabled={isUpdating}>
+            <Button
+              onClick={handleUpdate}
+              size="sm"
+              disabled={isUpdating}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
               {isUpdating ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
@@ -165,6 +179,7 @@ const SortableRow = ({
               }}
               variant="ghost"
               size="sm"
+              className="text-zinc-400 hover:text-white hover:bg-zinc-700"
             >
               Cancel
             </Button>
@@ -179,6 +194,7 @@ const SortableRow = ({
               variant="ghost"
               size="sm"
               onClick={() => setIsEditing(true)}
+              className="text-zinc-400 hover:text-green-400 hover:bg-zinc-700"
             >
               <Pencil className="h-4 w-4" />
             </Button>
@@ -190,7 +206,11 @@ const SortableRow = ({
           onClick={() => onPublishToggle(section.slug)}
           variant={section.isPublished ? "default" : "secondary"}
           size="sm"
-          className="flex items-center gap-2"
+          className={`flex items-center gap-2 ${
+            section.isPublished
+              ? "bg-green-600 hover:bg-green-700 text-white"
+              : "bg-zinc-700 hover:bg-zinc-600 text-zinc-300"
+          }`}
         >
           {section.isPublished ? (
             <>
@@ -205,8 +225,11 @@ const SortableRow = ({
           )}
         </Button>
       </TableCell>
-      <TableCell>
-        <span className="font-medium">{section.chapters.length}</span> chapters
+      <TableCell className="text-zinc-300">
+        <span className="font-medium text-green-400">
+          {section.chapters.length}
+        </span>{" "}
+        chapters
       </TableCell>
       <TableCell className="text-right">
         <div className="flex justify-end gap-2">
@@ -215,19 +238,22 @@ const SortableRow = ({
               <Button
                 variant="outline"
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-green-500/50 hover:text-green-400"
               >
                 <BookOpen className="h-4 w-4" />
                 Chapters
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent
+              align="end"
+              className="bg-zinc-800 border-zinc-700"
+            >
               <DropdownMenuItem
                 onClick={() =>
                   router.push(`/dashboard/create-course/${section.slug}`)
                 }
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-zinc-300 hover:bg-zinc-700 hover:text-green-400"
               >
                 <PlusCircle className="h-4 w-4" />
                 Create Chapters
@@ -236,7 +262,7 @@ const SortableRow = ({
                 onClick={() =>
                   router.push(`/dashboard/chapter/${section.slug}`)
                 }
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-zinc-300 hover:bg-zinc-700 hover:text-green-400"
               >
                 <Book className="h-4 w-4" />
                 View Chapters
@@ -248,6 +274,7 @@ const SortableRow = ({
             size="sm"
             variant="destructive"
             disabled={deletingId === section.slug}
+            className="bg-red-600 hover:bg-red-700 text-white"
           >
             {deletingId === section.slug ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -440,140 +467,190 @@ const SectionPage = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-8 space-y-8">
-      <Card className="bg-gray-900 border-gray-800 shadow-xl">
-        <CardHeader className="bg-gray-800 border-b border-gray-700 rounded-t-lg">
-          <CardTitle className="text-2xl font-semibold text-green-400">
-            Create New Section
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6 bg-gray-900">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <Label htmlFor="title" className="text-green-400">
-                Section Title
-              </Label>
-              <Input
-                {...register("title", { required: "Title is required" })}
-                placeholder="Enter section title"
-                className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
-              />
-              {errors.title && (
-                <span className="text-red-400">{errors.title.message}</span>
-              )}
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <Controller
-                  name="isPublished"
-                  control={control}
-                  render={({ field }) => (
-                    <ToggleSwitch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      label="Published"
-                      activeColor="bg-green-500"
-                      activeIcon={<CheckCircle className="w-4 h-4" />}
-                      inactiveIcon={<XCircle className="w-4 h-4" />}
-                    />
-                  )}
-                />
-              </div>
-              <div className="flex items-center space-x-2">
-                <Controller
-                  name="isFree"
-                  control={control}
-                  render={({ field }) => (
-                    <ToggleSwitch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      label="Free Access"
-                      activeColor="bg-blue-500"
-                      activeIcon={<CheckCircle className="w-4 h-4" />}
-                      inactiveIcon={<XCircle className="w-4 h-4" />}
-                    />
-                  )}
-                />
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              Create Section
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-gray-900 border-gray-800 shadow-xl">
-        <CardHeader className="bg-gray-800 border-b border-gray-700 rounded-t-lg">
-          <CardTitle className="text-2xl font-semibold text-green-400">
-            Course Sections
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6 bg-gray-900">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-800 border-b border-gray-700">
-                <TableHead></TableHead>
-                <TableHead className="font-semibold text-green-400">
-                  Position
-                </TableHead>
-                <TableHead className="font-semibold text-green-400">
-                  Title
-                </TableHead>
-                <TableHead className="font-semibold text-green-400">
-                  Status
-                </TableHead>
-                <TableHead className="font-semibold text-green-400">
-                  Chapters
-                </TableHead>
-                <TableHead className="text-right font-semibold text-green-400">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <SortableContext
-                items={(sections || []).map((s) => s.id)}
-                strategy={verticalListSortingStrategy}
+    <div className="py-10">
+      {/* Header Section */}
+      <div className="mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <Link href="/dashboard">
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-2 bg-gradient-to-r from-zinc-800 to-zinc-700 rounded-lg hover:from-zinc-700 hover:to-zinc-600 transition-all duration-300"
               >
-                <TableBody>
-                  {(sections || []).length > 0 ? (
-                    sections.map((section) => (
-                      <SortableRow
-                        key={section.id}
-                        section={section}
-                        onPublishToggle={handlePublishToggle}
-                        onDelete={handleDelete}
-                        onUpdate={handleUpdate}
-                        deletingId={deletingId}
-                        router={router}
-                      />
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={6}
-                        className="text-center text-gray-400 py-8"
-                      >
-                        No sections found. Create your first section above.
-                      </TableCell>
-                    </TableRow>
+                <ArrowLeft className="h-5 w-5 text-zinc-300" />
+              </motion.div>
+            </Link>
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                Course{" "}
+                <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+                  Sections
+                </span>
+              </h1>
+              <p className="text-xl text-zinc-300 max-w-3xl">
+                Manage and organize your course sections and chapters
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="max-w-5xl mx-auto space-y-8">
+        {/* Create Section Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 shadow-xl">
+            <CardHeader className="bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-b border-zinc-700 rounded-t-lg">
+              <CardTitle className="text-2xl font-semibold text-green-400 flex items-center gap-2">
+                <Plus className="h-6 w-6" />
+                Create New Section
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 bg-gradient-to-br from-zinc-900/80 to-black/80">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div>
+                  <Label htmlFor="title" className="text-green-400">
+                    Section Title
+                  </Label>
+                  <Input
+                    {...register("title", { required: "Title is required" })}
+                    placeholder="Enter section title"
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
+                  />
+                  {errors.title && (
+                    <span className="text-red-400">{errors.title.message}</span>
                   )}
-                </TableBody>
-              </SortableContext>
-            </DndContext>
-          </Table>
-        </CardContent>
-      </Card>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Controller
+                      name="isPublished"
+                      control={control}
+                      render={({ field }) => (
+                        <ToggleSwitch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          label="Published"
+                          activeColor="bg-green-500"
+                          activeIcon={<CheckCircle className="w-4 h-4" />}
+                          inactiveIcon={<XCircle className="w-4 h-4" />}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Controller
+                      name="isFree"
+                      control={control}
+                      render={({ field }) => (
+                        <ToggleSwitch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          label="Free Access"
+                          activeColor="bg-blue-500"
+                          activeIcon={<CheckCircle className="w-4 h-4" />}
+                          inactiveIcon={<XCircle className="w-4 h-4" />}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Create Section
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Sections Table Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 shadow-xl">
+            <CardHeader className="bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-b border-zinc-700 rounded-t-lg">
+              <CardTitle className="text-2xl font-semibold text-green-400 flex items-center gap-2">
+                <Layers className="h-6 w-6" />
+                Course Sections
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 bg-gradient-to-br from-zinc-900/80 to-black/80">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-b border-zinc-700">
+                    <TableHead></TableHead>
+                    <TableHead className="font-semibold text-green-400">
+                      Position
+                    </TableHead>
+                    <TableHead className="font-semibold text-green-400">
+                      Title
+                    </TableHead>
+                    <TableHead className="font-semibold text-green-400">
+                      Status
+                    </TableHead>
+                    <TableHead className="font-semibold text-green-400">
+                      Chapters
+                    </TableHead>
+                    <TableHead className="text-right font-semibold text-green-400">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={(sections || []).map((s) => s.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <TableBody>
+                      {(sections || []).length > 0 ? (
+                        sections.map((section) => (
+                          <SortableRow
+                            key={section.id}
+                            section={section}
+                            onPublishToggle={handlePublishToggle}
+                            onDelete={handleDelete}
+                            onUpdate={handleUpdate}
+                            deletingId={deletingId}
+                            router={router}
+                          />
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            colSpan={6}
+                            className="text-center text-zinc-400 py-8"
+                          >
+                            No sections found. Create your first section above.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </SortableContext>
+                </DndContext>
+              </Table>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
     </div>
   );
 };

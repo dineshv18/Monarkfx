@@ -12,6 +12,8 @@ import {
   IndianRupee,
   Target,
   BookOpen,
+  Search,
+  Filter,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -19,11 +21,22 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/helper/AuthContext";
 import ClassCard from "./components/ClassCard";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function LiveClasses() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
 
@@ -72,6 +85,21 @@ export default function LiveClasses() {
     return classDate > new Date();
   }).length;
   const activeClasses = classes.filter((cls: any) => cls.isOnline).length;
+
+  // Filter classes based on search and status
+  const filteredClasses = classes.filter((cls: any) => {
+    const matchesSearch =
+      cls.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cls.description?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      filterStatus === "all" ||
+      (filterStatus === "upcoming" && new Date(cls.startTime) > new Date()) ||
+      (filterStatus === "live" && cls.isOnline) ||
+      (filterStatus === "past" && new Date(cls.startTime) < new Date());
+
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="min-h-screen bg-black font-plus-jakarta-sans">
@@ -249,42 +277,70 @@ export default function LiveClasses() {
             </p>
           </div>
 
-          {loading ? (
-            <div className="flex justify-center items-center min-h-[60vh]">
-              <div className="text-center">
-                <div className="animate-spin mb-4">
-                  <Loader2 className="h-12 w-12 text-green-400" />
+          {/* Search and Filter Section */}
+          <div className="mb-12">
+            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 h-4 w-4" />
+                      <Input
+                        placeholder="Search trading sessions..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                      />
+                    </div>
+                  </div>
+                  <Select value={filterStatus} onValueChange={setFilterStatus}>
+                    <SelectTrigger className="w-full md:w-48 bg-zinc-800 border-zinc-700 text-white">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-800 border-zinc-700">
+                      <SelectItem value="all">All Sessions</SelectItem>
+                      <SelectItem value="upcoming">Upcoming</SelectItem>
+                      <SelectItem value="live">Live Now</SelectItem>
+                      <SelectItem value="past">Past Sessions</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Classes Grid */}
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <Loader2 className="h-12 w-12 animate-spin text-green-400 mx-auto mb-4" />
                 <p className="text-zinc-400">Loading trading sessions...</p>
               </div>
             </div>
-          ) : classes.length === 0 ? (
-            <Card className="p-16 max-w-2xl mx-auto text-center bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
-              <CardContent>
-                <div className="p-6 bg-zinc-800/50 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                  <TrendingUp className="h-12 w-12 text-zinc-400" />
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-white">
-                  No Trading Sessions Available
-                </h3>
-                <p className="mb-6 text-zinc-400 leading-relaxed">
-                  There are no upcoming trading sessions at the moment.
-                </p>
-                <p className="text-zinc-500">
-                  Please check back soon as we regularly update our schedule
-                  with new trading sessions and market analysis.
-                </p>
-              </CardContent>
-            </Card>
+          ) : filteredClasses.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="p-4 bg-zinc-900/50 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+                <Video className="h-10 w-10 text-zinc-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {searchTerm || filterStatus !== "all"
+                  ? "No sessions found"
+                  : "No trading sessions available"}
+              </h3>
+              <p className="text-zinc-400">
+                {searchTerm || filterStatus !== "all"
+                  ? "Try adjusting your search or filters"
+                  : "Check back later for new sessions"}
+              </p>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-              {classes.map((classItem, idx) => (
-                <div key={idx} className="mb-6">
-                  <ClassCard
-                    classData={classItem}
-                    isAuthenticated={isAuthenticated}
-                  />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredClasses.map((classItem: any) => (
+                <ClassCard
+                  key={classItem.id || classItem.slug}
+                  classData={classItem}
+                  isAuthenticated={isAuthenticated}
+                />
               ))}
             </div>
           )}

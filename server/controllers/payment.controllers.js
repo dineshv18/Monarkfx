@@ -6,9 +6,23 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { razorpay } from "../app.js";
 
 export const getRazorpayKey = asyncHandler(async (req, res) => {
-  res.status(200).json({
-    key: process.env.RAZORPAY_KEY_ID,
-  });
+  try {
+    if (!process.env.RAZORPAY_KEY_ID) {
+      throw new ApiError(500, "Razorpay key not configured");
+    }
+
+    res.status(200).json({
+      success: true,
+      key: process.env.RAZORPAY_KEY_ID,
+      message: "Payment key retrieved successfully",
+      config: {
+        supported_methods: ["card", "netbanking", "wallet", "upi"],
+        supported_cards: ["VISA", "MASTERCARD", "AMEX", "RUPAY", "DISCOVER"],
+      },
+    });
+  } catch (error) {
+    throw new ApiError(500, "Failed to get payment key", [error.message]);
+  }
 });
 
 export const checkout = asyncHandler(async (req, res) => {
@@ -16,6 +30,10 @@ export const checkout = asyncHandler(async (req, res) => {
     const options = {
       amount: Number(req.body.amount),
       currency: "INR",
+      receipt: `order_${Date.now()}`,
+      notes: {
+        source: "web",
+      },
     };
     const order = await razorpay.orders.create(options);
 
@@ -27,6 +45,10 @@ export const checkout = asyncHandler(async (req, res) => {
       .status(200)
       .json(new ApiResponsive(200, order, "Order created successfully"));
   } catch (error) {
+    console.error("Razorpay order creation error:", error);
+    if (error.error && error.error.description) {
+      throw new ApiError(400, error.error.description, [error.error.reason]);
+    }
     throw new ApiError(500, "Error creating order", [error.message]);
   }
 });
@@ -116,10 +138,7 @@ export const paymentVerification = asyncHandler(async (req, res) => {
 
       // 3. Process courses
       for (const courseId of courseIds) {
-        const courseDetail = courseDetails.find((c) => c.id === courseId);
-        if (!courseDetail) continue;
-
-        // Get the course to check for validity days
+        // Get the course to check for validity days and pricing
         const course = await tx.course.findUnique({
           where: { id: courseId },
         });
@@ -143,16 +162,39 @@ export const paymentVerification = asyncHandler(async (req, res) => {
           },
         });
 
+        // Calculate the actual purchase price and discount
+        const courseDetails = req.body.courseDetails || {};
+        const actualPurchasePrice =
+          courseDetails.discountedPrice || course.price;
+        const originalPrice = courseDetails.originalPrice || course.price;
+        const discountAmount = originalPrice - actualPurchasePrice;
+        const couponCode = req.body.couponDetails?.code || null;
+
+        // Handle referral code if provided
+        let affiliateId = null;
+        if (req.body.referralCode) {
+          const affiliate = await tx.affiliate.findUnique({
+            where: { referralCode: req.body.referralCode },
+          });
+
+          if (
+            affiliate &&
+            affiliate.isActive &&
+            affiliate.status === "APPROVED"
+          ) {
+            affiliateId = affiliate.id;
+          }
+        }
+
         if (existingPurchase) {
           // Update the existing purchase with new expiry date
           await tx.purchase.update({
             where: { id: existingPurchase.id },
             data: {
-              purchasePrice: courseDetail.discountedPrice || courseDetail.price,
-              discountPrice: courseDetail.discountedPrice
-                ? courseDetail.price - courseDetail.discountedPrice
-                : 0,
-              couponCode: couponDetails?.code || null,
+              purchasePrice: actualPurchasePrice,
+              discountPrice: discountAmount,
+              couponCode: couponCode,
+              referralCode: req.body.referralCode || null,
               expiryDate,
               updatedAt: new Date(),
             },
@@ -167,11 +209,10 @@ export const paymentVerification = asyncHandler(async (req, res) => {
               course: {
                 connect: { id: courseId },
               },
-              purchasePrice: courseDetail.discountedPrice || courseDetail.price,
-              discountPrice: courseDetail.discountedPrice
-                ? courseDetail.price - courseDetail.discountedPrice
-                : 0,
-              couponCode: couponDetails?.code || null,
+              purchasePrice: actualPurchasePrice,
+              discountPrice: discountAmount,
+              couponCode: couponCode,
+              referralCode: req.body.referralCode || null,
               expiryDate,
             },
           });
@@ -199,6 +240,36 @@ export const paymentVerification = asyncHandler(async (req, res) => {
             updatedAt: new Date(),
           },
         });
+
+        // Create affiliate sale if referral code was used
+        if (affiliateId) {
+          const commissionAmount = (actualPurchasePrice * 15) / 100; // 15% commission
+
+          await tx.affiliateSale.create({
+            data: {
+              affiliateId,
+              courseId,
+              courseName: course.title, // Add the course name
+              saleAmount: actualPurchasePrice,
+              commissionAmount,
+              status: "COMPLETED",
+              notes: `Purchase by user ${req.user.id}`,
+            },
+          });
+
+          // Update affiliate's total earnings and sales count
+          await tx.affiliate.update({
+            where: { id: affiliateId },
+            data: {
+              totalEarnings: {
+                increment: commissionAmount,
+              },
+              totalSales: {
+                increment: 1,
+              },
+            },
+          });
+        }
       }
 
       // 4. Handle coupon usage

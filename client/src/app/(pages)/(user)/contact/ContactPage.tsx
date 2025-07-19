@@ -229,7 +229,7 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
     if (info.copyable) {
       navigator.clipboard.writeText(
         info.rawDetails ||
-        (typeof info.details === "string" ? info.details : "")
+          (typeof info.details === "string" ? info.details : "")
       );
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
@@ -258,9 +258,11 @@ const ContactCard = ({ info, index }: { info: any; index: number }) => {
       onMouseMove={handleMouseMove}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${(mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
-          }deg) rotateY(${-(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
-          }deg)`
+          ? `perspective(1000px) rotateX(${
+              (mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
+            }deg) rotateY(${
+              -(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
+            }deg)`
           : "perspective(1000px) rotateX(0deg) rotateY(0deg)",
         transition: isHovered ? "none" : "transform 0.5s ease",
       }}
@@ -363,9 +365,11 @@ const SocialCard = ({ platform, index }: { platform: any; index: number }) => {
       onMouseMove={handleMouseMove}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${(mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
-          }deg) rotateY(${-(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
-          }deg) scale(1.02)`
+          ? `perspective(1000px) rotateX(${
+              (mousePosition.y - (cardRef.current?.offsetHeight || 0) / 2) / 20
+            }deg) rotateY(${
+              -(mousePosition.x - (cardRef.current?.offsetWidth || 0) / 2) / 20
+            }deg) scale(1.02)`
           : "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)",
         transition: isHovered ? "none" : "transform 0.5s ease",
       }}
@@ -376,15 +380,17 @@ const SocialCard = ({ platform, index }: { platform: any; index: number }) => {
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
         style={{
           background: isHovered
-            ? `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y
-            }px, rgba(${platform.name === "Instagram"
-              ? "225, 48, 108"
-              : platform.name === "LinkedIn"
-                ? "0, 119, 181"
-                : platform.name === "Facebook"
+            ? `radial-gradient(circle at ${mousePosition.x}px ${
+                mousePosition.y
+              }px, rgba(${
+                platform.name === "Instagram"
+                  ? "225, 48, 108"
+                  : platform.name === "LinkedIn"
+                  ? "0, 119, 181"
+                  : platform.name === "Facebook"
                   ? "24, 119, 242"
                   : "29, 161, 242"
-            }, 0.1) 0%, transparent 70%)`
+              }, 0.1) 0%, transparent 70%)`
             : "none",
         }}
       />
@@ -521,7 +527,7 @@ export default function ContactPage() {
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
-        "Failed to send message. Please try again later."
+          "Failed to send message. Please try again later."
       );
     } finally {
       setIsSubmitting(false);
@@ -581,7 +587,7 @@ export default function ContactPage() {
         subtitle="We'd love to hear from you"
       />
 
-      <main className="bg-black overflow-hidden relative">
+      <main className="bg-black overflow-hidden relative font-plus-jakarta-sans">
         {/* Custom cursor */}
         <motion.div
           className="fixed top-0 left-0 rounded-full pointer-events-none z-50 mix-blend-difference hidden md:block"
@@ -675,14 +681,16 @@ export default function ContactPage() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3 }}
-                      className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"
-                        }`}
+                      className={`flex ${
+                        msg.type === "user" ? "justify-end" : "justify-start"
+                      }`}
                     >
                       <div
-                        className={`max-w-[80%] p-3 rounded-2xl ${msg.type === "user"
+                        className={`max-w-[80%] p-3 rounded-2xl ${
+                          msg.type === "user"
                             ? "bg-green-600 text-white rounded-tr-none"
                             : "bg-gray-800 border border-gray-600 text-white rounded-tl-none shadow-sm"
-                          }`}
+                        }`}
                       >
                         {msg.message}
                       </div>
@@ -1254,8 +1262,9 @@ export default function ContactPage() {
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`group relative overflow-hidden flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-3 rounded-xl shadow-lg shadow-red-500/20 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-                      }`}
+                    className={`group relative overflow-hidden flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-3 rounded-xl shadow-lg shadow-red-500/20 ${
+                      isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                    }`}
                     whileHover={{
                       scale: isSubmitting ? 1 : 1.02,
                       boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.25)",
@@ -1274,8 +1283,9 @@ export default function ContactPage() {
                       {isSubmitting ? "Sending..." : "Send Message"}
                     </span>
                     <Send
-                      className={`w-4 h-4 relative z-10 ${isSubmitting ? "" : "group-hover:translate-x-1"
-                        } transition-transform`}
+                      className={`w-4 h-4 relative z-10 ${
+                        isSubmitting ? "" : "group-hover:translate-x-1"
+                      } transition-transform`}
                     />
                   </motion.button>
                 </form>

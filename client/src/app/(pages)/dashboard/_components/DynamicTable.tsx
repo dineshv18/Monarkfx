@@ -224,18 +224,25 @@ export function DynamicTable({
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <Settings className="h-4 w-4 text-gray-600" />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 text-zinc-400 hover:text-green-400 hover:bg-zinc-700"
+            >
+              <Settings className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[200px]">
+          <DropdownMenuContent
+            align="end"
+            className="w-[200px] bg-zinc-800 border-zinc-700"
+          >
             <DropdownMenuItem
               onClick={() => {
                 handleNavigation("user", item.slug as string);
               }}
-              className="cursor-pointer"
+              className="cursor-pointer text-zinc-300 hover:bg-zinc-700 hover:text-green-400"
             >
-              <Edit className="mr-2 h-4 w-4 text-gray-600" />
+              <Edit className="mr-2 h-4 w-4" />
               <span>Edit User</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -246,30 +253,37 @@ export function DynamicTable({
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <Settings className="h-4 w-4 text-gray-600" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-zinc-400 hover:text-green-400 hover:bg-zinc-700"
+          >
+            <Settings className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-[200px]">
+        <DropdownMenuContent
+          align="end"
+          className="w-[200px] bg-zinc-800 border-zinc-700"
+        >
           {!hideCourse && (
             <DropdownMenuItem
               onClick={() => handleNavigation("course", (item as Course).slug)}
-              className="cursor-pointer"
+              className="cursor-pointer text-zinc-300 hover:bg-zinc-700 hover:text-green-400"
             >
-              <Edit className="mr-2 h-4 w-4 text-gray-600" />
+              <Edit className="mr-2 h-4 w-4" />
               <span>Edit Course</span>
             </DropdownMenuItem>
           )}
           {!hideCourse && (
             <DropdownMenuItem
               onClick={() => handleNavigation("section", (item as Course).slug)}
-              className="cursor-pointer"
+              className="cursor-pointer text-zinc-300 hover:bg-zinc-700 hover:text-green-400"
             >
-              <FileText className="mr-2 h-4 w-4 text-gray-600" />
+              <FileText className="mr-2 h-4 w-4" />
               <span>Manage Sections</span>
             </DropdownMenuItem>
           )}
-          {!hideChapter && <DropdownMenuSeparator />}
+          {!hideChapter && <DropdownMenuSeparator className="bg-zinc-700" />}
         </DropdownMenuContent>
       </DropdownMenu>
     );
@@ -280,17 +294,17 @@ export function DynamicTable({
   if (!isAuthenticated) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-400">Please log in to view this content.</p>
+        <p className="text-zinc-400">Please log in to view this content.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4 overflow-hidden">
-      <div className="rounded-lg border border-gray-800 bg-gray-900 shadow-xl overflow-x-auto">
+      <div className="rounded-lg border border-zinc-700 bg-gradient-to-br from-zinc-900/80 to-black/80 shadow-xl overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-800 border-b border-gray-700">
+            <TableRow className="bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-b border-zinc-700">
               {columns.map((column) => (
                 <TableHead
                   key={column.key}
@@ -311,12 +325,12 @@ export function DynamicTable({
             {data.map((item) => (
               <TableRow
                 key={item.id}
-                className="hover:bg-gray-800 transition-colors border-b border-gray-700"
+                className="hover:bg-zinc-800/30 transition-all duration-300 border-b border-zinc-700"
               >
                 {columns.map((column) => (
                   <TableCell
                     key={column.key}
-                    className="py-3 px-4 text-gray-300"
+                    className="py-3 px-4 text-zinc-300"
                   >
                     {column.key === "description" ? (
                       truncateDescription(String(item[column.key] || ""))
@@ -417,7 +431,7 @@ export function DynamicTable({
 
       {totalItems > 12 && (
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 px-2">
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-zinc-400">
             Showing {(currentPage - 1) * 12 + 1} to{" "}
             {Math.min(currentPage * 12, totalItems)} of {totalItems} entries
           </p>
@@ -427,12 +441,12 @@ export function DynamicTable({
               disabled={currentPage === 1}
               variant="outline"
               size="sm"
-              className="h-8"
+              className="h-8 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-green-500/50 hover:text-green-400"
             >
               <ChevronLeft className="h-4 w-4 mr-1" />
               Previous
             </Button>
-            <span className="flex items-center px-2 text-sm">
+            <span className="flex items-center px-2 text-sm text-zinc-300">
               Page {currentPage} of {totalPages}
             </span>
             <Button
@@ -440,7 +454,7 @@ export function DynamicTable({
               disabled={currentPage === totalPages}
               variant="outline"
               size="sm"
-              className="h-8"
+              className="h-8 bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-green-500/50 hover:text-green-400"
             >
               Next
               <ChevronRight className="h-4 w-4 ml-1" />

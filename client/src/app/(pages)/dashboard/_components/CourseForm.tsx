@@ -385,18 +385,24 @@ const CourseForm = ({
   };
 
   if (!courseData && isEditing) {
-    return <div>Loading...</div>;
+    return (
+      <div className="py-10">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <Card className="shadow-xl bg-gray-900 border-gray-800">
-        <CardHeader className="flex flex-row items-center justify-between bg-gray-800 border-b border-gray-700 rounded-t-lg">
+      <Card className="shadow-xl bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700">
+        <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-b border-zinc-700 rounded-t-lg">
           <div>
             <CardTitle className="text-3xl font-bold text-white mb-2">
               {isEditing ? "Edit Course" : "Create New Course"}
             </CardTitle>
-            <p className="text-gray-400">
+            <p className="text-zinc-400">
               {isEditing
                 ? "Update your course details and content"
                 : "Fill in the details to create a new course"}
@@ -405,22 +411,32 @@ const CourseForm = ({
           {isEditing && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">
+                <Button
+                  variant="destructive"
+                  className="bg-red-600 hover:bg-red-700 border-red-600 hover:border-red-700"
+                >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete Course
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="bg-gradient-to-br from-zinc-900/95 to-black/95 border border-zinc-700">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
+                  <AlertDialogTitle className="text-white">
+                    Are you absolutely sure?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-zinc-400">
                     This action cannot be undone. This will permanently delete
                     the course and remove all associated data.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete}>
+                  <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-zinc-300 hover:bg-zinc-700 hover:border-green-500/50 hover:text-green-400">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDelete}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
                     Delete
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -428,10 +444,10 @@ const CourseForm = ({
             </AlertDialog>
           )}
         </CardHeader>
-        <CardContent className="p-6 bg-gray-900">
+        <CardContent className="p-6 bg-gradient-to-br from-zinc-900/80 to-black/80">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Course Status */}
-            <div className="flex items-center justify-between bg-gray-800 border border-gray-700 p-4 rounded-lg">
+            <div className="flex items-center justify-between bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border border-zinc-700 p-4 rounded-lg hover:border-green-500/30 transition-all duration-300">
               <div className="flex flex-col">
                 <Label
                   htmlFor="isPublished"
@@ -439,7 +455,7 @@ const CourseForm = ({
                 >
                   Publication Status
                 </Label>
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-zinc-400">
                   {watch("isPublished")
                     ? "Published - Visible to students"
                     : "Draft - Not visible to students"}
@@ -464,7 +480,7 @@ const CourseForm = ({
                           />
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent>
+                      <TooltipContent className="bg-zinc-800 border-zinc-700 text-white">
                         {field.value
                           ? "Course is live and visible to students"
                           : "Course is not yet visible to students"}
@@ -476,7 +492,7 @@ const CourseForm = ({
             </div>
 
             {/* Course Type */}
-            <div className="flex items-center justify-between bg-gray-800 border border-gray-700 p-4 rounded-lg">
+            <div className="flex items-center justify-between bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border border-zinc-700 p-4 rounded-lg hover:border-green-500/30 transition-all duration-300">
               <div className="flex flex-col">
                 <Label
                   htmlFor="paid"
@@ -484,7 +500,7 @@ const CourseForm = ({
                 >
                   Payment Type
                 </Label>
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-zinc-400">
                   {watch("paid")
                     ? "Premium Course (Paid Access)"
                     : "Free Course (Open Access)"}
@@ -509,7 +525,7 @@ const CourseForm = ({
                           />
                         </div>
                       </TooltipTrigger>
-                      <TooltipContent>
+                      <TooltipContent className="bg-zinc-800 border-zinc-700 text-white">
                         {field.value
                           ? "This is a paid course"
                           : "This is a free course"}
@@ -524,17 +540,17 @@ const CourseForm = ({
               type="single"
               collapsible
               defaultValue="basic-info"
-              className="bg-gray-800 border border-gray-700 rounded-lg shadow-xl"
+              className="bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border border-zinc-700 rounded-lg shadow-xl"
             >
               {/* Basic Information */}
               <AccordionItem
                 value="basic-info"
-                className="border-b border-gray-700"
+                className="border-b border-zinc-700"
               >
-                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 hover:bg-zinc-700/70 text-green-400 transition-all duration-300">
                   Basic Information
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 p-4 bg-gray-900">
+                <AccordionContent className="space-y-4 p-4 bg-gradient-to-br from-zinc-900/80 to-black/80">
                   {/* Title */}
                   <div>
                     <Label
@@ -547,7 +563,7 @@ const CourseForm = ({
                       id="title"
                       {...register("title", { required: "Title is required" })}
                       placeholder="Course title"
-                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                      className="mt-1 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                     />
                     {errors.title && (
                       <span className="text-red-400 text-sm">
@@ -573,9 +589,9 @@ const CourseForm = ({
                           ? "Edit URL slug"
                           : "Generate from title if empty"
                       }
-                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                      className="mt-1 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                     />
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-zinc-400 mt-1">
                       URL identifier (e.g., "monarkfx-course").
                       {currentSlug && (
                         <span className="font-mono block mt-1 text-green-400">
@@ -781,13 +797,13 @@ const CourseForm = ({
                             message: "Validity must be 0 or greater",
                           },
                         })}
-                        className="pl-2 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                        className="pl-2 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                         placeholder="0 (unlimited access)"
                         type="number"
                         min="0"
                       />
                     </div>
-                    <p className="text-sm text-gray-400 mt-1">
+                    <p className="text-sm text-zinc-400 mt-1">
                       Enter 0 for unlimited access, or number of days for
                       limited access
                     </p>
@@ -808,7 +824,7 @@ const CourseForm = ({
                         Regular Price (₹)
                       </Label>
                       <div className="relative mt-1">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400">
                           ₹
                         </span>
                         <Input
@@ -820,7 +836,7 @@ const CourseForm = ({
                               message: "Price must be greater than 0",
                             },
                           })}
-                          className="pl-8 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                          className="pl-8 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                           placeholder="499.00"
                           type="number"
                           step="0.01"
@@ -843,7 +859,7 @@ const CourseForm = ({
                         Sale Price (Optional) (₹)
                       </Label>
                       <div className="relative mt-1">
-                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400">
                           ₹
                         </span>
                         <Input
@@ -872,7 +888,7 @@ const CourseForm = ({
                               },
                             },
                           })}
-                          className="pl-8 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                          className="pl-8 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                           placeholder="299.00"
                           type="number"
                           step="0.01"
@@ -901,7 +917,7 @@ const CourseForm = ({
                         required: "Language is required",
                       })}
                       placeholder="Course language"
-                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                      className="mt-1 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                     />
                     {errors.language && (
                       <span className="text-red-400 text-sm">
@@ -927,10 +943,10 @@ const CourseForm = ({
                           onValueChange={field.onChange}
                           value={field.value}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300">
                             <SelectValue placeholder="Select a category" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-zinc-800 border-zinc-700 text-white">
                             {categories.map((category) => (
                               <SelectItem key={category.id} value={category.id}>
                                 {category.name}
@@ -959,18 +975,18 @@ const CourseForm = ({
                       id="subheading"
                       {...register("subheading")}
                       placeholder="Course subheading"
-                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                      className="mt-1 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                     />
                   </div>
                 </AccordionContent>
               </AccordionItem>
 
               {/* SEO Settings */}
-              <AccordionItem value="seo" className="border-b border-gray-700">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
+              <AccordionItem value="seo" className="border-b border-zinc-700">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 hover:bg-zinc-700/70 text-green-400 transition-all duration-300">
                   SEO Settings
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 p-4 bg-gray-900">
+                <AccordionContent className="space-y-4 p-4 bg-gradient-to-br from-zinc-900/80 to-black/80">
                   <div>
                     <Label
                       htmlFor="metaTitle"
@@ -982,7 +998,7 @@ const CourseForm = ({
                       id="metaTitle"
                       {...register("metaTitle")}
                       placeholder="SEO Meta title"
-                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                      className="mt-1 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                     />
                   </div>
 
@@ -997,7 +1013,7 @@ const CourseForm = ({
                       id="metaDesc"
                       {...register("metaDesc")}
                       placeholder="SEO Meta description"
-                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                      className="mt-1 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                     />
                   </div>
                 </AccordionContent>
@@ -1006,18 +1022,18 @@ const CourseForm = ({
               {/* Course Settings */}
               <AccordionItem
                 value="settings"
-                className="border-b border-gray-700"
+                className="border-b border-zinc-700"
               >
-                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 hover:bg-zinc-700/70 text-green-400 transition-all duration-300">
                   Course Settings
                 </AccordionTrigger>
-                <AccordionContent className="space-y-4 p-4 bg-gray-900">
+                <AccordionContent className="space-y-4 p-4 bg-gradient-to-br from-zinc-900/80 to-black/80">
                   <div className="grid grid-cols-2 gap-4">
                     {["featured", "popular", "trending", "bestseller"].map(
                       (type) => (
                         <div
                           key={type}
-                          className="flex items-center justify-between bg-gray-800 border border-gray-700 p-3 rounded-lg"
+                          className="flex items-center justify-between bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border border-zinc-700 p-3 rounded-lg hover:border-green-500/30 transition-all duration-300"
                         >
                           <Label className="capitalize text-sm font-medium text-green-400">
                             {type}
@@ -1056,16 +1072,16 @@ const CourseForm = ({
               {/* Course Thumbnail */}
               <AccordionItem
                 value="thumbnail"
-                className="border-b border-gray-700"
+                className="border-b border-zinc-700"
               >
-                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 hover:bg-zinc-700/70 text-green-400 transition-all duration-300">
                   Course Thumbnail
                 </AccordionTrigger>
 
-                <AccordionContent className="p-4 bg-gray-900">
+                <AccordionContent className="p-4 bg-gradient-to-br from-zinc-900/80 to-black/80">
                   <div
                     {...getRootProps()}
-                    className="border-2 border-dashed border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-green-500 transition-colors duration-200"
+                    className="border-2 border-dashed border-zinc-600 rounded-lg p-4 text-center cursor-pointer hover:border-green-500/30 transition-all duration-300"
                   >
                     <input {...getInputProps()} />
                     {thumbnailPreview ? (
@@ -1086,10 +1102,10 @@ const CourseForm = ({
                               updateThumbnail();
                             }}
                             disabled={isLoading}
-                            className="w-full"
+                            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
                           >
                             {isLoading ? (
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center justify-center gap-2">
                                 <Loader2 className="h-4 w-4 animate-spin" />
                                 <span>Uploading...</span>
                               </div>
@@ -1101,8 +1117,8 @@ const CourseForm = ({
                       </div>
                     ) : (
                       <div className="py-8">
-                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                        <p className="mt-2 text-sm text-gray-400">
+                        <Upload className="mx-auto h-12 w-12 text-zinc-400" />
+                        <p className="mt-2 text-sm text-zinc-400">
                           Drag & drop or click to select thumbnail
                         </p>
                       </div>
@@ -1112,11 +1128,11 @@ const CourseForm = ({
               </AccordionItem>
 
               {/* Thumbnail Video */}
-              <AccordionItem value="video" className="border-b border-gray-700">
-                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gray-800 hover:bg-gray-700 text-green-400 transition-colors">
+              <AccordionItem value="video" className="border-b border-zinc-700">
+                <AccordionTrigger className="text-lg font-semibold px-4 py-3 bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 hover:bg-zinc-700/70 text-green-400 transition-all duration-300">
                   Thumbnail Video
                 </AccordionTrigger>
-                <AccordionContent className="p-4 bg-gray-900">
+                <AccordionContent className="p-4 bg-gradient-to-br from-zinc-900/80 to-black/80">
                   <div>
                     <Label
                       htmlFor="videoUrl"
@@ -1128,7 +1144,7 @@ const CourseForm = ({
                       id="videoUrl"
                       {...register("videoUrl")}
                       placeholder="https://www.your-video-url.com"
-                      className="mt-1 bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+                      className="mt-1 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 transition-all duration-300"
                     />
                   </div>
                 </AccordionContent>
@@ -1154,7 +1170,7 @@ const CourseForm = ({
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-green-600 hover:bg-green-700 
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 
                 text-white font-semibold py-3 px-6 rounded-lg 
                 transition-all duration-300 
                 disabled:opacity-70 disabled:cursor-not-allowed

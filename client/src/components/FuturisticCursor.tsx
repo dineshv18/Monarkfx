@@ -31,12 +31,12 @@ export default function FuturisticCursor() {
     };
   }, [pathname]);
 
-  // Don't render futuristic cursor on dashboard pages
-  if (pathname?.startsWith("/dashboard")) {
-    return null;
-  }
-
   useEffect(() => {
+    // Don't set up event listeners for dashboard pages
+    if (pathname?.startsWith("/dashboard")) {
+      return;
+    }
+
     const updatePosition = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
       setVisible(true);
@@ -91,9 +91,14 @@ export default function FuturisticCursor() {
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
+    // Don't set up mobile detection for dashboard pages
+    if (pathname?.startsWith("/dashboard")) {
+      return;
+    }
+
     if (typeof window !== "undefined") {
       const handleBlur = () => setVisible(false);
       const handleFocus = () => setVisible(true);
@@ -111,7 +116,12 @@ export default function FuturisticCursor() {
         window.removeEventListener("focus", handleFocus);
       };
     }
-  }, []);
+  }, [pathname]);
+
+  // Don't render futuristic cursor on dashboard pages
+  if (pathname?.startsWith("/dashboard")) {
+    return null;
+  }
 
   const mainCursorVariants = {
     default: {

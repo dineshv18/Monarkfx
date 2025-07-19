@@ -322,17 +322,17 @@ export default function PurchaseDialog({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white rounded-xl border-none shadow-xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700 rounded-xl shadow-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <DialogTitle className="text-2xl font-bold text-gray-800">
+            <DialogTitle className="text-2xl font-bold text-white">
               Purchase Live Class
             </DialogTitle>
-            <DialogDescription className="text-gray-600 mt-1">
+            <DialogDescription className="text-zinc-400 mt-1">
               Secure your spot in this exclusive live class session
             </DialogDescription>
           </motion.div>
@@ -368,13 +368,11 @@ export default function PurchaseDialog({
           </motion.div>
 
           <motion.div
-            className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200"
+            className="bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 p-4 rounded-lg border border-zinc-600"
             variants={item}
           >
-            <h3 className="font-bold text-xl text-gray-800">
-              {classData.title}
-            </h3>
-            <p className="text-gray-600 mt-1">{classData.description}</p>
+            <h3 className="font-bold text-xl text-white">{classData.title}</h3>
+            <p className="text-zinc-300 mt-1">{classData.description}</p>
           </motion.div>
 
           {/* Module selection */}
@@ -382,7 +380,7 @@ export default function PurchaseDialog({
             classData.modules &&
             classData.modules.length > 0 && (
               <motion.div className="space-y-3" variants={item}>
-                <h4 className="font-semibold text-gray-800">Select Module:</h4>
+                <h4 className="font-semibold text-white">Select Module:</h4>
                 <RadioGroup
                   value={selectedModuleId || ""}
                   onValueChange={setSelectedModuleId}
@@ -391,7 +389,7 @@ export default function PurchaseDialog({
                   {classData.modules.map((module: Module) => (
                     <div
                       key={module.id}
-                      className="flex items-start space-x-2 border rounded-lg p-3"
+                      className="flex items-start space-x-2 border border-zinc-600 rounded-lg p-3 bg-zinc-800/30"
                     >
                       <RadioGroupItem
                         value={module.id}
@@ -399,15 +397,18 @@ export default function PurchaseDialog({
                         className="mt-1"
                       />
                       <div className="flex-1">
-                        <Label htmlFor={module.id} className="font-medium">
+                        <Label
+                          htmlFor={module.id}
+                          className="font-medium text-white"
+                        >
                           {module.title}
                           {module.isFree && (
-                            <span className="ml-2 text-green-600 font-bold">
+                            <span className="ml-2 text-green-400 font-bold">
                               (Free)
                             </span>
                           )}
                         </Label>
-                        <div className="text-sm text-gray-500 mt-1">
+                        <div className="text-sm text-zinc-400 mt-1">
                           <div className="flex items-center">
                             <Calendar className="h-3.5 w-3.5 mr-1" />
                             {formatDate(module.startTime)}
@@ -425,51 +426,51 @@ export default function PurchaseDialog({
             )}
 
           <motion.div className="space-y-3" variants={item}>
-            <div className="flex items-center text-gray-700">
-              <Calendar className="mr-3 h-5 w-5 text-[#af1d33]" />
+            <div className="flex items-center text-zinc-300">
+              <Calendar className="mr-3 h-5 w-5 text-green-400" />
               <span>
                 {selectedModule
                   ? formatDate(selectedModule.startTime)
                   : classData.formattedDate}
               </span>
             </div>
-            <div className="flex items-center text-gray-700">
-              <Clock className="mr-3 h-5 w-5 text-[#af1d33]" />
+            <div className="flex items-center text-zinc-300">
+              <Clock className="mr-3 h-5 w-5 text-green-400" />
               <span>
                 {selectedModule
                   ? formatTime(selectedModule.startTime)
                   : classData.formattedTime}
               </span>
             </div>
-            <div className="flex items-center text-gray-700">
-              <User className="mr-3 h-5 w-5 text-[#af1d33]" />
+            <div className="flex items-center text-zinc-300">
+              <User className="mr-3 h-5 w-5 text-green-400" />
               <span>Instructor: {classData.teacherName}</span>
             </div>
           </motion.div>
 
           <motion.div
-            className="bg-[#af1d33]/10 p-4 rounded-lg flex justify-between items-center"
+            className="bg-green-500/10 p-4 rounded-lg flex justify-between items-center border border-green-500/20"
             variants={item}
           >
-            <span className="text-gray-700 font-medium">Price</span>
-            <span className="text-2xl font-bold text-[#af1d33]">
+            <span className="text-zinc-300 font-medium">Price</span>
+            <span className="text-2xl font-bold text-green-400">
               {isSelectedModuleFree() ? "Free" : `₹${getModulePrice()}`}
             </span>
           </motion.div>
 
           <motion.div className="space-y-2" variants={item}>
-            <h4 className="font-semibold text-gray-800">What's included:</h4>
+            <h4 className="font-semibold text-white">What's included:</h4>
             <ul className="space-y-2">
-              <li className="flex items-center text-gray-700">
-                <Check className="mr-2 h-4 w-4 text-green-500" />
+              <li className="flex items-center text-zinc-300">
+                <Check className="mr-2 h-4 w-4 text-green-400" />
                 <span>Live interactive session with the instructor</span>
               </li>
-              <li className="flex items-center text-gray-700">
-                <Check className="mr-2 h-4 w-4 text-green-500" />
+              <li className="flex items-center text-zinc-300">
+                <Check className="mr-2 h-4 w-4 text-green-400" />
                 <span>Q&A opportunity during the class</span>
               </li>
-              <li className="flex items-center text-gray-700">
-                <Check className="mr-2 h-4 w-4 text-green-500" />
+              <li className="flex items-center text-zinc-300">
+                <Check className="mr-2 h-4 w-4 text-green-400" />
                 <span>Access to session recording (if available)</span>
               </li>
             </ul>
@@ -477,7 +478,7 @@ export default function PurchaseDialog({
 
           {!isSelectedModuleFree() && (
             <motion.div
-              className="text-sm p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800"
+              className="text-sm p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-400"
               variants={item}
             >
               Note: After payment, your access will require admin approval
@@ -490,7 +491,7 @@ export default function PurchaseDialog({
           <Button
             variant="outline"
             onClick={onClose}
-            className="rounded-full border-gray-300"
+            className="rounded-full border-zinc-600 text-zinc-300 hover:bg-zinc-800"
           >
             Cancel
           </Button>
@@ -501,7 +502,7 @@ export default function PurchaseDialog({
               className={`${
                 isSelectedModuleFree()
                   ? "bg-green-600 hover:bg-green-700"
-                  : "bg-[#10B981] hover:bg-[#10B981]"
+                  : "bg-green-600 hover:bg-green-700"
               } text-white rounded-full px-6 shadow-md`}
             >
               {isLoading ? (

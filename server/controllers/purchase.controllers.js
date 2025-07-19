@@ -4,7 +4,8 @@ import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createPurchase = asyncHandler(async (req, res) => {
-  const { courseId, purchasePrice, discountPrice, couponCode } = req.body;
+  const { courseId, purchasePrice, discountPrice, couponCode, referralCode } =
+    req.body;
   const userId = req.user.id;
 
   // Check if course exists
@@ -14,6 +15,24 @@ export const createPurchase = asyncHandler(async (req, res) => {
 
   if (!course) {
     throw new ApiError(404, "Course not found");
+  }
+
+  // Handle referral code if provided
+  let affiliateId = null;
+  if (referralCode) {
+    const affiliate = await prisma.affiliate.findUnique({
+      where: { referralCode },
+    });
+
+    if (!affiliate) {
+      throw new ApiError(400, "Invalid referral code");
+    }
+
+    if (!affiliate.isActive || affiliate.status !== "APPROVED") {
+      throw new ApiError(400, "Referral code is not active");
+    }
+
+    affiliateId = affiliate.id;
   }
 
   // Check if purchase already exists
@@ -47,6 +66,7 @@ export const createPurchase = asyncHandler(async (req, res) => {
           purchasePrice,
           discountPrice,
           couponCode,
+          referralCode,
           updatedAt: new Date(),
         },
       });
@@ -90,9 +110,39 @@ export const createPurchase = asyncHandler(async (req, res) => {
       purchasePrice,
       discountPrice,
       couponCode,
+      referralCode,
       expiryDate, // Add expiry date
     },
   });
+
+  // Create affiliate sale if referral code was used
+  if (affiliateId) {
+    const commissionAmount = (purchasePrice * 15) / 100; // 15% commission
+
+    await prisma.affiliateSale.create({
+      data: {
+        affiliateId,
+        courseId,
+        saleAmount: purchasePrice,
+        commissionAmount,
+        status: "PENDING",
+        notes: `Purchase by user ${userId}`,
+      },
+    });
+
+    // Update affiliate's total earnings and sales count
+    await prisma.affiliate.update({
+      where: { id: affiliateId },
+      data: {
+        totalEarnings: {
+          increment: commissionAmount,
+        },
+        totalSales: {
+          increment: 1,
+        },
+      },
+    });
+  }
 
   // Create or update enrollment with the same expiry date
   await prisma.enrollment.upsert({
@@ -198,8 +248,8 @@ export const getMyPurchases = asyncHandler(async (req, res) => {
     .json(
       new ApiResponsive(
         200,
-        "User purchases retrieved successfully",
-        processedPurchases
+        { purchases: processedPurchases },
+        "User purchases retrieved successfully"
       )
     );
 });

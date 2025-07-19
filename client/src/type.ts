@@ -329,6 +329,9 @@ export interface BillingDetails {
   country: string;
   zipCode: string;
   saveAddress?: boolean;
+  phoneNumber?: string;
+  referralCode?: string;
+  paymentMethod?: string;
 }
 
 export interface EnrollmentResponse {
@@ -386,6 +389,8 @@ export interface AddressData {
   country: string;
   zipCode: string;
   paymentStatus?: boolean;
+  courseIds?: string;
+  createdAt?: string;
 }
 
 export interface RazorpayResponse {

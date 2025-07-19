@@ -174,17 +174,17 @@ export default function CourseAccessDialog({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white rounded-xl border-none shadow-xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700 rounded-xl shadow-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <DialogTitle className="text-2xl font-bold text-gray-800">
+            <DialogTitle className="text-2xl font-bold text-white">
               Access Class Links
             </DialogTitle>
-            <DialogDescription className="text-gray-600 mt-1">
+            <DialogDescription className="text-zinc-400 mt-1">
               Complete your payment to unlock access to the class
             </DialogDescription>
           </motion.div>

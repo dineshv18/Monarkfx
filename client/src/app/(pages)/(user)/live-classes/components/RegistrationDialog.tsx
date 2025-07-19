@@ -60,6 +60,7 @@ export default function RegistrationDialog({
       }
     };
   }, []);
+
   const initiateRegistration = async () => {
     try {
       setIsLoading(true);
@@ -189,17 +190,17 @@ export default function RegistrationDialog({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-white rounded-xl border-none shadow-xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md bg-gradient-to-br from-gray-900 via-black to-gray-900 border-gray-700 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <DialogTitle className="text-2xl font-bold text-gray-800">
+            <DialogTitle className="text-2xl font-bold text-white">
               Register for Live Class
-            </DialogTitle>{" "}
-            <DialogDescription className="text-gray-600 mt-1">
+            </DialogTitle>
+            <DialogDescription className="text-gray-300 mt-1">
               Register now and await admin approval before course fee payment
             </DialogDescription>
           </motion.div>
@@ -232,56 +233,62 @@ export default function RegistrationDialog({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-60"></div>
           </motion.div>
+
           <motion.div
-            className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200"
+            className="bg-gradient-to-r from-gray-800 to-gray-700 p-4 rounded-lg border border-gray-600"
             variants={item}
           >
-            <h3 className="font-bold text-xl text-gray-800">
-              {classData.title}
-            </h3>
-            <p className="text-gray-600 mt-1">{classData.description}</p>
+            <h3 className="font-bold text-xl text-white">{classData.title}</h3>
+            <p className="text-gray-300 mt-1">{classData.description}</p>
           </motion.div>
+
           <motion.div className="space-y-3" variants={item}>
-            <div className="flex items-center text-gray-700">
-              <User className="mr-3 h-5 w-5 text-[#af1d33]" />
+            <div className="flex items-center text-white">
+              <User className="mr-3 h-5 w-5 text-green-400" />
               <span>Instructor: {classData.teacherName}</span>
             </div>
-            <div className="flex items-center text-gray-700">
-              <Calendar className="mr-3 h-5 w-5 text-[#af1d33]" />
+            <div className="flex items-center text-white">
+              <Calendar className="mr-3 h-5 w-5 text-green-400" />
               <span>{classData.formattedDate}</span>
             </div>
-            <div className="flex items-center text-gray-700">
-              <Clock className="mr-3 h-5 w-5 text-[#af1d33]" />
+            <div className="flex items-center text-white">
+              <Clock className="mr-3 h-5 w-5 text-green-400" />
               <span>{classData.formattedTime}</span>
             </div>
           </motion.div>
+
           <motion.div
-            className="bg-[#af1d33]/10 p-4 rounded-lg flex justify-between items-center"
+            className="bg-gradient-to-r from-green-600 to-green-500 p-4 rounded-lg flex justify-between items-center shadow-lg"
             variants={item}
           >
-            <span className="text-gray-700 font-medium">Registration Fee</span>
-            <span className="text-2xl font-bold text-[#af1d33]">
+            <span className="text-white font-medium">Registration Fee</span>
+            <span className="text-2xl font-bold text-white">
               ₹{classData.registrationFee}
             </span>
           </motion.div>
-          <motion.div className="bg-gray-50 p-4 rounded-lg" variants={item}>
+
+          <motion.div
+            className="bg-gradient-to-r from-gray-800 to-gray-700 p-4 rounded-lg border border-gray-600"
+            variants={item}
+          >
             <div className="flex justify-between items-center">
-              <span className="text-gray-700 font-medium">Course Fee</span>
-              <span className="text-xl font-bold text-gray-700">
+              <span className="text-white font-medium">Course Fee</span>
+              <span className="text-xl font-bold text-white">
                 ₹{classData.courseFee}
               </span>
             </div>
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-gray-300 text-sm mt-2">
               <i>
                 Note: Course fee will be payable later to access class links
               </i>
             </p>
-          </motion.div>{" "}
+          </motion.div>
+
           <motion.div
             className={`text-sm p-3 border rounded-lg ${
               classData?.registrationEnabled === false
-                ? "bg-red-50 border-red-200 text-red-800"
-                : "bg-blue-50 border-blue-200 text-blue-800"
+                ? "bg-red-900/20 border-red-500/30 text-red-300"
+                : "bg-green-900/20 border-green-500/30 text-green-300"
             }`}
             variants={item}
           >
@@ -299,12 +306,13 @@ export default function RegistrationDialog({
               </div>
             )}
           </motion.div>
-        </motion.div>{" "}
+        </motion.div>
+
         <DialogFooter className="gap-2 sm:gap-0">
           <Button
             variant="outline"
             onClick={onClose}
-            className="rounded-full border-gray-300"
+            className="rounded-full border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
           >
             Cancel
           </Button>
@@ -318,8 +326,8 @@ export default function RegistrationDialog({
               }
               className={`rounded-full px-6 shadow-md ${
                 classData?.registrationEnabled === false
-                  ? "bg-gray-400 cursor-not-allowed text-gray-600"
-                  : "bg-[#10B981] hover:bg-[#10B981] text-white"
+                  ? "bg-gray-600 cursor-not-allowed text-gray-400"
+                  : "bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white shadow-lg"
               }`}
             >
               {isLoading ? (

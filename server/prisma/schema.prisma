@@ -87,6 +87,7 @@ model Course {
   reviews           Review[]
   sections          Section[]
   applicableCoupons Coupon[]                @relation("CouponToCourse")
+  AffiliateSale     AffiliateSale[]
 
   @@index([categoryId])
 }
@@ -248,6 +249,7 @@ model Purchase {
   purchasePrice Float
   discountPrice Float?
   couponCode    String?
+  referralCode  String?
   expiryDate    DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now())
@@ -534,6 +536,62 @@ model TrackingScript {
   @@index([position])
 }
 
+model Affiliate {
+  id                String          @id @default(uuid())
+  name              String
+  email             String          @unique
+  phone             String?
+  address           String?
+  city              String?
+  state             String?
+  country           String?
+  pincode           String?
+  bankName          String?
+  accountNumber     String?
+  ifscCode          String?
+  accountHolderName String?
+  upiId             String?
+  commissionRate    Float           @default(15.0)
+  status            AffiliateStatus @default(PENDING)
+  referralCode      String          @unique
+  totalEarnings     Float           @default(0)
+  totalSales        Int             @default(0)
+  notes             String?
+  adminNotes        String?
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  sales             AffiliateSale[]
+
+  @@index([email])
+  @@index([status])
+  @@index([referralCode])
+}
+
+model AffiliateSale {
+  id               String     @id @default(uuid())
+  affiliateId      String
+  courseId         String?
+  courseName       String
+  saleAmount       Float
+  commissionAmount Float
+  customerName     String?
+  customerEmail    String?
+  customerPhone    String?
+  paymentMethod    String?
+  transactionId    String?
+  status           SaleStatus @default(PENDING)
+  notes            String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  affiliate        Affiliate  @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  course           Course?    @relation(fields: [courseId], references: [id])
+
+  @@index([affiliateId])
+  @@index([courseId])
+  @@index([status])
+}
+
 enum Role {
   STUDENT
   ADMIN
@@ -584,4 +642,18 @@ enum ScriptPosition {
   HEAD
   BODY_START
   BODY_END
+}
+
+enum AffiliateStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum SaleStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  REFUNDED
 }

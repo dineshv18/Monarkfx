@@ -218,7 +218,10 @@ const About = () => {
 
   return (
     <ReactLenis root options={{ smoothWheel: true, duration: 1.2 }}>
-      <main className="bg-black overflow-hidden relative" ref={container}>
+      <main
+        className="bg-black overflow-hidden relative font-plus-jakarta-sans"
+        ref={container}
+      >
         {/* Custom cursor */}
         <motion.div
           className="fixed top-0 left-0 rounded-full pointer-events-none z-50 mix-blend-difference hidden md:block"

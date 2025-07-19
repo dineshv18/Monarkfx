@@ -20,6 +20,10 @@ import {
   Tag,
   User,
   Save,
+  Video,
+  Settings,
+  FileImage,
+  AlertCircle,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { generateSlug } from "@/utils/slugUtils";
@@ -35,7 +39,7 @@ interface EditClassState {
   courseFee: number;
   courseFeeEnabled: boolean;
   registrationEnabled: boolean;
-  isOnClassroom?: boolean; // Add this field
+  isOnClassroom?: boolean;
   currentRaga?: string | null;
   currentOrientation?: string | null;
   isActive: boolean;
@@ -125,7 +129,9 @@ export default function EditZoomClassPage() {
 
       toast({
         title: "Success",
-        description: `Live class ${enabled ? "started" : "stopped"} successfully`,
+        description: `Live class ${
+          enabled ? "started" : "stopped"
+        } successfully`,
       });
     } catch (error) {
       console.error("Error toggling classroom:", error);
@@ -158,8 +164,6 @@ export default function EditZoomClassPage() {
       });
       return;
     }
-
-    // Course fee validation - removed since courseFeeEnabled is always true
 
     setIsSaving(true);
 
@@ -228,6 +232,7 @@ export default function EditZoomClassPage() {
 
     setClassData(newClassData);
   };
+
   // Handler for slug change
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!classData) return;
@@ -240,177 +245,224 @@ export default function EditZoomClassPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="min-h-screen bg-black text-white p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="text-center">
+              <Loader2 className="h-12 w-12 animate-spin text-green-400 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-white mb-2">
+                Loading Class Details
+              </h2>
+              <p className="text-zinc-400">
+                Please wait while we fetch the class information...
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!classData) {
     return (
-      <div className="container mx-auto py-6">
-        <p>Class not found</p>
-        <Button onClick={() => router.push("/dashboard/zoom")}>
-          Back to Live Classes
-        </Button>
+      <div className="min-h-screen bg-black text-white p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="text-center">
+              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-white mb-2">
+                Class Not Found
+              </h2>
+              <p className="text-zinc-400 mb-4">
+                The class you're looking for doesn't exist or has been removed.
+              </p>
+              <Button
+                onClick={() => router.push("/dashboard/zoom")}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                Back to Live Classes
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex items-center gap-4 mb-6">
-        <Button
-          variant="ghost"
-          onClick={() => router.push("/dashboard/zoom")}
-          className="p-0 h-auto"
-        >
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          Back to Live Classes
-        </Button>
-      </div>
+    <div className="min-h-screen bg-black text-white p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-6">
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="p-0 h-auto text-zinc-400 hover:text-white"
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back to Live Classes
+          </Button>
+        </div>
 
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Edit Live Class</h1>
-      </div>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Edit Live Class</h1>
+            <p className="text-zinc-400 mt-2">
+              Update your live trading session details
+            </p>
+          </div>
+          {classData.isOnClassroom && (
+            <div className="flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/30 rounded-lg">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-green-400 font-medium">Live Now</span>
+            </div>
+          )}
+        </div>
 
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-xl flex items-center">
-            <Info className="h-5 w-5 mr-2 text-blue-500" />
-            Class Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={updateClass} className="space-y-6">
-            <div className="grid grid-cols-1 gap-6">
-              {/* Basic Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={updateClass} className="space-y-8">
+          {/* Basic Information */}
+          <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl flex items-center text-white">
+                <Info className="h-5 w-5 mr-2 text-blue-400" />
+                Class Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="title">Class Title</Label>
+                  <Label
+                    htmlFor="title"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Class Title <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="title"
+                    name="title"
                     value={classData.title}
                     onChange={handleTitleChange}
+                    placeholder="Enter a descriptive title for your class"
+                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
                     required
                   />
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="slug">URL Slug</Label>
+                  <Label
+                    htmlFor="slug"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    URL Slug
+                  </Label>
                   <Input
                     id="slug"
+                    name="slug"
                     value={classData.slug}
                     onChange={handleSlugChange}
                     placeholder="custom-url-path"
-                    required
+                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
                   />
-                  <p className="text-xs text-gray-500">
-                    Custom URL identifier (e.g.,
-                    "intermediate-bansuri-class-june"). The slug will
-                    auto-update with the title unless you manually edit it.
+                  <p className="text-xs text-zinc-500">
+                    Custom URL identifier. The slug will auto-update as you type
+                    the title unless you manually edit it.
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="author">Meeting Author/Host</Label>
+                  <Label
+                    htmlFor="author"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Meeting Author/Host
+                  </Label>
                   <div className="relative">
-                    <User className="h-4 w-4 absolute left-3 top-3 text-gray-500" />
+                    <User className="h-4 w-4 absolute left-3 top-3 text-zinc-500" />
                     <Input
                       id="author"
+                      name="author"
                       value={classData.author || ""}
                       onChange={(e) =>
                         setClassData({ ...classData, author: e.target.value })
                       }
-                      placeholder="Enter meeting host name"
-                      className="pl-10"
+                      placeholder="Host name"
+                      className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={classData.description || ""}
-                    onChange={(e) =>
-                      setClassData({
-                        ...classData,
-                        description: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="sessionDescription">
-                    Session Description
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="startTime"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Start Time <span className="text-red-500">*</span>
                   </Label>
-                  <Textarea
-                    id="sessionDescription"
-                    value={classData.sessionDescription || ""}
-                    onChange={(e) =>
-                      setClassData({
-                        ...classData,
-                        sessionDescription: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Schedule */}
-              <div>
-                <h3 className="text-base font-medium mb-4 flex items-center">
-                  <Calendar className="h-4 w-4 mr-2 text-blue-500" />
-                  Schedule
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="startTime">
-                      Start Time <span className="text-red-500">*</span>
-                    </Label>
-                    <div className="relative">
-                      <Clock className="h-4 w-4 absolute left-3 top-3 text-gray-500" />
-                      <Input
-                        id="startTime"
-                        type="text"
-                        value={classData.startTime}
-                        onChange={(e) =>
-                          setClassData({
-                            ...classData,
-                            startTime: e.target.value,
-                          })
-                        }
-                        className="pl-10"
-                        placeholder="e.g., June 15, 2024 15:00"
-                        required
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      Enter date and time in any format (e.g., June 15, 2024
-                      3:00 PM)
-                    </p>
+                  <div className="relative">
+                    <Calendar className="h-4 w-4 absolute left-3 top-3 text-zinc-500" />
+                    <Input
+                      id="startTime"
+                      name="startTime"
+                      type="datetime-local"
+                      value={classData.startTime}
+                      onChange={(e) =>
+                        setClassData({
+                          ...classData,
+                          startTime: e.target.value,
+                        })
+                      }
+                      className="pl-10 bg-zinc-800 border-zinc-700 text-white"
+                      required
+                    />
                   </div>
                 </div>
               </div>
 
-              <Separator />
+              <div className="space-y-2">
+                <Label
+                  htmlFor="description"
+                  className="text-sm font-medium text-zinc-300"
+                >
+                  Description
+                </Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  value={classData.description || ""}
+                  onChange={(e) =>
+                    setClassData({ ...classData, description: e.target.value })
+                  }
+                  placeholder="Describe what students will learn in this session..."
+                  className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                  rows={4}
+                />
+              </div>
+            </CardContent>
+          </Card>
 
-              {/* Fees Section */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
+          {/* Pricing & Fees */}
+          <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl flex items-center text-white">
+                <Tag className="h-5 w-5 mr-2 text-green-400" />
+                Pricing & Fees
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
                   <Label
                     htmlFor="registrationFee"
-                    className="text-sm font-medium"
+                    className="text-sm font-medium text-zinc-300"
                   >
                     Registration Fee <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     id="registrationFee"
+                    name="registrationFee"
                     type="number"
+                    min="0"
+                    step="0.01"
                     value={classData.registrationFee}
                     onChange={(e) =>
                       setClassData({
@@ -418,146 +470,174 @@ export default function EditZoomClassPage() {
                         registrationFee: parseFloat(e.target.value),
                       })
                     }
-                    placeholder="Enter registration fee"
-                    className="w-48"
+                    placeholder="0.00"
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
                     required
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="courseFee" className="text-sm font-medium">
-                      Course Fee <span className="text-red-500">*</span>
-                    </Label>
-                    <Input
-                      id="courseFee"
-                      type="number"
-                      value={classData.courseFee}
-                      onChange={(e) =>
-                        setClassData({
-                          ...classData,
-                          courseFee: parseFloat(e.target.value),
-                        })
-                      }
-                      placeholder="Enter course fee"
-                      className="w-48"
-                      required
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2 mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
-                    <div className="h-4 w-4 bg-blue-500 rounded-sm flex items-center justify-center">
-                      <span className="text-white text-xs">✓</span>
-                    </div>
-                    <Label className="text-sm text-blue-700 font-medium">
-                      Course fee requirement is always enabled
-                    </Label>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Students must pay the course fee to access class links after registration.
-                    This ensures proper payment verification before granting access to the live class.
-                  </p>
+                  <Label
+                    htmlFor="courseFee"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Course Fee <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="courseFee"
+                    name="courseFee"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={classData.courseFee}
+                    onChange={(e) =>
+                      setClassData({
+                        ...classData,
+                        courseFee: parseFloat(e.target.value),
+                      })
+                    }
+                    placeholder="0.00"
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                    required
+                  />
                 </div>
               </div>
 
-              <Separator />
-
-              {/* Class Details */}
-              <div>
-                <h3 className="text-base font-medium mb-4 flex items-center">
-                  <Tag className="h-4 w-4 mr-2 text-blue-500" />
-                  Class Details
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="currentRaga">Current Raga</Label>
-                    <Input
-                      id="currentRaga"
-                      value={classData.currentRaga || ""}
-                      onChange={(e) =>
-                        setClassData({
-                          ...classData,
-                          currentRaga: e.target.value,
-                        })
-                      }
-                      placeholder="e.g., Madhyam Saptak, Sa - Pa"
-                    />
-                    <p className="text-xs text-gray-500">
-                      Musical Raga covered in this class
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="currentOrientation">
-                      Current Orientation
-                    </Label>
-                    <Input
-                      id="currentOrientation"
-                      value={classData.currentOrientation || ""}
-                      onChange={(e) =>
-                        setClassData({
-                          ...classData,
-                          currentOrientation: e.target.value,
-                        })
-                      }
-                      placeholder="e.g., Hindi Classical, Carnatic"
-                    />
-                    <p className="text-xs text-gray-500">
-                      Musical style or orientation
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="capacity">Capacity</Label>
-                    <Input
-                      id="capacity"
-                      type="number"
-                      min="1"
-                      value={classData.capacity || ""}
-                      onChange={(e) =>
-                        setClassData({
-                          ...classData,
-                          capacity: e.target.value
-                            ? parseInt(e.target.value)
-                            : null,
-                        })
-                      }
-                      placeholder="Maximum number of students"
-                    />
-                    <p className="text-xs text-gray-500">
-                      Leave empty for unlimited capacity
-                    </p>
-                  </div>
+              <div className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg border border-zinc-700">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="registrationEnabled"
+                    checked={classData.registrationEnabled}
+                    onCheckedChange={(checked) =>
+                      setClassData({
+                        ...classData,
+                        registrationEnabled: checked,
+                      })
+                    }
+                  />
+                  <Label
+                    htmlFor="registrationEnabled"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Enable Registration
+                  </Label>
+                </div>
+                <div className="text-sm text-zinc-400">
+                  Allow students to register for this class
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
-              <Separator />
-
-              {/* Thumbnail */}
-              <div>
-                <h3 className="text-base font-medium mb-4">Thumbnail Image</h3>
+          {/* Thumbnail Upload */}
+          <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl flex items-center text-white">
+                <FileImage className="h-5 w-5 mr-2 text-purple-400" />
+                Class Thumbnail
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-sm text-zinc-400">
+                  Update the image that represents your live class. This will be
+                  displayed to students.
+                </p>
                 <FileUpload
                   onUploadComplete={handleImageUpload}
-                  existingImageUrl={classData.thumbnailUrl || null}
+                  existingImageUrl={classData.thumbnailUrl || ""}
                 />
-                <p className="text-xs text-gray-500 mt-2">
-                  Recommended size: 1280x720px (16:9 ratio)
-                </p>
-              </div>
-
-              <Separator />
-
-              {/* Settings */}
-              <div>
-                <h3 className="text-base font-medium mb-4">Settings</h3>
-                <div className="flex items-center justify-between py-2">
-                  <div>
-                    <Label htmlFor="isActive" className="cursor-pointer">
-                      Active Status
-                    </Label>
-                    <p className="text-xs text-gray-500">
-                      Make this class visible to students
+                {classData.thumbnailUrl && (
+                  <div className="mt-4 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                    <p className="text-sm text-green-400">
+                      ✓ Thumbnail uploaded successfully
                     </p>
                   </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Additional Settings */}
+          <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl flex items-center text-white">
+                <Settings className="h-5 w-5 mr-2 text-yellow-400" />
+                Additional Settings
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="currentRaga"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Current Raga
+                  </Label>
+                  <Input
+                    id="currentRaga"
+                    name="currentRaga"
+                    value={classData.currentRaga || ""}
+                    onChange={(e) =>
+                      setClassData({
+                        ...classData,
+                        currentRaga: e.target.value,
+                      })
+                    }
+                    placeholder="e.g., Yaman, Bhairav"
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="currentOrientation"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Current Orientation
+                  </Label>
+                  <Input
+                    id="currentOrientation"
+                    name="currentOrientation"
+                    value={classData.currentOrientation || ""}
+                    onChange={(e) =>
+                      setClassData({
+                        ...classData,
+                        currentOrientation: e.target.value,
+                      })
+                    }
+                    placeholder="e.g., Beginner, Intermediate"
+                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="sessionDescription"
+                  className="text-sm font-medium text-zinc-300"
+                >
+                  Session Description
+                </Label>
+                <Textarea
+                  id="sessionDescription"
+                  name="sessionDescription"
+                  value={classData.sessionDescription || ""}
+                  onChange={(e) =>
+                    setClassData({
+                      ...classData,
+                      sessionDescription: e.target.value,
+                    })
+                  }
+                  placeholder="Detailed description of what will be covered in this session..."
+                  className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg border border-zinc-700">
+                <div className="flex items-center space-x-2">
                   <Switch
                     id="isActive"
                     checked={classData.isActive}
@@ -565,48 +645,76 @@ export default function EditZoomClassPage() {
                       setClassData({ ...classData, isActive: checked })
                     }
                   />
+                  <Label
+                    htmlFor="isActive"
+                    className="text-sm font-medium text-zinc-300"
+                  >
+                    Active Class
+                  </Label>
                 </div>
+                <div className="text-sm text-zinc-400">
+                  Make this class available to students
+                </div>
+              </div>
 
-                <div className="flex items-center justify-between py-2">
-                  <div>
-                    <Label htmlFor="isOnClassroom" className="cursor-pointer">
-                      Live Class Control
-                    </Label>
-                    <p className="text-xs text-gray-500">
-                      Allow students to join the live class
-                    </p>
+              {classData.isOnClassroom && (
+                <div className="flex items-center justify-between p-4 bg-red-500/10 rounded-lg border border-red-500/20">
+                  <div className="flex items-center space-x-2">
+                    <Video className="h-5 w-5 text-red-400" />
+                    <span className="text-sm font-medium text-red-400">
+                      Live Class in Progress
+                    </span>
                   </div>
-                  <Switch
-                    id="isOnClassroom"
-                    checked={classData.isOnClassroom ?? false}
-                    onCheckedChange={(checked) =>
-                      handleToggleClassroom(checked)
-                    }
-                  />
+                  <Button
+                    type="button"
+                    onClick={() => handleToggleClassroom(false)}
+                    disabled={isSaving}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Stopping...
+                      </>
+                    ) : (
+                      "Stop Class"
+                    )}
+                  </Button>
                 </div>
-              </div>
+              )}
+            </CardContent>
+          </Card>
 
-              <div className="flex justify-end gap-2 pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.push("/dashboard/zoom")}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSaving}>
-                  {isSaving ? "Saving..." : (
-                    <>
-                      <Save className="h-4 w-4 mr-2" />
-                      Save Changes
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          {/* Submit Button */}
+          <div className="flex justify-end gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isSaving}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Update Live Class
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

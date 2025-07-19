@@ -117,27 +117,28 @@ export default function ReviewSection({
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-green-400" />
       </div>
     );
   }
 
   return (
-    <div className="py-8 px-5">      <div className="flex justify-between items-center mb-6">
-      <h2 className="text-2xl font-bold text-gray-900">Student Reviews</h2>
-      {isAuthenticated && hasAccess && (
-        <Button
-          onClick={() => setShowReviewDialog(true)}
-          className="bg-primary hover:bg-primary/90"
-        >
-          Write a Review
-        </Button>
-      )}
-    </div>
+    <div className="py-8 px-5">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-white">Student Reviews</h2>
+        {isAuthenticated && hasAccess && (
+          <Button
+            onClick={() => setShowReviewDialog(true)}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            Write a Review
+          </Button>
+        )}
+      </div>
 
       {reviews.length === 0 ? (
-        <div className="text-center py-8 bg-gray-50 rounded-lg">
-          <p className="text-gray-600">
+        <div className="text-center py-8 bg-zinc-800/50 rounded-lg border border-zinc-700">
+          <p className="text-zinc-400">
             No reviews yet. Be the first to review!
           </p>
         </div>
@@ -146,27 +147,28 @@ export default function ReviewSection({
           {reviews.map((review) => (
             <div
               key={review.id}
-              className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+              className="bg-gradient-to-br from-zinc-900/80 to-black/80 p-6 rounded-xl shadow-sm border border-zinc-700"
             >
               <div className="flex justify-between items-start">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-white">
                       {review.user.name}
                     </h3>
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          className={`h-4 w-4 ${i < review.rating
+                          className={`h-4 w-4 ${
+                            i < review.rating
                               ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                            }`}
+                              : "text-zinc-600"
+                          }`}
                         />
                       ))}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-zinc-400 mt-1">
                     {new Date(review.createdAt).toLocaleDateString()}
                     {review.isEdited && " (edited)"}
                   </p>
@@ -175,37 +177,37 @@ export default function ReviewSection({
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEditReview(review)}
-                      className="text-blue-600 hover:text-blue-800"
+                      className="text-blue-400 hover:text-blue-300"
                     >
                       <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteReview(review.id)}
-                      className="text-red-600 hover:text-red-800"
+                      className="text-red-400 hover:text-red-300"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 )}
               </div>
-              <p className="mt-3 text-gray-700">{review.comment}</p>
+              <p className="mt-3 text-zinc-300">{review.comment}</p>
             </div>
           ))}
         </div>
       )}
 
       <Dialog open={showReviewDialog} onOpenChange={setShowReviewDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-white">
               {editingReview ? "Edit Review" : "Write a Review"}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-zinc-400">
               Share your experience with other students
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <div className="flex items-center juStudent Reviewsstify-center gap-1 mb-4">
+            <div className="flex items-center justify-center gap-1 mb-4">
               {[...Array(5)].map((_, i) => (
                 <button
                   key={i}
@@ -213,10 +215,11 @@ export default function ReviewSection({
                   className="focus:outline-none"
                 >
                   <Star
-                    className={`h-8 w-8 ${i < rating
+                    className={`h-8 w-8 ${
+                      i < rating
                         ? "text-yellow-400 fill-yellow-400"
-                        : "text-gray-300"
-                      }`}
+                        : "text-zinc-600"
+                    }`}
                   />
                 </button>
               ))}
@@ -225,7 +228,7 @@ export default function ReviewSection({
               placeholder="Write your review here..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="min-h-[100px]"
+              className="min-h-[100px] bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
             />
           </div>
           <DialogFooter>
@@ -237,10 +240,14 @@ export default function ReviewSection({
                 setRating(5);
                 setComment("");
               }}
+              className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
             >
               Cancel
             </Button>
-            <Button onClick={handleSubmitReview}>
+            <Button
+              onClick={handleSubmitReview}
+              className="bg-green-600 hover:bg-green-700"
+            >
               {editingReview ? "Update Review" : "Submit Review"}
             </Button>
           </DialogFooter>
