@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Table,
   TableBody,
@@ -10,7 +11,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Link2, Copy, ExternalLink } from "lucide-react";
+import {
+  RefreshCw,
+  Link2,
+  Copy,
+  ExternalLink,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ZoomLiveClass {
@@ -20,27 +28,45 @@ interface ZoomLiveClass {
   isActive: boolean;
   isOnClassroom?: boolean;
   zoomLink?: string;
+  zoomMeetingId?: string;
+  zoomPassword?: string;
   slug: string;
 }
 
-interface SessionLinksProps {
-  sessions: ZoomLiveClass[];
-  classes?: ZoomLiveClass[];
-  refreshData: () => void;
-}
-
-export default function SessionLinks({
-  sessions,
-  classes,
-  refreshData,
-}: SessionLinksProps) {
+export default function SessionLinks() {
+  const [sessions, setSessions] = useState<ZoomLiveClass[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+
+  const fetchSessions = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/classes`,
+        { withCredentials: true }
+      );
+      setSessions(response.data.data);
+    } catch (error) {
+      console.error("Error fetching sessions:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load session data",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      await refreshData();
+      await fetchSessions();
       toast({
         title: "Success",
         description: "Session links refreshed successfully",
@@ -73,17 +99,62 @@ export default function SessionLinks({
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString();
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
-  // Combine sessions and classes, prioritizing sessions
-  const allSessions = sessions || classes || [];
+  const getStatusBadge = (isActive: boolean) => {
+    if (isActive) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-600 text-white border border-green-500">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Active
+        </span>
+      );
+    }
 
-  // Filter for active sessions that are in the future
-  const activeUpcomingClasses =
-    allSessions.filter(
-      (session) => session.isActive && new Date(session.startTime) > new Date()
-    ) || [];
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+        <XCircle className="h-3 w-3 mr-1" />
+        Inactive
+      </span>
+    );
+  };
+
+  const getLiveStatusBadge = (isOnClassroom: boolean) => {
+    if (isOnClassroom) {
+      return (
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-600 text-white border border-red-500">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-1"></div>
+            LIVE
+          </span>
+        </div>
+      );
+    }
+
+    return (
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-600 text-white border border-zinc-500">
+        Offline
+      </span>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+      </div>
+    );
+  }
+
+  // Filter for active sessions
+  const activeSessions = sessions.filter((session) => session.isActive);
 
   return (
     <div className="space-y-4">
@@ -96,46 +167,35 @@ export default function SessionLinks({
           variant="outline"
           onClick={handleRefresh}
           disabled={refreshing}
-          className="flex items-center gap-2 bg-green-500/10 border-green-500/50 text-green-400 hover:bg-green-500/20"
+          className="flex items-center gap-2 border-green-500/50 text-green-400 hover:bg-green-500/10"
         >
           <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} />
           Refresh
         </Button>
       </div>
 
-      <div className="bg-zinc-900 border border-green-500/30 rounded-lg overflow-hidden">
+      <div className="overflow-x-auto">
         <Table>
           <TableHeader>
-            <TableRow className="border-green-500/30 hover:bg-green-500/5">
-              <TableHead className="text-green-400 font-semibold">
-                Class Title
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Start Time
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Status
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Live Status
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Student Link
-              </TableHead>
-              <TableHead className="text-green-400 font-semibold">
-                Actions
-              </TableHead>
+            <TableRow className="border-zinc-700 hover:bg-zinc-800/50">
+              <TableHead className="text-zinc-300">Class Title</TableHead>
+              <TableHead className="text-zinc-300">Start Time</TableHead>
+              <TableHead className="text-zinc-300">Status</TableHead>
+              <TableHead className="text-zinc-300">Live Status</TableHead>
+              <TableHead className="text-zinc-300">Zoom Details</TableHead>
+              <TableHead className="text-zinc-300">Student Link</TableHead>
+              <TableHead className="text-zinc-300">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {activeUpcomingClasses.length > 0 ? (
-              activeUpcomingClasses.map((session) => {
-                const studentLink = `${window.location.origin}/courses/zoom/${session.slug}`;
+            {activeSessions.length > 0 ? (
+              activeSessions.map((session) => {
+                const studentLink = `${window.location.origin}/live-classes/${session.id}`;
 
                 return (
                   <TableRow
                     key={session.id}
-                    className="border-green-500/30 hover:bg-green-500/10"
+                    className="border-zinc-700 hover:bg-zinc-800/50"
                   >
                     <TableCell>
                       <div>
@@ -150,32 +210,25 @@ export default function SessionLinks({
                     <TableCell className="text-zinc-300">
                       {formatDate(session.startTime)}
                     </TableCell>
+                    <TableCell>{getStatusBadge(session.isActive)}</TableCell>
                     <TableCell>
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          session.isActive
-                            ? "bg-green-500/20 text-green-400 border border-green-500/50"
-                            : "bg-red-500/20 text-red-400 border border-red-500/50"
-                        }`}
-                      >
-                        {session.isActive ? "Active" : "Inactive"}
-                      </span>
+                      {getLiveStatusBadge(session.isOnClassroom || false)}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-bold ${
-                            session.isOnClassroom
-                              ? "bg-blue-500/20 text-blue-400 border border-blue-500/50"
-                              : "bg-zinc-700 text-zinc-300 border border-zinc-600"
-                          }`}
-                        >
-                          {session.isOnClassroom ? "LIVE" : "Offline"}
+                      {session.zoomLink ? (
+                        <div className="space-y-1">
+                          <div className="text-xs text-zinc-400">
+                            Meeting ID: {session.zoomMeetingId}
+                          </div>
+                          <div className="text-xs text-zinc-400">
+                            Password: {session.zoomPassword}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-zinc-500">
+                          No Zoom details
                         </span>
-                        {session.isOnClassroom && (
-                          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        )}
-                      </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -183,35 +236,35 @@ export default function SessionLinks({
                           {studentLink}
                         </code>
                         <Button
-                          variant="outline"
                           size="sm"
+                          variant="ghost"
                           onClick={() => copyToClipboard(studentLink)}
-                          className="bg-green-500/10 border-green-500/50 text-green-400 hover:bg-green-500/20"
+                          className="text-blue-400 hover:text-blue-300"
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-2">
+                      <div className="flex items-center gap-2">
                         <Button
-                          variant="outline"
                           size="sm"
+                          variant="ghost"
                           onClick={() => window.open(studentLink, "_blank")}
-                          className="bg-blue-500/10 border-blue-500/50 text-blue-400 hover:bg-blue-500/20"
+                          className="text-green-400 hover:text-green-300"
                         >
-                          <ExternalLink className="h-3 w-3 mr-1" />
-                          Preview
+                          <ExternalLink className="h-4 w-4" />
                         </Button>
                         {session.zoomLink && (
                           <Button
-                            variant="outline"
                             size="sm"
-                            onClick={() => copyToClipboard(session.zoomLink!)}
-                            className="bg-amber-500/10 border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
+                            variant="ghost"
+                            onClick={() =>
+                              window.open(session.zoomLink, "_blank")
+                            }
+                            className="text-purple-400 hover:text-purple-300"
                           >
-                            <Copy className="h-3 w-3 mr-1" />
-                            Zoom Link
+                            <Link2 className="h-4 w-4" />
                           </Button>
                         )}
                       </div>
@@ -222,40 +275,15 @@ export default function SessionLinks({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={7}
                   className="text-center py-8 text-zinc-400"
                 >
-                  No active upcoming classes found
+                  No active sessions found
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
-      </div>
-
-      <div className="mt-4 p-4 bg-zinc-800 border border-green-500/20 rounded-lg">
-        <h4 className="font-medium text-white mb-2">
-          How to share class links:
-        </h4>
-        <ul className="text-sm text-zinc-300 space-y-1">
-          <li>
-            • Share the <strong className="text-green-400">Student Link</strong>{" "}
-            with students for them to access the class
-          </li>
-          <li>
-            • Use the <strong className="text-blue-400">Preview</strong> button
-            to see how students will view the class
-          </li>
-          <li>
-            • Copy the <strong className="text-amber-400">Zoom Link</strong> to
-            join the class as an instructor
-          </li>
-          <li>
-            • Classes must be marked as{" "}
-            <strong className="text-green-400">Active</strong> and{" "}
-            <strong className="text-blue-400">Live</strong> for students to join
-          </li>
-        </ul>
       </div>
     </div>
   );
