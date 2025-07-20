@@ -34,14 +34,10 @@ import {
 
 // Types
 import type { ApiResponseTh, UserSec, Purchase } from "@/type";
-import type {
-  Enrollment,
-  CourseData,
-  Purchase as CoursePurchase,
-} from "@/type/course";
+import type { Enrollment } from "@/type/course";
 import UserCertificates from "./UserCertificates";
 import MyLiveClasses from "./MyLiveClasses";
-import EnhancedCourseCard from "../../_components/EnhancedCourseCard";
+import SecureChainCourseCard from "../../_components/SecureChainCourseCard";
 
 // Define a type for processed purchases
 type ProcessedPurchase = Purchase & {
@@ -630,7 +626,7 @@ const UserProfile = () => {
           </Card>
         ) : (
           enrollments.map((enrollment: any) => (
-            <EnhancedCourseCard
+            <SecureChainCourseCard
               hidePrice={true}
               key={enrollment.course.id}
               course={enrollment.course}
@@ -699,7 +695,7 @@ const UserProfile = () => {
           </Card>
         ) : (
           purchases.map((purchase: any) => (
-            <EnhancedCourseCard
+            <SecureChainCourseCard
               hidePrice={true}
               key={purchase.course.id}
               course={purchase.course}

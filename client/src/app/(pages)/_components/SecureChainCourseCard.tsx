@@ -5,16 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Shield,
-  Play,
   Clock,
-  Users,
   Star,
   TrendingUp,
   Award,
   Flame,
   Check,
-  ArrowRight,
   AlertTriangle,
   BookOpen,
   Folder,

@@ -1,34 +1,19 @@
 import type React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardTitle } from "@/components/ui/card";
 import type { ChapterDataNew } from "@/type";
-import {
-  BookOpen,
-  Calendar,
-  Clock,
-  Target,
-  Award,
-  CheckCircle,
-} from "lucide-react";
+import { BookOpen, Calendar, Clock, Target } from "lucide-react";
 
 interface ChapterDetailsProps {
   chapter: ChapterDataNew | null;
-  progress?: {
-    isCompleted: boolean;
-    watchedTime: number;
-    progressPercentage?: number;
-  } | null;
   videoDuration?: number;
 }
 
 const ChapterDetails: React.FC<ChapterDetailsProps> = ({
   chapter,
-  progress,
   videoDuration,
 }) => {
   if (!chapter) return null;
 
-  const progressPercentage = progress?.progressPercentage || 0;
-  const isCompleted = progress?.isCompleted || false;
   const actualDuration = videoDuration || chapter.duration || 0;
 
   // Format duration to MM:SS
