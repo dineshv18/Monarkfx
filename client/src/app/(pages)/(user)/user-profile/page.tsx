@@ -218,7 +218,7 @@ const UserProfile = () => {
         axios.get<ApiResponseTh<Enrollment[]>>(
           `${process.env.NEXT_PUBLIC_API_URL}/enrollment/user`
         ),
-        axios.get<ApiResponseTh<Purchase[]>>(
+        axios.get<ApiResponseTh<{ purchases: Purchase[] }>>(
           `${process.env.NEXT_PUBLIC_API_URL}/purchase/my-course`
         ),
       ]);
@@ -253,9 +253,7 @@ const UserProfile = () => {
 
       if (purchasesResponse.data && purchasesResponse.data.success) {
         // Process purchase data to add validity information
-        const purchases = Array.isArray(purchasesResponse.data.message)
-          ? purchasesResponse.data.message
-          : [];
+        const purchases = purchasesResponse.data.data?.purchases || [];
 
         const processedPurchases = purchases.map((purchase: Purchase) => {
           const expiryDate = purchase.expiryDate;
@@ -305,7 +303,7 @@ const UserProfile = () => {
             axios.get<ApiResponseTh<Enrollment[]>>(
               `${process.env.NEXT_PUBLIC_API_URL}/enrollment/user`
             ),
-            axios.get<ApiResponseTh<Purchase[]>>(
+            axios.get<ApiResponseTh<{ purchases: Purchase[] }>>(
               `${process.env.NEXT_PUBLIC_API_URL}/purchase/my-course`
             ),
           ]);
@@ -344,9 +342,7 @@ const UserProfile = () => {
 
         if (purchasesResponse.data && purchasesResponse.data.success) {
           // Process purchase data to add validity information
-          const purchases = Array.isArray(purchasesResponse.data.message)
-            ? purchasesResponse.data.message
-            : [];
+          const purchases = purchasesResponse.data.data?.purchases || [];
 
           const processedPurchases = purchases.map((purchase: Purchase) => {
             const expiryDate = purchase.expiryDate;
