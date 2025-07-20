@@ -359,10 +359,6 @@ const AdminUsersPage: React.FC = () => {
             Import Users
           </Button>
         </Link>
-        <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-indigo-600 hover:to-blue-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2">
-          <Download className="h-5 w-5" />
-          Export Data
-        </Button>
       </motion.div>
 
       {/* Animated Stats Cards */}

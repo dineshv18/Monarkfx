@@ -44,6 +44,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Affiliate {
   id: string;
@@ -363,8 +364,8 @@ const AffiliatesPage = () => {
                     How Affiliate System Works
                   </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-6 text-white">
-                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                <ScrollArea className="space-y-2 text-white  max-h-[500px] ">
+                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700 my-4 ">
                     <h3 className="text-lg font-semibold text-green-400 mb-3">
                       📋 Affiliate Registration Process
                     </h3>
@@ -380,7 +381,7 @@ const AffiliatesPage = () => {
                     </ol>
                   </div>
 
-                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700 my-4">
                     <h3 className="text-lg font-semibold text-green-400 mb-3">
                       💰 How Commissions Work
                     </h3>
@@ -397,7 +398,7 @@ const AffiliatesPage = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700 my-4">
                     <h3 className="text-lg font-semibold text-green-400 mb-3">
                       🎯 What Affiliates Can Promote
                     </h3>
@@ -409,7 +410,7 @@ const AffiliatesPage = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700">
+                  <div className="bg-zinc-800/50 p-4 rounded-lg border border-zinc-700 my-4">
                     <h3 className="text-lg font-semibold text-green-400 mb-3">
                       📊 Admin Management
                     </h3>
@@ -420,7 +421,7 @@ const AffiliatesPage = () => {
                       <li>• Manage commission rates and payments</li>
                     </ul>
                   </div>
-                </div>
+                </ScrollArea>
               </DialogContent>
             </Dialog>
 
