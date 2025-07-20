@@ -40,7 +40,8 @@ const Courses = () => {
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("newest");
+  const [sortBy, setSortBy] = useState("free_first");
+  const [priceFilter, setPriceFilter] = useState("all");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     []
   );
@@ -89,6 +90,7 @@ const Courses = () => {
           ...(debouncedSearch && { search: debouncedSearch }),
           ...(selectedCategory !== "all" && { category: selectedCategory }),
           ...(sortBy && { sort: sortBy }),
+          ...(priceFilter !== "all" && { priceFilter: priceFilter }),
           ...(marketParam && { market: marketParam }),
         });
 
@@ -116,7 +118,7 @@ const Courses = () => {
         setIsLoadingMore(false);
       }
     },
-    [debouncedSearch, selectedCategory, sortBy, marketParam]
+    [debouncedSearch, selectedCategory, sortBy, priceFilter, marketParam]
   );
 
   // Infinite scroll observer
@@ -167,7 +169,8 @@ const Courses = () => {
   const handleReset = () => {
     setSearchQuery("");
     setSelectedCategory("all");
-    setSortBy("newest");
+    setSortBy("free_first");
+    setPriceFilter("all");
     setCurrentPage(1);
     setCourses([]);
     setHasMore(true);
@@ -350,6 +353,31 @@ const Courses = () => {
                   </Select>
 
                   <Select
+                    value={priceFilter}
+                    onValueChange={(value) => {
+                      setPriceFilter(value);
+                      setCurrentPage(1);
+                      setCourses([]);
+                      setHasMore(true);
+                    }}
+                  >
+                    <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-700 text-white">
+                      <SelectValue placeholder="Price Filter" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-zinc-900 border-zinc-700">
+                      <SelectItem value="all" className="text-white">
+                        All Courses
+                      </SelectItem>
+                      <SelectItem value="free" className="text-white">
+                        Free Courses
+                      </SelectItem>
+                      <SelectItem value="paid" className="text-white">
+                        Paid Courses
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select
                     value={sortBy}
                     onValueChange={(value) => {
                       setSortBy(value);
@@ -362,6 +390,9 @@ const Courses = () => {
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-900 border-zinc-700">
+                      <SelectItem value="free_first" className="text-white">
+                        Free First
+                      </SelectItem>
                       <SelectItem value="newest" className="text-white">
                         Newest First
                       </SelectItem>

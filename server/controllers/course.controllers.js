@@ -169,6 +169,7 @@ export const getCourses = asyncHandler(async (req, res) => {
   const search = req.query.search;
   const category = req.query.category;
   const sort = req.query.sort;
+  const priceFilter = req.query.priceFilter; // New filter for free/paid courses
 
   const where = {
     isPublished: true,
@@ -179,12 +180,18 @@ export const getCourses = asyncHandler(async (req, res) => {
       ],
     }),
     ...(category && category !== "all" && { categoryId: category }),
+    ...(priceFilter === "free" && { price: 0 }),
+    ...(priceFilter === "paid" && { price: { gt: 0 } }),
   };
 
   let orderBy = {};
   switch (sort) {
+    case "free_first":
+      // Free courses first, then newest paid courses
+      orderBy = [{ price: "asc" }, { createdAt: "desc" }];
+      break;
     case "oldest":
-      orderBy = { createdAt: "asc" };
+      orderBy = [{ price: "asc" }, { createdAt: "asc" }]; // Free courses first, then by date
       break;
     case "price_high":
       orderBy = [{ salePrice: "desc" }, { price: "desc" }];
@@ -193,7 +200,8 @@ export const getCourses = asyncHandler(async (req, res) => {
       orderBy = [{ salePrice: "asc" }, { price: "asc" }];
       break;
     default:
-      orderBy = { createdAt: "desc" };
+      // Default: Free courses first, then newest paid courses
+      orderBy = [{ price: "asc" }, { createdAt: "desc" }];
   }
 
   const [courses, totalCourses] = await Promise.all([
