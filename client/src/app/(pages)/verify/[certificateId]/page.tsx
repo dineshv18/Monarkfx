@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
 interface CertificateData {
@@ -61,6 +60,34 @@ export default function VerifyCertificate({
       toast.success("Certificate URL copied to clipboard!");
     } catch (error) {
       toast.error("Failed to copy URL");
+    }
+  };
+
+  const downloadCertificate = async () => {
+    const loadingToast = toast.loading("Preparing certificate for download...");
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/certificates/download/${params.certificateId}`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `certificate-${params.certificateId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast.dismiss(loadingToast);
+      toast.success("Certificate downloaded successfully!");
+    } catch (error) {
+      console.error("Error downloading certificate:", error);
+      toast.dismiss(loadingToast);
+      toast.error("Failed to download certificate");
     }
   };
 
@@ -190,9 +217,9 @@ export default function VerifyCertificate({
                   </p>
                 </div>
               </div>
-              <Badge className="bg-green-500/20 text-green-300 border-green-500/40 px-4 py-2 text-sm font-semibold">
+              <span className="bg-green-500/20 text-green-300 border-green-500/40 px-4 py-2 text-sm font-semibold rounded-full">
                 VERIFIED
-              </Badge>
+              </span>
             </div>
           </div>
 
@@ -255,13 +282,13 @@ export default function VerifyCertificate({
                       <p className="text-zinc-400 text-sm font-medium">
                         Grade Achieved
                       </p>
-                      <Badge
+                      <span
                         className={`${getGradeColor(
                           certificateData.grade
-                        )} mt-1 px-3 py-1 text-sm font-semibold`}
+                        )} mt-1 px-3 py-1 text-sm font-semibold rounded-full`}
                       >
                         {certificateData.grade}
-                      </Badge>
+                      </span>
                     </div>
                   </div>
                 )}
@@ -293,12 +320,7 @@ export default function VerifyCertificate({
           <div className="relative p-8 border-t border-zinc-700/50 bg-gradient-to-r from-zinc-900/50 to-black/50">
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
               <Button
-                onClick={() =>
-                  window.open(
-                    `/certificates/download/${params.certificateId}`,
-                    "_blank"
-                  )
-                }
+                onClick={downloadCertificate}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
               >
                 <Award className="h-4 w-4 mr-2" />

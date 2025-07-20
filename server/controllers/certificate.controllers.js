@@ -16,306 +16,378 @@ const __dirname = path.dirname(__filename);
 const tempDir = path.join(__dirname, "../temp");
 fs.mkdir(tempDir, { recursive: true }).catch(console.error);
 
-const generateCertificatePDF = async (certificateData) => {
-  const doc = new PDFDocument({
-    layout: "landscape",
-    size: "A4",
-    margin: 40,
-  });
+const generateCertificatePDF = (certificateData) => {
+  try {
+    // Validate certificate data
+    if (!certificateData) {
+      throw new Error("Certificate data is required");
+    }
 
-  // Set up colors
-  const primaryColor = "#22c55e"; // Green
-  const secondaryColor = "#10b981"; // Emerald
-  const accentColor = "#fbbf24"; // Amber
-  const textColor = "#1f2937"; // Dark gray
-  const lightTextColor = "#6b7280"; // Gray
-
-  // Background gradient effect
-  const gradient = doc.linearGradient(0, 0, doc.page.width, doc.page.height);
-  gradient.stop(0, "#ffffff");
-  gradient.stop(0.3, "#f8fafc");
-  gradient.stop(0.7, "#f1f5f9");
-  gradient.stop(1, "#e2e8f0");
-
-  doc.rect(0, 0, doc.page.width, doc.page.height).fill(gradient);
-
-  // Decorative border
-  const borderWidth = 15;
-  const borderGradient = doc.linearGradient(
-    0,
-    0,
-    doc.page.width,
-    doc.page.height
-  );
-  borderGradient.stop(0, primaryColor);
-  borderGradient.stop(0.5, secondaryColor);
-  borderGradient.stop(1, accentColor);
-
-  doc
-    .rect(
-      borderWidth,
-      borderWidth,
-      doc.page.width - borderWidth * 2,
-      doc.page.height - borderWidth * 2
-    )
-    .lineWidth(3)
-    .stroke(borderGradient);
-
-  // Inner decorative border
-  const innerBorderWidth = 25;
-  doc
-    .rect(
-      innerBorderWidth,
-      innerBorderWidth,
-      doc.page.width - innerBorderWidth * 2,
-      doc.page.height - innerBorderWidth * 2
-    )
-    .lineWidth(1)
-    .stroke(lightTextColor);
-
-  // Corner decorations
-  const cornerSize = 40;
-  const cornerColor = primaryColor;
-
-  // Top-left corner
-  doc.rect(innerBorderWidth, innerBorderWidth, cornerSize, 3).fill(cornerColor);
-  doc.rect(innerBorderWidth, innerBorderWidth, 3, cornerSize).fill(cornerColor);
-
-  // Top-right corner
-  doc
-    .rect(
-      doc.page.width - innerBorderWidth - cornerSize,
-      innerBorderWidth,
-      cornerSize,
-      3
-    )
-    .fill(cornerColor);
-  doc
-    .rect(
-      doc.page.width - innerBorderWidth - 3,
-      innerBorderWidth,
-      3,
-      cornerSize
-    )
-    .fill(cornerColor);
-
-  // Bottom-left corner
-  doc
-    .rect(
-      innerBorderWidth,
-      doc.page.height - innerBorderWidth - 3,
-      cornerSize,
-      3
-    )
-    .fill(cornerColor);
-  doc
-    .rect(
-      innerBorderWidth,
-      doc.page.height - innerBorderWidth - cornerSize,
-      3,
-      cornerSize
-    )
-    .fill(cornerColor);
-
-  // Bottom-right corner
-  doc
-    .rect(
-      doc.page.width - innerBorderWidth - cornerSize,
-      doc.page.height - innerBorderWidth - 3,
-      cornerSize,
-      3
-    )
-    .fill(cornerColor);
-  doc
-    .rect(
-      doc.page.width - innerBorderWidth - 3,
-      doc.page.height - innerBorderWidth - cornerSize,
-      3,
-      cornerSize
-    )
-    .fill(cornerColor);
-
-  // Header section
-  const headerY = innerBorderWidth + 60;
-
-  // Company logo/name
-  doc
-    .fontSize(28)
-    .font("Helvetica-Bold")
-    .fillColor(primaryColor)
-    .text("MonarkFX", {
-      align: "center",
-      y: headerY,
+    const doc = new PDFDocument({
+      layout: "landscape",
+      size: "A4",
+      margin: 0,
     });
 
-  // Subtitle
-  doc
-    .fontSize(14)
-    .font("Helvetica")
-    .fillColor(lightTextColor)
-    .text("Global Trading Excellence", {
-      align: "center",
-      y: headerY + 35,
-    });
+    // Set up colors
+    const primaryColor = "#dc2626"; // Red
+    const secondaryColor = "#b91c1c"; // Dark Red
+    const accentColor = "#ef4444"; // Light Red
+    const textColor = "#1f2937"; // Dark gray
+    const lightTextColor = "#6b7280"; // Gray
+    const goldColor = "#f59e0b"; // Gold accent
 
-  // Decorative line
-  const lineY = headerY + 60;
-  doc
-    .moveTo(doc.page.width * 0.2, lineY)
-    .lineTo(doc.page.width * 0.8, lineY)
-    .lineWidth(2)
-    .stroke(primaryColor);
+    // Page dimensions
+    const pageWidth = doc.page.width;
+    const pageHeight = doc.page.height;
 
-  // Certificate title
-  doc
-    .fontSize(36)
-    .font("Helvetica-Bold")
-    .fillColor(textColor)
-    .text("Certificate of Achievement", {
-      align: "center",
-      y: lineY + 40,
-    });
+    // Background - Simple white background instead of gradient
+    doc.rect(0, 0, pageWidth, pageHeight).fill("#ffffff");
 
-  // Achievement icon (text-based)
-  doc
-    .fontSize(48)
-    .font("Helvetica-Bold")
-    .fillColor(accentColor)
-    .text("🏆", {
-      align: "center",
-      y: lineY + 90,
-    });
+    // Main decorative border - Improved design
+    const outerBorder = 15;
+    const innerBorder = 25;
 
-  // Certificate content
-  const contentY = lineY + 160;
+    // Outer border with solid color
+    doc
+      .rect(
+        outerBorder,
+        outerBorder,
+        pageWidth - outerBorder * 2,
+        pageHeight - outerBorder * 2
+      )
+      .lineWidth(3)
+      .stroke(primaryColor);
 
-  doc
-    .fontSize(18)
-    .font("Helvetica")
-    .fillColor(textColor)
-    .text("This is to certify that", {
-      align: "center",
-      y: contentY,
-    });
+    // Inner elegant border
+    doc
+      .rect(
+        innerBorder,
+        innerBorder,
+        pageWidth - innerBorder * 2,
+        pageHeight - innerBorder * 2
+      )
+      .lineWidth(1)
+      .stroke(lightTextColor);
 
-  // Student name
-  doc
-    .fontSize(32)
-    .font("Helvetica-Bold")
-    .fillColor(primaryColor)
-    .text(certificateData.userName, {
-      align: "center",
-      y: contentY + 40,
-    });
+    // Corner decorations - More elegant
+    const cornerSize = 30;
+    const cornerThickness = 3;
 
-  // Course completion text
-  doc
-    .fontSize(18)
-    .font("Helvetica")
-    .fillColor(textColor)
-    .text("has successfully completed the course", {
-      align: "center",
-      y: contentY + 90,
-    });
+    // Top-left corner
+    doc
+      .rect(innerBorder, innerBorder, cornerSize, cornerThickness)
+      .fill(primaryColor);
+    doc
+      .rect(innerBorder, innerBorder, cornerThickness, cornerSize)
+      .fill(primaryColor);
 
-  // Course title
-  doc
-    .fontSize(24)
-    .font("Helvetica-Bold")
-    .fillColor(secondaryColor)
-    .text(certificateData.courseTitle, {
-      align: "center",
-      y: contentY + 130,
-    });
+    // Top-right corner
+    doc
+      .rect(
+        pageWidth - innerBorder - cornerSize,
+        innerBorder,
+        cornerSize,
+        cornerThickness
+      )
+      .fill(primaryColor);
+    doc
+      .rect(
+        pageWidth - innerBorder - cornerThickness,
+        innerBorder,
+        cornerThickness,
+        cornerSize
+      )
+      .fill(primaryColor);
 
-  // Date and grade section
-  const detailsY = contentY + 180;
+    // Bottom-left corner
+    doc
+      .rect(
+        innerBorder,
+        pageHeight - innerBorder - cornerThickness,
+        cornerSize,
+        cornerThickness
+      )
+      .fill(primaryColor);
+    doc
+      .rect(
+        innerBorder,
+        pageHeight - innerBorder - cornerSize,
+        cornerThickness,
+        cornerSize
+      )
+      .fill(primaryColor);
 
-  doc
-    .fontSize(16)
-    .font("Helvetica")
-    .fillColor(textColor)
-    .text(
-      `Awarded on ${format(
-        new Date(certificateData.completedDate),
-        "MMMM dd, yyyy"
-      )}`,
-      {
+    // Bottom-right corner
+    doc
+      .rect(
+        pageWidth - innerBorder - cornerSize,
+        pageHeight - innerBorder - cornerThickness,
+        cornerSize,
+        cornerThickness
+      )
+      .fill(primaryColor);
+    doc
+      .rect(
+        pageWidth - innerBorder - cornerThickness,
+        pageHeight - innerBorder - cornerSize,
+        cornerThickness,
+        cornerSize
+      )
+      .fill(primaryColor);
+
+    // Header section - Better spacing
+    const headerStartY = innerBorder + 50;
+
+    // Company logo/name - More prominent
+    doc
+      .fontSize(36)
+      .font("Helvetica-Bold")
+      .fillColor(primaryColor)
+      .text("MonarkFX", pageWidth * 0.1, headerStartY, {
+        width: pageWidth * 0.8,
         align: "center",
-        y: detailsY,
-      }
-    );
+      });
 
-  if (certificateData.grade) {
+    // Subtitle with better spacing
+    doc
+      .fontSize(14)
+      .font("Helvetica-Oblique")
+      .fillColor(lightTextColor)
+      .text("Global Trading Excellence", pageWidth * 0.1, headerStartY + 45, {
+        width: pageWidth * 0.8,
+        align: "center",
+      });
+
+    // Decorative separator
+    const separatorY = headerStartY + 80;
+    const separatorWidth = pageWidth * 0.6;
+    const separatorX = (pageWidth - separatorWidth) / 2;
+
+    doc
+      .moveTo(separatorX, separatorY)
+      .lineTo(separatorX + separatorWidth, separatorY)
+      .lineWidth(2)
+      .strokeOpacity(0.8)
+      .stroke(primaryColor);
+
+    // Small decorative elements on separator
+    doc.circle(separatorX, separatorY, 4).fill(goldColor);
+    doc.circle(separatorX + separatorWidth, separatorY, 4).fill(goldColor);
+    doc.circle(pageWidth / 2, separatorY, 6).fill(primaryColor);
+
+    // Certificate title - More elegant positioning
+    const titleY = separatorY + 40;
+    doc
+      .fontSize(42)
+      .font("Helvetica-Bold")
+      .fillColor(textColor)
+      .text("Certificate of Achievement", pageWidth * 0.1, titleY, {
+        width: pageWidth * 0.8,
+        align: "center",
+      });
+
+    // Content section - Better organized
+    const contentStartY = titleY + 80;
+
+    // "This is to certify that" text
+    doc
+      .fontSize(18)
+      .font("Helvetica")
+      .fillColor(textColor)
+      .text("This is to certify that", pageWidth * 0.1, contentStartY, {
+        width: pageWidth * 0.8,
+        align: "center",
+      });
+
+    // Student name - More prominent with background
+    const nameY = contentStartY + 40;
+    const nameBackgroundWidth = pageWidth * 0.7;
+    const nameBackgroundX = (pageWidth - nameBackgroundWidth) / 2;
+
+    // Subtle background for name
+    doc
+      .rect(nameBackgroundX, nameY - 10, nameBackgroundWidth, 60)
+      .fillOpacity(0.05)
+      .fill(primaryColor)
+      .fillOpacity(1);
+
+    doc
+      .fontSize(38)
+      .font("Helvetica-Bold")
+      .fillColor(primaryColor)
+      .text(
+        certificateData.userName || "Student Name",
+        pageWidth * 0.1,
+        nameY,
+        {
+          width: pageWidth * 0.8,
+          align: "center",
+        }
+      );
+
+    // Course completion text
+    const completionTextY = nameY + 70;
+    doc
+      .fontSize(18)
+      .font("Helvetica")
+      .fillColor(textColor)
+      .text(
+        "has successfully completed the course",
+        pageWidth * 0.1,
+        completionTextY,
+        {
+          width: pageWidth * 0.8,
+          align: "center",
+        }
+      );
+
+    // Course title - More prominent
+    const courseTitleY = completionTextY + 40;
+    doc
+      .fontSize(28)
+      .font("Helvetica-Bold")
+      .fillColor(secondaryColor)
+      .text(
+        certificateData.courseTitle || "Course Title",
+        pageWidth * 0.1,
+        courseTitleY,
+        {
+          width: pageWidth * 0.8,
+          align: "center",
+        }
+      );
+
+    // Date and grade section - Better organized
+    const detailsY = courseTitleY + 60;
+
+    // Date
+    const dateText = certificateData.completedDate
+      ? `Awarded on ${new Date(
+          certificateData.completedDate
+        ).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}`
+      : `Awarded on ${new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}`;
+
     doc
       .fontSize(16)
-      .font("Helvetica-Bold")
-      .fillColor(accentColor)
-      .text(`Grade Achieved: ${certificateData.grade}`, {
+      .font("Helvetica")
+      .fillColor(textColor)
+      .text(dateText, pageWidth * 0.1, detailsY, {
+        width: pageWidth * 0.8,
         align: "center",
-        y: detailsY + 30,
       });
+
+    // Grade (if available)
+    if (certificateData.grade) {
+      doc
+        .fontSize(18)
+        .font("Helvetica-Bold")
+        .fillColor(accentColor)
+        .text(
+          `Grade Achieved: ${certificateData.grade}`,
+          pageWidth * 0.1,
+          detailsY + 30,
+          {
+            width: pageWidth * 0.8,
+            align: "center",
+          }
+        );
+    }
+
+    // Certificate ID - Better positioning
+    const certIdY = detailsY + (certificateData.grade ? 65 : 35);
+    doc
+      .fontSize(12)
+      .font("Helvetica")
+      .fillColor(lightTextColor)
+      .text(
+        `Certificate ID: ${
+          certificateData.certificateId || "CERT-" + Date.now()
+        }`,
+        pageWidth * 0.1,
+        certIdY,
+        {
+          width: pageWidth * 0.8,
+          align: "center",
+        }
+      );
+
+    // Bottom section - Better organized
+    const bottomSectionY = pageHeight - 100;
+
+    // Verification line - More elegant
+    const verificationLineWidth = pageWidth * 0.8;
+    const verificationLineX = (pageWidth - verificationLineWidth) / 2;
+
+    doc
+      .moveTo(verificationLineX, bottomSectionY)
+      .lineTo(verificationLineX + verificationLineWidth, bottomSectionY)
+      .lineWidth(1)
+      .strokeOpacity(0.6)
+      .stroke(lightTextColor);
+
+    // Verification URL
+    const certId = certificateData.certificateId || "CERT-" + Date.now();
+    doc
+      .fontSize(11)
+      .font("Helvetica")
+      .fillColor(lightTextColor)
+      .text(
+        `Verify this certificate at: monarkfx.com/verify/${certId}`,
+        pageWidth * 0.1,
+        bottomSectionY + 15,
+        {
+          width: pageWidth * 0.8,
+          align: "center",
+        }
+      );
+
+    // Footer
+    doc
+      .fontSize(10)
+      .font("Helvetica")
+      .fillColor(lightTextColor)
+      .text(
+        "This certificate is digitally generated and verifiable online",
+        pageWidth * 0.1,
+        bottomSectionY + 35,
+        {
+          width: pageWidth * 0.8,
+          align: "center",
+        }
+      );
+
+    // Simple decorative elements
+    // Top decorative pattern
+    const topPatternY = headerStartY - 20;
+    const patternSpacing = pageWidth * 0.12;
+    const startX = pageWidth * 0.15;
+
+    for (let i = 0; i < 7; i++) {
+      const x = startX + i * patternSpacing;
+      doc.circle(x, topPatternY, 3).fill(primaryColor);
+    }
+
+    // Bottom decorative pattern
+    const bottomPatternY = bottomSectionY - 40;
+    for (let i = 0; i < 7; i++) {
+      const x = startX + i * patternSpacing;
+      doc.circle(x, bottomPatternY, 3).fill(secondaryColor);
+    }
+
+    return doc;
+  } catch (error) {
+    console.error("Error in generateCertificatePDF:", error);
+    throw new Error(`Failed to generate PDF certificate: ${error.message}`);
   }
-
-  // Certificate ID
-  doc
-    .fontSize(12)
-    .font("Helvetica")
-    .fillColor(lightTextColor)
-    .text(`Certificate ID: ${certificateData.certificateId}`, {
-      align: "center",
-      y: detailsY + 60,
-    });
-
-  // Bottom section with verification
-  const bottomY = doc.page.height - 120;
-
-  // Verification line
-  doc
-    .moveTo(doc.page.width * 0.1, bottomY)
-    .lineTo(doc.page.width * 0.9, bottomY)
-    .lineWidth(1)
-    .stroke(lightTextColor);
-
-  // Verification text
-  doc
-    .fontSize(10)
-    .font("Helvetica")
-    .fillColor(lightTextColor)
-    .text(
-      `Verify this certificate at: ${process.env.FRONTEND_URL}/verify/${certificateData.certificateId}`,
-      {
-        align: "center",
-        y: bottomY + 20,
-      }
-    );
-
-  // Footer
-  doc
-    .fontSize(10)
-    .font("Helvetica")
-    .fillColor(lightTextColor)
-    .text("This certificate is digitally generated and verifiable online", {
-      align: "center",
-      y: bottomY + 40,
-    });
-
-  // Add some decorative elements
-  // Top decorative pattern
-  const patternY = headerY - 20;
-  for (let i = 0; i < 5; i++) {
-    const x = doc.page.width * 0.1 + i * doc.page.width * 0.2;
-    doc.circle(x, patternY, 3).fill(primaryColor);
-  }
-
-  // Bottom decorative pattern
-  const bottomPatternY = bottomY - 40;
-  for (let i = 0; i < 5; i++) {
-    const x = doc.page.width * 0.1 + i * doc.page.width * 0.2;
-    doc.circle(x, bottomPatternY, 3).fill(secondaryColor);
-  }
-
-  return doc;
 };
 
 export const getUserCertificates = asyncHandler(async (req, res) => {
@@ -347,44 +419,59 @@ export const getUserCertificates = asyncHandler(async (req, res) => {
 });
 
 export const downloadCertificate = asyncHandler(async (req, res) => {
-  const { certificateId } = req.params;
+  try {
+    const { certificateId } = req.params;
 
-  const certificate = await prisma.courseCompletion.findUnique({
-    where: {
-      certificateId,
-    },
-    include: {
-      user: true,
-      course: true,
-    },
-  });
+    if (!certificateId) {
+      throw new ApiError(400, "Certificate ID is required");
+    }
 
-  if (!certificate) {
-    throw new ApiError(404, "Certificate not found");
+    const certificate = await prisma.courseCompletion.findUnique({
+      where: {
+        certificateId,
+      },
+      include: {
+        user: true,
+        course: true,
+      },
+    });
+
+    if (!certificate) {
+      throw new ApiError(404, "Certificate not found");
+    }
+
+    // Create certificate data object
+    const certificateData = {
+      userName: certificate.user.name,
+      courseTitle: certificate.course.title,
+      completedDate: certificate.completedAt,
+      certificateId: certificate.certificateId,
+      grade: certificate.grade,
+    };
+
+    // Generate PDF using the improved template
+    const doc = generateCertificatePDF(certificateData);
+
+    // Set response headers
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=certificate-${certificateId}.pdf`
+    );
+
+    // Pipe the PDF directly to the response
+    doc.pipe(res);
+    doc.end();
+  } catch (error) {
+    console.error("Error in downloadCertificate:", error);
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(
+      500,
+      `Failed to generate certificate PDF: ${error.message}`
+    );
   }
-
-  // Create certificate data object
-  const certificateData = {
-    userName: certificate.user.name,
-    courseTitle: certificate.course.title,
-    completedDate: certificate.completedAt,
-    certificateId: certificate.certificateId,
-    grade: certificate.grade,
-  };
-
-  // Generate PDF using the improved template
-  const doc = await generateCertificatePDF(certificateData);
-
-  // Set response headers
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader(
-    "Content-Disposition",
-    `attachment; filename=certificate-${certificateId}.pdf`
-  );
-
-  // Pipe the PDF directly to the response
-  doc.pipe(res);
-  doc.end();
 });
 
 export const shareCertificate = asyncHandler(async (req, res) => {
@@ -549,6 +636,7 @@ export const verifyCertificate = asyncHandler(async (req, res) => {
           issueDate: format(new Date(certificate.completedAt), "MMMM dd, yyyy"),
           grade: certificate.grade,
           certificateId: certificate.certificateId,
+          verifyUrl: `monarkfx.com/verify/${certificate.certificateId}`,
         },
       },
       "Certificate verified successfully"

@@ -10,7 +10,6 @@ import Image from "next/image";
 
 // UI Components
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -530,12 +529,9 @@ const UserProfile = () => {
                   </div>
                   <div>
                     <p className="text-xs text-zinc-400 font-medium">Role</p>
-                    <Badge
-                      variant="outline"
-                      className="text-sm font-bold bg-green-500/20 text-green-300 border-green-500/30"
-                    >
+                    <span className="text-sm font-semibold text-white">
                       {user?.role}
-                    </Badge>
+                    </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-zinc-800/50 rounded-lg border border-zinc-700/50">

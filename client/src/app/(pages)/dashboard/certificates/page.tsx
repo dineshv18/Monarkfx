@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -175,8 +174,8 @@ export default function AdminCertificates() {
   };
 
   const downloadCertificate = async (certificateId: string) => {
+    const loadingToast = toast.loading("Preparing certificate for download...");
     try {
-      toast.loading("Preparing certificate for download...");
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/certificates/download/${certificateId}`,
         {
@@ -193,9 +192,12 @@ export default function AdminCertificates() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+
+      toast.dismiss(loadingToast);
       toast.success("Certificate downloaded successfully!");
     } catch (error) {
       console.error("Error downloading certificate:", error);
+      toast.dismiss(loadingToast);
       toast.error("Failed to download certificate");
     }
   };
@@ -214,9 +216,9 @@ export default function AdminCertificates() {
   const getGradeBadge = (grade: string | null) => {
     if (!grade) {
       return (
-        <Badge className="bg-green-500/20 text-green-300 border-green-500/40">
+        <span className="bg-green-500/20 text-green-300 border-green-500/40 px-2 py-1 rounded-md">
           Pass
-        </Badge>
+        </span>
       );
     }
 
@@ -224,21 +226,25 @@ export default function AdminCertificates() {
     switch (grade.toUpperCase()) {
       case "A+":
       case "A":
-        colorClass = "bg-green-500/20 text-green-300 border-green-500/40";
+        colorClass =
+          "bg-green-500/20 text-green-300 border-green-500/40 px-2 py-1 rounded-md";
         break;
       case "B+":
       case "B":
-        colorClass = "bg-blue-500/20 text-blue-300 border-blue-500/40";
+        colorClass =
+          "bg-blue-500/20 text-blue-300 border-blue-500/40 px-2 py-1 rounded-md";
         break;
       case "C+":
       case "C":
-        colorClass = "bg-yellow-500/20 text-yellow-300 border-yellow-500/40";
+        colorClass =
+          "bg-yellow-500/20 text-yellow-300 border-yellow-500/40 px-2 py-1 rounded-md";
         break;
       default:
-        colorClass = "bg-purple-500/20 text-purple-300 border-purple-500/40";
+        colorClass =
+          "bg-purple-500/20 text-purple-300 border-purple-500/40 px-2 py-1 rounded-md";
     }
 
-    return <Badge className={colorClass}>{grade}</Badge>;
+    return <span className={colorClass}>{grade}</span>;
   };
 
   const filteredCertificates = certificates.filter(

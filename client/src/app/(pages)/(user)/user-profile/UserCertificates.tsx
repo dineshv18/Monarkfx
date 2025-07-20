@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import {
   Download,
   Award,
@@ -14,7 +12,6 @@ import {
   ExternalLink,
   Share2,
   Trophy,
-  Star,
   CheckCircle,
   Sparkles,
   BookOpen,
@@ -61,8 +58,8 @@ export default function UserCertificates() {
   };
 
   const downloadCertificate = async (certificateId: string) => {
+    const loadingToast = toast.loading("Preparing certificate for download...");
     try {
-      toast.loading("Preparing certificate for download...");
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/certificates/download/${certificateId}`,
         {
@@ -79,9 +76,12 @@ export default function UserCertificates() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+
+      toast.dismiss(loadingToast);
       toast.success("Certificate downloaded successfully!");
     } catch (error) {
       console.error("Error downloading certificate:", error);
+      toast.dismiss(loadingToast);
       toast.error("Failed to download certificate");
     }
   };
@@ -217,13 +217,13 @@ export default function UserCertificates() {
                         </p>
                       </div>
                     </div>
-                    <Badge
+                    <span
                       className={`${getGradeColor(
                         cert.grade
-                      )} text-white border-0 px-3 py-1 font-bold`}
+                      )} text-white border-0 px-3 py-1 font-bold rounded-full`}
                     >
                       {getGradeText(cert.grade)}
-                    </Badge>
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-4 text-sm text-zinc-400">
