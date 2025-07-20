@@ -726,7 +726,7 @@ const MyLiveClasses = () => {
     };
   };
 
-  const defaultThumbnail = "/images/default-class-thumbnail.jpg";
+  const defaultThumbnail = "https://placehold.co/600x400?text=No+Image";
 
   // Filter upcoming classes
   const upcomingClasses = subscriptions.filter((sub) =>
@@ -875,7 +875,13 @@ const MyLiveClasses = () => {
               <div className="relative h-48 w-full overflow-hidden">
                 <Image
                   src={
-                    subscription.zoomSession.thumbnailUrl || defaultThumbnail
+                    subscription.zoomSession.thumbnailUrl?.includes(
+                      "cloudinary.com"
+                    )
+                      ? subscription.zoomSession.thumbnailUrl
+                      : subscription.zoomSession.thumbnailUrl
+                      ? `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/monarkfx/zoom-thumbnails/${subscription.zoomSession.thumbnailUrl}`
+                      : defaultThumbnail
                   }
                   alt={subscription.zoomSession.title}
                   fill

@@ -39,6 +39,7 @@ import FreeChapterDialog from "./FreeChapterDialog";
 import { formatPrice } from "@/helper/FormatPrice";
 import ReviewSection from "./review-section";
 import { motion } from "framer-motion";
+import { getCourseImageUrl } from "@/lib/cloudinary";
 
 interface Chapter {
   id: string;
@@ -501,12 +502,13 @@ const CourseClient: React.FC<CourseClientProps> = ({
             <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl ring-1 ring-green-500/20 group">
               {/* Thumbnail Image - Always visible when not playing */}
               <div
-                className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-0 scale-110" : "opacity-100 scale-100"
-                  }`}
+                className={`absolute inset-0 transition-all duration-500 ${
+                  isPlaying ? "opacity-0 scale-110" : "opacity-100 scale-100"
+                }`}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
+                  src={getCourseImageUrl(course.thumbnail)}
                   alt={course.title}
                   layout="fill"
                   objectFit="cover"
@@ -526,8 +528,9 @@ const CourseClient: React.FC<CourseClientProps> = ({
               {/* Video Player - Only visible when playing and video URL exists */}
               {isClient && course.videoUrl && (
                 <div
-                  className={`absolute inset-0 transition-all duration-500 ${isPlaying ? "opacity-100 scale-100" : "opacity-0 scale-90"
-                    }`}
+                  className={`absolute inset-0 transition-all duration-500 ${
+                    isPlaying ? "opacity-100 scale-100" : "opacity-0 scale-90"
+                  }`}
                 >
                   <ReactPlayer
                     url={course.videoUrl}
@@ -586,19 +589,19 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     <div className="prose prose-lg dark:prose-invert">
                       {course.description
                         ? parse(cleanHtml(course.description), {
-                          replace: (domNode) => {
-                            if (
-                              domNode instanceof Element &&
-                              (!domNode.children?.length ||
-                                (domNode.children.length === 1 &&
-                                  "data" in domNode.children[0] &&
-                                  !domNode.children[0].data?.trim()))
-                            ) {
-                              return <></>;
-                            }
-                            return domNode;
-                          },
-                        })
+                            replace: (domNode) => {
+                              if (
+                                domNode instanceof Element &&
+                                (!domNode.children?.length ||
+                                  (domNode.children.length === 1 &&
+                                    "data" in domNode.children[0] &&
+                                    !domNode.children[0].data?.trim()))
+                              ) {
+                                return <></>;
+                              }
+                              return domNode;
+                            },
+                          })
                         : "No description available"}
                     </div>
                   </TabsContent>
@@ -631,19 +634,20 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                 {section.chapters.map((chapter) => (
                                   <div
                                     key={chapter.id}
-                                    className={`group flex flex-col gap-2 p-4 rounded-xl transition-all duration-300 ${(!course.paid && isEnrolled) ||
+                                    className={`group flex flex-col gap-2 p-4 rounded-xl transition-all duration-300 ${
+                                      (!course.paid && isEnrolled) ||
                                       chapter.isFree ||
                                       hasPurchased
-                                      ? "hover:bg-zinc-800/50 cursor-pointer bg-zinc-900/30 border border-zinc-800/50 hover:border-green-500/30"
-                                      : "bg-zinc-900/50 border border-zinc-800/50"
-                                      }`}
+                                        ? "hover:bg-zinc-800/50 cursor-pointer bg-zinc-900/30 border border-zinc-800/50 hover:border-green-500/30"
+                                        : "bg-zinc-900/50 border border-zinc-800/50"
+                                    }`}
                                     onClick={() => handleChapterClick(chapter)}
                                   >
                                     <div className="flex items-center justify-between">
                                       <div className="flex items-center gap-3">
                                         {chapter.isFree ||
-                                          (course.paid && hasPurchased) ||
-                                          (!course.paid && isEnrolled) ? (
+                                        (course.paid && hasPurchased) ||
+                                        (!course.paid && isEnrolled) ? (
                                           <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
                                             <PlayCircle className="w-4 h-4 text-green-500" />
                                           </div>
@@ -653,12 +657,13 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                           </div>
                                         )}
                                         <span
-                                          className={`font-medium ${chapter.isFree ||
+                                          className={`font-medium ${
+                                            chapter.isFree ||
                                             (course.paid && hasPurchased) ||
                                             (!course.paid && isEnrolled)
-                                            ? "text-white group-hover:text-green-400 transition-colors duration-300"
-                                            : "text-zinc-400"
-                                            }`}
+                                              ? "text-white group-hover:text-green-400 transition-colors duration-300"
+                                              : "text-zinc-400"
+                                          }`}
                                         >
                                           {chapter.title}
                                         </span>
@@ -669,16 +674,16 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                             ? "bg-green-500/20 text-green-300 border-green-500/30 rounded-full px-3 py-1"
                                             : (course.paid && hasPurchased) ||
                                               (!course.paid && isEnrolled)
-                                              ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 rounded-full px-3 py-1"
-                                              : "border-zinc-700 text-zinc-400 bg-zinc-800/50"
+                                            ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 rounded-full px-3 py-1"
+                                            : "border-zinc-700 text-zinc-400 bg-zinc-800/50"
                                         }
                                       >
                                         {chapter.isFree
                                           ? "Free"
                                           : (course.paid && hasPurchased) ||
                                             (!course.paid && isEnrolled)
-                                            ? "Enrolled"
-                                            : "Premium"}
+                                          ? "Enrolled"
+                                          : "Premium"}
                                       </span>
                                     </div>
                                   </div>
@@ -723,7 +728,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                 <CardHeader className="space-y-4 relative">
                   <CardTitle className="space-y-4">
                     {(course.paid && hasPurchased) ||
-                      (!course.paid && isEnrolled) ? (
+                    (!course.paid && isEnrolled) ? (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -761,7 +766,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                     {Math.round(
                                       ((course.price - course.salePrice) /
                                         course.price) *
-                                      100
+                                        100
                                     )}
                                     %
                                   </div>
@@ -817,7 +822,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                   className="space-y-4"
                 >
                   {(!course.paid && isEnrolled) ||
-                    (course.paid && hasPurchased) ? (
+                  (course.paid && hasPurchased) ? (
                     <div className="space-y-4">
                       <h3 className="font-semibold text-white text-lg">
                         Course Progress
@@ -883,11 +888,9 @@ const CourseClient: React.FC<CourseClientProps> = ({
                           </div>
                           <div>
                             <p className="font-semibold text-white">
-                              {!course.validityDays || course.validityDays === 0 ? (
-                                "Lifetime Access"
-                              ) : (
-                                `${course.validityDays} Days Access`
-                              )}
+                              {!course.validityDays || course.validityDays === 0
+                                ? "Lifetime Access"
+                                : `${course.validityDays} Days Access`}
                             </p>
                             <p className="text-sm text-zinc-400">
                               {!course.validityDays || course.validityDays === 0

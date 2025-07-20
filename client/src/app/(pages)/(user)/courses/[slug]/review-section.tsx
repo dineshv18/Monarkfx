@@ -184,12 +184,12 @@ export const ReviewSection = ({
           <div className="flex items-center gap-4 mt-2">
             <div className="flex items-center gap-1">
               <Star className="w-8 h-8 fill-yellow-500 text-yellow-500" />
-              <span className="text-2xl font-bold text-black">
+              <span className="text-2xl font-bold text-white">
                 {averageRating}
               </span>
-              <span className="text-gray-500 text-lg">/ 5.0</span>
+              <span className="text-gray-400 text-lg">/ 5.0</span>
             </div>
-            <div className="text-gray-700 text-lg">
+            <div className="text-gray-400 text-lg">
               <span className="font-bold">{reviews.length}</span> reviews
             </div>
           </div>

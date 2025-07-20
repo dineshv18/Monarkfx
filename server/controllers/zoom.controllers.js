@@ -6,7 +6,7 @@ import axios from "axios";
 import { razorpay } from "../app.js";
 import crypto from "crypto";
 import { SendEmail } from "../email/SendEmail.js";
-import { deleteFromS3 } from "../utils/deleteFromS3.js";
+import { deleteFromCloudinary } from "../utils/cloudinary.js";
 
 // Function to get Zoom access token
 const getZoomAccessToken = async () => {
@@ -53,7 +53,7 @@ const createZoomMeeting = async (meetingData) => {
         start_time: meetingData.startTime,
         duration: Math.ceil(
           (new Date(meetingData.endTime) - new Date(meetingData.startTime)) /
-          (60 * 1000)
+            (60 * 1000)
         ),
         timezone: "Asia/Kolkata",
         settings: {
@@ -70,7 +70,8 @@ const createZoomMeeting = async (meetingData) => {
           "Content-Type": "application/json",
         },
       }
-    ); return {
+    );
+    return {
       zoomMeetingId: String(response.data.id),
       zoomLink: response.data.join_url,
       zoomStartUrl: response.data.start_url,
@@ -104,10 +105,10 @@ export const createZoomSession = asyncHandler(async (req, res) => {
   } = req.body;
 
   if (!title || !startTime || !endTime) {
-    // If thumbnail was uploaded but there's an error, delete it from S3
+    // If thumbnail was uploaded but there's an error, delete it from Cloudinary
     if (thumbnailUrl) {
       try {
-        await deleteFromS3(thumbnailUrl);
+        await deleteFromCloudinary(thumbnailUrl);
       } catch (err) {
         console.error(
           "Error deleting thumbnail after class creation failed:",
@@ -242,7 +243,7 @@ export const createZoomSession = asyncHandler(async (req, res) => {
     // If the class creation fails but thumbnail was uploaded, delete the uploaded image
     if (thumbnailUrl) {
       try {
-        await deleteFromS3(thumbnailUrl);
+        await deleteFromCloudinary(thumbnailUrl);
       } catch (err) {
         console.error(
           "Error deleting thumbnail after class creation failed:",
@@ -304,10 +305,10 @@ export const updateZoomSession = asyncHandler(async (req, res) => {
   });
 
   if (!zoomClass) {
-    // If thumbnail was uploaded but class doesn't exist, delete it from S3
+    // If thumbnail was uploaded but class doesn't exist, delete it from Cloudinary
     if (thumbnailUrl && thumbnailUrl !== zoomClass?.thumbnailUrl) {
       try {
-        await deleteFromS3(thumbnailUrl);
+        await deleteFromCloudinary(thumbnailUrl);
       } catch (err) {
         console.error("Error deleting thumbnail after update failed:", err);
       }
@@ -325,10 +326,10 @@ export const updateZoomSession = asyncHandler(async (req, res) => {
 
   // Handle thumbnail update
   if (thumbnailUrl !== undefined) {
-    // If the thumbnail URL has changed, delete the old one from S3
+    // If the thumbnail URL has changed, delete the old one from Cloudinary
     if (zoomClass.thumbnailUrl && thumbnailUrl !== zoomClass.thumbnailUrl) {
       try {
-        await deleteFromS3(zoomClass.thumbnailUrl);
+        await deleteFromCloudinary(zoomClass.thumbnailUrl);
       } catch (err) {
         console.error("Error deleting old thumbnail:", err);
       }
@@ -351,7 +352,7 @@ export const updateZoomSession = asyncHandler(async (req, res) => {
     // If update fails and we uploaded a new thumbnail, delete it
     if (thumbnailUrl && thumbnailUrl !== zoomClass.thumbnailUrl) {
       try {
-        await deleteFromS3(thumbnailUrl);
+        await deleteFromCloudinary(thumbnailUrl);
       } catch (err) {
         console.error("Error deleting thumbnail after update failed:", err);
       }
@@ -407,7 +408,7 @@ export const deleteZoomSession = asyncHandler(async (req, res) => {
     });
 
     if (zoomClass.thumbnailUrl) {
-      await deleteFromS3(zoomClass.thumbnailUrl);
+      await deleteFromCloudinary(zoomClass.thumbnailUrl);
     }
 
     return res
@@ -435,10 +436,10 @@ export const getUserZoomSessions = asyncHandler(async (req, res) => {
         subscribedUsers: {
           ...(req.user
             ? {
-              where: {
-                userId: req.user.id,
-              },
-            }
+                where: {
+                  userId: req.user.id,
+                },
+              }
             : {}),
         },
         createdBy: {
@@ -461,10 +462,10 @@ export const getUserZoomSessions = asyncHandler(async (req, res) => {
         subscribedUsers: {
           ...(req.user
             ? {
-              where: {
-                userId: req.user.id,
-              },
-            }
+                where: {
+                  userId: req.user.id,
+                },
+              }
             : {}),
         },
         createdBy: {
@@ -517,7 +518,7 @@ export const getUserZoomSessions = asyncHandler(async (req, res) => {
       }),
       duration: Math.ceil(
         (new Date(classData.endTime) - new Date(classData.startTime)) /
-        (60 * 1000)
+          (60 * 1000)
       ),
       subscribedUsers: undefined,
       createdBy: undefined,
@@ -582,7 +583,7 @@ export const getMyZoomSubscriptions = asyncHandler(async (req, res) => {
       duration: Math.ceil(
         (new Date(sub.zoomLiveClass.endTime || new Date()) -
           new Date(sub.zoomLiveClass.startTime)) /
-        (60 * 1000)
+          (60 * 1000)
       ),
     },
     zoomLiveClass: undefined, // Remove the original object to avoid duplication
@@ -1782,13 +1783,13 @@ export const getZoomSession = asyncHandler(async (req, res) => {
         // Only include user-specific subscription data if user is logged in
         ...(req.user
           ? {
-            where: {
-              userId: req.user.id,
-            },
-            include: {
-              zoomSession: true,
-            },
-          }
+              where: {
+                userId: req.user.id,
+              },
+              include: {
+                zoomSession: true,
+              },
+            }
           : {}),
       },
       createdBy: {
@@ -1812,10 +1813,10 @@ export const getZoomSession = asyncHandler(async (req, res) => {
           // Only include zoom details if user is authenticated and has proper access
           ...(req.user
             ? {
-              zoomLink: true,
-              zoomMeetingId: true,
-              zoomPassword: true,
-            }
+                zoomLink: true,
+                zoomMeetingId: true,
+                zoomPassword: true,
+              }
             : {}),
         },
       },
@@ -1865,7 +1866,7 @@ export const getZoomSession = asyncHandler(async (req, res) => {
     }),
     duration: Math.ceil(
       (new Date(zoomSession.endTime) - new Date(zoomSession.startTime)) /
-      (60 * 1000)
+        (60 * 1000)
     ),
     subscribedUsers: undefined, // Remove the user objects to avoid duplication
     createdBy: undefined, // Remove the user object to avoid duplication

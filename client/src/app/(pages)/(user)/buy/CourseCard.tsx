@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CourseCardProps } from "@/type";
 import { formatPrice } from "@/helper/FormatPrice";
+import { getCourseImageUrl } from "@/lib/cloudinary";
 
 const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
   const discount = course.salePrice
@@ -20,7 +21,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
       {/* Image Container with Overlay */}
       <div className="relative h-32 overflow-hidden">
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${course.thumbnail}`}
+          src={getCourseImageUrl(course.thumbnail)}
           alt={course.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-110"

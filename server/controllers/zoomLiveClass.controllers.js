@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import axios from "axios";
-import { deleteFromS3 } from "../utils/deleteFromS3.js";
+import { deleteFromCloudinary } from "../utils/cloudinary.js";
 import { createSlug } from "../helper/Slug.js";
 
 // Function to get Zoom access token
@@ -70,7 +70,8 @@ const createZoomMeeting = async (meetingData) => {
           "Content-Type": "application/json",
         },
       }
-    ); return {
+    );
+    return {
       zoomMeetingId: String(response.data.id),
       zoomLink: response.data.join_url,
       zoomStartUrl: response.data.start_url,
@@ -87,15 +88,12 @@ const deleteZoomMeeting = async (meetingId) => {
   try {
     const token = await getZoomAccessToken();
 
-    await axios.delete(
-      `https://api.zoom.us/v2/meetings/${meetingId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    await axios.delete(`https://api.zoom.us/v2/meetings/${meetingId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     console.log(`Zoom meeting ${meetingId} deleted successfully`);
     return true;
@@ -158,7 +156,7 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
       // If slug exists, append a random string to make it unique
       const randomStr = Math.random().toString(36).substring(2, 7);
       formattedSlug = `${formattedSlug}-${randomStr}`;
-    }    // Initialize base data with required fields - DO NOT create Zoom meeting yet
+    } // Initialize base data with required fields - DO NOT create Zoom meeting yet
     const zoomLiveClassData = {
       title,
       description,
@@ -177,7 +175,8 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
       registrationFee: parseFloat(registrationFee || 0),
       courseFee: parseFloat(courseFee || 0),
       courseFeeEnabled: courseFeeEnabled || false,
-      registrationEnabled: registrationEnabled !== undefined ? registrationEnabled : true,
+      registrationEnabled:
+        registrationEnabled !== undefined ? registrationEnabled : true,
       hasModules: hasModules || false,
       isFirstModuleFree: isFirstModuleFree || false,
       currentRaga: currentRaga || null,
@@ -198,7 +197,7 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
       // Create the main zoom live class
       const liveClass = await tx.zoomLiveClass.create({
         data: zoomLiveClassData,
-      });      // If modules are provided, create them (but without Zoom links initially)
+      }); // If modules are provided, create them (but without Zoom links initially)
       if (
         hasModules &&
         modules &&
@@ -243,7 +242,7 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
     // If the session creation fails but thumbnail was uploaded, delete the uploaded image
     if (thumbnailUrl) {
       try {
-        await deleteFromS3(thumbnailUrl);
+        await deleteFromCloudinary(thumbnailUrl);
       } catch (err) {
         console.error(
           "Error deleting thumbnail after live class creation failed:",
@@ -328,10 +327,10 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
   });
 
   if (!zoomLiveClass) {
-    // If a new thumbnail was uploaded but class doesn't exist, delete it from S3
+    // If a new thumbnail was uploaded but class doesn't exist, delete it from Cloudinary
     if (thumbnailUrl) {
       try {
-        await deleteFromS3(thumbnailUrl);
+        await deleteFromCloudinary(thumbnailUrl);
       } catch (err) {
         console.error("Error deleting thumbnail after update failed:", err);
       }
@@ -346,7 +345,8 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
   if (price !== undefined) updatedFields.price = parseFloat(price);
   if (getPrice !== undefined) updatedFields.getPrice = getPrice;
   if (registrationFee !== undefined)
-    updatedFields.registrationFee = parseFloat(registrationFee); if (courseFee !== undefined) updatedFields.courseFee = parseFloat(courseFee);
+    updatedFields.registrationFee = parseFloat(registrationFee);
+  if (courseFee !== undefined) updatedFields.courseFee = parseFloat(courseFee);
   if (courseFeeEnabled !== undefined)
     updatedFields.courseFeeEnabled = courseFeeEnabled;
   if (registrationEnabled !== undefined)
@@ -386,20 +386,18 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
     }
 
     updatedFields.slug = formattedSlug;
-
   }
 
   // Handle thumbnail update
   if (thumbnailUrl !== undefined) {
-    // If the thumbnail URL has changed and old one exists, delete the old one from S3
+    // If the thumbnail URL has changed and old one exists, delete the old one from Cloudinary
     const oldThumbnailUrl = zoomLiveClass.thumbnailUrl;
     const thumbnailHasChanged =
       oldThumbnailUrl && oldThumbnailUrl !== thumbnailUrl;
 
     if (thumbnailHasChanged) {
       try {
-
-        await deleteFromS3(oldThumbnailUrl);
+        await deleteFromCloudinary(oldThumbnailUrl);
       } catch (err) {
         console.error("Error deleting old thumbnail:", err);
         // Continue with the update even if thumbnail deletion fails
@@ -429,7 +427,7 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
     const oldThumbnailUrl = zoomLiveClass.thumbnailUrl;
     if (thumbnailUrl && thumbnailUrl !== oldThumbnailUrl) {
       try {
-        await deleteFromS3(thumbnailUrl);
+        await deleteFromCloudinary(thumbnailUrl);
       } catch (err) {
         console.error("Error deleting thumbnail after update failed:", err);
       }
@@ -441,7 +439,6 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
 // Admin: Delete Zoom live class
 export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
   const { id } = req.params;
-
 
   const zoomLiveClass = await prisma.zoomLiveClass.findUnique({
     where: { id },
@@ -455,7 +452,6 @@ export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
     console.log(`Zoom live class with ID ${id} not found`);
     throw new ApiError(404, "Zoom live class not found");
   }
-
 
   // Delete the Zoom live class and related records in a transaction
   try {
@@ -488,7 +484,6 @@ export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
         where: { zoomLiveClassId: id },
       });
 
-
       // 6. Finally, delete the class itself
       await tx.zoomLiveClass.delete({
         where: { id },
@@ -499,12 +494,13 @@ export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
     // Delete the thumbnail if it exists (after the database transaction completes)
     if (zoomLiveClass.thumbnailUrl) {
       try {
-
-        await deleteFromS3(zoomLiveClass.thumbnailUrl);
-        console.log(`Successfully deleted thumbnail from S3`);
-      } catch (s3Error) {
-        console.error(`Failed to delete thumbnail from S3: ${s3Error.message}`);
-        // Continue with the response even if S3 deletion fails
+        await deleteFromCloudinary(zoomLiveClass.thumbnailUrl);
+        console.log(`Successfully deleted thumbnail from Cloudinary`);
+      } catch (cloudinaryError) {
+        console.error(
+          `Failed to delete thumbnail from Cloudinary: ${cloudinaryError.message}`
+        );
+        // Continue with the response even if Cloudinary deletion fails
       }
     }
 
@@ -537,10 +533,10 @@ export const getUserZoomLiveClasses = asyncHandler(async (req, res) => {
       subscriptions: {
         ...(req.user
           ? {
-            where: {
-              userId: req.user.id,
-            },
-          }
+              where: {
+                userId: req.user.id,
+              },
+            }
           : {}),
       },
       createdBy: {
@@ -589,7 +585,7 @@ export const getUserZoomLiveClasses = asyncHandler(async (req, res) => {
 
     // Make sure teacherName is available even if author is empty
     const teacherName =
-      classData.author || liveClass.createdBy?.name || "Instructor";    // Return transformed class
+      classData.author || liveClass.createdBy?.name || "Instructor"; // Return transformed class
     return {
       ...classData,
       isRegistered,
@@ -630,10 +626,10 @@ export const getZoomLiveClass = asyncHandler(async (req, res) => {
       subscriptions: {
         ...(req.user
           ? {
-            where: {
-              userId: req.user.id,
-            },
-          }
+              where: {
+                userId: req.user.id,
+              },
+            }
           : {}),
       },
       createdBy: {
@@ -742,7 +738,8 @@ export const toggleCourseFeeEnabled = asyncHandler(async (req, res) => {
       new ApiResponsive(
         200,
         updatedClass,
-        `Course fee requirement ${courseFeeEnabled ? "enabled" : "disabled"
+        `Course fee requirement ${
+          courseFeeEnabled ? "enabled" : "disabled"
         } successfully`
       )
     );
@@ -774,7 +771,8 @@ export const toggleRegistrationEnabled = asyncHandler(async (req, res) => {
       new ApiResponsive(
         200,
         updatedClass,
-        `Registration ${registrationEnabled ? "enabled" : "disabled"
+        `Registration ${
+          registrationEnabled ? "enabled" : "disabled"
         } successfully`
       )
     );
@@ -789,9 +787,9 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
     where: { id },
     include: {
       modules: {
-        orderBy: { position: "asc" }
-      }
-    }
+        orderBy: { position: "asc" },
+      },
+    },
   });
 
   if (!zoomLiveClass) {
@@ -813,7 +811,7 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
       } catch (error) {
         console.error("Error creating main class Zoom meeting:", error);
         throw new ApiError(500, "Failed to create Zoom meeting for main class");
-      }      // Update main class with Zoom details
+      } // Update main class with Zoom details
       const updatedMainClass = await tx.zoomLiveClass.update({
         where: { id },
         data: {
@@ -832,7 +830,8 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
             const moduleZoomData = await createZoomMeeting({
               title: `${zoomLiveClass.title} - ${module.title}`,
               startTime: module.startTime,
-            }); await tx.zoomSessionModule.update({
+            });
+            await tx.zoomSessionModule.update({
               where: { id: module.id },
               data: {
                 zoomLink: moduleZoomData.zoomLink,
@@ -842,7 +841,10 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
               },
             });
           } catch (error) {
-            console.error(`Error creating Zoom meeting for module ${module.title}:`, error);
+            console.error(
+              `Error creating Zoom meeting for module ${module.title}:`,
+              error
+            );
             // Continue with other modules even if one fails
           }
         }
@@ -862,7 +864,7 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
         for (const module of zoomLiveClass.modules) {
           if (module.zoomMeetingId) {
             await deleteZoomMeeting(module.zoomMeetingId);
-          }          // Clear module Zoom data
+          } // Clear module Zoom data
           await tx.zoomSessionModule.update({
             where: { id: module.id },
             data: {
@@ -920,9 +922,13 @@ export const getAdminJoinLink = asyncHandler(async (req, res) => {
   }
   // Return zoom details for admin - use start URL if available, otherwise join URL
   const zoomDetails = {
-    zoomLink: zoomLiveClass.zoomStartUrl || zoomLiveClass.zoomLink || zoomLiveClass.zoomJoinUrl,
+    zoomLink:
+      zoomLiveClass.zoomStartUrl ||
+      zoomLiveClass.zoomLink ||
+      zoomLiveClass.zoomJoinUrl,
     zoomMeetingId: zoomLiveClass.zoomMeetingId,
-    zoomPassword: zoomLiveClass.zoomPassword || zoomLiveClass.zoomMeetingPassword,
+    zoomPassword:
+      zoomLiveClass.zoomPassword || zoomLiveClass.zoomMeetingPassword,
     zoomStartUrl: zoomLiveClass.zoomStartUrl, // Admin can use start URL if available
   };
 
@@ -936,7 +942,6 @@ export const getAdminJoinLink = asyncHandler(async (req, res) => {
       )
     );
 });
-
 
 export const getAllLiveClassesSEO = asyncHandler(async (req, res) => {
   const zoomLiveClasses = await prisma.zoomLiveClass.findMany({
@@ -967,4 +972,3 @@ export const getAllLiveClassesSEO = asyncHandler(async (req, res) => {
       )
     );
 });
-

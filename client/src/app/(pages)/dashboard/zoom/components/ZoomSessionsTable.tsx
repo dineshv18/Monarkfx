@@ -447,7 +447,13 @@ export default function ZoomSessionsTable({
                         <div className="relative w-12 h-8 rounded overflow-hidden bg-zinc-800">
                           {liveClass.thumbnailUrl ? (
                             <Image
-                              src={liveClass.thumbnailUrl}
+                              src={
+                                liveClass.thumbnailUrl.includes(
+                                  "cloudinary.com"
+                                )
+                                  ? liveClass.thumbnailUrl
+                                  : `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/monarkfx/zoom-thumbnails/${liveClass.thumbnailUrl}`
+                              }
                               alt={liveClass.title}
                               fill
                               className="object-cover"

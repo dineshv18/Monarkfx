@@ -100,7 +100,7 @@ function ChapterFormItem({
           {...register(`chapters.${index}.description` as const, {
             required: "Description is required",
           })}
-          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500"
+          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-400 focus:border-green-500 focus:ring-green-500 h-32"
         />
         {errors.chapters?.[index]?.description && (
           <p className="text-sm text-red-400">
@@ -132,7 +132,7 @@ function ChapterFormItem({
         )}
       </div>
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label className="text-green-400">PDF Document</Label>
         <FileUpload
           accept={{ "application/pdf": [".pdf"] }}
@@ -142,9 +142,9 @@ function ChapterFormItem({
           fileType="pdf"
           existingFileUrl={null}
         />
-      </div>
+      </div> */}
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label className="text-green-400">Audio File</Label>
         <FileUpload
           accept={{ "audio/*": [".mp3", ".wav"] }}
@@ -154,7 +154,7 @@ function ChapterFormItem({
           fileType="audio"
           existingFileUrl={null}
         />
-      </div>
+      </div> */}
 
       <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
         <div className="flex items-center space-x-2">

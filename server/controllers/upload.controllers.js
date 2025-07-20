@@ -1,11 +1,8 @@
-import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
-import path from "path";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponsive } from "../utils/ApiResponsive.js";
-import s3client from "../utils/s3client.js";
-import { getFileUrl } from "../utils/deleteFromS3.js";
+import { uploadZoomThumbnail as uploadToCloudinary } from "../utils/cloudinary.js";
 
 // Upload zoom session thumbnail
 export const uploadZoomThumbnail = asyncHandler(async (req, res) => {
@@ -29,27 +26,8 @@ export const uploadZoomThumbnail = asyncHandler(async (req, res) => {
       );
     }
 
-    // Generate unique identifier for the file
-    const fileId = uuidv4();
-    const fileExtension = path.extname(file.originalname);
-
-    // Use the UPLOAD_FOLDER environment variable for the base path
-    const uploadFolder = process.env.UPLOAD_FOLDER || "monarkfx";
-    const fileName = `${uploadFolder}/zoom-thumbnails/${fileId}${fileExtension}`;
-
-    // Upload to S3/DigitalOcean Spaces
-    const uploadParams = {
-      Bucket: process.env.SPACES_BUCKET,
-      Key: fileName,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-      ACL: "public-read",
-    };
-
-    await s3client.send(new PutObjectCommand(uploadParams));
-
-    // Generate the URL for the uploaded file
-    const fileUrl = getFileUrl(fileName);
+    // Upload to Cloudinary
+    const fileUrl = await uploadToCloudinary(file, "monarkfx/zoom-thumbnails");
 
     return res
       .status(200)

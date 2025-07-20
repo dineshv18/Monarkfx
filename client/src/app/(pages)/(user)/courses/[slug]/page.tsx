@@ -3,6 +3,7 @@ import { AlertTriangle } from "lucide-react";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import CourseLoading from "./loading";
+import { getCourseImageUrl } from "@/lib/cloudinary";
 
 const CourseClient = dynamic(() => import("./course-client"), {
   ssr: false,
@@ -63,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const { data } = courseData;
-  const ogImage = `${process.env.NEXT_PUBLIC_IMAGE_URL}/${data.thumbnail}`;
+  const ogImage = getCourseImageUrl(data.thumbnail);
 
   return {
     title: data.metaTitle || data.title || defaultTitle,

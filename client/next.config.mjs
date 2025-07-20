@@ -18,9 +18,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "randomuser.me",
       },
+
       {
         protocol: "https",
-        hostname: "desirediv-storage.blr1.digitaloceanspaces.com",
+        hostname: "res.cloudinary.com",
       },
     ],
   },

@@ -28,6 +28,7 @@ import { Progress } from "@/components/ui/progress";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { getCourseImageUrl } from "@/lib/cloudinary";
 
 interface SecureChainCourseCardProps {
   course: CourseDataNew;
@@ -69,9 +70,7 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
   const router = useRouter();
 
   const getImageUrl = (image: string | null | undefined) => {
-    if (!image) return "https://placehold.co/600x400?text=No+Image";
-    if (image.startsWith("http")) return image;
-    return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
+    return getCourseImageUrl(image);
   };
 
   // Fetch course progress when hidePrice is true

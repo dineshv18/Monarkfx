@@ -4,13 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { deleteFile } from "../middlewares/multer.middlerware.js";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const UPLOAD_DIR = path.join(__dirname, "../public/upload");
+import { uploadImage } from "../utils/cloudinary.js";
 
 const validateCourseData = (title, description) => {
   if (!title?.trim() || !description?.trim()) {
@@ -31,29 +25,6 @@ const findCourseBySlug = async (slug) => {
   return course;
 };
 
-const handleFileUpload = (file) => {
-  if (!file) {
-    throw new ApiError(400, "Invalid file upload");
-  }
-
-  // Validate file type
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-  if (!allowedTypes.includes(file.mimetype)) {
-    throw new ApiError(
-      400,
-      "Invalid file type. Only JPG, PNG and WebP allowed"
-    );
-  }
-
-  // Validate file size (e.g., 5MB limit)
-  const maxSize = 5 * 1024 * 1024; // 5MB
-  if (file.size > maxSize) {
-    throw new ApiError(400, "File too large. Maximum size is 5MB");
-  }
-
-  return file.filename;
-};
-
 const createMetaDescription = (description) => {
   if (!description) return "";
 
@@ -72,7 +43,15 @@ export const createCourse = asyncHandler(async (req, res) => {
   let uploadedThumbnail = null;
   try {
     if (req.files && req.files.thumbnail && req.files.thumbnail[0]) {
-      uploadedThumbnail = req.files.thumbnail[0].filename;
+      // Upload to Cloudinary if it's a new file
+      if (req.files.thumbnail[0].buffer) {
+        uploadedThumbnail = await uploadImage(
+          req.files.thumbnail[0],
+          "monarkfx/courses"
+        );
+      } else {
+        uploadedThumbnail = req.files.thumbnail[0].filename;
+      }
     }
 
     const {
@@ -171,6 +150,11 @@ export const createCourse = asyncHandler(async (req, res) => {
       .status(201)
       .json(new ApiResponsive(201, "Course created successfully", course));
   } catch (error) {
+    console.log(
+      "Course creation error, uploadedThumbnail:",
+      typeof uploadedThumbnail,
+      uploadedThumbnail
+    );
     if (uploadedThumbnail) {
       await deleteFile(uploadedThumbnail);
     }
@@ -343,6 +327,9 @@ export const getCourse = asyncHandler(async (req, res) => {
           createdAt: true,
           updatedAt: true,
           chapters: {
+            where: {
+              isPublished: true,
+            },
             orderBy: {
               position: "asc",
             },
@@ -490,8 +477,11 @@ export const updateCourseImage = asyncHandler(async (req, res) => {
         await deleteFile(existingCourse.thumbnail);
       }
 
-      // Get new thumbnail filename
-      const thumbnail = req.files.thumbnail[0].filename;
+      // Upload new thumbnail to Cloudinary
+      const thumbnail = await uploadImage(
+        req.files.thumbnail[0],
+        "monarkfx/courses"
+      );
 
       // Update course with new thumbnail
       return await tx.course.update({
@@ -506,10 +496,6 @@ export const updateCourseImage = asyncHandler(async (req, res) => {
       })
     );
   } catch (error) {
-    // Clean up uploaded file if transaction fails
-    if (req.files?.thumbnail?.[0]?.filename) {
-      await deleteFile(req.files.thumbnail[0].filename);
-    }
     throw new ApiError(500, "Failed to update course thumbnail");
   }
 });

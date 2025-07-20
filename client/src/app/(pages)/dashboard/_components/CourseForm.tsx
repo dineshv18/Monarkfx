@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2, Upload, Loader2 } from "lucide-react";
 import { generateSlug } from "@/utils/slugUtils";
+import { getCourseImageUrl } from "@/lib/cloudinary";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -66,9 +67,7 @@ const CourseForm = ({
   const [thumbnail, setThumbnail] = useState<File | null>(null);
 
   const getImageUrl = (image: string | null | undefined) => {
-    if (!image) return "https://placehold.co/600x400?text=No+Image";
-    if (image.startsWith("http")) return image;
-    return `https://desirediv-storage.blr1.digitaloceanspaces.com/${image}`;
+    return getCourseImageUrl(image);
   };
 
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
@@ -619,7 +618,7 @@ const CourseForm = ({
                         render={({ field }) => (
                           <JoditEditor
                             value={field.value}
-                            className="text-black bg-white"
+                            className="text-black"
                             config={{
                               readonly: false,
                               height: 350,

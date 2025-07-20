@@ -4,7 +4,7 @@ import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { createSlug } from "../helper/Slug.js";
 import { deleteFile } from "../middlewares/multer.middlerware.js";
-import { deleteFromS3 } from "../utils/deleteFromS3.js";
+import { uploadPDF, uploadAudio } from "../utils/cloudinary.js";
 
 const findChapter = async (slug) => {
   const chapter = await prisma.chapter.findUnique({
@@ -58,12 +58,20 @@ export const createChapter = asyncHandler(async (req, res) => {
     if (req.files) {
       // Process PDF if uploaded
       if (req.files.pdf && req.files.pdf[0]) {
-        pdfUrl = req.files.pdf[0].filename;
+        if (req.files.pdf[0].buffer) {
+          pdfUrl = await uploadPDF(req.files.pdf[0], "monarkfx/pdfs");
+        } else {
+          pdfUrl = req.files.pdf[0].filename;
+        }
       }
 
       // Process audio if uploaded
       if (req.files.audio && req.files.audio[0]) {
-        audioUrl = req.files.audio[0].filename;
+        if (req.files.audio[0].buffer) {
+          audioUrl = await uploadAudio(req.files.audio[0], "monarkfx/audio");
+        } else {
+          audioUrl = req.files.audio[0].filename;
+        }
       }
     }
 
@@ -175,14 +183,20 @@ export const updateChapter = asyncHandler(async (req, res) => {
     if (videoUrl !== undefined) updateData.videoUrl = videoUrl || null;
 
     // Parse boolean values correctly
-    if (req.body.isFree !== undefined) updateData.isFree = req.body.isFree === "true";
-    if (req.body.isPublished !== undefined) updateData.isPublished = req.body.isPublished === "true";
+    if (req.body.isFree !== undefined)
+      updateData.isFree = req.body.isFree === "true";
+    if (req.body.isPublished !== undefined)
+      updateData.isPublished = req.body.isPublished === "true";
 
     // Handle file uploads
     if (req.files) {
       // Process PDF if uploaded
       if (req.files.pdf && req.files.pdf[0]) {
-        pdfUrl = req.files.pdf[0].filename;
+        if (req.files.pdf[0].buffer) {
+          pdfUrl = await uploadPDF(req.files.pdf[0], "monarkfx/pdfs");
+        } else {
+          pdfUrl = req.files.pdf[0].filename;
+        }
         updateData.pdfUrl = pdfUrl;
         if (existingChapter.pdfUrl) {
           filesToDelete.push(existingChapter.pdfUrl);
@@ -191,7 +205,11 @@ export const updateChapter = asyncHandler(async (req, res) => {
 
       // Process audio if uploaded
       if (req.files.audio && req.files.audio[0]) {
-        audioUrl = req.files.audio[0].filename;
+        if (req.files.audio[0].buffer) {
+          audioUrl = await uploadAudio(req.files.audio[0], "monarkfx/audio");
+        } else {
+          audioUrl = req.files.audio[0].filename;
+        }
         updateData.audioUrl = audioUrl;
         if (existingChapter.audioUrl) {
           filesToDelete.push(existingChapter.audioUrl);
@@ -202,7 +220,10 @@ export const updateChapter = asyncHandler(async (req, res) => {
     // Handle direct URLs from request body - ensure old files are deleted first
     if (req.body.pdfUrl !== undefined) {
       // If pdfUrl is changing, delete the old one
-      if (existingChapter.pdfUrl && existingChapter.pdfUrl !== req.body.pdfUrl) {
+      if (
+        existingChapter.pdfUrl &&
+        existingChapter.pdfUrl !== req.body.pdfUrl
+      ) {
         filesToDelete.push(existingChapter.pdfUrl);
       }
       updateData.pdfUrl = req.body.pdfUrl;
@@ -210,19 +231,22 @@ export const updateChapter = asyncHandler(async (req, res) => {
 
     if (req.body.audioUrl !== undefined) {
       // If audioUrl is changing, delete the old one
-      if (existingChapter.audioUrl && existingChapter.audioUrl !== req.body.audioUrl) {
+      if (
+        existingChapter.audioUrl &&
+        existingChapter.audioUrl !== req.body.audioUrl
+      ) {
         filesToDelete.push(existingChapter.audioUrl);
       }
       updateData.audioUrl = req.body.audioUrl;
     }
 
-    // Delete old files from S3 before updating the database
+    // Delete old files from Cloudinary before updating the database
     for (const fileUrl of filesToDelete) {
       try {
-        await deleteFromS3(fileUrl);
-        console.log(`Successfully deleted file from S3: ${fileUrl}`);
+        await deleteFile(fileUrl);
+        console.log(`Successfully deleted file from Cloudinary: ${fileUrl}`);
       } catch (err) {
-        console.error(`Error deleting file ${fileUrl} from S3:`, err);
+        console.error(`Error deleting file ${fileUrl} from Cloudinary:`, err);
       }
     }
 
@@ -423,10 +447,10 @@ export const deleteChapter = asyncHandler(async (req, res) => {
     }
   });
 
-  // Delete files from storage using deleteFromS3 instead of deleteFile
+  // Delete files from storage using deleteFile (now uses Cloudinary)
   for (const fileUrl of filesToDelete) {
-    await deleteFromS3(fileUrl).catch(err =>
-      console.error(`Error deleting file ${fileUrl} from S3:`, err)
+    await deleteFile(fileUrl).catch((err) =>
+      console.error(`Error deleting file ${fileUrl} from Cloudinary:`, err)
     );
   }
 
@@ -445,16 +469,17 @@ export const cleanupChapterFiles = async (chapterId) => {
   try {
     const chapter = await prisma.chapter.findUnique({
       where: { id: chapterId },
-      select: { videoUrl: true, pdfUrl: true, audioUrl: true }
+      select: { videoUrl: true, pdfUrl: true, audioUrl: true },
     });
 
     if (!chapter) return;
 
-    // Delete all associated files using deleteFromS3
-    if (chapter.videoUrl) await deleteFromS3(chapter.videoUrl).catch(console.error);
-    if (chapter.pdfUrl) await deleteFromS3(chapter.pdfUrl).catch(console.error);
-    if (chapter.audioUrl) await deleteFromS3(chapter.audioUrl).catch(console.error);
-
+    // Delete all associated files using deleteFile (now uses Cloudinary)
+    if (chapter.videoUrl)
+      await deleteFile(chapter.videoUrl).catch(console.error);
+    if (chapter.pdfUrl) await deleteFile(chapter.pdfUrl).catch(console.error);
+    if (chapter.audioUrl)
+      await deleteFile(chapter.audioUrl).catch(console.error);
   } catch (error) {
     console.error(`Error cleaning up chapter ${chapterId} files:`, error);
   }

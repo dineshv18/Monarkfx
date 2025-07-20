@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { CartItem } from "@/type";
 import { truncateDescription } from "../dashboard/_components/TruncateDescription";
 import { formatPrice } from "@/helper/FormatPrice";
+import { getCourseImageUrl } from "@/lib/cloudinary";
 
 const Cart: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -184,7 +185,7 @@ const Cart: React.FC = () => {
                         <div className="flex gap-4">
                           <div className="relative w-[80px] h-[80px] flex-shrink-0">
                             <Image
-                              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${item.course.thumbnail}`}
+                              src={getCourseImageUrl(item.course.thumbnail)}
                               alt={item.course.title}
                               fill
                               className="rounded-lg object-cover border border-green-500/20"
