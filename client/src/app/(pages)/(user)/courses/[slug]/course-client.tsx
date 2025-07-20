@@ -349,10 +349,10 @@ const CourseClient: React.FC<CourseClientProps> = ({
   if (error) return <ErrorComponent error={error} />;
 
   return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sans">
+    <div className="min-h-screen bg-black font-plus-jakarta-sansye">
       {/* Course Header */}
-      <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden ">
-        <div className="absolute inset-0 opacity-5">
+      <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden pt-10 ">
+        <div className="absolute inset-0 opacity-5 ">
           <div
             className="absolute inset-0"
             style={{
@@ -361,7 +361,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
           />
         </div>
 
-        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10">
+        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10 ">
           {" "}
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Course Info */}
