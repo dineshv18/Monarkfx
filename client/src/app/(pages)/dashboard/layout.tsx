@@ -5,10 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/helper/AuthContext";
 
 export const metadata: Metadata = {
-  title:
-    "Dashboard | MonarkFX - Global Trading Excellence | Indian Classical Music Institute",
+  title: "Dashboard | MonarkFX - Global Trading Excellence",
   description:
-    "Join MonarkFX - Global Trading Excellence - A premier institute dedicated to teaching Indian classical flute (bansuri), traditional music education, and cultural arts. Experience authentic guru-shishya parampara with expert mentorship.",
+    "Join MonarkFX - Global Trading Excellence - A premier institute dedicated to teaching stock market trading, forex trading, and cryptocurrency trading. Experience professional trading education with expert mentorship and real-time market analysis.",
 };
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

@@ -252,7 +252,7 @@ export default function CreateZoomLiveClassPage() {
                   />
                   <p className="text-xs text-zinc-500">
                     Custom URL identifier (e.g.,
-                    "intermediate-bansuri-class-june"). The slug will
+                    "intermediate-stock-trading-june"). The slug will
                     auto-update as you type the title unless you manually edit
                     it.
                   </p>
