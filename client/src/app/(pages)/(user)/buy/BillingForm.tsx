@@ -354,23 +354,6 @@ export default function BillingForm({
                 <p className="text-zinc-400 text-sm">Total Amount</p>
               </div>
             </div>
-            <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-              <p className="text-green-300 text-sm">
-                <strong>✅ All Payment Methods Supported:</strong>
-                <br />• <strong>UPI:</strong> Any UPI ID (e.g., ritesh@paytm)
-                <br />• <strong>Cards:</strong> All Indian debit/credit cards
-                <br />• <strong>Net Banking:</strong> All major banks
-                <br />• <strong>Wallets:</strong> Paytm, PhonePe, Google Pay
-                <br />
-                <strong>Test Cards:</strong>
-                <br />• 4111 1111 1111 1111 (Visa - Success)
-                <br />• 5555 5555 5555 4444 (Mastercard - Success)
-                <br />• 4000 0000 0000 0002 (Visa - Failure)
-                <br />• CVV: 123, Expiry: Any future date
-                <br />
-                <strong>Test UPI:</strong> success@razorpay
-              </p>
-            </div>
           </CardContent>
         </Card>
 

@@ -577,35 +577,99 @@ const CourseClient: React.FC<CourseClientProps> = ({
         <div className="grid md:grid-cols-3 gap-8">
           {/* Course Description, Content, and Reviews */}
           <div className="md:col-span-2 order-2 md:order-none">
-            <Card>
-              <CardContent className="p-0">
-                <Tabs defaultValue="description" className="w-full">
-                  <TabsList className="w-full justify-start rounded-none border-b">
-                    <TabsTrigger value="description">Description</TabsTrigger>
-                    <TabsTrigger value="content">Course Content</TabsTrigger>
-                    <TabsTrigger value="reviews">Reviews</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="description" className="p-6">
-                    <div className="prose prose-lg dark:prose-invert text-white">
-                      {course.description
-                        ? parse(cleanHtml(course.description), {
-                            replace: (domNode) => {
-                              if (
-                                domNode instanceof Element &&
-                                (!domNode.children?.length ||
-                                  (domNode.children.length === 1 &&
-                                    "data" in domNode.children[0] &&
-                                    !domNode.children[0].data?.trim()))
-                              ) {
-                                return <></>;
-                              }
-                              return domNode;
-                            },
-                          })
-                        : "No description available"}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-2xl overflow-hidden shadow-xl"
+            >
+              <Tabs defaultValue="description" className="w-full">
+                <TabsList className="w-full justify-start rounded-none border-b border-zinc-700 bg-zinc-900/50 backdrop-blur-sm">
+                  <TabsTrigger
+                    value="description"
+                    className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 hover:bg-zinc-800/50 transition-all duration-300"
+                  >
+                    Description
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="content"
+                    className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 hover:bg-zinc-800/50 transition-all duration-300"
+                  >
+                    Course Content
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="reviews"
+                    className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-400 data-[state=active]:border-green-500/30 hover:bg-zinc-800/50 transition-all duration-300"
+                  >
+                    Reviews
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="description" className="p-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="space-y-6"
+                  >
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-3 bg-green-500/20 rounded-xl">
+                        <Book className="w-6 h-6 text-green-400" />
+                      </div>
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+                        Course Description
+                      </h2>
                     </div>
-                  </TabsContent>
-                  <TabsContent value="content" className="p-6">
+
+                    <div className="prose prose-lg dark:prose-invert text-zinc-200 max-w-none">
+                      {course.description ? (
+                        parse(cleanHtml(course.description), {
+                          replace: (domNode) => {
+                            if (
+                              domNode instanceof Element &&
+                              (!domNode.children?.length ||
+                                (domNode.children.length === 1 &&
+                                  "data" in domNode.children[0] &&
+                                  !domNode.children[0].data?.trim()))
+                            ) {
+                              return <></>;
+                            }
+                            return domNode;
+                          },
+                        })
+                      ) : (
+                        <div className="text-center py-12">
+                          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+                            <Book className="w-8 h-8 text-zinc-400" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-zinc-300 mb-2">
+                            No Description Available
+                          </h3>
+                          <p className="text-zinc-400">
+                            This course doesn't have a description yet.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                </TabsContent>
+
+                <TabsContent value="content" className="p-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="space-y-6"
+                  >
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-3 bg-green-500/20 rounded-xl">
+                        <Folder className="w-6 h-6 text-green-400" />
+                      </div>
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+                        Course Content
+                      </h2>
+                    </div>
+
                     <Accordion
                       type="single"
                       defaultValue={defaultSection}
@@ -614,109 +678,152 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     >
                       {sectionsWithChapters.length > 0 ? (
                         sectionsWithChapters.map((section, sectionIndex) => (
-                          <AccordionItem
+                          <motion.div
                             key={section.id}
-                            value={section.id}
-                            className="border rounded-lg"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                              duration: 0.5,
+                              delay: sectionIndex * 0.1,
+                            }}
                           >
-                            <AccordionTrigger className="px-4 py-3 bg-gray-800 hover:bg-gray-700">
-                              <div className="flex items-center gap-3">
-                                <span className="text-green-600 font-semibold">
-                                  Section {sectionIndex + 1}:
-                                </span>
-                                <span className="font-medium">
-                                  {section.title}
-                                </span>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <div className="space-y-3 p-4">
-                                {section.chapters.map((chapter) => (
-                                  <div
-                                    key={chapter.id}
-                                    className={`group flex flex-col gap-2 p-4 rounded-xl transition-all duration-300 ${
-                                      (!course.paid && isEnrolled) ||
-                                      chapter.isFree ||
-                                      hasPurchased
-                                        ? "hover:bg-zinc-800/50 cursor-pointer bg-zinc-900/30 border border-zinc-800/50 hover:border-green-500/30"
-                                        : "bg-zinc-900/50 border border-zinc-800/50"
-                                    }`}
-                                    onClick={() => handleChapterClick(chapter)}
-                                  >
-                                    <div className="flex items-center justify-between">
-                                      <div className="flex items-center gap-3">
-                                        {chapter.isFree ||
-                                        (course.paid && hasPurchased) ||
-                                        (!course.paid && isEnrolled) ? (
-                                          <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
-                                            <PlayCircle className="w-4 h-4 text-green-500" />
-                                          </div>
-                                        ) : (
-                                          <div className="p-2 rounded-lg bg-zinc-800/50">
-                                            <Lock className="w-4 h-4 text-zinc-500" />
-                                          </div>
-                                        )}
-                                        <span
-                                          className={`font-medium ${
-                                            chapter.isFree ||
-                                            (course.paid && hasPurchased) ||
-                                            (!course.paid && isEnrolled)
-                                              ? "text-white group-hover:text-green-400 transition-colors duration-300"
-                                              : "text-zinc-400"
-                                          }`}
-                                        >
-                                          {chapter.title}
-                                        </span>
-                                      </div>
-                                      <span
-                                        className={
-                                          chapter.isFree
-                                            ? "bg-green-500/20 text-green-300 border-green-500/30 rounded-full px-3 py-1"
-                                            : (course.paid && hasPurchased) ||
-                                              (!course.paid && isEnrolled)
-                                            ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 rounded-full px-3 py-1"
-                                            : "border-zinc-700 text-zinc-400 bg-zinc-800/50"
-                                        }
-                                      >
-                                        {chapter.isFree
-                                          ? "Free"
-                                          : (course.paid && hasPurchased) ||
-                                            (!course.paid && isEnrolled)
-                                          ? "Enrolled"
-                                          : "Premium"}
-                                      </span>
+                            <AccordionItem
+                              value={section.id}
+                              className="border border-zinc-700 rounded-xl overflow-hidden bg-gradient-to-br from-zinc-900/50 to-black/50 hover:border-green-500/30 transition-all duration-300"
+                            >
+                              <AccordionTrigger className="px-6 py-4 bg-gradient-to-r from-zinc-900/80 to-black/80 hover:from-zinc-800/80 hover:to-black/80 transition-all duration-300 group">
+                                <div className="flex items-center gap-4">
+                                  <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
+                                    <span className="text-sm font-bold text-green-400">
+                                      {String(sectionIndex + 1).padStart(
+                                        2,
+                                        "0"
+                                      )}
+                                    </span>
+                                  </div>
+                                  <div className="text-left">
+                                    <span className="text-green-400 font-semibold text-sm">
+                                      Section {sectionIndex + 1}
+                                    </span>
+                                    <div className="font-medium text-white group-hover:text-green-300 transition-colors">
+                                      {section.title}
                                     </div>
                                   </div>
-                                ))}
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
+                                </div>
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                <div className="space-y-3 p-6 bg-zinc-900/30">
+                                  {section.chapters.map(
+                                    (chapter, chapterIndex) => (
+                                      <motion.div
+                                        key={chapter.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{
+                                          duration: 0.3,
+                                          delay: chapterIndex * 0.05,
+                                        }}
+                                        className={`group flex flex-col gap-2 p-4 rounded-xl transition-all duration-300 ${
+                                          (!course.paid && isEnrolled) ||
+                                          chapter.isFree ||
+                                          hasPurchased
+                                            ? "hover:bg-zinc-800/50 cursor-pointer bg-zinc-900/30 border border-zinc-800/50 hover:border-green-500/30"
+                                            : "bg-zinc-900/50 border border-zinc-800/50"
+                                        }`}
+                                        onClick={() =>
+                                          handleChapterClick(chapter)
+                                        }
+                                      >
+                                        <div className="flex items-center justify-between">
+                                          <div className="flex items-center gap-3">
+                                            {chapter.isFree ||
+                                            (course.paid && hasPurchased) ||
+                                            (!course.paid && isEnrolled) ? (
+                                              <div className="p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors duration-300">
+                                                <PlayCircle className="w-4 h-4 text-green-500" />
+                                              </div>
+                                            ) : (
+                                              <div className="p-2 rounded-lg bg-zinc-800/50">
+                                                <Lock className="w-4 h-4 text-zinc-500" />
+                                              </div>
+                                            )}
+                                            <span
+                                              className={`font-medium ${
+                                                chapter.isFree ||
+                                                (course.paid && hasPurchased) ||
+                                                (!course.paid && isEnrolled)
+                                                  ? "text-white group-hover:text-green-400 transition-colors duration-300"
+                                                  : "text-zinc-400"
+                                              }`}
+                                            >
+                                              {chapter.title}
+                                            </span>
+                                          </div>
+                                          <span
+                                            className={
+                                              chapter.isFree
+                                                ? "bg-green-500/20 text-green-300 border-green-500/30 rounded-full px-3 py-1"
+                                                : (course.paid &&
+                                                    hasPurchased) ||
+                                                  (!course.paid && isEnrolled)
+                                                ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 rounded-full px-3 py-1"
+                                                : "border-zinc-700 text-zinc-400 bg-zinc-800/50"
+                                            }
+                                          >
+                                            {chapter.isFree
+                                              ? "Free"
+                                              : (course.paid && hasPurchased) ||
+                                                (!course.paid && isEnrolled)
+                                              ? "Enrolled"
+                                              : "Premium"}
+                                          </span>
+                                        </div>
+                                      </motion.div>
+                                    )
+                                  )}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          </motion.div>
                         ))
                       ) : (
-                        <div className="text-center py-8">
-                          <AlertTriangle className="w-12 h-12 mx-auto text-yellow-500 mb-4" />
-                          <p className="text-lg font-semibold text-gray-700">
-                            No content available
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-center py-12"
+                        >
+                          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+                            <AlertTriangle className="w-12 h-12 text-yellow-400" />
+                          </div>
+                          <h3 className="text-xl font-semibold text-zinc-300 mb-3">
+                            No Content Available
+                          </h3>
+                          <p className="text-zinc-400 max-w-md mx-auto">
+                            This course doesn't have any sections or chapters
+                            yet. Content will be added soon!
                           </p>
-                          <p className="text-gray-500">
-                            This course doesn&apos;t have any sections or
-                            chapters yet.
-                          </p>
-                        </div>
+                        </motion.div>
                       )}
                     </Accordion>
-                  </TabsContent>
-                  <TabsContent value="reviews" className="p-6">
+                  </motion.div>
+                </TabsContent>
+
+                <TabsContent value="reviews" className="p-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                  >
                     <ReviewSection
                       courseId={course.id}
                       isEnrolled={isEnrolled}
                       hasPurchased={hasPurchased}
                       userId={course.userId}
                     />
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
+                  </motion.div>
+                </TabsContent>
+              </Tabs>
+            </motion.div>
           </div>
 
           {/* Price Card */}

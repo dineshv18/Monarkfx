@@ -244,13 +244,6 @@ export default function UserCertificates() {
                 <div className="relative p-6">
                   <div className="flex items-center gap-3">
                     <Button
-                      onClick={() => downloadCertificate(cert.certificateId)}
-                      className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Download PDF
-                    </Button>
-                    <Button
                       onClick={() => shareCertificate(cert.certificateId)}
                       variant="outline"
                       size="sm"
@@ -267,6 +260,15 @@ export default function UserCertificates() {
                       className="border-zinc-600 text-zinc-300 hover:bg-zinc-800 hover:border-blue-500/50 hover:text-blue-400 transition-all duration-300"
                     >
                       <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-3 mt-4">
+                    <Button
+                      onClick={() => downloadCertificate(cert.certificateId)}
+                      className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download PDF
                     </Button>
                   </div>
                 </div>
