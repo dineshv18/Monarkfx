@@ -708,7 +708,7 @@ export default function ZoomSessionsTable({
                                 </div>
                                 {liveClass.currentRaga && (
                                   <div>
-                                    Current Raga: {liveClass.currentRaga}
+                                    Market Focus: {liveClass.currentRaga}
                                   </div>
                                 )}
                                 {liveClass.currentOrientation && (

@@ -446,14 +446,14 @@ export default function CreateZoomLiveClassPage() {
                     htmlFor="currentRaga"
                     className="text-sm font-medium text-zinc-300"
                   >
-                    Current Raga
+                    Market Focus
                   </Label>
                   <Input
                     id="currentRaga"
                     name="currentRaga"
                     value={formData.currentRaga}
                     onChange={handleChange}
-                    placeholder="e.g., Yaman, Bhairav"
+                    placeholder="e.g., Nifty 50, Options Trading, Intraday Strategy"
                     className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
                   />
                 </div>
@@ -463,14 +463,14 @@ export default function CreateZoomLiveClassPage() {
                     htmlFor="currentOrientation"
                     className="text-sm font-medium text-zinc-300"
                   >
-                    Current Orientation
+                    Skill Level
                   </Label>
                   <Input
                     id="currentOrientation"
                     name="currentOrientation"
                     value={formData.currentOrientation}
                     onChange={handleChange}
-                    placeholder="e.g., Beginner, Intermediate"
+                    placeholder="e.g., Beginner, Intermediate, Advanced"
                     className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
                   />
                 </div>
@@ -481,14 +481,14 @@ export default function CreateZoomLiveClassPage() {
                   htmlFor="sessionDescription"
                   className="text-sm font-medium text-zinc-300"
                 >
-                  Session Description
+                  Session Highlights
                 </Label>
                 <Textarea
                   id="sessionDescription"
                   name="sessionDescription"
                   value={formData.sessionDescription}
                   onChange={handleChange}
-                  placeholder="Detailed description of what will be covered in this session..."
+                  placeholder="Briefly describe what this session will cover (e.g., Candlestick patterns, Live trade examples, Risk management)"
                   className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
                   rows={3}
                 />

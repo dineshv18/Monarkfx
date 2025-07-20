@@ -900,7 +900,7 @@ export default function ClassDetails() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Session Description */}
+              {/* Session Highlights */}
               {classData.sessionDescription && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -1029,7 +1029,7 @@ export default function ClassDetails() {
                     <CardContent className="space-y-3">
                       {classData.currentRaga && (
                         <div>
-                          <p className="text-sm text-zinc-400">Current Raga</p>
+                          <p className="text-sm text-zinc-400">Market Focus</p>
                           <p className="text-white font-medium">
                             {classData.currentRaga}
                           </p>

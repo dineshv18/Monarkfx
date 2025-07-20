@@ -573,7 +573,7 @@ export default function EditZoomClassPage() {
                     htmlFor="currentRaga"
                     className="text-sm font-medium text-zinc-300"
                   >
-                    Current Raga
+                    Market Focus
                   </Label>
                   <Input
                     id="currentRaga"
@@ -595,7 +595,7 @@ export default function EditZoomClassPage() {
                     htmlFor="currentOrientation"
                     className="text-sm font-medium text-zinc-300"
                   >
-                    Current Orientation
+                    Skill Level
                   </Label>
                   <Input
                     id="currentOrientation"
@@ -618,7 +618,7 @@ export default function EditZoomClassPage() {
                   htmlFor="sessionDescription"
                   className="text-sm font-medium text-zinc-300"
                 >
-                  Session Description
+                  Session Highlights
                 </Label>
                 <Textarea
                   id="sessionDescription"
