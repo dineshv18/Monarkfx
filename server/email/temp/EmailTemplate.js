@@ -1435,117 +1435,238 @@ export const getCertificateGeneratedTemplate = (data) => `
     <title>Certificate Generated - MonarkFX - Global Trading Excellence</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f5f5f5;
+            color: #e5e7eb;
+            background: linear-gradient(135deg, #000000, #111827);
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            min-height: 100vh;
         }
         .container {
             max-width: 600px;
-            margin: 20px auto;
-            background-color: #ffffff;
-            border-radius: 12px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            position: relative;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #10b981, #059669);
         }
         .header {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #ffffff;
             text-align: center;
-            padding: 40px;
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1), transparent 50%);
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
         .content {
-            padding: 40px;
+            padding: 40px 30px;
+            background: linear-gradient(180deg, #1f2937, #111827);
         }
         h1 {
-            margin: 0;
+            margin: 0 0 10px 0;
             font-size: 32px;
             font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         h2 {
-            color: #1a1a1a;
+            color: #22c55e;
             font-size: 24px;
-            margin-top: 0;
+            margin: 0 0 20px 0;
+            font-weight: 600;
+        }
+        h3 {
+            color: #10b981;
+            font-size: 20px;
+            margin: 20px 0;
+            font-weight: 600;
         }
         p {
             margin-bottom: 20px;
             font-size: 16px;
-            color: #333333;
+            color: #d1d5db;
+            line-height: 1.7;
         }
         .certificate-info {
-            background-color: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 30px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            background: linear-gradient(145deg, #374151, #1f2937);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            position: relative;
+        }
+        .certificate-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #22c55e, #10b981);
         }
         .certificate-id {
-            font-family: monospace;
-            background: #f0f0f0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
             padding: 8px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 14px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            display: inline-block;
+            margin: 5px 0;
         }
         .button {
             display: inline-block;
-            padding: 15px 35px;
-            background: linear-gradient(135deg, #ff0000, #cc0000);
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #22c55e, #10b981);
             color: #ffffff;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
             text-align: center;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        .button:hover::before {
+            left: 100%;
         }
         .button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 35px rgba(34, 197, 94, 0.4);
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .achievement-highlight {
+            background: linear-gradient(145deg, #374151, #1f2937);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            text-align: center;
+        }
+        .achievement-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
         }
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 25px 30px;
             font-size: 14px;
-            color: #666666;
-            background-color: #f8f8f8;
+            color: #9ca3af;
+            background: linear-gradient(145deg, #111827, #0f172a);
+            border-top: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .footer a {
+            color: #22c55e;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { border-radius: 12px; }
+            .header, .content { padding: 30px 20px; }
+            h1 { font-size: 28px; }
+            h2 { font-size: 20px; }
+            .button { padding: 14px 28px; font-size: 15px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <div class="logo">MonarkFX</div>
+            <div class="success-icon">🏆</div>
             <h1>Congratulations!</h1>
         </div>
         <div class="content">
-            <h2>Trading Achievement Accomplished</h2>
-            <p>Dear ${data.userName},</p>
-            <p>We are delighted to inform you that you have successfully completed the course:</p>
-            <h3 style="color: #cc0000;">${data.courseName}</h3>
+            <h2>Certificate of Achievement Generated</h2>
+            <p>Dear <strong>${data.userName}</strong>,</p>
+            
+            <div class="achievement-highlight">
+                <div class="achievement-icon">🎉</div>
+                <p><strong>You have successfully completed the course:</strong></p>
+                <h3>${data.courseName}</h3>
+            </div>
             
             <div class="certificate-info">
                 <p><strong>Your certificate of trading excellence has been generated!</strong></p>
                 <p>Certificate ID: <span class="certificate-id">${
                   data.certificateId
                 }</span></p>
-                <p>You can now access and download your certificate from your profile. This marks an important milestone in your trading journey with us.</p>
+                <p>This certificate validates your dedication to financial markets and your commitment to learning. You can now access and download your certificate from your profile.</p>
             </div>
 
-            <center>
+            <div class="button-container">
                 <a href="${
                   process.env.FRONTEND_URL
-                }/user-profile" class="button">View Certificate</a>
-            </center>
+                }/user-profile" class="button">View Your Certificate</a>
+            </div>
 
-            <p>This certificate validates your dedication to financial markets and your commitment to learning. Continue on the path of trading excellence!</p>
+            <p>This marks an important milestone in your trading journey with us. Continue on the path of trading excellence and keep expanding your knowledge!</p>
+            
+            <p><strong>What's next?</strong></p>
+            <ul style="color: #d1d5db; line-height: 1.8;">
+                <li>Download your certificate for your records</li>
+                <li>Share your achievement on professional networks</li>
+                <li>Explore more advanced courses to continue learning</li>
+                <li>Join our community of successful traders</li>
+            </ul>
         </div>
         <div class="footer">
             © ${new Date().getFullYear()} MonarkFX - Global Trading Excellence<br>
-            This is an automated message. Please do not reply to this email.
+            This is an automated message. Please do not reply to this email.<br>
+            <a href="${process.env.FRONTEND_URL}">Visit our website</a>
         </div>
     </div>
 </body>
