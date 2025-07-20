@@ -11,6 +11,8 @@ import {
   Clock,
   Check,
   AlertTriangle,
+  BookOpen,
+  Target,
 } from "lucide-react";
 import type { CourseDataNew, ChapterDataNew } from "@/type";
 import { cn } from "@/lib/utils";
@@ -52,6 +54,13 @@ const ChapterList: React.FC<ChapterListProps> = ({
     return canAccessContent || chapter.isFree;
   };
 
+  // Get chapter progress percentage
+  const getChapterProgress = (chapterId: string) => {
+    // This would need to be passed from parent component
+    // For now, return 0 or 100 based on completion
+    return isChapterCompleted(chapterId) ? 100 : 0;
+  };
+
   // Format expiry date
   const formatExpiryDate = (dateString: string | null) => {
     try {
@@ -69,8 +78,8 @@ const ChapterList: React.FC<ChapterListProps> = ({
 
     if (isExpired) {
       return (
-        <div className="flex items-center mt-2 px-3 py-2 bg-red-500/20 border border-red-500/40 rounded-lg">
-          <AlertTriangle className="h-4 w-4 text-red-400 mr-2" />
+        <div className="flex items-center mt-3 px-4 py-3 bg-gradient-to-r from-red-500/20 to-red-600/20 border border-red-500/40 rounded-xl">
+          <AlertTriangle className="h-4 w-4 text-red-400 mr-3" />
           <div className="text-xs">
             <p className="text-red-300 font-semibold">Access Expired</p>
             {expiryDate && (
@@ -86,13 +95,13 @@ const ChapterList: React.FC<ChapterListProps> = ({
     if (daysLeft !== null && daysLeft !== undefined) {
       return (
         <div
-          className={`flex items-center mt-2 px-3 py-2 border rounded-lg ${
+          className={`flex items-center mt-3 px-4 py-3 border rounded-xl ${
             daysLeft < 7
-              ? "bg-red-500/20 border-red-500/40"
-              : "bg-green-500/20 border-green-500/40"
+              ? "bg-gradient-to-r from-red-500/20 to-red-600/20 border-red-500/40"
+              : "bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-500/40"
           }`}
         >
-          <Clock className="h-4 w-4 mr-2" />
+          <Clock className="h-4 w-4 mr-3" />
           <div className="text-xs">
             <p
               className={`font-semibold ${
@@ -117,8 +126,8 @@ const ChapterList: React.FC<ChapterListProps> = ({
 
     if (courseHasValidity) {
       return (
-        <div className="flex items-center mt-2 px-3 py-2 bg-yellow-500/20 border border-yellow-500/40 rounded-lg">
-          <Clock className="h-4 w-4 text-yellow-400 mr-2" />
+        <div className="flex items-center mt-3 px-4 py-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/40 rounded-xl">
+          <Clock className="h-4 w-4 text-yellow-400 mr-3" />
           <div className="text-xs">
             <p className="text-yellow-300 font-semibold">
               {course.validityDays} days validity
@@ -132,8 +141,8 @@ const ChapterList: React.FC<ChapterListProps> = ({
     // Only show lifetime access if validityDays is 0 or null/undefined
     if (!courseHasValidity) {
       return (
-        <div className="flex items-center mt-2 px-3 py-2 bg-green-500/20 border border-green-500/40 rounded-lg">
-          <Check className="h-4 w-4 text-green-400 mr-2" />
+        <div className="flex items-center mt-3 px-4 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/40 rounded-xl">
+          <Check className="h-4 w-4 text-green-400 mr-3" />
           <div className="text-xs">
             <p className="text-green-300 font-semibold">Lifetime Access</p>
             <p className="text-green-400">No expiration</p>
@@ -146,31 +155,56 @@ const ChapterList: React.FC<ChapterListProps> = ({
   };
 
   return (
-    <div className="h-full bg-gray-900 font-plus-jakarta-sans">
-      <div className="p-6 border-b bg-green-600 text-white">
-        <h2 className="text-2xl font-bold">Course Content</h2>
-        <div className="mt-2">
-          <Progress value={courseProgress} className="w-full" />
-          <p className="text-sm mt-1">{Math.round(courseProgress)}% Complete</p>
+    <div className="h-full bg-gradient-to-b from-zinc-900/95 to-black/95 font-plus-jakarta-sans">
+      <div className="p-6 border-b border-zinc-700/50 bg-gradient-to-r from-green-600/20 to-emerald-600/20 backdrop-blur-sm">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
+            <BookOpen className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-white">Course Content</h2>
+            <p className="text-sm text-zinc-300">Master your trading skills</p>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-zinc-300">Progress</span>
+            <span className="text-sm font-bold text-green-400">
+              {Math.round(courseProgress)}%
+            </span>
+          </div>
+          <div className="relative">
+            <Progress
+              value={courseProgress}
+              className="w-full h-3 bg-zinc-700/50"
+            />
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-300"
+              style={{ width: `${courseProgress}%` }}
+            />
+          </div>
         </div>
 
         {/* Course Pricing Information */}
         {course.paid && (
-          <div className="mt-3 px-3 py-2 bg-white/10 rounded-lg">
+          <div className="mb-4 p-4 bg-gradient-to-r from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 rounded-xl">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Course Price:</span>
+              <span className="text-sm font-medium text-zinc-300">
+                Course Price:
+              </span>
               <div className="flex items-center gap-2">
                 {course.salePrice && course.salePrice > 0 ? (
                   <>
-                    <span className="text-lg font-bold text-green-200">
+                    <span className="text-lg font-bold text-green-400">
                       {formatPrice(course.salePrice)}
                     </span>
-                    <span className="text-sm text-gray-300 line-through">
+                    <span className="text-sm text-zinc-400 line-through">
                       {formatPrice(course.price)}
                     </span>
                   </>
                 ) : (
-                  <span className="text-lg font-bold text-green-200">
+                  <span className="text-lg font-bold text-green-400">
                     {formatPrice(course.price)}
                   </span>
                 )}
@@ -182,6 +216,7 @@ const ChapterList: React.FC<ChapterListProps> = ({
         {/* Validity Information */}
         {showValidityInfo()}
       </div>
+
       <ScrollArea className="h-[calc(100vh-5rem)]">
         <div className="p-6">
           {course.sections &&
@@ -191,57 +226,87 @@ const ChapterList: React.FC<ChapterListProps> = ({
               )
               .map((section, index) => (
                 <div key={section.id} className="mb-8">
-                  <h3 className="font-semibold text-lg mb-4 text-gray-700 flex items-center">
-                    <span className="bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold">
+                  <div className="flex items-center mb-4">
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-full w-8 h-8 flex items-center justify-center mr-3 font-bold text-white shadow-lg">
                       {index + 1}
-                    </span>
-                    {section.title}
-                  </h3>
+                    </div>
+                    <h3 className="font-semibold text-lg text-white flex items-center">
+                      {section.title}
+                      <Target className="h-4 w-4 ml-2 text-green-400" />
+                    </h3>
+                  </div>
                   <div className="space-y-2">
-                    {section.chapters.map((chapter) => (
-                      <Button
-                        key={chapter.id}
-                        variant="ghost"
-                        className={cn(
-                          "w-full justify-start p-3 h-auto font-inter transition-all duration-300",
-                          selectedChapter?.id === chapter.id
-                            ? "bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 text-green-700"
-                            : isChapterCompleted(chapter.id)
-                            ? "bg-green-50"
-                            : "bg-gray-800 hover:bg-gray-700",
-                          !isChapterAccessible(chapter) && "opacity-60",
-                          "group"
-                        )}
-                        onClick={() => onChapterClick(chapter)}
-                        disabled={!isChapterAccessible(chapter)}
-                      >
-                        <div className="flex items-center w-full">
-                          <div className="flex-shrink-0 mr-3">
-                            {isChapterAccessible(chapter) ? (
-                              isChapterCompleted(chapter.id) ? (
-                                <CheckCircle className="h-5 w-5 text-green-500" />
-                              ) : (
-                                <Play className="h-5 w-5 text-green-500" />
-                              )
-                            ) : (
-                              <Lock className="h-5 w-5 text-gray-400" />
-                            )}
-                          </div>
-                          <div className="flex-grow">
-                            <span className="text-left font-medium block">
-                              {chapter.title}
-                            </span>
+                    {section.chapters.map((chapter) => {
+                      const chapterProgress = getChapterProgress(chapter.id);
+                      const isCompleted = isChapterCompleted(chapter.id);
 
-                            {isChapterCompleted(chapter.id) && (
-                              <span className="text-xs text-green-600">
-                                Completed
+                      return (
+                        <Button
+                          key={chapter.id}
+                          variant="ghost"
+                          className={cn(
+                            "w-full justify-start p-4 h-auto font-inter transition-all duration-300 group relative",
+                            selectedChapter?.id === chapter.id
+                              ? "bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/50 text-white shadow-lg"
+                              : isCompleted
+                              ? "bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 text-white"
+                              : "bg-gradient-to-r from-zinc-800/50 to-zinc-900/50 border border-zinc-700/50 text-zinc-300 hover:from-zinc-700/50 hover:to-zinc-800/50 hover:border-green-500/30 hover:text-white",
+                            !isChapterAccessible(chapter) && "opacity-60"
+                          )}
+                          onClick={() => onChapterClick(chapter)}
+                          disabled={!isChapterAccessible(chapter)}
+                        >
+                          <div className="flex items-center w-full">
+                            <div className="flex-shrink-0 mr-3">
+                              {isChapterAccessible(chapter) ? (
+                                isCompleted ? (
+                                  <div className="p-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full">
+                                    <CheckCircle className="h-4 w-4 text-white" />
+                                  </div>
+                                ) : (
+                                  <div className="p-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/50 rounded-full">
+                                    <Play className="h-4 w-4 text-green-400" />
+                                  </div>
+                                )
+                              ) : (
+                                <div className="p-1 bg-gradient-to-r from-zinc-600/20 to-zinc-700/20 border border-zinc-600/50 rounded-full">
+                                  <Lock className="h-4 w-4 text-zinc-400" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-grow text-left">
+                              <span className="font-medium block mb-1">
+                                {chapter.title}
                               </span>
-                            )}
+
+                              {isCompleted ? (
+                                <span className="text-xs text-green-400 font-medium">
+                                  ✓ Completed
+                                </span>
+                              ) : chapterProgress > 0 &&
+                                chapterProgress < 100 ? (
+                                <div className="flex items-center gap-2">
+                                  <div className="w-16 h-1 bg-zinc-700 rounded-full overflow-hidden">
+                                    <div
+                                      className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-300"
+                                      style={{ width: `${chapterProgress}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-xs text-zinc-400">
+                                    {Math.round(chapterProgress)}%
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-zinc-500">
+                                  Not started
+                                </span>
+                              )}
+                            </div>
+                            <ChevronRight className="h-5 w-5 text-zinc-400 group-hover:text-green-400 transition-colors duration-300" />
                           </div>
-                          <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-green-500 transition-colors duration-300" />
-                        </div>
-                      </Button>
-                    ))}
+                        </Button>
+                      );
+                    })}
                   </div>
                 </div>
               ))}

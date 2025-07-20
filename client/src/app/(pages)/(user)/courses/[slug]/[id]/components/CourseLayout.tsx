@@ -51,12 +51,14 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
   const [chapterProgress, setChapterProgress] = useState<{
     isCompleted: boolean;
     watchedTime: number;
+    progressPercentage: number;
   } | null>(null);
   const [courseProgress, setCourseProgress] = useState<CourseProgress>({
     percentage: 0,
     completedChapters: [],
     isCompleted: false,
   });
+  const [currentVideoDuration, setCurrentVideoDuration] = useState<number>(0);
 
   const makeAuthenticatedRequest = async (
     url: string,
@@ -207,68 +209,122 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
     initProgress();
   }, [isPurchaseChecked, course.id]);
 
-  const handleVideoProgress = async (progress: { playedSeconds: number }) => {
-    if (selectedChapter) {
+  const handleVideoProgress = async (progress: {
+    playedSeconds: number;
+    played: number;
+  }) => {
+    if (selectedChapter && !chapterProgress?.isCompleted) {
       try {
-        await makeAuthenticatedRequest(
-          `${process.env.NEXT_PUBLIC_API_URL}/user-progress/update`,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              chapterId: selectedChapter.id,
-              watchedTime: progress.playedSeconds,
-            }),
-          }
-        );
-        await fetchCourseProgress();
+        // Calculate progress percentage based on actual video duration
+        const progressPercentage = progress.played * 100;
+
+        // Only update if progress is significant (more than 5% change)
+        const currentProgress = chapterProgress?.progressPercentage || 0;
+        if (Math.abs(progressPercentage - currentProgress) >= 5) {
+          await makeAuthenticatedRequest(
+            `${process.env.NEXT_PUBLIC_API_URL}/user-progress/update`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                chapterId: selectedChapter.id,
+                watchedTime: progress.playedSeconds, // Send actual seconds watched
+                progressPercentage: progressPercentage, // Send percentage for display
+                duration: currentVideoDuration, // Send actual video duration
+              }),
+            }
+          );
+
+          // Update local state
+          setChapterProgress((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  watchedTime: progress.playedSeconds,
+                  progressPercentage: progressPercentage,
+                }
+              : {
+                  isCompleted: false,
+                  watchedTime: progress.playedSeconds,
+                  progressPercentage: progressPercentage,
+                }
+          );
+        }
       } catch (err) {
         console.error("Failed to update progress:", err);
       }
     }
   };
 
+  const handleVideoDuration = (duration: number) => {
+    console.log("Received video duration:", duration);
+    setCurrentVideoDuration(duration);
+  };
+
   const handleVideoEnded = async () => {
-    if (selectedChapter) {
+    if (selectedChapter && !chapterProgress?.isCompleted) {
       try {
+        // Mark chapter as completed
         await makeAuthenticatedRequest(
           `${process.env.NEXT_PUBLIC_API_URL}/user-progress/complete`,
           {
             method: "POST",
             body: JSON.stringify({
               chapterId: selectedChapter.id,
-              watchedTime: selectedChapter.duration || 100,
+              watchedTime:
+                currentVideoDuration || selectedChapter.duration || 0,
+              progressPercentage: 100,
+              duration: currentVideoDuration || selectedChapter.duration || 0,
             }),
           }
         );
 
+        // Update local state
         setChapterProgress({
           isCompleted: true,
-          watchedTime: selectedChapter.duration || 100,
+          watchedTime: currentVideoDuration || selectedChapter.duration || 0,
+          progressPercentage: 100,
         });
 
+        // Fetch updated course progress
         await fetchCourseProgress();
 
-        if (courseProgress.percentage === 100) {
+        // Show completion message
+        toast.success(`🎉 Chapter "${selectedChapter.title}" completed!`);
+
+        // Check if course is completed
+        const updatedProgress = await makeAuthenticatedRequest(
+          `${process.env.NEXT_PUBLIC_API_URL}/user-progress/course/${course.id}`
+        );
+
+        if (updatedProgress.data.percentage >= 100) {
           toast.success(
             "🎉 Congratulations! You've completed the entire course!"
           );
         } else {
+          // Auto-advance to next chapter
           const nextChapter = getNextChapter();
           if (nextChapter) {
-            toast.success("Chapter completed! Moving to next chapter...");
+            toast.success("Moving to next chapter...");
             setSelectedChapter(nextChapter);
-            loadVideoUrl(nextChapter.slug);
-            const progressData = await makeAuthenticatedRequest(
-              `${process.env.NEXT_PUBLIC_API_URL}/user-progress/chapter/${nextChapter.id}`
-            );
-            setChapterProgress(progressData.data);
+            await loadVideoUrl(nextChapter.slug);
+
+            // Load progress for next chapter
+            try {
+              const progressData = await makeAuthenticatedRequest(
+                `${process.env.NEXT_PUBLIC_API_URL}/user-progress/chapter/${nextChapter.id}`
+              );
+              setChapterProgress(progressData.data);
+            } catch (err) {
+              console.error("Failed to fetch next chapter progress:", err);
+              setChapterProgress(null);
+            }
           } else {
             toast.success("Congratulations! You've completed all chapters!");
           }
         }
       } catch (err) {
         console.error("Failed to mark chapter as complete:", err);
-        toast.error("Failed to mark chapter as complete");
+        toast.error("Failed to mark chapter as complete. Please try again.");
       }
     }
   };
@@ -369,19 +425,41 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 font-plus-jakarta-sans">
-      <div className="flex flex-1 overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-zinc-900 via-black to-black font-plus-jakarta-sans">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
+      </div>
+
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-3xl animate-pulse" />
+        <div
+          className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-2xl animate-pulse"
+          style={{ animationDelay: "1s" }}
+        />
+      </div>
+
+      <div className="flex flex-1 overflow-hidden relative z-10">
         {isDesktop ? (
           <div
             className={`${
-              isSidebarOpen ? "w-[300px]" : "w-0"
-            } transition-all duration-300 ease-in-out overflow-hidden border-r shadow-xl bg-white`}
+              isSidebarOpen ? "w-[350px]" : "w-0"
+            } transition-all duration-300 ease-in-out overflow-hidden border-r border-zinc-700/50 shadow-2xl bg-gradient-to-b from-zinc-900/95 to-black/95 backdrop-blur-sm`}
           >
             <ScrollArea className="h-full">{SidebarContent}</ScrollArea>
           </div>
         ) : (
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-            <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
+            <SheetContent
+              side="left"
+              className="w-[350px] sm:w-[400px] p-0 bg-gradient-to-b from-zinc-900/95 to-black/95 border-r border-zinc-700/50"
+            >
               <ScrollArea className="h-full pt-12">{SidebarContent}</ScrollArea>
             </SheetContent>
           </Sheet>
@@ -389,22 +467,28 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
 
         <div className="flex flex-col flex-1 overflow-hidden mt-20">
           <ScrollArea className="flex-1">
-            <div className="p-4 space-y-4">
-              <VideoPlayer
-                videoUrl={videoUrl}
-                isLoading={isVideoLoading}
-                onProgress={handleVideoProgress}
-                onDuration={() => {}}
-                onEnded={handleVideoEnded}
-                className={`w-full bg-white rounded-lg shadow-md transition-all duration-300 ease-in-out ${
-                  isSidebarOpen ? "aspect-[21/9]" : "aspect-video"
-                }`}
-                initialProgress={chapterProgress?.watchedTime || 0}
-                isCompleted={chapterProgress?.isCompleted || false}
-                chapterId={selectedChapter?.id || ""}
-              />
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <ChapterDetails chapter={selectedChapter} />
+            <div className="p-6 space-y-6">
+              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden">
+                <VideoPlayer
+                  videoUrl={videoUrl}
+                  isLoading={isVideoLoading}
+                  onProgress={handleVideoProgress}
+                  onDuration={handleVideoDuration}
+                  onEnded={handleVideoEnded}
+                  className={`w-full transition-all duration-300 ease-in-out ${
+                    isSidebarOpen ? "aspect-[21/9]" : "aspect-video"
+                  }`}
+                  initialProgress={chapterProgress?.watchedTime || 0}
+                  isCompleted={chapterProgress?.isCompleted || false}
+                  chapterId={selectedChapter?.id || ""}
+                />
+              </div>
+              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden">
+                <ChapterDetails
+                  chapter={selectedChapter}
+                  progress={chapterProgress}
+                  videoDuration={currentVideoDuration}
+                />
               </div>
             </div>
           </ScrollArea>
@@ -413,12 +497,12 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
             variant="outline"
             size="sm"
             onClick={toggleSidebar}
-            className={`fixed z-50 h-10 px-2 bg-white/95 backdrop-blur-sm hover:bg-gradient-to-r hover:from-[#fce7ff] hover:to-[#fff1eb] border border-[#610981]/20 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out group left-0 top-1/2 -translate-y-1/2 rounded-r-lg`}
+            className={`fixed z-50 h-12 px-3 bg-gradient-to-r from-zinc-900/95 to-black/95 backdrop-blur-sm hover:from-green-600/20 hover:to-emerald-600/20 border border-zinc-700/50 hover:border-green-500/50 shadow-2xl hover:shadow-green-500/20 transition-all duration-300 ease-in-out group left-0 top-1/2 -translate-y-1/2 rounded-r-xl`}
           >
             {isSidebarOpen ? (
-              <ChevronLeft className="h-5 w-5 text-[#610981] group-hover:scale-110 transition-transform duration-200" />
+              <ChevronLeft className="h-5 w-5 text-zinc-300 group-hover:text-green-400 group-hover:scale-110 transition-all duration-200" />
             ) : (
-              <ChevronRight className="h-5 w-5 text-[#610981] group-hover:scale-110 transition-transform duration-200" />
+              <ChevronRight className="h-5 w-5 text-zinc-300 group-hover:text-green-400 group-hover:scale-110 transition-all duration-200" />
             )}
           </Button>
         </div>
