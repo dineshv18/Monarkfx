@@ -53,6 +53,7 @@ const Header = () => {
   const { isAuthenticated, checkAuth } = useAuth();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const courseDropdownRef = useRef<HTMLDivElement>(null);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     checkAuth();
@@ -61,6 +62,7 @@ const Header = () => {
         setIsScrolled(true);
         setIsMobileMenuOpen(false);
         setIsCourseDropdownOpen(false);
+        setIsProfileDropdownOpen(false);
       } else {
         setIsScrolled(false);
       }
@@ -73,11 +75,22 @@ const Header = () => {
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      // Close course dropdown if clicking outside
       if (
         courseDropdownRef.current &&
-        !courseDropdownRef.current.contains(event.target as Node)
+        !courseDropdownRef.current.contains(target)
       ) {
         setIsCourseDropdownOpen(false);
+      }
+
+      // Close profile dropdown if clicking outside
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(target)
+      ) {
+        setIsProfileDropdownOpen(false);
       }
     };
 
@@ -90,6 +103,7 @@ const Header = () => {
     const handleRouteChange = () => {
       setIsMobileMenuOpen(false);
       setIsCourseDropdownOpen(false);
+      setIsProfileDropdownOpen(false);
     };
     window.addEventListener("popstate", handleRouteChange);
     return () => window.removeEventListener("popstate", handleRouteChange);
@@ -110,6 +124,12 @@ const Header = () => {
     } catch (error) {
       console.error("Logout error:", error);
     }
+  };
+
+  const closeAllDropdowns = () => {
+    setIsCourseDropdownOpen(false);
+    setIsProfileDropdownOpen(false);
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -172,7 +192,10 @@ const Header = () => {
               href={item.href}
               setPosition={setNavPosition}
               isActive={activeIndex === idx}
-              onClick={() => setActiveIndex(idx)}
+              onClick={() => {
+                setActiveIndex(idx);
+                closeAllDropdowns();
+              }}
             >
               {item.name}
             </NavTab>
@@ -223,7 +246,7 @@ const Header = () => {
                       <Link
                         href={item.href}
                         className="relative block px-4 py-3 text-white hover:bg-green-500/20 transition-all duration-300 group"
-                        onClick={() => setIsCourseDropdownOpen(false)}
+                        onClick={() => closeAllDropdowns()}
                       >
                         <div className="flex items-center gap-3">
                           <div className="p-2 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
@@ -253,7 +276,7 @@ const Header = () => {
       {/* Auth & Cart Section */}
       <div className="hidden md:flex items-center space-x-3">
         {isAuthenticated ? (
-          <div className="relative">
+          <div className="relative" ref={profileDropdownRef}>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -283,14 +306,14 @@ const Header = () => {
                   <Link
                     href="/user-profile"
                     className="relative block px-4 py-2 text-white hover:bg-white/10 transition-colors"
-                    onClick={() => setIsProfileDropdownOpen(false)}
+                    onClick={() => closeAllDropdowns()}
                   >
                     Profile
                   </Link>
                   <button
                     onClick={() => {
                       handleLogout();
-                      setIsProfileDropdownOpen(false);
+                      closeAllDropdowns();
                     }}
                     className="relative w-full text-left px-4 py-2 text-white hover:bg-white/10 transition-colors"
                   >
@@ -338,7 +361,7 @@ const Header = () => {
                   <Link
                     href={item.href}
                     className="block text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => closeAllDropdowns()}
                   >
                     {item.name}
                   </Link>
@@ -386,10 +409,7 @@ const Header = () => {
                           <Link
                             href={item.href}
                             className=" text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300 flex items-center gap-2"
-                            onClick={() => {
-                              setIsMobileMenuOpen(false);
-                              setIsCourseDropdownOpen(false);
-                            }}
+                            onClick={() => closeAllDropdowns()}
                           >
                             <item.icon className="w-4 h-4 text-green-400" />
                             <span>{item.name}</span>
@@ -407,19 +427,25 @@ const Header = () => {
                 transition={{ delay: (menuItems.length + 1) * 0.05 }}
                 className="border-t border-white/10 pt-2 mt-2"
               >
+                {/* Cart for Mobile */}
+                <div className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-white/5 transition-all duration-300">
+                  <span className="text-white text-sm">Cart</span>
+                  <Cart />
+                </div>
+
                 {isAuthenticated ? (
                   <>
                     <Link
                       href="/user-profile"
                       className="block text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={() => closeAllDropdowns()}
                     >
                       Profile
                     </Link>
                     <button
                       onClick={() => {
                         handleLogout();
-                        setIsMobileMenuOpen(false);
+                        closeAllDropdowns();
                       }}
                       className="w-full text-left text-white text-sm hover:text-green-400 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
                     >
@@ -430,7 +456,7 @@ const Header = () => {
                   <Link
                     href="/auth"
                     className="flex items-center space-x-2 text-white text-sm bg-gradient-to-r from-green-600 to-green-500 py-2 px-4 rounded-lg my-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => closeAllDropdowns()}
                   >
                     <LogIn className="h-4 w-4" />
                     <span>Login</span>
