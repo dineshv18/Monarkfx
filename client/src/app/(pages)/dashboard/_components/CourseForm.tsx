@@ -394,7 +394,7 @@ const CourseForm = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-4xl mx-auto py-8 px-4 bg-black text-white">
       <Card className="shadow-xl bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700">
         <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-b border-zinc-700 rounded-t-lg">
           <div>
@@ -610,7 +610,7 @@ const CourseForm = ({
                     >
                       Description
                     </Label>
-                    <div className="h-[400px] relative">
+                    <div className="h-[400px] relative bg-white text-black">
                       <Controller
                         name="description"
                         control={control}
@@ -621,7 +621,7 @@ const CourseForm = ({
                             className="text-black"
                             config={{
                               readonly: false,
-                              height: 350,
+                              height: 400,
                               toolbarSticky: false,
                               toolbarAdaptive: false,
                               buttons: [

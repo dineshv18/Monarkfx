@@ -4,7 +4,6 @@ import "./globals.css";
 import { Space_Grotesk } from "next/font/google";
 import ClientProviders from "@/helper/Providers";
 import Script from "next/script";
-import FuturisticCursor from "@/components/FuturisticCursor";
 import TrackingScripts from "@/components/TrackingScripts";
 
 const geistSans = localFont({
@@ -46,9 +45,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk bg-black text-white`}
       >
-        {/* Custom Cursor */}
-        <FuturisticCursor />
-
         {/* Global Tracking Scripts */}
         <TrackingScripts />
 

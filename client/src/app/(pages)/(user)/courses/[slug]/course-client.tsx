@@ -586,7 +586,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     <TabsTrigger value="reviews">Reviews</TabsTrigger>
                   </TabsList>
                   <TabsContent value="description" className="p-6">
-                    <div className="prose prose-lg dark:prose-invert">
+                    <div className="prose prose-lg dark:prose-invert text-white">
                       {course.description
                         ? parse(cleanHtml(course.description), {
                             replace: (domNode) => {
