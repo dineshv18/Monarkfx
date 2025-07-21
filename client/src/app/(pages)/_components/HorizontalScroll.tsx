@@ -6,7 +6,7 @@ import { ReactLenis } from "@studio-freight/react-lenis";
 import { useRef, useState } from "react";
 import MentorshipSection from "./mentorship-section";
 import FuturisticTestimonialShowcase from "./FuturisticTestimonialShowcase";
-import EducationCards from "./EducationCards";
+
 import Link from "next/link";
 
 interface Course {
@@ -56,10 +56,6 @@ export default function Home(): JSX.Element {
   return (
     <ReactLenis root>
       <main className="relative bg-black text-white overflow-hidden">
-        <main className="bg-black">
-          <EducationCards />
-        </main>
-
         <main className="bg-black">
           <MentorshipSection />
         </main>

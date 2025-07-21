@@ -288,6 +288,21 @@ const Footer: React.FC = () => {
           </motion.div>
         </div>
       </div>
+      {/* Developed & Designed by Ritesh */}
+      <div className="w-full flex justify-center mt-4 z-50 pointer-events-auto relative">
+        <span className="text-xs text-gray-400">
+          Developed & Designed by{" "}
+          <a
+            href="https://linktr.ee/riteshk_007"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-green-400 underline hover:text-green-300 transition-colors"
+          >
+            Ritesh
+          </a>{" "}
+          🧑🏼‍💻
+        </span>
+      </div>
     </motion.footer>
   );
 };
