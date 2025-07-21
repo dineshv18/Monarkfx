@@ -1,7 +1,12 @@
+"use client";
 import FeaturedCourses from "../_components/FeaturedCourses";
 import HeroSection from "../_components/HeroSectionProps";
 import Scroll from "../_components/HorizontalScroll";
 import TestimonialCarousel from "../_components/TestimonialCarousel";
+import HomeCategoryGrid from "../_components/HomeCategoryGrid";
+import { Card, CardContent } from "@/components/ui/card";
+import { LogoCarousel } from "../_components/LogoCarousel";
+import Headtext from "../_components/head-text";
 
 export default function Home() {
   return (
@@ -9,7 +14,14 @@ export default function Home() {
       <HeroSection />
       <FeaturedCourses sectionType="trending" />
       <FeaturedCourses sectionType="featured" />
+      <Card className="rounded-none border-none bg-gray-960">
+        <CardContent className="pt-6">
+          <Headtext text="Our Partners" className="text-center" />
+          <LogoCarousel />
+        </CardContent>
+      </Card>
       <FeaturedCourses sectionType="bestseller" />
+      <HomeCategoryGrid />
       <FeaturedCourses sectionType="popular" />
       <FeaturedCourses sectionType="free" />
       <TestimonialCarousel />
