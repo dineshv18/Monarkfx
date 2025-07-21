@@ -22,12 +22,12 @@ import Link from "next/link";
 import SecureChainCourseCard from "./SecureChainCourseCard";
 import { CourseDataNew } from "@/type";
 import { motion, useInView } from "framer-motion";
+import Headtext from "./head-text";
 
 interface SectionProps {
   title: string;
   subtitle: string;
   courses: CourseDataNew[] | null;
-  icon: React.ElementType;
   headingClassName?: string;
   subtitleClassName?: string;
   containerClassName?: string;
@@ -46,7 +46,6 @@ const CourseSection = ({
   title,
   subtitle,
   courses,
-  icon: Icon,
   headingClassName = "",
   subtitleClassName = "",
   containerClassName = "",
@@ -155,26 +154,13 @@ const CourseSection = ({
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center justify-center gap-3 mb-6"
-          >
-            <div
-              className={`p-4 ${colors.iconBg} rounded-2xl border ${colors.border}`}
-            >
-              <Icon className={`h-8 w-8 ${colors.iconColor}`} />
-            </div>
-          </motion.div>
-
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
             className={`text-4xl md:text-5xl font-bold text-green-400 mb-6 ${headingClassName}`}
           >
-            {title}
+            <Headtext text={title} className={headingClassName} />
           </motion.h2>
 
           <motion.p
@@ -334,7 +320,6 @@ const FeaturedCourses = ({
       title: "Featured Courses",
       subtitle:
         "Explore our carefully curated selection of outstanding courses designed to help you excel in trading",
-      icon: Award,
       data: data?.featured,
     },
     {
@@ -342,7 +327,6 @@ const FeaturedCourses = ({
       title: "Popular Courses",
       subtitle:
         "Discover the courses that our students love most and join the learning revolution",
-      icon: BarChart3,
       data: data?.popular,
     },
     {
@@ -350,15 +334,13 @@ const FeaturedCourses = ({
       title: "Trending Now",
       subtitle:
         "Stay ahead of the curve with our most in-demand and current courses",
-      icon: TrendingUp,
       data: data?.trending,
     },
     {
       key: "bestseller",
-      title: "Bestsellers",
+      title: "Best Sellers",
       subtitle:
         "Experience our top-performing courses that have helped thousands succeed",
-      icon: BookOpen,
       data: data?.bestseller,
     },
     {
@@ -366,7 +348,6 @@ const FeaturedCourses = ({
       title: "Free Courses",
       subtitle:
         "Start your learning journey with our collection of high-quality free courses",
-      icon: Gift,
       data: data?.free,
     },
   ];
@@ -380,7 +361,6 @@ const FeaturedCourses = ({
           title={section.title}
           subtitle={section.subtitle}
           courses={section.data}
-          icon={section.icon}
           headingClassName={headingClassName}
           subtitleClassName={subtitleClassName}
           containerClassName={containerClassName}
@@ -402,7 +382,6 @@ const FeaturedCourses = ({
               title={section.title}
               subtitle={section.subtitle}
               courses={section.data}
-              icon={section.icon}
               headingClassName={headingClassName}
               subtitleClassName={subtitleClassName}
               containerClassName={containerClassName}

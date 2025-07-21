@@ -5,7 +5,6 @@ import Image from "next/image";
 import { ReactLenis } from "@studio-freight/react-lenis";
 import { useRef, useState } from "react";
 import MentorshipSection from "./mentorship-section";
-import FuturisticTestimonialShowcase from "./FuturisticTestimonialShowcase";
 
 import Link from "next/link";
 
@@ -278,26 +277,7 @@ export default function Home(): JSX.Element {
           </div>
         </section>
 
-        <FuturisticTestimonialShowcase limitCount={3} />
-        <section className="py-16 bg-[#090909]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
-              Explore Our{" "}
-              <span className="text-gradient-green">Success Stories</span>
-            </h2>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-10">
-              See how traders from all backgrounds have transformed their
-              approach to the markets with our cutting-edge methodology and
-              mentorship.
-            </p>
-            <Link href="/testimonials" className="inline-block">
-              <button className="relative group overflow-hidden bg-black border border-green-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out">
-                <span className="relative z-10">View All Testimonials</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-800 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 ease-in-out" />
-              </button>
-            </Link>
-          </div>
-        </section>
+        {/* Remove FuturisticTestimonialShowcase and testimonials section here */}
       </main>
     </ReactLenis>
   );
