@@ -270,15 +270,6 @@ const HeroSection: React.FC = () => {
                 <p className="text-zinc-400 flex-grow text-center leading-relaxed">
                   {feature.description}
                 </p>
-                <div className="mt-5 pt-4 border-t border-zinc-700/50">
-                  <Link
-                    href="/courses"
-                    className="text-green-400 font-medium flex items-center justify-center text-sm hover:text-green-300 transition-colors group"
-                  >
-                    Learn more
-                    <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
               </div>
             </motion.div>
           ))}
