@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LogoCarousel } from "../_components/LogoCarousel";
 import Headtext from "../_components/head-text";
 import LiveCoursesSection from "../_components/LiveCoursesSection";
+import UttamNagarOfficeCTA from "../_components/UttamNagarOfficeCTA";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       <FeaturedCourses sectionType="bestseller" />
       <HomeCategoryGrid />
       <FeaturedCourses sectionType="popular" />
+      <UttamNagarOfficeCTA />
       <LiveCoursesSection />
       <FeaturedCourses sectionType="free" />
       <TestimonialCarousel />

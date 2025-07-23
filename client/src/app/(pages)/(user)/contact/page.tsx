@@ -114,23 +114,6 @@ export default function Contact() {
     },
   ];
 
-  const courseInfo = [
-    {
-      name: "STP Course",
-      description: "Smart Trader Profile - 2-month duration across four levels",
-      features: ["Stock Market Focus", "Technical Analysis", "Risk Management"],
-    },
-    {
-      name: "FCH Course",
-      description: "Forex Crypto Hustler - 2-month duration across four levels",
-      features: [
-        "Global Markets",
-        "Cryptocurrency Trading",
-        "Forex Strategies",
-      ],
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-black text-white font-plus-jakarta-sans">
       {/* Add CSS for grid pattern */}
