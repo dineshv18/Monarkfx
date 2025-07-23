@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -343,7 +343,7 @@ export default function Contact() {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="John Doe"
+                        placeholder="Ram"
                         className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
                         required
                       />
@@ -357,7 +357,7 @@ export default function Contact() {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="john@example.com"
+                        placeholder="ram@example.com"
                         className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
                         required
                       />
@@ -383,14 +383,63 @@ export default function Contact() {
                     <label className="block text-sm font-medium text-zinc-300 mb-2">
                       Subject
                     </label>
-                    <Input
-                      type="text"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      placeholder="Course inquiry, General question, etc."
-                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
-                    />
+                    <div className="relative">
+                      <select
+                        name="subject"
+                        value={
+                          formData.subject.startsWith("Other:")
+                            ? "Other"
+                            : formData.subject
+                        }
+                        onChange={(e) => {
+                          if (e.target.value === "Other") {
+                            setFormData((prev) => ({
+                              ...prev,
+                              subject: "Other:",
+                            }));
+                          } else {
+                            setFormData((prev) => ({
+                              ...prev,
+                              subject: e.target.value,
+                            }));
+                          }
+                        }}
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3"
+                        required
+                      >
+                        <option value="">Select a subject</option>
+                        <option value="Course Inquiry">Course Inquiry</option>
+                        <option value="Office Classes">Office Classes</option>
+                        <option value="Live Classes">Live Classes</option>
+                        <option value="Course Fees">Course Fees</option>
+                        <option value="Certificate">Certificate</option>
+                        <option value="Technical Support">
+                          Technical Support
+                        </option>
+                        <option value="Affiliate Program">
+                          Affiliate Program
+                        </option>
+                        <option value="Feedback">Feedback</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      {/* Show input if 'Other' is selected */}
+                      {formData.subject.startsWith("Other:") && (
+                        <input
+                          type="text"
+                          name="otherSubject"
+                          value={formData.subject.replace("Other:", "")}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              subject: `Other:${e.target.value}`,
+                            }))
+                          }
+                          placeholder="Please specify your subject"
+                          className="mt-2 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3"
+                          required
+                        />
+                      )}
+                    </div>
                   </div>
 
                   <div>
@@ -506,7 +555,7 @@ export default function Contact() {
             <CardContent>
               <div className="h-96 rounded-lg overflow-hidden border border-zinc-700">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.7837997936613!2d77.05616367528806!3d28.606262075679115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d05de8d29cab9%3A0x2d77bb4a1742f15c!2sEquity%20Tank%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1740240805113!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.1810840039375!2d77.0610743755005!3d28.62433437566924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d058569e87c21%3A0xf42cb1ff733f175d!2sMonark%20FX%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1753284393656!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
