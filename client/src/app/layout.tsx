@@ -43,7 +43,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk bg-black text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk bg-black text-white overflow-x-hidden`}
       >
         {/* Global Tracking Scripts */}
         <TrackingScripts />

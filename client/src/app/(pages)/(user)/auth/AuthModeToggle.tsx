@@ -30,9 +30,10 @@ export default function AuthModeToggle({
             onClick={() => setAuthMode("register")}
             className="text-green-500 hover:text-green-600 hover:bg-green-500/10 transition-colors duration-200"
           >
-            Need an account? <span className="font-semibold ml-1">Register</span>
+            Need an account?{" "}
+            <span className="font-semibold ml-1">Register</span>
           </Button>
-          <div className="flex items-center justify-center space-x-2 text-sm text-zinc-400">
+          <div className="flex items-center justify-center space-x-2 text-sm text-zinc-400 flex-col md:flex-row">
             <Button
               variant="link"
               onClick={() => setAuthMode("forgotPassword")}
@@ -40,7 +41,7 @@ export default function AuthModeToggle({
             >
               Forgot Password?
             </Button>
-            <span>•</span>
+            <span className="hidden md:block">•</span>
             <Button
               variant="link"
               onClick={() => setAuthMode("resendVerification")}

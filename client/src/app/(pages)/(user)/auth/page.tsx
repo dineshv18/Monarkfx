@@ -75,7 +75,7 @@ export default function AuthPage({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="bg-zinc-900 p-8 rounded-2xl shadow-xl border border-green-500/30">
+          <div className="bg-zinc-900 p-3 md:p-8 rounded-2xl shadow-xl border border-green-500/30">
             <AuthComponent courseSlug={courseSlug} />
           </div>
         </motion.div>
