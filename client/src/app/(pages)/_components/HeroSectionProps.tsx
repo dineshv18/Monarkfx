@@ -203,10 +203,10 @@ const HeroSection: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  href="/business"
+                  href="/courses"
                   className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 group"
                 >
-                  <span>Business Solutions</span>
+                  <span>Explore Courses</span>
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
@@ -216,10 +216,10 @@ const HeroSection: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  href="/courses"
+                  href="/live-classes"
                   className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl font-semibold text-white hover:bg-white/20 hover:border-green-500/50 transition-all duration-300 flex items-center gap-2 group"
                 >
-                  <span>Explore Courses</span>
+                  <span>Explore Live Classes</span>
                   <ChevronRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
