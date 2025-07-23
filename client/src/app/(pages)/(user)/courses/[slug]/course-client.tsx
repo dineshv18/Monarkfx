@@ -762,12 +762,12 @@ const CourseClient: React.FC<CourseClientProps> = ({
                                           <span
                                             className={
                                               chapter.isFree
-                                                ? "bg-green-500/20 text-green-300 border-green-500/30 rounded-full px-3 py-1"
+                                                ? "bg-green-500/20 text-green-300 border-green-500/30 "
                                                 : (course.paid &&
                                                     hasPurchased) ||
                                                   (!course.paid && isEnrolled)
-                                                ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 rounded-full px-3 py-1"
-                                                : "border-zinc-700 text-zinc-400 bg-zinc-800/50"
+                                                ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0 rounded-full px-3 py-1 text-sm"
+                                                : "border-zinc-700 text-zinc-400 bg-zinc-800/50 rounded-full px-3 py-1 text-sm"
                                             }
                                           >
                                             {chapter.isFree
