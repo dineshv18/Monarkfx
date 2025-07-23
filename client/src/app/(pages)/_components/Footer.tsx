@@ -80,6 +80,7 @@ const Footer: React.FC = () => {
     { name: "Home", path: "/" },
     { name: "About Us", path: "/about" },
     { name: "Courses", path: "/courses" },
+    { name: "Live Classes", path: "/live-classes" },
     { name: "Business", path: "/business" },
     { name: "Contact", path: "/contact" },
   ];
@@ -267,7 +268,7 @@ const Footer: React.FC = () => {
               className="flex space-x-4 text-sm"
             >
               <Link
-                href="/privacy"
+                href="/privacy-policy"
                 className="text-gray-400 hover:text-green-500 transition-colors"
               >
                 Privacy Policy
@@ -276,7 +277,7 @@ const Footer: React.FC = () => {
                 href="/terms"
                 className="text-gray-400 hover:text-green-500 transition-colors"
               >
-                Terms of Service
+                Terms & Conditions
               </Link>
               <Link
                 href="/refund"

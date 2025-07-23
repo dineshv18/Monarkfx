@@ -1,28 +1,43 @@
 import React from "react";
 
+const RefundPolicy = () => (
+  <main className="max-w-3xl mx-auto px-4 py-20 md:pt-32 text-gray-200">
+    <h1 className="text-3xl font-bold mb-6 text-green-400">Refund Policy</h1>
+    <p className="mb-4">
+      At Monark FX, we strive to provide the best learning experience through
+      our online courses and live classes. Please read our refund policy
+      carefully before making any purchase.
+    </p>
+    <h2 className="text-xl font-semibold mt-8 mb-2 text-green-300">
+      No Refunds
+    </h2>
+    <p className="mb-4">
+      All purchases of courses and live classes on Monark FX are final. We do
+      not offer refunds once a course or class has been purchased or accessed.
+    </p>
+    <h2 className="text-xl font-semibold mt-8 mb-2 text-green-300">
+      Need Help?
+    </h2>
+    <p className="mb-4">
+      If you have any questions or concerns about your purchase, please contact
+      our support team. We are here to help you with any issues or queries you
+      may have.
+    </p>
+    <p>
+      Contact us at{" "}
+      <a
+        href="mailto:service@monarkfx.com"
+        className="text-green-400 underline"
+      >
+        service@monarkfx.com
+      </a>{" "}
+      or use the{" "}
+      <a href="/contact" className="text-green-400 underline">
+        Contact
+      </a>{" "}
+      page to submit your query.
+    </p>
+  </main>
+);
 
-const Refund = () => {
-  return (
-    <>
-    
-      <div className=" flex items-center justify-center px-4 py-16 pt-24">
-        <div className="max-w-3xl mx-auto bg-white">
-          <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
-            Refund Policy
-          </h1>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            Welcome to our Refund Policy page. We understand that sometimes
-            things don't go as planned, and you may need to request a refund.
-            This policy outlines the conditions under which refunds are granted
-            and the process for requesting a refund. We strive to ensure that
-            our refund process is fair and transparent. If you have any
-            questions or concerns about our refund policy, please feel free to
-            contact us. Thank you for choosing our platform.
-          </p>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default Refund;
+export default RefundPolicy;
