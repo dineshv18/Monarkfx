@@ -21,7 +21,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
       {/* Image Container with Overlay */}
       <div className="relative h-32 overflow-hidden">
         <Image
-          src={getCourseImageUrl(course.thumbnail)}
+          src={getCourseImageUrl(course.thumbnail) || "/placeholder.jpeg"}
           alt={course.title}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-110"

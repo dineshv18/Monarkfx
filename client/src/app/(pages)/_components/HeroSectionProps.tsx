@@ -261,7 +261,7 @@ const HeroSection: React.FC = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-b from-green-500/20 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
               <div className="relative bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-md border border-zinc-700/50 p-6 sm:p-8 rounded-2xl h-full flex flex-col hover:border-green-500/30 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg hover:shadow-green-500/10">
-                <div className="p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl w-fit mb-5 border border-green-500/30">
+                <div className="p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl w-fit mx-auto   mb-5 border border-green-500/30">
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold mb-3 text-white text-center">

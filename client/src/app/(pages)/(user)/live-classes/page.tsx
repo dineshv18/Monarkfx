@@ -3,17 +3,11 @@ import {
   Youtube,
   Loader2,
   Video,
-  Users,
-  Calendar,
   Star,
   Zap,
   TrendingUp,
-  BarChart3,
   IndianRupee,
-  Target,
-  BookOpen,
   Search,
-  Filter,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -22,7 +16,6 @@ import { useAuth } from "@/helper/AuthContext";
 import ClassCard from "./components/ClassCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,

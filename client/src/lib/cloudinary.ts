@@ -4,7 +4,7 @@ export const getCloudinaryUrl = (
   imagePath: string | null | undefined,
   folder: string = "monarkfx/courses"
 ): string => {
-  if (!imagePath) return "https://placehold.co/600x400?text=No+Image";
+  if (!imagePath) return "/placeholder.jpeg";
 
   // If it's already a Cloudinary URL, return as is
   if (imagePath.includes("cloudinary.com")) {

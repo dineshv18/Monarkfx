@@ -186,7 +186,7 @@ export default function RegistrationDialog({
     show: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   };
 
-  const defaultThumbnail = "/images/default-class-thumbnail.jpg";
+  const defaultThumbnail = "/placeholder.jpeg";
 
   return (
     <Dialog open={true} onOpenChange={onClose}>

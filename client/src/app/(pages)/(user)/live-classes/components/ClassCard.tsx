@@ -87,7 +87,7 @@ export default function ClassCard({
       <Card className="w-full overflow-hidden bg-gradient-to-br from-zinc-900/80 to-black/80 shadow-xl hover:shadow-2xl transition-all duration-500 border-zinc-700 hover:border-green-500/30 rounded-xl group h-full">
         <div className="relative h-48 w-full overflow-hidden">
           <Image
-            src={classData.thumbnailUrl}
+            src={classData.thumbnailUrl || "/placeholder.jpeg"}
             alt={classData.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

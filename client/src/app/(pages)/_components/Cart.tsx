@@ -185,7 +185,10 @@ const Cart: React.FC = () => {
                         <div className="flex gap-4">
                           <div className="relative w-[80px] h-[80px] flex-shrink-0">
                             <Image
-                              src={getCourseImageUrl(item.course.thumbnail)}
+                              src={
+                                getCourseImageUrl(item.course.thumbnail) ||
+                                "/placeholder.jpeg"
+                              }
                               alt={item.course.title}
                               fill
                               className="rounded-lg object-cover border border-green-500/20"

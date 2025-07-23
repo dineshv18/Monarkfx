@@ -61,7 +61,7 @@ export function CourseCard({ course, formatPrice }: CourseCardProps) {
       {/* Course Image */}
       <div className="relative h-48">
         <Image
-          src={course.image}
+          src={course.image || "/placeholder.jpeg"}
           alt={course.title}
           fill
           className="object-cover"
@@ -108,10 +108,16 @@ export function CourseCard({ course, formatPrice }: CourseCardProps) {
 
         {/* Course Details */}
         <div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t">
-          <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
+          <motion.div
+            className="flex items-center"
+            whileHover={{ scale: 1.05 }}
+          >
             <span>{course.lessons} Lessons</span>
           </motion.div>
-          <motion.div className="flex items-center" whileHover={{ scale: 1.05 }}>
+          <motion.div
+            className="flex items-center"
+            whileHover={{ scale: 1.05 }}
+          >
             <span>{course.students} Students</span>
           </motion.div>
         </div>
