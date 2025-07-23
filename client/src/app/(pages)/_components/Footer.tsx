@@ -157,12 +157,12 @@ const Footer: React.FC = () => {
               variants={itemVariants}
               className="md:col-span-1 space-y-6"
             >
-              <div className="flex items-center space-x-2">
+              <Link href="/" className="flex items-center space-x-2">
                 <Image src="/logo.png" width={100} height={100} alt="logo" />
-                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-green-500">
+                <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-500">
                   Monark FX
                 </h3>
-              </div>
+              </Link>
               <p className="text-gray-300">
                 Empowering traders with cutting-edge technology and expert
                 market insights since 2018.
