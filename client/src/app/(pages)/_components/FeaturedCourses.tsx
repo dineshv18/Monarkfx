@@ -103,7 +103,7 @@ const CourseSection = ({
   return (
     <section
       ref={sectionRef}
-      className="py-20 relative overflow-hidden bg-black"
+      className="py-20 relative overflow-hidden bg-gradient-to-br from-zinc-900/95 to-black/95 "
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
@@ -303,7 +303,7 @@ const FeaturedCourses = ({
 
   if (error) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-zinc-900/95 to-black/95  text-white flex items-center justify-center">
         <div className="text-center">
           <div className="p-4 bg-red-500/20 rounded-2xl border border-red-500/30 mb-4">
             <AlertTriangle className="h-8 w-8 text-red-400 mx-auto" />

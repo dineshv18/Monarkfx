@@ -22,7 +22,7 @@ const HomeCategoryGrid: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative py-16 px-2 bg-gradient-to-b from-black via-zinc-900 to-green-950 overflow-hidden">
+    <section className="relative py-16 px-2  bg-gradient-to-b from-black via-black to-green-950 overflow-hidden">
       {/* Subtle grid background */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none z-0"

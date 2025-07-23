@@ -137,7 +137,7 @@ export default function TestimonialCarousel() {
   }
 
   return (
-    <div className="w-full bg-black py-12 px-2 md:px-8 lg:px-16">
+    <div className="w-full bg-gradient-to-br from-zinc-900/95 to-black/95  py-12 px-2 md:px-8 lg:px-16">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight uppercase">

@@ -25,17 +25,6 @@ export default function Home() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
   const itemVariants = {
     hidden: { y: 30, opacity: 0 },
     visible: {
@@ -61,7 +50,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative bg-gradient-to-t from-black via-gray-900 to-black text-white overflow-hidden min-h-screen">
+    <main className="relative bg-gradient-to-t from-zinc-900/95 to-black/95  text-white overflow-hidden min-h-screen">
       {/* Custom Cursor */}
       {cursorText && (
         <motion.div
@@ -142,27 +131,15 @@ export default function Home() {
           ref={containerRef}
           className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10"
         >
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-          >
+          <div>
             {/* Enhanced Section Header */}
             <div className="text-center mb-16 md:mb-20">
-              <motion.div
-                variants={itemVariants}
-                className="inline-flex items-center bg-gradient-to-r from-green-950/80 to-emerald-950/80 backdrop-blur-md border border-green-700/50 px-6 py-2 rounded-full mb-6 hover:border-green-500/70 transition-all duration-500 group"
-              >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                  className="w-5 h-5 mr-3 text-green-400 group-hover:text-green-300"
-                >
+              <div className="inline-flex items-center bg-gradient-to-r from-green-950/80 to-emerald-950/80 backdrop-blur-md border border-green-700/50 px-6 py-2 rounded-full mb-6 hover:border-green-500/70 transition-all duration-500 group">
+                <div className="w-5 h-5 mr-3 text-green-400 group-hover:text-green-300">
                   <svg fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
                   </svg>
-                </motion.div>
+                </div>
                 <span className="text-sm font-semibold text-green-300 group-hover:text-green-200 transition-colors">
                   Premium Trading Courses
                 </span>
@@ -171,7 +148,7 @@ export default function Home() {
                   animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-              </motion.div>
+              </div>
 
               <motion.h2
                 variants={itemVariants}
@@ -231,18 +208,6 @@ export default function Home() {
 
             {/* Enhanced Main Content Card */}
             <motion.div variants={itemVariants} className="relative group">
-              <motion.div
-                className="absolute -inset-1 bg-gradient-to-r from-green-600/20 via-emerald-600/20 to-teal-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700"
-                animate={{
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-
               <div className="relative bg-gradient-to-br from-gray-900/90 via-green-950/30 to-emerald-950/20 backdrop-blur-xl border border-green-700/30 rounded-2xl p-8 md:p-12 hover:border-green-500/50 transition-all duration-700 group-hover:shadow-2xl group-hover:shadow-green-500/10">
                 <div className="grid md:grid-cols-3 gap-12">
                   <div className="md:col-span-2 space-y-8">
@@ -473,7 +438,7 @@ export default function Home() {
                 </div>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </main>
