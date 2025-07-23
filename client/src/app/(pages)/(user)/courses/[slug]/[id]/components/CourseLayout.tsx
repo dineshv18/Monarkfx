@@ -486,7 +486,6 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
               <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden">
                 <ChapterDetails
                   chapter={selectedChapter}
-                  progress={chapterProgress}
                   videoDuration={currentVideoDuration}
                 />
               </div>
