@@ -234,66 +234,72 @@ const Courses = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
-                <BookOpen className="h-8 w-8 text-green-400" />
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
+                <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
               {title}{" "}
               <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
                 Courses
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-zinc-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
               {subtitle}
             </p>
 
             {/* Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto mb-8 sm:mb-12 px-4">
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-green-500/20 rounded-lg">
-                      <BookOpen className="h-5 w-5 text-green-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
+                      <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     {totalCourses}
                   </div>
-                  <div className="text-sm text-zinc-400">Total Courses</div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Total Courses
+                  </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-blue-500/20 rounded-lg">
-                      <TrendingUp className="h-5 w-5 text-blue-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-blue-500/20 rounded-lg">
+                      <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     {premiumCourses}
                   </div>
-                  <div className="text-sm text-zinc-400">Premium Courses</div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Premium Courses
+                  </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-purple-500/20 rounded-lg">
-                      <Users className="h-5 w-5 text-purple-400" />
+              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300 sm:col-span-2 lg:col-span-1">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-purple-500/20 rounded-lg">
+                      <Users className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     {freeCourses}
                   </div>
-                  <div className="text-sm text-zinc-400">Free Courses</div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Free Courses
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -302,11 +308,11 @@ const Courses = () => {
       </div>
 
       {/* Content Section */}
-      <div className="bg-black py-10">
-        <div className="container mx-auto px-4 max-w-7xl">
+      <div className="bg-black py-8 sm:py-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           {/* Filters Section */}
-          <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-zinc-700 p-6 mb-12 shadow-xl">
-            <div className="flex flex-col gap-6">
+          <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-zinc-700 p-4 sm:p-6 mb-8 sm:mb-12 shadow-xl">
+            <div className="flex flex-col gap-4 sm:gap-6">
               <div className="w-full">
                 <div className="relative">
                   <Input
@@ -318,14 +324,14 @@ const Courses = () => {
                       setCourses([]);
                       setHasMore(true);
                     }}
-                    className="pl-10 w-full bg-black/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-green-500"
+                    className="pl-10 w-full bg-black/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-green-500 text-sm sm:text-base"
                   />
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 h-5 w-5" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 w-full">
-                <div className="flex flex-col sm:flex-row gap-4 flex-grow">
+              <div className="flex flex-col gap-4 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   <Select
                     value={selectedCategory}
                     onValueChange={(value) => {
@@ -335,7 +341,7 @@ const Courses = () => {
                       setHasMore(true);
                     }}
                   >
-                    <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-700 text-white">
+                    <SelectTrigger className="w-full bg-black/50 border-zinc-700 text-white text-sm sm:text-base">
                       <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-900 border-zinc-700">
@@ -361,7 +367,7 @@ const Courses = () => {
                       setHasMore(true);
                     }}
                   >
-                    <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-700 text-white">
+                    <SelectTrigger className="w-full bg-black/50 border-zinc-700 text-white text-sm sm:text-base">
                       <SelectValue placeholder="Price Filter" />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-900 border-zinc-700">
@@ -386,7 +392,7 @@ const Courses = () => {
                       setHasMore(true);
                     }}
                   >
-                    <SelectTrigger className="w-full sm:w-[200px] bg-black/50 border-zinc-700 text-white">
+                    <SelectTrigger className="w-full bg-black/50 border-zinc-700 text-white text-sm sm:text-base">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-900 border-zinc-700">
@@ -412,7 +418,7 @@ const Courses = () => {
                 <Button
                   variant="outline"
                   onClick={handleReset}
-                  className="w-full sm:w-auto border-green-500/30 text-green-400 hover:bg-green-500/10"
+                  className="w-full sm:w-auto border-green-500/30 text-green-400 hover:bg-green-500/10 text-sm sm:text-base"
                 >
                   <SlidersHorizontal className="mr-2 h-4 w-4" />
                   Reset Filters
@@ -425,7 +431,7 @@ const Courses = () => {
           {isLoading && <SkeletonCardGrid />}
 
           {!isLoading && courses.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {courses.map((course, index) => {
                 // Add ref to last element for infinite scroll
                 if (courses.length === index + 1) {
@@ -445,29 +451,31 @@ const Courses = () => {
 
           {/* Loading More Indicator */}
           {isLoadingMore && (
-            <div className="flex justify-center items-center py-8">
-              <div className="flex items-center gap-3 text-green-400">
-                <Loader2 className="h-6 w-6 animate-spin" />
-                <span>Loading more courses...</span>
+            <div className="flex justify-center items-center py-6 sm:py-8">
+              <div className="flex items-center gap-2 sm:gap-3 text-green-400">
+                <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
+                <span className="text-sm sm:text-base">
+                  Loading more courses...
+                </span>
               </div>
             </div>
           )}
 
           {/* No More Courses Indicator */}
           {!isLoading && !hasMore && courses.length > 0 && (
-            <div className="text-center py-8">
-              <div className="text-zinc-500 text-sm">
+            <div className="text-center py-6 sm:py-8">
+              <div className="text-zinc-500 text-xs sm:text-sm">
                 You've reached the end of all courses
               </div>
             </div>
           )}
 
           {!isLoading && courses.length === 0 && (
-            <div className="text-center py-12 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-zinc-700">
-              <h3 className="text-xl font-semibold text-white">
+            <div className="text-center py-8 sm:py-12 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-zinc-700">
+              <h3 className="text-lg sm:text-xl font-semibold text-white px-4">
                 No courses found
               </h3>
-              <p className="text-zinc-400 mt-2">
+              <p className="text-sm sm:text-base text-zinc-400 mt-2 px-4">
                 Try adjusting your search or filters
               </p>
             </div>

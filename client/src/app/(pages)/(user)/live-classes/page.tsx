@@ -14,6 +14,7 @@ import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/helper/AuthContext";
 import ClassCard from "./components/ClassCard";
+import VideoDialog from "./components/VideoDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -103,73 +104,77 @@ export default function LiveClasses() {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
-                <TrendingUp className="h-8 w-8 text-green-400" />
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
+                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
               Live Trading Sessions
             </h1>
 
-            <p className="text-xl md:text-2xl text-zinc-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
               Master the art of trading with our expert-led live sessions. Learn
               technical analysis, market strategies, and real-time trading
               techniques from seasoned professionals.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4">
               <button
                 onClick={() =>
                   document
                     .getElementById("classes-section")
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
-                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <Zap className="h-5 w-5" />
+                <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
                 Start Trading
               </button>
 
               <button
                 onClick={() => setIsVideoOpen(true)}
-                className="group flex items-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-6 py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
+                className="w-full sm:w-auto group flex items-center justify-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
               >
-                <Youtube className="h-5 w-5 transition-transform group-hover:scale-110" />
+                <Youtube className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:scale-110" />
                 <span>Watch Demo</span>
               </button>
             </div>
 
-            {/* Stats Section - Simplified */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            {/* Stats Section - Responsive */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-2xl mx-auto px-4">
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-green-500/20 rounded-lg">
-                      <Video className="h-5 w-5 text-green-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
+                      <Video className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     {totalClasses}
                   </div>
-                  <div className="text-sm text-zinc-400">Trading Sessions</div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Trading Sessions
+                  </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-yellow-500/20 rounded-lg">
-                      <IndianRupee className="h-5 w-5 text-yellow-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-yellow-500/20 rounded-lg">
+                      <IndianRupee className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     98-100%
                   </div>
-                  <div className="text-sm text-zinc-400">Success Rate</div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Success Rate
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -177,21 +182,25 @@ export default function LiveClasses() {
         </div>
       </div>
 
-      {/* Video Dialog would go here */}
+      {/* Video Dialog */}
+      <VideoDialog isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
 
       {/* Classes Section */}
-      <div className="bg-black py-20">
-        <div id="classes-section" className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="p-3 bg-green-500/20 rounded-xl">
-                <Star className="h-6 w-6 text-green-400" />
+      <div className="bg-black py-12 sm:py-16 md:py-20">
+        <div
+          id="classes-section"
+          className="container mx-auto px-4 sm:px-6 lg:px-8"
+        >
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 bg-green-500/20 rounded-lg sm:rounded-xl">
+                <Star className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-green-400" />
               </div>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-white px-2">
               Available Trading Sessions
             </h2>
-            <p className="text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed px-4">
               Join our expert traders for live interactive sessions designed to
               enhance your trading skills and market knowledge. Book your spot
               today!
@@ -199,10 +208,10 @@ export default function LiveClasses() {
           </div>
 
           {/* Search and Filter Section */}
-          <div className="mb-12">
+          <div className="mb-8 sm:mb-12">
             <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row gap-4">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <div className="flex-1">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 h-4 w-4" />
@@ -210,12 +219,12 @@ export default function LiveClasses() {
                         placeholder="Search trading sessions..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                        className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                       />
                     </div>
                   </div>
                   <Select value={filterStatus} onValueChange={setFilterStatus}>
-                    <SelectTrigger className="w-full md:w-48 bg-zinc-800 border-zinc-700 text-white">
+                    <SelectTrigger className="w-full sm:w-48 bg-zinc-800 border-zinc-700 text-white text-sm sm:text-base">
                       <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent className="bg-zinc-800 border-zinc-700">
@@ -232,30 +241,32 @@ export default function LiveClasses() {
 
           {/* Classes Grid - Responsive */}
           {loading ? (
-            <div className="flex justify-center items-center py-20">
+            <div className="flex justify-center items-center py-12 sm:py-20">
               <div className="text-center">
-                <Loader2 className="h-12 w-12 animate-spin text-green-400 mx-auto mb-4" />
-                <p className="text-zinc-400">Loading trading sessions...</p>
+                <Loader2 className="h-8 w-8 sm:h-12 sm:w-12 animate-spin text-green-400 mx-auto mb-3 sm:mb-4" />
+                <p className="text-sm sm:text-base text-zinc-400">
+                  Loading trading sessions...
+                </p>
               </div>
             </div>
           ) : filteredClasses.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="p-4 bg-zinc-900/50 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-                <Video className="h-10 w-10 text-zinc-400" />
+            <div className="text-center py-12 sm:py-20">
+              <div className="p-3 sm:p-4 bg-zinc-900/50 rounded-full w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 flex items-center justify-center">
+                <Video className="h-8 w-8 sm:h-10 sm:w-10 text-zinc-400" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 px-4">
                 {searchTerm || filterStatus !== "all"
                   ? "No sessions found"
                   : "No trading sessions available"}
               </h3>
-              <p className="text-zinc-400">
+              <p className="text-sm sm:text-base text-zinc-400 px-4">
                 {searchTerm || filterStatus !== "all"
                   ? "Try adjusting your search or filters"
                   : "Check back later for new sessions"}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredClasses.map((classItem: any) => (
                 <ClassCard
                   key={classItem.id || classItem.slug}
