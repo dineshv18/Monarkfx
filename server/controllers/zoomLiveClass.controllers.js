@@ -669,6 +669,7 @@ export const getZoomLiveClass = asyncHandler(async (req, res) => {
     delete classData.zoomLink;
     delete classData.zoomMeetingId;
     delete classData.zoomPassword;
+    delete classData.zoomStartUrl;
 
     // Also remove sensitive info from modules
     if (classData.modules) {
@@ -677,6 +678,7 @@ export const getZoomLiveClass = asyncHandler(async (req, res) => {
         delete moduleCopy.zoomLink;
         delete moduleCopy.zoomMeetingId;
         delete moduleCopy.zoomPassword;
+        delete moduleCopy.zoomStartUrl;
         return moduleCopy;
       });
     }

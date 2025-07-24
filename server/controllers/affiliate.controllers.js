@@ -9,7 +9,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 const createAffiliate = asyncHandler(async (req, res) => {
   const {
     name,
-    email,
     phone,
     address,
     city,
@@ -23,14 +22,25 @@ const createAffiliate = asyncHandler(async (req, res) => {
     upiId,
     commissionRate,
     notes,
+    govtIdNumber,
   } = req.body;
 
-  // Check if affiliate already exists with this email
-  const existingAffiliate = await prisma.affiliate.findUnique({
+  const userId = req.user.id;
+  const email = req.user.email;
+
+  // Check if affiliate already exists for this user
+  const existingAffiliate = await prisma.affiliate.findFirst({
+    where: { userId },
+  });
+  if (existingAffiliate) {
+    throw new ApiError(400, "You have already applied for affiliate.");
+  }
+
+  // Check if affiliate already exists with this email (should not happen, but for safety)
+  const emailAffiliate = await prisma.affiliate.findFirst({
     where: { email },
   });
-
-  if (existingAffiliate) {
+  if (emailAffiliate) {
     throw new ApiError(400, "Affiliate with this email already exists");
   }
 
@@ -55,6 +65,8 @@ const createAffiliate = asyncHandler(async (req, res) => {
       commissionRate: commissionRate || 15.0,
       referralCode,
       notes,
+      govtIdNumber,
+      userId,
     },
   });
 
@@ -472,6 +484,53 @@ const getAffiliateByReferralCode = asyncHandler(async (req, res) => {
     .json(new ApiResponsive(200, affiliate, "Affiliate found"));
 });
 
+// Get logged-in user's affiliate dashboard
+const getMyAffiliateDashboard = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const affiliate = await prisma.affiliate.findFirst({
+    where: { userId },
+    include: {
+      sales: {
+        include: {
+          course: { select: { id: true, title: true, slug: true } },
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
+  });
+  if (!affiliate) {
+    throw new ApiError(404, "Affiliate profile not found");
+  }
+  const totalEarnings = affiliate.sales.reduce(
+    (sum, sale) => sum + (sale.commissionAmount || 0),
+    0
+  );
+  return res.status(200).json(
+    new ApiResponsive(
+      200,
+      {
+        affiliate: {
+          id: affiliate.id,
+          name: affiliate.name,
+          referralCode: affiliate.referralCode,
+          status: affiliate.status,
+          isActive: affiliate.isActive,
+          totalEarnings,
+          sales: affiliate.sales.map((sale) => ({
+            id: sale.id,
+            course: sale.course,
+            saleAmount: sale.saleAmount,
+            commissionAmount: sale.commissionAmount,
+            createdAt: sale.createdAt,
+            status: sale.status,
+          })),
+        },
+      },
+      "Affiliate dashboard info"
+    )
+  );
+});
+
 export {
   createAffiliate,
   getAllAffiliates,
@@ -483,4 +542,5 @@ export {
   updateAffiliateSaleStatus,
   getAffiliateStats,
   getAffiliateByReferralCode,
+  getMyAffiliateDashboard,
 };

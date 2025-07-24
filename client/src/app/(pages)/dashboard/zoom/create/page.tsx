@@ -344,7 +344,6 @@ export default function CreateZoomLiveClassPage() {
                       name="registrationFee"
                       type="number"
                       min="0"
-                      step="0.01"
                       value={formData.registrationFee}
                       onChange={handleChange}
                       placeholder="0.00"
@@ -368,7 +367,6 @@ export default function CreateZoomLiveClassPage() {
                       name="courseFee"
                       type="number"
                       min="0"
-                      step="0.01"
                       value={formData.courseFee}
                       onChange={handleChange}
                       placeholder="0.00"

@@ -29,6 +29,10 @@ import {
   Video,
   LayoutDashboard,
   Camera,
+  Link,
+  ArrowRight,
+  IndianRupee,
+  Share2,
 } from "lucide-react";
 
 // Types
@@ -187,6 +191,9 @@ const UserProfile = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const router = useRouter();
+  const [affiliateData, setAffiliateData] = useState<any>(null);
+  const [affiliateLoading, setAffiliateLoading] = useState(false);
+  const [affiliateError, setAffiliateError] = useState<string | null>(null);
 
   // Function to update URL when tab changes
   const updateTab = (tab: string) => {
@@ -285,6 +292,35 @@ const UserProfile = () => {
       setIsRefreshing(false);
     }
   };
+
+  // Fetch affiliate dashboard data
+  const fetchAffiliateDashboard = async () => {
+    setAffiliateLoading(true);
+    setAffiliateError(null);
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/affiliate/me/dashboard`,
+        { withCredentials: true }
+      );
+      if (res.data && res.data.success) {
+        setAffiliateData(res.data.data.affiliate);
+      } else {
+        setAffiliateData(null);
+      }
+    } catch (err: any) {
+      setAffiliateError(err?.response?.data?.message || "Not an affiliate");
+      setAffiliateData(null);
+    } finally {
+      setAffiliateLoading(false);
+    }
+  };
+
+  // Fetch affiliate data when tab is selected
+  useEffect(() => {
+    if (activeTab === "affiliate") {
+      fetchAffiliateDashboard();
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -766,6 +802,122 @@ const UserProfile = () => {
     </div>
   );
 
+  // Affiliate Tab Content
+  const AffiliateTabContent = () => {
+    if (affiliateLoading) {
+      return (
+        <div className="p-8 text-center text-zinc-400">
+          Loading affiliate info...
+        </div>
+      );
+    }
+    if (affiliateError) {
+      return (
+        <div className="p-8 text-center">
+          <AlertCircle className="mx-auto mb-2 text-yellow-400" />
+          <div className="text-zinc-400 mb-4">{affiliateError}</div>
+          <a
+            href="/business"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <ArrowRight className="h-4 w-4" />
+            Become an Affiliate
+          </a>
+        </div>
+      );
+    }
+    if (!affiliateData) {
+      return (
+        <div className="p-8 text-center text-zinc-400">
+          You are not an affiliate yet.
+        </div>
+      );
+    }
+    return (
+      <div className="p-6 space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <Share2 className="h-6 w-6 text-green-400" />
+              <span className="text-lg font-bold text-white">
+                Your Referral Code:
+              </span>
+              <span className="bg-zinc-800 text-green-400 px-3 py-1 rounded-lg font-mono text-lg">
+                {affiliateData.referralCode}
+              </span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <IndianRupee className="h-5 w-5 text-yellow-400" />
+              <span className="text-zinc-300">Total Earnings:</span>
+              <span className="text-green-400 font-bold text-lg">
+                ₹{affiliateData.totalEarnings}
+              </span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-zinc-300">Status:</span>
+              <span
+                className={`font-bold px-2 py-1 rounded ${
+                  affiliateData.status === "APPROVED"
+                    ? "bg-green-600 text-white"
+                    : affiliateData.status === "PENDING"
+                    ? "bg-yellow-500 text-white"
+                    : "bg-red-600 text-white"
+                }`}
+              >
+                {affiliateData.status}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-white mb-4">Affiliate Sales</h3>
+          {affiliateData.sales.length === 0 ? (
+            <div className="text-zinc-400">No sales yet.</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm text-zinc-300">
+                <thead>
+                  <tr className="bg-zinc-800">
+                    <th className="px-4 py-2 text-left">Course</th>
+                    <th className="px-4 py-2 text-left">Amount</th>
+                    <th className="px-4 py-2 text-left">Commission</th>
+                    <th className="px-4 py-2 text-left">Date</th>
+                    <th className="px-4 py-2 text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {affiliateData.sales.map((sale: any) => (
+                    <tr key={sale.id} className="border-b border-zinc-700">
+                      <td className="px-4 py-2">{sale.course?.title || "-"}</td>
+                      <td className="px-4 py-2">₹{sale.saleAmount}</td>
+                      <td className="px-4 py-2">₹{sale.commissionAmount}</td>
+                      <td className="px-4 py-2">
+                        {format(new Date(sale.createdAt), "dd MMM yyyy")}
+                      </td>
+                      <td className="px-4 py-2">
+                        <span
+                          className={`px-2 py-1 rounded text-xs font-bold ${
+                            sale.status === "COMPLETED"
+                              ? "bg-green-600 text-white"
+                              : sale.status === "PENDING"
+                              ? "bg-yellow-500 text-white"
+                              : "bg-red-600 text-white"
+                          }`}
+                        >
+                          {sale.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-black font-plus-jakarta-sans mt-20 mb-10">
       <div className="max-w-7xl mx-auto p-4 md:p-6">
@@ -808,6 +960,13 @@ const UserProfile = () => {
                   >
                     <BookOpenIcon className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
                     <span className="hidden sm:inline">My Courses</span>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="affiliate"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
+                  >
+                    <Share2 className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
+                    <span className="hidden sm:inline">Affiliate</span>
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -888,6 +1047,18 @@ const UserProfile = () => {
                   <ShoppingCartIcon className="h-4 w-4 mr-3" />
                   Purchased Courses
                 </Button>
+                <Button
+                  variant={activeTab === "affiliate" ? "default" : "ghost"}
+                  className={`w-full justify-start font-medium transition-all duration-300 ${
+                    activeTab === "affiliate"
+                      ? "bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                      : "text-zinc-300 hover:bg-zinc-800 hover:text-white border-zinc-700"
+                  }`}
+                  onClick={() => updateTab("affiliate")}
+                >
+                  <Share2 className="h-4 w-4 mr-3" />
+                  Affiliate
+                </Button>
               </div>
             </Card>
           </div>
@@ -917,6 +1088,9 @@ const UserProfile = () => {
                     <PurchasedCoursesContent />
                   </div>
                 </TabsContent>
+                <TabsContent value="affiliate" className="mt-0">
+                  <AffiliateTabContent />
+                </TabsContent>
               </Tabs>
             </div>
 
@@ -935,6 +1109,7 @@ const UserProfile = () => {
               {activeTab === "live-classes" && <MyLiveClasses />}
               {activeTab === "enrolled-courses" && <EnrolledCoursesContent />}
               {activeTab === "purchased-courses" && <PurchasedCoursesContent />}
+              {activeTab === "affiliate" && <AffiliateTabContent />}
             </div>
           </div>
         </div>

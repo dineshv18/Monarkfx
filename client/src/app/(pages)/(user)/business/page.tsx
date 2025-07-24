@@ -25,11 +25,12 @@ import {
   X,
   IndianRupee,
   Info,
-  HelpCircle,
 } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Toaster } from "sonner";
+import { useAuth } from "@/helper/AuthContext";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_AVATAR_IMAGE = "/placeholder.jpeg";
 
@@ -74,9 +75,25 @@ const affiliateBenefits = [
 ];
 
 // Affiliate registration form data
-const initialFormData = {
+type AffiliateFormData = {
+  name: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  bankName: string;
+  accountNumber: string;
+  ifscCode: string;
+  accountHolderName: string;
+  upiId: string;
+  notes: string;
+  govtIdNumber: string;
+};
+
+const initialFormData: AffiliateFormData = {
   name: "",
-  email: "",
   phone: "",
   address: "",
   city: "",
@@ -89,6 +106,7 @@ const initialFormData = {
   accountHolderName: "",
   upiId: "",
   notes: "",
+  govtIdNumber: "",
 };
 
 // How it works steps
@@ -202,9 +220,18 @@ const AffiliateRegistrationModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState<AffiliateFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
+  const { isAuthenticated, checkAuth } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isOpen && !isAuthenticated) {
+      onClose();
+      router.push("/auth");
+    }
+  }, [isOpen, isAuthenticated, onClose, router]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -217,9 +244,29 @@ const AffiliateRegistrationModal = ({
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Show loading toast
-    const loadingToast = toast.loading("Submitting your application...");
+    // Validate all required fields
+    const requiredFields: (keyof AffiliateFormData)[] = [
+      "name",
+      "phone",
+      "address",
+      "city",
+      "state",
+      "country",
+      "pincode",
+      "bankName",
+      "accountNumber",
+      "ifscCode",
+      "accountHolderName",
+      "govtIdNumber",
+    ];
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        setIsSubmitting(false);
+        return;
+      }
+    }
 
+    const loadingToast = toast.loading("Submitting your application...");
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/affiliate/create`,
@@ -228,17 +275,14 @@ const AffiliateRegistrationModal = ({
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(formData),
         }
       );
-
       const data = await response.json();
-
       if (data.success) {
         toast.dismiss(loadingToast);
-        toast.success(
-          "Affiliate registration submitted successfully! We will contact you soon."
-        );
+
         setFormData(initialFormData);
         setStep(1);
         onClose();
@@ -255,7 +299,7 @@ const AffiliateRegistrationModal = ({
   };
 
   const nextStep = () => {
-    if (step === 1 && (!formData.name || !formData.email || !formData.phone)) {
+    if (step === 1 && (!formData.name || !formData.phone)) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -326,15 +370,6 @@ const AffiliateRegistrationModal = ({
                     className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
                   />
                   <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address *"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
-                  />
-                  <input
                     type="tel"
                     name="phone"
                     placeholder="Phone Number *"
@@ -351,13 +386,24 @@ const AffiliateRegistrationModal = ({
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
                   />
+                  <input
+                    type="text"
+                    name="govtIdNumber"
+                    placeholder="Aadhar Card OR Pan Card Number *"
+                    value={formData.govtIdNumber}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:border-green-500 focus:outline-none"
+                  />
                 </div>
                 <div className="flex justify-end">
                   <button
                     type="button"
                     onClick={nextStep}
                     disabled={
-                      !formData.name || !formData.email || !formData.phone
+                      !formData.name ||
+                      !formData.phone ||
+                      !formData.govtIdNumber
                     }
                     className="px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >

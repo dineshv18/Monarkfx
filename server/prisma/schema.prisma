@@ -44,6 +44,7 @@ model User {
   createdZoomSessions     ZoomLiveClass[]
   zoomPayments            ZoomPayment[]
   zoomSubscriptions       ZoomSubscription[]
+  affiliates              Affiliate[]
 
   @@index([email])
 }
@@ -562,10 +563,14 @@ model Affiliate {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   sales             AffiliateSale[]
+  govtIdNumber      String? // Government ID number/code
+  userId            String // Link to User
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([email])
   @@index([status])
   @@index([referralCode])
+  @@index([userId])
 }
 
 model AffiliateSale {

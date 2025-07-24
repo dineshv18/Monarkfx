@@ -13,13 +13,16 @@ import {
   updateAffiliateSaleStatus,
   getAffiliateStats,
   getAffiliateByReferralCode,
+  getMyAffiliateDashboard,
 } from "../controllers/affiliate.controllers.js";
 
 const router = Router();
 
 // Public routes
 router.get("/referral/:referralCode", getAffiliateByReferralCode);
-router.post("/create", createAffiliate);
+router.post("/create", verifyJWTToken, createAffiliate);
+// Affiliate dashboard for logged-in user
+router.get("/me/dashboard", verifyJWTToken, getMyAffiliateDashboard);
 
 // Protected routes (admin only)
 router.use(verifyJWTToken, verifyAdmin);

@@ -42,7 +42,7 @@ const router = Router();
 // Public routes
 router.get("/classes", getUserZoomLiveClasses);
 router.get("/class/:idOrSlug", getZoomLiveClass);
-router.get("/seo-classes", getAllLiveClassesSEO)
+router.get("/seo-classes", getAllLiveClassesSEO);
 // Add compatibility route for the older "session" naming convention
 router.get("/session/:idOrSlug", getZoomLiveClass);
 
@@ -63,11 +63,7 @@ router.get(
   verifyJWTToken,
   checkSubscription
 );
-router.get(
-  "/demo-access/:zoomLiveClassId",
-  verifyJWTToken,
-  getDemoAccess
-);
+router.get("/demo-access/:zoomLiveClassId", verifyJWTToken, getDemoAccess);
 
 // Admin routes
 router.post("/admin/class", verifyJWTToken, verifyAdmin, createZoomLiveClass);

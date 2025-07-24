@@ -15,24 +15,17 @@ import {
   Loader2,
   CheckCircle2,
   Video,
-  Copy,
   CreditCard,
-  Book,
   AlertCircle,
   Play,
   Users as UsersIcon,
   Star,
   MapPin,
-  ExternalLink,
-  TrendingUp,
-  Zap,
-  Shield,
   Award,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/helper/AuthContext";
@@ -742,18 +735,18 @@ export default function ClassDetails() {
                     {classData?.apiFlags?.hasAccessToLinks ||
                     classData.hasAccessToLinks ? (
                       <div className="absolute top-4 right-4">
-                        <Badge className="bg-green-600 text-white font-bold shadow-lg">
+                        <span className="bg-green-600 text-white font-bold shadow-lg px-2 py-1 rounded-md flex items-center justify-center gap-2">
                           <Play className="h-3 w-3 mr-1" />
                           Access Granted
-                        </Badge>
+                        </span>
                       </div>
                     ) : classData?.apiFlags?.isRegistered ||
                       classData.isRegistered ? (
                       <div className="absolute top-4 right-4">
-                        <Badge className="bg-blue-600 text-white font-bold shadow-lg">
+                        <span className="bg-blue-600 text-white font-bold shadow-lg px-2 py-1 rounded-md flex items-center justify-center gap-2">
                           <Star className="h-3 w-3 mr-1" />
                           Registered
-                        </Badge>
+                        </span>
                       </div>
                     ) : null}
                   </>
@@ -1037,7 +1030,7 @@ export default function ClassDetails() {
                       )}
                       {classData.currentOrientation && (
                         <div>
-                          <p className="text-sm text-zinc-400">Orientation</p>
+                          <p className="text-sm text-zinc-400">Market Focus</p>
                           <p className="text-white font-medium">
                             {classData.currentOrientation}
                           </p>
