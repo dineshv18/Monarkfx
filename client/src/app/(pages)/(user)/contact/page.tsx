@@ -183,7 +183,7 @@ export default function Contact() {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
           <motion.div
             ref={heroRef}
             initial={{ opacity: 0, y: 20 }}
@@ -191,32 +191,32 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
-                <MessageSquare className="h-8 w-8 text-green-400" />
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
+                <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
               Get in{" "}
               <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
                 Touch
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-zinc-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
               Ready to start your trading journey? Get in touch with our expert
               team for personalized guidance and course information.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4">
               <motion.a
                 href="#contact-form"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 Send Message
               </motion.a>
 
@@ -224,63 +224,75 @@ export default function Contact() {
                 href="/business"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="group flex items-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-6 py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
+                className="w-full sm:w-auto group flex items-center justify-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
               >
                 <span>Join Affiliate Program</span>
               </motion.a>
             </div>
 
             {/* Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-green-500/20 rounded-lg">
-                      <Users className="h-5 w-5 text-green-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
+                      <Users className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     1000+
                   </div>
-                  <div className="text-sm text-zinc-400">Students Trained</div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Students Trained
+                  </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-blue-500/20 rounded-lg">
-                      <Award className="h-5 w-5 text-blue-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-blue-500/20 rounded-lg">
+                      <Award className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">ISO</div>
-                  <div className="text-sm text-zinc-400">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
+                    ISO
+                  </div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
                     Certified Institute
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-purple-500/20 rounded-lg">
-                      <BookOpen className="h-5 w-5 text-purple-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-purple-500/20 rounded-lg">
+                      <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">All</div>
-                  <div className="text-sm text-zinc-400">Exclusive Courses</div>
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
+                    All
+                  </div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Exclusive Courses
+                  </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-yellow-500/20 rounded-lg">
-                      <CheckCircle className="h-5 w-5 text-yellow-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-yellow-500/20 rounded-lg">
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">24h</div>
-                  <div className="text-sm text-zinc-400">Response Time</div>
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
+                    24h
+                  </div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Response Time
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -288,37 +300,40 @@ export default function Contact() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-2 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12">
           {/* Contact Form */}
           <motion.div
             ref={formRef}
             initial={{ opacity: 0, x: -50 }}
             animate={isFormInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8"
             id="contact-form"
           >
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-sm font-medium mb-4">
-                <Info className="h-4 w-4" />
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+                <Info className="h-3 w-3 sm:h-4 sm:w-4" />
                 Send us a Message
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 px-2">
                 Get Started Today
               </h2>
-              <p className="text-zinc-400">
+              <p className="text-sm sm:text-base text-zinc-400 px-2">
                 Fill out the form below and we'll get back to you within 24
                 hours.
               </p>
             </div>
 
             <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-              <CardContent className="p-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
+              <CardContent className="p-6 sm:p-8">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-4 sm:space-y-6"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-zinc-300 mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
                         Full Name *
                       </label>
                       <Input
@@ -327,12 +342,12 @@ export default function Contact() {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Ram"
-                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 text-sm sm:text-base"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-zinc-300 mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
                         Email Address *
                       </label>
                       <Input
@@ -341,14 +356,14 @@ export default function Contact() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="ram@example.com"
-                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 text-sm sm:text-base"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
                       Phone Number *
                     </label>
                     <Input
@@ -357,13 +372,13 @@ export default function Contact() {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+91 98765 43210"
-                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500"
+                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 text-sm sm:text-base"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
                       Subject
                     </label>
                     <div className="relative">
@@ -387,7 +402,7 @@ export default function Contact() {
                             }));
                           }
                         }}
-                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3"
+                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3 text-sm sm:text-base"
                         required
                       >
                         <option value="">Select a subject</option>
@@ -418,7 +433,7 @@ export default function Contact() {
                             }))
                           }
                           placeholder="Please specify your subject"
-                          className="mt-2 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3"
+                          className="mt-2 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3 text-sm sm:text-base"
                           required
                         />
                       )}
@@ -426,7 +441,7 @@ export default function Contact() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-zinc-300 mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
                       Message *
                     </label>
                     <Textarea
@@ -435,7 +450,7 @@ export default function Contact() {
                       onChange={handleChange}
                       placeholder="Tell us about your trading goals and how we can help..."
                       rows={6}
-                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 resize-none"
+                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 resize-none text-sm sm:text-base"
                       required
                     />
                   </div>
@@ -443,7 +458,7 @@ export default function Contact() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
@@ -468,23 +483,23 @@ export default function Contact() {
             initial={{ opacity: 0, x: 50 }}
             animate={isInfoInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8"
           >
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 text-blue-400 rounded-full text-sm font-medium mb-4">
-                <Info className="h-4 w-4" />
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-500/20 text-blue-400 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+                <Info className="h-3 w-3 sm:h-4 sm:w-4" />
                 Contact Information
               </div>
-              <h2 className="text-3xl font-bold text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 px-2">
                 Multiple Ways to Reach Us
               </h2>
-              <p className="text-zinc-400">
+              <p className="text-sm sm:text-base text-zinc-400 px-2">
                 Choose the most convenient way to get in touch with our expert
                 trading team.
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {contactInfo.map((info, index) => (
                 <motion.div
                   key={index}
@@ -493,21 +508,21 @@ export default function Contact() {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
                   <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300 group">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-start gap-3 sm:gap-4">
                         <div
-                          className={`p-3 bg-gradient-to-r ${info.color} rounded-lg group-hover:scale-110 transition-transform duration-300`}
+                          className={`p-2 sm:p-3 bg-gradient-to-r ${info.color} rounded-lg group-hover:scale-110 transition-transform duration-300`}
                         >
-                          <info.icon className="h-6 w-6 text-white" />
+                          <info.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-white mb-1">
+                          <h3 className="font-semibold text-white mb-1 text-sm sm:text-base">
                             {info.title}
                           </h3>
-                          <p className="text-green-400 font-medium mb-1">
+                          <p className="text-green-400 font-medium mb-1 text-sm sm:text-base">
                             {info.details}
                           </p>
-                          <p className="text-zinc-400 text-sm">
+                          <p className="text-zinc-400 text-xs sm:text-sm">
                             {info?.description}
                           </p>
                         </div>
@@ -526,17 +541,17 @@ export default function Contact() {
           initial={{ opacity: 0, y: 50 }}
           animate={isMapInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="mt-20"
+          className="mt-12 sm:mt-16 lg:mt-20"
         >
           <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-green-400" />
+              <CardTitle className="text-white flex items-center gap-2 text-lg sm:text-xl">
+                <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                 Visit Our Branch
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-96 rounded-lg overflow-hidden border border-zinc-700">
+              <div className="h-64 sm:h-80 lg:h-96 rounded-lg overflow-hidden border border-zinc-700">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.1810840039375!2d77.0610743755005!3d28.62433437566924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d058569e87c21%3A0xf42cb1ff733f175d!2sMonark%20FX%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1753284393656!5m2!1sen!2sin"
                   width="100%"

@@ -169,7 +169,7 @@ const About = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
           <motion.div
             ref={heroRef}
             initial={{ opacity: 0, y: 20 }}
@@ -177,32 +177,32 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
-                <Trophy className="h-8 w-8 text-green-400" />
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
+                <Trophy className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
               About{" "}
               <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
                 Monark FX
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-zinc-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
               Learn about our journey, vision, and expertise in the world of
               trading and finance.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4">
               <motion.a
                 href="#legacy"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 Learn More
               </motion.a>
 
@@ -210,29 +210,29 @@ const About = () => {
                 href="/contact"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="group flex items-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-6 py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
+                className="w-full sm:w-auto group flex items-center justify-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
               >
                 <span>Contact Us</span>
               </motion.a>
             </div>
 
             {/* Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
               {achievements.map((achievement, index) => (
                 <Card
                   key={index}
                   className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300"
                 >
-                  <CardContent className="p-6 text-center">
-                    <div className="flex items-center justify-center gap-3 mb-3">
-                      <div className="p-2 bg-green-500/20 rounded-lg">
-                        <achievement.icon className="h-5 w-5 text-green-400" />
+                  <CardContent className="p-4 sm:p-6 text-center">
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                      <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
+                        <achievement.icon className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                       </div>
                     </div>
-                    <div className="text-2xl font-bold text-white mb-1">
+                    <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                       {achievement.value}
                     </div>
-                    <div className="text-sm text-zinc-400">
+                    <div className="text-xs sm:text-sm text-zinc-400">
                       {achievement.label}
                     </div>
                   </CardContent>
@@ -244,17 +244,17 @@ const About = () => {
       </div>
 
       {/* Legacy Section */}
-      <section id="legacy" className="py-32 relative">
-        <div className="container mx-auto px-4 max-w-7xl">
+      <section id="legacy" className="py-16 sm:py-24 md:py-32 relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <motion.div
             ref={legacyRef}
             initial={{ opacity: 0, y: 30 }}
             animate={isLegacyInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row items-center gap-16"
+            className="flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-16"
           >
-            <div className="w-full md:w-1/2 relative">
-              <div className="relative z-10 overflow-hidden group rounded-2xl">
+            <div className="w-full lg:w-1/2 relative">
+              <div className="relative z-10 overflow-hidden group rounded-xl sm:rounded-2xl">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
@@ -264,47 +264,47 @@ const About = () => {
                     width={700}
                     height={500}
                     alt="Monark FX Legacy"
-                    className="w-full h-auto object-cover rounded-2xl shadow-[0_10px_50px_-12px_rgba(34,197,94,0.2)] transition-all duration-700"
+                    className="w-full h-auto object-cover rounded-xl sm:rounded-2xl shadow-[0_10px_50px_-12px_rgba(34,197,94,0.2)] transition-all duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-green-600/30 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-700 rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-green-600/30 to-transparent opacity-40 group-hover:opacity-60 transition-opacity duration-700 rounded-xl sm:rounded-2xl"></div>
                 </motion.div>
               </div>
 
               {/* Decorative elements */}
               <motion.div
-                className="absolute -bottom-10 -right-10 w-80 h-80 border border-green-500/30 rounded-full -z-0 opacity-70"
+                className="absolute -bottom-6 sm:-bottom-10 -right-6 sm:-right-10 w-60 sm:w-80 h-60 sm:h-80 border border-green-500/30 rounded-full -z-0 opacity-70"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               ></motion.div>
               <motion.div
-                className="absolute -top-8 -left-8 w-40 h-40 border border-green-500/30 rounded-full -z-0 opacity-70"
+                className="absolute -top-6 sm:-top-8 -left-6 sm:-left-8 w-32 sm:w-40 h-32 sm:h-40 border border-green-500/30 rounded-full -z-0 opacity-70"
                 animate={{ rotate: -360 }}
                 transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
               ></motion.div>
             </div>
 
-            <div className="w-full md:w-1/2">
-              <div className="mb-8">
+            <div className="w-full lg:w-1/2">
+              <div className="mb-6 sm:mb-8">
                 <motion.span
-                  className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block"
+                  className="text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block"
                   initial={{ opacity: 0, x: -20 }}
                   animate={isLegacyInView ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.1 }}
                 >
                   Who We Are
                 </motion.span>
-                <h2 className="text-4xl md:text-6xl font-bold text-white mt-2">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mt-2 px-2">
                   Our Legacy in{" "}
                   <span className="text-green-500 relative">
                     Financial
-                    <span className="absolute -bottom-2 left-0 w-full h-1 bg-green-500/20"></span>
+                    <span className="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-0.5 sm:h-1 bg-green-500/20"></span>
                   </span>{" "}
                   Education
                 </h2>
               </div>
 
               <motion.p
-                className="text-zinc-300 text-lg leading-relaxed mb-8"
+                className="text-sm sm:text-base md:text-lg text-zinc-300 leading-relaxed mb-6 sm:mb-8 px-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isLegacyInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.3 }}
@@ -316,13 +316,13 @@ const About = () => {
               </motion.p>
 
               <motion.div
-                className="p-6 bg-gradient-to-r from-green-500/20 to-transparent border-l-4 border-green-500 rounded-r-xl shadow-sm"
+                className="p-4 sm:p-6 bg-gradient-to-r from-green-500/20 to-transparent border-l-4 border-green-500 rounded-r-xl shadow-sm"
                 initial={{ opacity: 0, x: 20 }}
                 animate={isLegacyInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.5 }}
                 whileHover={{ x: 5 }}
               >
-                <p className="italic text-green-400 font-medium">
+                <p className="italic text-green-400 font-medium text-sm sm:text-base">
                   "At Monark FX, we don't just teach trading; we build traders
                   who transform markets."
                 </p>
@@ -333,27 +333,27 @@ const About = () => {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-32 bg-gradient-to-br from-zinc-900 to-black relative">
-        <div className="container mx-auto px-4 max-w-6xl">
+      <section className="py-16 sm:py-24 md:py-32 bg-gradient-to-br from-zinc-900 to-black relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <motion.div
             ref={timelineRef}
             initial={{ opacity: 0, y: 30 }}
             animate={isTimelineInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
-            className="text-center mb-20"
+            className="text-center mb-12 sm:mb-16 lg:mb-20"
           >
             <motion.span
-              className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-3"
+              className="text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-2 sm:mb-3"
               initial={{ opacity: 0, y: -10 }}
               animate={isTimelineInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               Our Evolution
             </motion.span>
-            <h2 className="text-5xl font-bold text-center text-white relative inline-block">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-white relative inline-block px-2">
               Our <span className="text-green-500">Journey</span>
               <motion.div
-                className="absolute -bottom-3 left-0 w-full h-1 bg-green-500/20"
+                className="absolute -bottom-2 sm:-bottom-3 left-0 w-full h-0.5 sm:h-1 bg-green-500/20"
                 initial={{ width: 0 }}
                 animate={isTimelineInView ? { width: "100%" } : {}}
                 transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
@@ -361,7 +361,7 @@ const About = () => {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {timelineItems.map((item, index) => (
               <motion.div
                 key={index}
@@ -371,16 +371,16 @@ const About = () => {
                 className="relative"
               >
                 <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300 h-full">
-                  <CardContent className="p-8 text-center">
-                    <div className="mb-6">
-                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white font-bold text-xl mb-4">
+                  <CardContent className="p-6 sm:p-8 text-center">
+                    <div className="mb-4 sm:mb-6">
+                      <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white font-bold text-lg sm:text-xl mb-3 sm:mb-4">
                         {item.year}
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-4">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
                       {item.title}
                     </h3>
-                    <p className="text-zinc-300 leading-relaxed">
+                    <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
                       {item.description}
                     </p>
                   </CardContent>
@@ -392,27 +392,27 @@ const About = () => {
       </section>
 
       {/* Expertise Section */}
-      <section className="py-32 relative">
-        <div className="container mx-auto px-4 max-w-7xl">
+      <section className="py-16 sm:py-24 md:py-32 relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <motion.div
             ref={expertiseRef}
             initial={{ opacity: 0, y: 30 }}
             animate={isExpertiseInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
-            className="text-center mb-20"
+            className="text-center mb-12 sm:mb-16 lg:mb-20"
           >
             <motion.span
-              className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-3"
+              className="text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-2 sm:mb-3"
               initial={{ opacity: 0, y: -10 }}
               animate={isExpertiseInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               What We Offer
             </motion.span>
-            <h2 className="text-5xl font-bold text-center text-white relative inline-block">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-white relative inline-block px-2">
               Our <span className="text-green-500">Expertise</span>
               <motion.div
-                className="absolute -bottom-3 left-0 w-full h-1 bg-green-500/20"
+                className="absolute -bottom-2 sm:-bottom-3 left-0 w-full h-0.5 sm:h-1 bg-green-500/20"
                 initial={{ width: 0 }}
                 animate={isExpertiseInView ? { width: "100%" } : {}}
                 transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
@@ -420,7 +420,7 @@ const About = () => {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {expertiseItems.map((item, index) => (
               <motion.div
                 key={index}
@@ -430,16 +430,16 @@ const About = () => {
                 className="group relative"
               >
                 <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300 h-full">
-                  <CardContent className="p-8">
+                  <CardContent className="p-6 sm:p-8">
                     <div
-                      className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${item.color} mb-6 group-hover:scale-110 transition-transform duration-300`}
+                      className={`inline-flex p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r ${item.color} mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300`}
                     >
-                      <item.icon className="h-8 w-8 text-white" />
+                      <item.icon className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-4">
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
                       {item.title}
                     </h3>
-                    <p className="text-zinc-300 leading-relaxed">
+                    <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
                       {item.description}
                     </p>
                   </CardContent>
@@ -451,27 +451,27 @@ const About = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-32 bg-gradient-to-br from-zinc-900 to-black relative">
-        <div className="container mx-auto px-4 max-w-7xl">
+      <section className="py-16 sm:py-24 md:py-32 bg-gradient-to-br from-zinc-900 to-black relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <motion.div
             ref={statsRef}
             initial={{ opacity: 0, y: 30 }}
             animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
-            className="text-center mb-20"
+            className="text-center mb-12 sm:mb-16 lg:mb-20"
           >
             <motion.span
-              className="text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-3"
+              className="text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold text-green-500 inline-block mb-2 sm:mb-3"
               initial={{ opacity: 0, y: -10 }}
               animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
               Our Impact
             </motion.span>
-            <h2 className="text-5xl font-bold text-center text-white relative inline-block">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-white relative inline-block px-2">
               Numbers That <span className="text-green-500">Matter</span>
               <motion.div
-                className="absolute -bottom-3 left-0 w-full h-1 bg-green-500/20"
+                className="absolute -bottom-2 sm:-bottom-3 left-0 w-full h-0.5 sm:h-1 bg-green-500/20"
                 initial={{ width: 0 }}
                 animate={isStatsInView ? { width: "100%" } : {}}
                 transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
@@ -479,7 +479,7 @@ const About = () => {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {achievements.map((achievement, index) => (
               <motion.div
                 key={index}
@@ -488,16 +488,16 @@ const About = () => {
                 transition={{ duration: 0.7, delay: index * 0.1 }}
               >
                 <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                  <CardContent className="p-8 text-center">
-                    <div className="flex items-center justify-center gap-3 mb-3">
-                      <div className="p-2 bg-green-500/20 rounded-lg">
-                        <achievement.icon className="h-5 w-5 text-green-400" />
+                  <CardContent className="p-6 sm:p-8 text-center">
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                      <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
+                        <achievement.icon className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                       </div>
                     </div>
-                    <div className="text-3xl font-bold text-white mb-1">
+                    <div className="text-2xl sm:text-3xl font-bold text-white mb-1">
                       {achievement.value}
                     </div>
-                    <div className="text-sm text-zinc-400">
+                    <div className="text-xs sm:text-sm text-zinc-400">
                       {achievement.label}
                     </div>
                   </CardContent>

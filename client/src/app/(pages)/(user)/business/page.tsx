@@ -126,12 +126,6 @@ const howItWorks = [
     title: "Earn",
     description: "Get 15% commission on every successful sale you generate",
   },
-  {
-    number: "04",
-    title: "Withdraw",
-    description:
-      "Withdraw your earnings anytime through multiple payment methods",
-  },
 ];
 
 // Success stories
@@ -223,7 +217,7 @@ const AffiliateRegistrationModal = ({
   const [formData, setFormData] = useState<AffiliateFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
-  const { isAuthenticated, checkAuth } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -674,36 +668,36 @@ const BusinessPage = () => {
           />
         </div>
 
-        <div className="container mx-auto px-4 py-20 md:pt-32 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-2xl border border-green-500/30">
-                <IndianRupee className="h-8 w-8 text-green-400" />
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
+                <IndianRupee className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
               Become Our{" "}
               <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
                 Affiliate
               </span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-zinc-300 mb-8 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
               Earn 15% commission on every course sale. Join our affiliate
               program and start earning while helping others master trading.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4">
               <motion.button
                 onClick={() => {
                   setIsModalOpen(true);
                 }}
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 Join Affiliate Program
               </motion.button>
 
@@ -711,65 +705,75 @@ const BusinessPage = () => {
                 href="/contact"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="group flex items-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-6 py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
+                className="w-full sm:w-auto group flex items-center justify-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
               >
                 <span>Contact Us</span>
               </motion.a>
             </div>
 
             {/* Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-green-500/20 rounded-lg">
-                      <IndianRupee className="h-5 w-5 text-green-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
+                      <IndianRupee className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">15%</div>
-                  <div className="text-sm text-zinc-400">Commission Rate</div>
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
+                    15%
+                  </div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Commission Rate
+                  </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-blue-500/20 rounded-lg">
-                      <Users className="h-5 w-5 text-blue-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-blue-500/20 rounded-lg">
+                      <Users className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">500+</div>
-                  <div className="text-sm text-zinc-400">Active Affiliates</div>
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
+                    500+
+                  </div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Active Affiliates
+                  </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-purple-500/20 rounded-lg">
-                      <TrendingUp className="h-5 w-5 text-purple-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-purple-500/20 rounded-lg">
+                      <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     ₹25L+
                   </div>
-                  <div className="text-sm text-zinc-400">
+                  <div className="text-xs sm:text-sm text-zinc-400">
                     Paid to Affiliates
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <div className="p-2 bg-yellow-500/20 rounded-lg">
-                      <Star className="h-5 w-5 text-yellow-400" />
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="p-1.5 sm:p-2 bg-yellow-500/20 rounded-lg">
+                      <Star className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">
+                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
                     4.8/5
                   </div>
-                  <div className="text-sm text-zinc-400">Course Rating</div>
+                  <div className="text-xs sm:text-sm text-zinc-400">
+                    Course Rating
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -778,50 +782,50 @@ const BusinessPage = () => {
       </div>
 
       {/* How It Works - Information Section */}
-      <section className="py-16 bg-gradient-to-br from-zinc-900 to-black relative overflow-hidden">
+      <section className="py-12 sm:py-16 bg-gradient-to-br from-zinc-900 to-black relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto mb-12">
+          <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-sm font-medium mb-4">
-                <Info className="h-4 w-4" />
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+                <Info className="h-3 w-3 sm:h-4 sm:w-4" />
                 How Affiliate System Works
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6 px-2">
                 Complete Guide to Earning with Us
               </h2>
-              <p className="text-xl text-zinc-300">
+              <p className="text-base sm:text-lg md:text-xl text-zinc-300 px-4">
                 Understand how the affiliate system works and start earning
                 commissions
               </p>
             </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-2xl p-8"
+              className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl sm:rounded-2xl p-6 sm:p-8"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 bg-blue-500/20 rounded-xl">
-                  <Users className="h-6 w-6 text-blue-400" />
+              <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <div className="p-2 sm:p-3 bg-blue-500/20 rounded-lg sm:rounded-xl">
+                  <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
                 </div>
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-lg sm:text-xl font-bold text-white">
                   1. Register as Affiliate
                 </h3>
               </div>
-              <p className="text-zinc-300 mb-4">
+              <p className="text-sm sm:text-base text-zinc-300 mb-3 sm:mb-4">
                 Fill out the registration form with your details. We'll review
                 your application and approve qualified affiliates.
               </p>
-              <ul className="text-sm text-zinc-400 space-y-2">
+              <ul className="text-xs sm:text-sm text-zinc-400 space-y-1 sm:space-y-2">
                 <li>• Complete registration form</li>
                 <li>• Provide bank details for payments</li>
                 <li>• Wait for admin approval</li>
