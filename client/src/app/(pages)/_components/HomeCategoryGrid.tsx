@@ -21,6 +21,10 @@ const HomeCategoryGrid: React.FC = () => {
       });
   }, []);
 
+  if (!loading && categories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="relative py-16 px-2  bg-gradient-to-b from-black via-black to-green-950 overflow-hidden">
       {/* Subtle grid background */}
