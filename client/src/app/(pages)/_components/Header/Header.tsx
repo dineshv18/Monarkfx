@@ -137,7 +137,7 @@ const Header = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed z-50 top-[10px] left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-7xl flex flex-col md:flex-row items-center justify-between transition-all duration-500 ${
+      className={`fixed z-[9999] top-[10px] left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-7xl flex flex-col md:flex-row items-center justify-between transition-all duration-500 ${
         isScrolled
           ? "bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-[0_0_15px_rgba(220,38,38,0.25)]"
           : "bg-transparent"

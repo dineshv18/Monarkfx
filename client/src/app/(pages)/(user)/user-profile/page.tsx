@@ -917,7 +917,7 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-black font-plus-jakarta-sans mt-20 mb-10">
-      <div className="max-w-7xl mx-auto p-4 md:p-6">
+      <div className="max-w-7xl mx-auto p-4 md:p-6 pb-24 md:pb-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar / Mobile Tabs */}
           <div className="w-full lg:w-72 flex-shrink-0">
@@ -929,41 +929,36 @@ const UserProfile = () => {
                 onValueChange={updateTab}
                 className="w-full"
               >
-                <TabsList className="w-full grid grid-cols-4 bg-zinc-900 border border-zinc-700 shadow-lg rounded-lg p-1">
+                <TabsList className="w-full grid grid-cols-5 bg-zinc-900 border border-zinc-700 shadow-lg rounded-lg p-1">
                   <TabsTrigger
                     value="dashboard"
-                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-xs"
                   >
-                    <LayoutDashboard className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                    <span className="hidden sm:inline">Dashboard</span>
+                    <LayoutDashboard className="h-4 w-4" />
                   </TabsTrigger>
                   <TabsTrigger
                     value="certificates"
-                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-xs"
                   >
-                    <GraduationCap className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                    <span className="hidden sm:inline">Certificates</span>
+                    <GraduationCap className="h-4 w-4" />
                   </TabsTrigger>
                   <TabsTrigger
                     value="live-classes"
-                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-xs"
                   >
-                    <Video className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                    <span className="hidden sm:inline">Live Classes</span>
+                    <Video className="h-4 w-4" />
                   </TabsTrigger>
                   <TabsTrigger
                     value="my-courses"
-                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-xs"
                   >
-                    <BookOpenIcon className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                    <span className="hidden sm:inline">My Courses</span>
+                    <BookOpenIcon className="h-4 w-4" />
                   </TabsTrigger>
                   <TabsTrigger
                     value="affiliate"
-                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
+                    className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg text-xs"
                   >
-                    <Share2 className="h-4 w-4 mr-2 sm:mr-0 lg:mr-2" />
-                    <span className="hidden sm:inline">Affiliate</span>
+                    <Share2 className="h-4 w-4" />
                   </TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -1065,27 +1060,27 @@ const UserProfile = () => {
             {/* Mobile Tabs Content */}
             <div className="block lg:hidden">
               <Tabs value={activeTab} className="w-full">
-                <TabsContent value="dashboard" className="mt-0">
+                <TabsContent value="dashboard" className="mt-0 pb-20">
                   <UserInfo />
                   <DashboardStats />
                   <UserCertificates />
                 </TabsContent>
-                <TabsContent value="certificates" className="mt-0">
+                <TabsContent value="certificates" className="mt-0 pb-20">
                   <UserInfo />
                   <UserCertificates />
                 </TabsContent>
-                <TabsContent value="live-classes" className="mt-0">
+                <TabsContent value="live-classes" className="mt-0 pb-20">
                   <UserInfo />
                   <MyLiveClasses />
                 </TabsContent>
-                <TabsContent value="my-courses" className="mt-0">
+                <TabsContent value="my-courses" className="mt-0 pb-20">
                   <UserInfo />
                   <div className="space-y-8">
                     <EnrolledCoursesContent />
                     <PurchasedCoursesContent />
                   </div>
                 </TabsContent>
-                <TabsContent value="affiliate" className="mt-0">
+                <TabsContent value="affiliate" className="mt-0 pb-20">
                   <AffiliateTabContent />
                 </TabsContent>
               </Tabs>

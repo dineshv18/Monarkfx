@@ -1,5 +1,6 @@
 import Header from "../_components/Header/Header";
 import Footer from "../_components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -7,6 +8,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
       <Header />
       {children}
       <Footer />
+      <MobileBottomNav />
     </div>
   );
 };

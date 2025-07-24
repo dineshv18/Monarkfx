@@ -30,6 +30,8 @@ export default function Home() {
       <FeaturedCourses sectionType="free" />
       <TestimonialCarousel />
       <Scroll />
+      {/* Bottom padding for mobile navigation */}
+      <div className="h-24 md:hidden" />
     </>
   );
 }
