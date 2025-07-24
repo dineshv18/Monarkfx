@@ -513,9 +513,6 @@ const UserProfile = () => {
                   <ShieldCheckIcon className="h-4 w-4 text-white" />
                 </div>
               )}
-              <div className="absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                <Camera className="h-6 w-6 text-white" />
-              </div>
             </div>
 
             <div className="flex-1 space-y-4">

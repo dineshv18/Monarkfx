@@ -102,7 +102,7 @@ export default function Contact() {
       icon: Mail,
       title: "Email Us",
       details: "service@monarkfx.com",
-      description: "We respond within 24 business hours",
+
       color: "from-purple-500 to-pink-500",
     },
     {
@@ -267,8 +267,8 @@ export default function Contact() {
                       <BookOpen className="h-5 w-5 text-purple-400" />
                     </div>
                   </div>
-                  <div className="text-2xl font-bold text-white mb-1">2</div>
-                  <div className="text-sm text-zinc-400">Premium Courses</div>
+                  <div className="text-2xl font-bold text-white mb-1">All</div>
+                  <div className="text-sm text-zinc-400">Exclusive Courses</div>
                 </CardContent>
               </Card>
 
@@ -508,7 +508,7 @@ export default function Contact() {
                             {info.details}
                           </p>
                           <p className="text-zinc-400 text-sm">
-                            {info.description}
+                            {info?.description}
                           </p>
                         </div>
                       </div>
