@@ -349,7 +349,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
   if (error) return <ErrorComponent error={error} />;
 
   return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sansye overflow-x-hidden">
+    <div className="min-h-screen bg-black font-plus-jakarta-sansye overflow-x-hidden w-full">
       {/* Course Header */}
       <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden pt-10">
         <div className="absolute inset-0 opacity-5">
@@ -578,10 +578,10 @@ const CourseClient: React.FC<CourseClientProps> = ({
       </div>
 
       {/* Course Content */}
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Course Description, Content, and Reviews */}
-          <div className="lg:col-span-2 order-2 lg:order-none">
+          <div className="lg:col-span-2 order-2 lg:order-1">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -832,8 +832,8 @@ const CourseClient: React.FC<CourseClientProps> = ({
           </div>
 
           {/* Price Card */}
-          <div className="md:col-span-1 order-1 md:order-none">
-            <Card className="sticky top-4 overflow-hidden border-0 shadow-xl bg-gray-900 backdrop-blur-sm">
+          <div className="lg:col-span-1 order-1 lg:order-2">
+            <Card className="sticky top-4 overflow-hidden border-0 shadow-xl bg-gray-900 backdrop-blur-sm max-w-md mx-auto lg:max-w-none">
               {/* Price Header Section */}
               <div className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-green-600/10" />
@@ -861,15 +861,15 @@ const CourseClient: React.FC<CourseClientProps> = ({
                             animate={{ opacity: 1, scale: 1 }}
                             className="text-center"
                           >
-                            <div className="flex items-center justify-center gap-2 mb-2">
+                            <div className="flex items-center justify-center gap-2 mb-2 flex-col md:flex-row">
                               {course.salePrice ? (
                                 <>
                                   {/* Sale Price */}
-                                  <span className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+                                  <span className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
                                     {formatPrice(course.salePrice)}
                                   </span>
                                   {/* Original Price */}
-                                  <span className="text-lg text-gray-500 line-through ml-2">
+                                  <span className="text-base md:text-lg text-gray-500 line-through ml-2">
                                     {formatPrice(course.price)}
                                   </span>
                                   {/* Discount Badge */}
@@ -916,7 +916,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                 </CardHeader>
               </div>
 
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 p-4 sm:p-6">
                 {/* Enrollment Button */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -936,34 +936,34 @@ const CourseClient: React.FC<CourseClientProps> = ({
                   {(!course.paid && isEnrolled) ||
                   (course.paid && hasPurchased) ? (
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-white text-lg">
+                      <h3 className="font-semibold text-white text-lg px-4 sm:px-0">
                         Course Progress
                       </h3>
-                      <ul className="space-y-3">
-                        <li className="flex items-center gap-3 p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
-                          <div className="p-2 bg-green-500/30 rounded-lg">
-                            <Book className="w-5 h-5 text-green-400" />
+                      <ul className="space-y-3 px-4 sm:px-0">
+                        <li className="flex items-center gap-3 p-3 sm:p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
+                          <div className="p-2 bg-green-500/30 rounded-lg flex-shrink-0">
+                            <Book className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                           </div>
-                          <div>
-                            <p className="font-semibold text-green-200">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-green-200 text-sm sm:text-base">
                               Course Enrolled
                             </p>
-                            <p className="text-sm text-green-300">
+                            <p className="text-xs sm:text-sm text-green-300">
                               {!course.validityDays || course.validityDays === 0
                                 ? "Lifetime access granted"
                                 : `${course.validityDays} days access granted`}
                             </p>
                           </div>
                         </li>
-                        <li className="flex items-center gap-3 p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
-                          <div className="p-2 bg-blue-500/30 rounded-lg">
-                            <Award className="w-5 h-5 text-blue-400" />
+                        <li className="flex items-center gap-3 p-3 sm:p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+                          <div className="p-2 bg-blue-500/30 rounded-lg flex-shrink-0">
+                            <Award className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                           </div>
-                          <div>
-                            <p className="font-semibold text-blue-200">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-blue-200 text-sm sm:text-base">
                               Certificate Available
                             </p>
-                            <p className="text-sm text-blue-300">
+                            <p className="text-xs sm:text-sm text-blue-300">
                               Complete to earn
                             </p>
                           </div>
@@ -972,16 +972,16 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <h3 className="font-semibold text-white text-lg">
+                      <h3 className="font-semibold text-white text-lg px-4 sm:px-0">
                         Course Includes
                       </h3>
-                      <ul className="space-y-3">
-                        <li className="flex items-center gap-3 p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
-                          <div className="p-2 bg-green-500/20 rounded-lg">
-                            <PlayCircle className="w-5 h-5 text-green-400" />
+                      <ul className="space-y-3 px-4 sm:px-0">
+                        <li className="flex items-center gap-3 p-3 sm:p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
+                          <div className="p-2 bg-green-500/20 rounded-lg flex-shrink-0">
+                            <PlayCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                           </div>
-                          <div>
-                            <p className="font-semibold text-white">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-white text-sm sm:text-base">
                               {sectionsWithChapters.reduce(
                                 (total, section) =>
                                   total + section.chapters.length,
@@ -989,37 +989,37 @@ const CourseClient: React.FC<CourseClientProps> = ({
                               )}{" "}
                               Chapters
                             </p>
-                            <p className="text-sm text-zinc-400">
+                            <p className="text-xs sm:text-sm text-zinc-400">
                               Comprehensive content
                             </p>
                           </div>
                         </li>
-                        <li className="flex items-center gap-3 p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
-                          <div className="p-2 bg-green-500/20 rounded-lg">
-                            <Book className="w-5 h-5 text-green-400" />
+                        <li className="flex items-center gap-3 p-3 sm:p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
+                          <div className="p-2 bg-green-500/20 rounded-lg flex-shrink-0">
+                            <Book className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                           </div>
-                          <div>
-                            <p className="font-semibold text-white">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-white text-sm sm:text-base">
                               {!course.validityDays || course.validityDays === 0
                                 ? "Lifetime Access"
                                 : `${course.validityDays} Days Access`}
                             </p>
-                            <p className="text-sm text-zinc-400">
+                            <p className="text-xs sm:text-sm text-zinc-400">
                               {!course.validityDays || course.validityDays === 0
                                 ? "Learn at your own pace"
                                 : `Access expires after ${course.validityDays} days`}
                             </p>
                           </div>
                         </li>
-                        <li className="flex items-center gap-3 p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
-                          <div className="p-2 bg-green-500/20 rounded-lg">
-                            <Award className="w-5 h-5 text-green-400" />
+                        <li className="flex items-center gap-3 p-3 sm:p-4 rounded-lg bg-zinc-800/50 border border-green-500/20 hover:bg-zinc-800/80 hover:border-green-500/30 transition-all duration-300">
+                          <div className="p-2 bg-green-500/20 rounded-lg flex-shrink-0">
+                            <Award className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                           </div>
-                          <div>
-                            <p className="font-semibold text-white">
+                          <div className="min-w-0 flex-1">
+                            <p className="font-semibold text-white text-sm sm:text-base">
                               Completion Certificate
                             </p>
-                            <p className="text-sm text-zinc-400">
+                            <p className="text-xs sm:text-sm text-zinc-400">
                               Verify your achievement
                             </p>
                           </div>
