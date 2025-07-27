@@ -33,21 +33,17 @@ interface EditClassState {
   title: string;
   description?: string;
   startTime: string;
-  price: number;
-  getPrice: boolean;
   registrationFee: number;
   courseFee: number;
   courseFeeEnabled: boolean;
   registrationEnabled: boolean;
   isOnClassroom?: boolean;
-  currentRaga?: string | null;
-  currentOrientation?: string | null;
+  focus?: string | null;
+  level?: string | null;
   isActive: boolean;
   thumbnailUrl?: string | null;
   capacity?: number | null;
   recurringClass: boolean;
-  hasModules: boolean;
-  isFirstModuleFree: boolean;
   sessionDescription?: string | null;
   author?: string | null;
   slug: string;
@@ -180,8 +176,8 @@ export default function EditZoomClassPage() {
           courseFee: parseFloat(classData.courseFee.toString()),
           courseFeeEnabled: true,
           registrationEnabled: classData.registrationEnabled,
-          currentRaga: classData.currentRaga,
-          currentOrientation: classData.currentOrientation,
+          focus: classData.focus,
+          level: classData.level,
           isActive: classData.isActive,
           thumbnailUrl: classData.thumbnailUrl,
           capacity: classData.capacity,
@@ -290,8 +286,8 @@ export default function EditZoomClassPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-black text-white p-4 sm:p-6 overflow-x-hidden">
+      <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button
@@ -566,49 +562,49 @@ export default function EditZoomClassPage() {
                 Additional Settings
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-2">
                   <Label
-                    htmlFor="currentRaga"
+                    htmlFor="focus"
                     className="text-sm font-medium text-zinc-300"
                   >
                     Market Focus
                   </Label>
                   <Input
-                    id="currentRaga"
-                    name="currentRaga"
-                    value={classData.currentRaga || ""}
+                    id="focus"
+                    name="focus"
+                    value={classData.focus || ""}
                     onChange={(e) =>
                       setClassData({
                         ...classData,
-                        currentRaga: e.target.value,
+                        focus: e.target.value,
                       })
                     }
-                    placeholder="e.g., Yaman, Bhairav"
-                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                    placeholder="e.g., Nifty 50, Options Trading"
+                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label
-                    htmlFor="currentOrientation"
+                    htmlFor="level"
                     className="text-sm font-medium text-zinc-300"
                   >
                     Skill Level
                   </Label>
                   <Input
-                    id="currentOrientation"
-                    name="currentOrientation"
-                    value={classData.currentOrientation || ""}
+                    id="level"
+                    name="level"
+                    value={classData.level || ""}
                     onChange={(e) =>
                       setClassData({
                         ...classData,
-                        currentOrientation: e.target.value,
+                        level: e.target.value,
                       })
                     }
-                    placeholder="e.g., Beginner, Intermediate"
-                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                    placeholder="e.g., Beginner, Advanced"
+                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                   />
                 </div>
               </div>

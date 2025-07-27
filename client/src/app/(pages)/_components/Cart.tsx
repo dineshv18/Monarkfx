@@ -113,7 +113,7 @@ const Cart: React.FC = () => {
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-md bg-black p-0 border-l border-green-500/30 flex flex-col"
+        className="w-full sm:max-w-md bg-black p-0 border-l border-green-500/30 flex flex-col z-[100000]"
       >
         <SheetHeader className="p-6 bg-zinc-900 shadow-lg border-b border-green-500/20">
           <SheetTitle className="text-2xl font-bold text-white">

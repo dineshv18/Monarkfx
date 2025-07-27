@@ -17,19 +17,20 @@ export const createZoomReview = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Live class not found");
   }
 
-  // Check if user is enrolled/subscribed
+  // Check if user is enrolled/subscribed and has access (paid course fee)
   const subscription = await prisma.zoomSubscription.findFirst({
     where: {
       userId,
       zoomLiveClassId: zoomClassId,
       isRegistered: true,
+      hasAccessToLinks: true, // Must have paid course fee
     },
   });
 
   if (!subscription) {
     throw new ApiError(
       403,
-      "You must be registered in the live class to review it"
+      "You must have access to the live class to review it. Please complete payment first."
     );
   }
 

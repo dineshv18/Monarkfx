@@ -37,8 +37,8 @@ interface FormData {
   courseFee: string;
   courseFeeEnabled: boolean;
   registrationEnabled: boolean;
-  currentRaga: string;
-  currentOrientation: string;
+  focus: string;
+  level: string;
   sessionDescription: string;
   isActive: boolean;
   author: string;
@@ -56,8 +56,8 @@ export default function CreateZoomLiveClassPage() {
     courseFee: "0",
     courseFeeEnabled: true,
     registrationEnabled: true,
-    currentRaga: "",
-    currentOrientation: "",
+    focus: "",
+    level: "",
     sessionDescription: "",
     isActive: true,
     author: "",
@@ -139,18 +139,14 @@ export default function CreateZoomLiveClassPage() {
         startTime: formData.startTime,
         registrationFee: parseFloat(formData.registrationFee),
         courseFee: parseFloat(formData.courseFee),
-        courseFeeEnabled: true,
+        courseFeeEnabled: formData.courseFeeEnabled,
         registrationEnabled: formData.registrationEnabled,
-        currentRaga: formData.currentRaga || null,
-        currentOrientation: formData.currentOrientation || null,
+        focus: formData.focus || null,
+        level: formData.level || null,
         sessionDescription: formData.sessionDescription || null,
         isActive: formData.isActive,
         thumbnailUrl: formData.thumbnailUrl,
         slug: slug,
-        price: 0,
-        getPrice: false,
-        hasModules: false,
-        isFirstModuleFree: false,
         recurringClass: false,
         author: formData.author || "",
       };
@@ -181,8 +177,8 @@ export default function CreateZoomLiveClassPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-black text-white p-4 sm:p-6 overflow-x-hidden">
+      <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button
@@ -216,8 +212,8 @@ export default function CreateZoomLiveClassPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2 md:col-span-2">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6">
+                <div className="space-y-2">
                   <Label
                     htmlFor="title"
                     className="text-sm font-medium text-zinc-300"
@@ -235,7 +231,7 @@ export default function CreateZoomLiveClassPage() {
                   />
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
+                <div className="space-y-2">
                   <Label
                     htmlFor="slug"
                     className="text-sm font-medium text-zinc-300"
@@ -247,55 +243,54 @@ export default function CreateZoomLiveClassPage() {
                     name="slug"
                     value={formData.slug}
                     onChange={handleChange}
-                    placeholder="custom-url-path (leave empty to auto-generate from title)"
-                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                    placeholder="custom-url-path (auto-generated)"
+                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                   />
                   <p className="text-xs text-zinc-500">
-                    Custom URL identifier (e.g.,
-                    "intermediate-stock-trading-june"). The slug will
-                    auto-update as you type the title unless you manually edit
-                    it.
+                    Auto-updates from title unless manually edited
                   </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="author"
-                    className="text-sm font-medium text-zinc-300"
-                  >
-                    Meeting Author/Host
-                  </Label>
-                  <div className="relative">
-                    <User className="h-4 w-4 absolute left-3 top-3 text-zinc-500" />
-                    <Input
-                      id="author"
-                      name="author"
-                      value={formData.author}
-                      onChange={handleChange}
-                      placeholder="Host name"
-                      className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
-                    />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="author"
+                      className="text-sm font-medium text-zinc-300"
+                    >
+                      Meeting Author/Host
+                    </Label>
+                    <div className="relative">
+                      <User className="h-4 w-4 absolute left-3 top-3 text-zinc-500" />
+                      <Input
+                        id="author"
+                        name="author"
+                        value={formData.author}
+                        onChange={handleChange}
+                        placeholder="Host name"
+                        className="pl-10 w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="startTime"
-                    className="text-sm font-medium text-zinc-300"
-                  >
-                    Start Time <span className="text-red-500">*</span>
-                  </Label>
-                  <div className="relative">
-                    <Calendar className="h-4 w-4 absolute left-3 top-3 text-zinc-500" />
-                    <Input
-                      id="startTime"
-                      name="startTime"
-                      type="datetime-local"
-                      value={formData.startTime}
-                      onChange={handleChange}
-                      className="pl-10 bg-zinc-800 border-zinc-700 text-white"
-                      required
-                    />
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="startTime"
+                      className="text-sm font-medium text-zinc-300"
+                    >
+                      Start Time <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="relative">
+                      <Calendar className="h-4 w-4 absolute left-3 top-3 text-zinc-500" />
+                      <Input
+                        id="startTime"
+                        name="startTime"
+                        type="datetime-local"
+                        value={formData.startTime}
+                        onChange={handleChange}
+                        className="pl-10 w-full bg-zinc-800 border-zinc-700 text-white text-sm sm:text-base"
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -328,8 +323,8 @@ export default function CreateZoomLiveClassPage() {
                 Pricing & Fees
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-2">
                   <Label
                     htmlFor="registrationFee"
@@ -347,7 +342,7 @@ export default function CreateZoomLiveClassPage() {
                       value={formData.registrationFee}
                       onChange={handleChange}
                       placeholder="0.00"
-                      className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                      className="pl-10 w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                       required
                     />
                   </div>
@@ -370,7 +365,7 @@ export default function CreateZoomLiveClassPage() {
                       value={formData.courseFee}
                       onChange={handleChange}
                       placeholder="0.00"
-                      className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                      className="pl-10 w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                       required
                     />
                   </div>
@@ -437,39 +432,39 @@ export default function CreateZoomLiveClassPage() {
                 Additional Settings
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-2">
                   <Label
-                    htmlFor="currentRaga"
+                    htmlFor="focus"
                     className="text-sm font-medium text-zinc-300"
                   >
                     Market Focus
                   </Label>
                   <Input
-                    id="currentRaga"
-                    name="currentRaga"
-                    value={formData.currentRaga}
+                    id="focus"
+                    name="focus"
+                    value={formData.focus}
                     onChange={handleChange}
-                    placeholder="e.g., Nifty 50, Options Trading, Intraday Strategy"
-                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                    placeholder="e.g., Nifty 50, Options Trading"
+                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label
-                    htmlFor="currentOrientation"
+                    htmlFor="level"
                     className="text-sm font-medium text-zinc-300"
                   >
                     Skill Level
                   </Label>
                   <Input
-                    id="currentOrientation"
-                    name="currentOrientation"
-                    value={formData.currentOrientation}
+                    id="level"
+                    name="level"
+                    value={formData.level}
                     onChange={handleChange}
-                    placeholder="e.g., Beginner, Intermediate, Advanced"
-                    className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400"
+                    placeholder="e.g., Beginner, Advanced"
+                    className="w-full bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
                   />
                 </div>
               </div>

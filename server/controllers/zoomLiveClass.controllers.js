@@ -111,9 +111,6 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
     title,
     description,
     startTime,
-    endTime,
-    price,
-    getPrice,
     registrationFee,
     courseFee,
     courseFeeEnabled,
@@ -121,15 +118,13 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
     capacity,
     recurringClass,
     thumbnailUrl,
-    hasModules,
-    isFirstModuleFree,
     modules,
-    currentRaga,
-    currentOrientation,
     sessionDescription,
     isActive,
     author,
     slug,
+    focus,
+    level,
   } = req.body;
 
   if (!title || !startTime || !thumbnailUrl) {
@@ -161,9 +156,6 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
       title,
       description,
       startTime,
-      endTime,
-      price: parseFloat(price || 0),
-      getPrice: getPrice || false,
       userId: req.user.id,
       // Zoom links will be null initially - created only when Live Status is turned ON
       zoomLink: null,
@@ -177,14 +169,12 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
       courseFeeEnabled: courseFeeEnabled || false,
       registrationEnabled:
         registrationEnabled !== undefined ? registrationEnabled : true,
-      hasModules: hasModules || false,
-      isFirstModuleFree: isFirstModuleFree || false,
-      currentRaga: currentRaga || null,
-      currentOrientation: currentOrientation || null,
       sessionDescription: sessionDescription || null,
       isActive: isActive !== undefined ? isActive : true,
       recurringClass: recurringClass || false,
       isOnClassroom: false, // Initially class is not live
+      focus: focus || null,
+      level: level || null,
     };
 
     // Add capacity if provided
@@ -198,12 +188,7 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
       const liveClass = await tx.zoomLiveClass.create({
         data: zoomLiveClassData,
       }); // If modules are provided, create them (but without Zoom links initially)
-      if (
-        hasModules &&
-        modules &&
-        Array.isArray(modules) &&
-        modules.length > 0
-      ) {
+      if (modules && Array.isArray(modules) && modules.length > 0) {
         // Create each module without Zoom meeting initially
         for (let i = 0; i < modules.length; i++) {
           const module = modules[i];
@@ -213,13 +198,13 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
               title: module.title,
               description: module.description,
               startTime: module.startTime,
-              endTime: module.endTime,
+              // endTime removed as it doesn't exist in ZoomSessionModule schema
               // Zoom links will be null initially - created when Live Status is ON
               zoomLink: null,
               zoomMeetingId: null,
               zoomPassword: null,
               position: i + 1,
-              isFree: isFirstModuleFree && i === 0, // First module is free if isFirstModuleFree is true
+              isFree: module.isFree || false, // Use module's own isFree property
               zoomLiveClassId: liveClass.id,
             },
           });
@@ -281,7 +266,6 @@ export const getAllZoomLiveClasses = asyncHandler(async (req, res) => {
           email: true,
         },
       },
-      modules: true,
     },
   });
 
@@ -303,8 +287,6 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
     title,
     description,
     startTime,
-    price,
-    getPrice,
     registrationFee,
     courseFee,
     courseFeeEnabled,
@@ -312,14 +294,12 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
     capacity,
     recurringClass,
     thumbnailUrl,
-    hasModules,
-    isFirstModuleFree,
-    currentRaga,
-    currentOrientation,
     sessionDescription,
     isActive,
     author,
     slug,
+    focus,
+    level,
   } = req.body;
 
   const zoomLiveClass = await prisma.zoomLiveClass.findUnique({
@@ -342,8 +322,6 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
   if (title !== undefined) updatedFields.title = title;
   if (description !== undefined) updatedFields.description = description;
   if (startTime !== undefined) updatedFields.startTime = startTime;
-  if (price !== undefined) updatedFields.price = parseFloat(price);
-  if (getPrice !== undefined) updatedFields.getPrice = getPrice;
   if (registrationFee !== undefined)
     updatedFields.registrationFee = parseFloat(registrationFee);
   if (courseFee !== undefined) updatedFields.courseFee = parseFloat(courseFee);
@@ -355,16 +333,12 @@ export const updateZoomLiveClass = asyncHandler(async (req, res) => {
     updatedFields.capacity = parseInt(capacity);
   if (recurringClass !== undefined)
     updatedFields.recurringClass = recurringClass;
-  if (hasModules !== undefined) updatedFields.hasModules = hasModules;
-  if (isFirstModuleFree !== undefined)
-    updatedFields.isFirstModuleFree = isFirstModuleFree;
-  if (currentRaga !== undefined) updatedFields.currentRaga = currentRaga;
-  if (currentOrientation !== undefined)
-    updatedFields.currentOrientation = currentOrientation;
   if (sessionDescription !== undefined)
     updatedFields.sessionDescription = sessionDescription;
   if (isActive !== undefined) updatedFields.isActive = isActive;
   if (author !== undefined) updatedFields.author = author;
+  if (focus !== undefined) updatedFields.focus = focus;
+  if (level !== undefined) updatedFields.level = level;
 
   // Handle slug update
   if (slug !== undefined) {
@@ -444,7 +418,6 @@ export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
     where: { id },
     include: {
       subscriptions: true,
-      modules: true,
     },
   });
 
@@ -544,7 +517,6 @@ export const getUserZoomLiveClasses = asyncHandler(async (req, res) => {
           name: true,
         },
       },
-      modules: true,
     },
   });
   // Process each class to add formatted data and remove sensitive information
@@ -565,40 +537,42 @@ export const getUserZoomLiveClasses = asyncHandler(async (req, res) => {
     // Create a copy of the class data
     const classData = { ...liveClass };
 
-    // Remove sensitive zoom details unless user can actually join
-    if (!req.user || !canJoinClass) {
-      delete classData.zoomLink;
-      delete classData.zoomMeetingId;
-      delete classData.zoomPassword;
-
-      // Also remove sensitive info from modules
-      if (classData.modules) {
-        classData.modules = classData.modules.map((module) => {
-          const moduleCopy = { ...module };
-          delete moduleCopy.zoomLink;
-          delete moduleCopy.zoomMeetingId;
-          delete moduleCopy.zoomPassword;
-          return moduleCopy;
-        });
-      }
-    }
-
     // Make sure teacherName is available even if author is empty
     const teacherName =
-      classData.author || liveClass.createdBy?.name || "Instructor"; // Return transformed class
+      classData.author || liveClass.createdBy?.name || "Instructor";
+
+    // Return only necessary public data for the listing
     return {
-      ...classData,
-      isRegistered,
-      hasAccessToLinks,
-      isOnClassroom: liveClass.isOnClassroom || false,
-      canJoinClass,
+      id: classData.id,
+      title: classData.title,
+      description: classData.description,
+      startTime: classData.startTime,
       author: classData.author || "",
       teacherName,
+      isActive: classData.isActive,
+      registrationFee: classData.registrationFee,
+      courseFee: classData.courseFee,
+      courseFeeEnabled: classData.courseFeeEnabled,
+      capacity: classData.capacity,
+      recurringClass: classData.recurringClass,
+      thumbnailUrl: classData.thumbnailUrl,
+      focus: classData.focus,
+      level: classData.level,
+      sessionDescription: classData.sessionDescription,
+      slug: classData.slug,
+      userId: classData.userId,
+      createdAt: classData.createdAt,
+      updatedAt: classData.updatedAt,
+      registrationEnabled: classData.registrationEnabled,
+      isOnClassroom: classData.isOnClassroom || false,
+      // Only include user-specific data if user is authenticated
+      ...(req.user && {
+        isRegistered,
+        hasAccessToLinks,
+        canJoinClass,
+      }),
       formattedDate: liveClass.startTime || "",
       formattedTime: liveClass.startTime || "",
-      registrationEnabled: liveClass.registrationEnabled, // Include registration status
-      subscriptions: undefined,
-      createdBy: undefined,
     };
   });
 
@@ -637,11 +611,6 @@ export const getZoomLiveClass = asyncHandler(async (req, res) => {
           name: true,
         },
       },
-      modules: {
-        orderBy: {
-          position: "asc",
-        },
-      },
     },
   });
 
@@ -671,17 +640,7 @@ export const getZoomLiveClass = asyncHandler(async (req, res) => {
     delete classData.zoomPassword;
     delete classData.zoomStartUrl;
 
-    // Also remove sensitive info from modules
-    if (classData.modules) {
-      classData.modules = classData.modules.map((module) => {
-        const moduleCopy = { ...module };
-        delete moduleCopy.zoomLink;
-        delete moduleCopy.zoomMeetingId;
-        delete moduleCopy.zoomPassword;
-        delete moduleCopy.zoomStartUrl;
-        return moduleCopy;
-      });
-    }
+    // Note: Modules functionality not currently implemented
   }
 
   // Make sure teacherName is available even if author is empty
@@ -787,11 +746,6 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
 
   const zoomLiveClass = await prisma.zoomLiveClass.findUnique({
     where: { id },
-    include: {
-      modules: {
-        orderBy: { position: "asc" },
-      },
-    },
   });
 
   if (!zoomLiveClass) {
@@ -825,32 +779,7 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
         },
       });
 
-      // Create Zoom meetings for modules if they exist
-      if (zoomLiveClass.modules && zoomLiveClass.modules.length > 0) {
-        for (const module of zoomLiveClass.modules) {
-          try {
-            const moduleZoomData = await createZoomMeeting({
-              title: `${zoomLiveClass.title} - ${module.title}`,
-              startTime: module.startTime,
-            });
-            await tx.zoomSessionModule.update({
-              where: { id: module.id },
-              data: {
-                zoomLink: moduleZoomData.zoomLink,
-                zoomStartUrl: moduleZoomData.zoomStartUrl,
-                zoomMeetingId: moduleZoomData.zoomMeetingId,
-                zoomPassword: moduleZoomData.zoomPassword,
-              },
-            });
-          } catch (error) {
-            console.error(
-              `Error creating Zoom meeting for module ${module.title}:`,
-              error
-            );
-            // Continue with other modules even if one fails
-          }
-        }
-      }
+      // Note: Modules functionality not currently implemented
 
       return updatedMainClass;
     } else {
@@ -861,23 +790,7 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
         await deleteZoomMeeting(zoomLiveClass.zoomMeetingId);
       }
 
-      // Delete module Zoom meetings if they exist
-      if (zoomLiveClass.modules && zoomLiveClass.modules.length > 0) {
-        for (const module of zoomLiveClass.modules) {
-          if (module.zoomMeetingId) {
-            await deleteZoomMeeting(module.zoomMeetingId);
-          } // Clear module Zoom data
-          await tx.zoomSessionModule.update({
-            where: { id: module.id },
-            data: {
-              zoomLink: null,
-              zoomStartUrl: null,
-              zoomMeetingId: null,
-              zoomPassword: null,
-            },
-          });
-        }
-      }
+      // Note: Modules functionality not currently implemented
 
       // Update main class and clear Zoom data
       const updatedMainClass = await tx.zoomLiveClass.update({

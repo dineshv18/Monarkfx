@@ -22,6 +22,8 @@ import {
   Star,
   MapPin,
   Award,
+  TrendingUp,
+  BarChart3,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -117,101 +119,105 @@ export default function ClassDetails() {
     const showWaiting = apiFlags.showWaiting || false;
     const showClosed = apiFlags.showClosed || false;
     const isOnline = apiFlags.isOnline || classData?.isOnClassroom || false;
+    const registrationEnabled = classData?.registrationEnabled !== false;
+    const courseFeeEnabled = classData?.courseFeeEnabled || false;
 
     // Debug logging
     console.log("Button state debug:", {
       userIsRegistered,
       userHasAccess,
       userIsApproved,
-      canJoinClass,
       showDemo,
       showCourseFee,
       showWaiting,
       showClosed,
       isOnline,
+      registrationEnabled,
+      courseFeeEnabled,
       apiFlags,
     });
 
-    // HIGHEST PRIORITY: If API says show course fee button (admin approved but course fee not paid)
-    if (showCourseFee) {
-      return {
-        type: "pay",
-        text: "Pay Course Fee",
-        color:
-          "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white",
-        disabled: false,
-        action: () => setShowCourseAccessDialog(true),
-      };
-    }
-
-    // SECOND PRIORITY: If user can join class (has access AND admin has started the class)
-    if (canJoinClass) {
+    // FIRST PRIORITY: If user has full access and class is live
+    if (userHasAccess && isOnline) {
       return {
         type: "join",
         text: isJoining ? "Joining..." : "Join Live Class",
         color: "bg-green-600 hover:bg-green-700 text-white",
         disabled: isJoining,
         action: () => handleJoinClass(),
+        message: "You have full access to the live class!",
       };
     }
 
-    // THIRD PRIORITY: If user is registered and demo is available (for registered users)
-    if (userIsRegistered && showDemo) {
+    // SECOND PRIORITY: If user has full access but class is offline
+    if (userHasAccess && !isOnline) {
       return {
-        type: "demo",
-        text: "Join Live Class",
-        color: isOnline
-          ? "bg-green-600 hover:bg-green-700 text-white"
-          : "bg-gray-400 cursor-not-allowed text-gray-600",
-        disabled: !isOnline,
-        action: isOnline ? () => handleDemoAccess() : null,
-        message: isOnline
-          ? undefined
-          : "This button will become active once your class session begins.",
-      };
-    }
-
-    // FOURTH PRIORITY: If user has access but admin hasn't started the class yet
-    if (userHasAccess && !isOnClassroom) {
-      return {
-        type: "waiting-live",
-        text: "Waiting for Class to Start",
-        color: "bg-gray-500 cursor-not-allowed text-white",
+        type: "waiting-admin",
+        text: "Waiting for Admin to Start Class",
+        color: "bg-amber-600 text-white cursor-not-allowed",
         disabled: true,
         action: null,
+        message:
+          "The admin hasn't started the class yet. You'll be able to join once it's live.",
       };
     }
 
-    // FIFTH PRIORITY: If API says show waiting message (for non-registered users or when demo not available)
-    if (showWaiting) {
+    // THIRD PRIORITY: If admin approved registration but course fee needs to be paid
+    if (showCourseFee && userIsApproved && courseFeeEnabled) {
       return {
-        type: "waiting-live",
-        text: "Waiting for Class to Start",
-        color: "bg-gray-500 cursor-not-allowed text-white",
+        type: "pay",
+        text: `Pay Course Fee - ₹${classData?.courseFee || 0}`,
+        color:
+          "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-600 text-white",
+        disabled: false,
+        action: () => setShowCourseAccessDialog(true),
+        message:
+          "Your registration is approved! Pay the course fee to get full access to the class.",
+      };
+    }
+
+    // FOURTH PRIORITY: If user is registered and approved, and no course fee required
+    if (userIsRegistered && userIsApproved && !courseFeeEnabled) {
+      if (isOnline) {
+        return {
+          type: "demo",
+          text: "Join Live Class (Demo Access)",
+          color: "bg-blue-600 hover:bg-blue-700 text-white",
+          disabled: false,
+          action: () => handleDemoAccess(),
+          message: "You have demo access to the live class!",
+        };
+      } else {
+        return {
+          type: "waiting-demo",
+          text: "Demo Access Ready - Waiting for Class",
+          color: "bg-blue-500 cursor-not-allowed text-white",
+          disabled: true,
+          action: null,
+          message:
+            "Your demo access is ready! Class will start when the admin goes live.",
+        };
+      }
+    }
+
+    // FIFTH PRIORITY: If user is registered but waiting for approval
+    if (userIsRegistered && !userIsApproved) {
+      return {
+        type: "pending-approval",
+        text: "Waiting for Admin Approval",
+        color: "bg-yellow-600 cursor-not-allowed text-white",
         disabled: true,
         action: null,
+        message:
+          "Your registration is complete! Please wait for admin approval to access the class.",
       };
     }
 
-    // SIXTH PRIORITY: If user is registered but waiting for approval (only if demo is not available)
-    if (userIsRegistered && !userIsApproved && !showDemo) {
-      return {
-        type: "waiting",
-        text: "Please wait for approval",
-        color: "bg-gray-500 cursor-not-allowed text-white",
-        disabled: true,
-        action: null,
-      };
-    }
-
-    // SEVENTH PRIORITY: Check registration status for button display
-    const registrationOpen = classData?.registrationEnabled !== false;
-
-    // If user can register (new users when registration is open)
-    if (canRegister && registrationOpen && !userIsRegistered) {
+    // SIXTH PRIORITY: If registration is enabled and user can register
+    if (registrationEnabled && canRegister && !userIsRegistered) {
       return {
         type: "register",
-        text: "Register for Class",
+        text: `Register for Class - ₹${classData?.registrationFee || 0}`,
         color:
           "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white",
         disabled: false,
@@ -228,27 +234,54 @@ export default function ClassDetails() {
           }
           setShowRegistrationDialog(true);
         },
+        message: "Register now to secure your spot in the live class!",
       };
     }
 
-    // EIGHTH PRIORITY: If registration is closed, show disabled button to all users (both registered and non-registered)
-    if (!registrationOpen || showClosed) {
+    // SEVENTH PRIORITY: If registration is disabled
+    if (!registrationEnabled || showClosed) {
       return {
-        type: "disabled",
+        type: "closed",
         text: "Registration Closed",
         color: "bg-gray-500 cursor-not-allowed text-white",
         disabled: true,
         action: null,
+        message: "Registration for this class is currently closed.",
+      };
+    }
+
+    // EIGHTH PRIORITY: If user shows demo but class is offline
+    if (showDemo && !isOnline) {
+      return {
+        type: "waiting-demo",
+        text: "Demo Access - Class Not Started",
+        color: "bg-gray-500 cursor-not-allowed text-white",
+        disabled: true,
+        action: null,
+        message: "Demo access is available, but the class hasn't started yet.",
+      };
+    }
+
+    // NINTH PRIORITY: If showing waiting status
+    if (showWaiting) {
+      return {
+        type: "waiting",
+        text: "Class Not Available",
+        color: "bg-gray-500 cursor-not-allowed text-white",
+        disabled: true,
+        action: null,
+        message: "This class is not currently available.",
       };
     }
 
     // Default fallback
     return {
-      type: "disabled",
+      type: "unavailable",
       text: "Not Available",
       color: "bg-gray-400 cursor-not-allowed text-gray-600",
       disabled: true,
       action: null,
+      message: "This class is currently not available.",
     };
   };
 
@@ -829,6 +862,38 @@ export default function ClassDetails() {
                     </p>
                   </div>
                 </div>
+
+                {classData.focus && (
+                  <div className="flex items-center gap-3 p-4 bg-gradient-to-br from-zinc-900/80 to-black/80 rounded-xl border border-zinc-700 hover:border-green-500/30 transition-all duration-300">
+                    <div className="p-2 bg-red-500/20 rounded-lg">
+                      <TrendingUp className="h-5 w-5 text-red-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-400 font-medium">
+                        Market Focus
+                      </p>
+                      <p className="text-white font-semibold">
+                        {classData.focus}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {classData.level && (
+                  <div className="flex items-center gap-3 p-4 bg-gradient-to-br from-zinc-900/80 to-black/80 rounded-xl border border-zinc-700 hover:border-green-500/30 transition-all duration-300">
+                    <div className="p-2 bg-indigo-500/20 rounded-lg">
+                      <BarChart3 className="h-5 w-5 text-indigo-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-zinc-400 font-medium">
+                        Skill Level
+                      </p>
+                      <p className="text-white font-semibold">
+                        {classData.level}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </motion.div>
 
               {/* Action Button */}
@@ -961,6 +1026,26 @@ export default function ClassDetails() {
                         ₹{classData.registrationFee + classData.courseFee}
                       </span>
                     </div>
+
+                    {/* Action Button */}
+                    <div className="pt-4">
+                      <Button
+                        onClick={buttonState?.action || (() => {})}
+                        disabled={buttonState?.disabled}
+                        className={`w-full ${
+                          buttonState?.color || "bg-gray-500"
+                        } transition-all duration-200`}
+                      >
+                        {buttonState?.text || "Loading..."}
+                      </Button>
+
+                      {/* Status Message */}
+                      {buttonState?.message && (
+                        <p className="text-sm text-zinc-400 mt-2 text-center">
+                          {buttonState.message}
+                        </p>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -1044,6 +1129,17 @@ export default function ClassDetails() {
           </div>
         </div>
       </div>
+
+      {/* Reviews Section - Only show after course fee payment */}
+      {isAuthenticated && classData && (
+        <div className="container mx-auto px-4 pb-20">
+          <ReviewSection
+            zoomClassId={classData.id}
+            isRegistered={isRegistered}
+            hasAccess={hasAccessToLinks}
+          />
+        </div>
+      )}
 
       {/* Dialogs */}
       {showPurchaseDialog && (

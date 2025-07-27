@@ -239,7 +239,7 @@ export default function PurchaseDialog({
           contact: "",
         },
         theme: {
-          color: "#10B981",
+          color: "#d60606",
         },
       };
 

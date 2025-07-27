@@ -139,7 +139,9 @@ export default function ReviewSection({
       {reviews.length === 0 ? (
         <div className="text-center py-8 bg-zinc-800/50 rounded-lg border border-zinc-700">
           <p className="text-zinc-400">
-            No reviews yet. Be the first to review!
+            {hasAccess
+              ? "No reviews yet. Be the first to review!"
+              : "Reviews will be available after joining the class"}
           </p>
         </div>
       ) : (

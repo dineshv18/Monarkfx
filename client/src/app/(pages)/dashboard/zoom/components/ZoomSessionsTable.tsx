@@ -30,6 +30,7 @@ import {
   XCircle,
   Clock,
   AlertCircle,
+  CreditCard,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
@@ -41,6 +42,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 // Type definitions
 interface User {
@@ -127,6 +129,7 @@ export default function ZoomSessionsTable({
     message: string;
     action: () => Promise<void>;
   } | null>(null);
+  const router = useRouter();
 
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleString();
@@ -214,6 +217,33 @@ export default function ZoomSessionsTable({
       toast({
         title: "Error",
         description: "Failed to update registration setting",
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingRegistration(false);
+    }
+  };
+
+  const handleToggleCourseFee = async (classId: string, enabled: boolean) => {
+    try {
+      setUpdatingRegistration(true);
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/admin/class/${classId}/toggle-course-fee`,
+        { courseFeeEnabled: enabled },
+        { withCredentials: true }
+      );
+      refreshData();
+      toast({
+        title: "Success",
+        description: `Course fee ${
+          enabled ? "enabled" : "disabled"
+        } successfully`,
+      });
+    } catch (error) {
+      console.error("Error toggling course fee:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update course fee setting",
         variant: "destructive",
       });
     } finally {
@@ -581,6 +611,25 @@ export default function ZoomSessionsTable({
                                   : "Closed"}
                               </span>
                             </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm text-zinc-400">
+                                Course Fee:
+                              </span>
+                              <Switch
+                                checked={liveClass.courseFeeEnabled}
+                                onCheckedChange={(enabled) =>
+                                  handleToggleCourseFee(liveClass.id, enabled)
+                                }
+                                disabled={updatingRegistration}
+                                className="data-[state=checked]:bg-purple-500"
+                              />
+                              <span className="text-sm text-zinc-300">
+                                {liveClass.courseFeeEnabled
+                                  ? "Required"
+                                  : "Disabled"}
+                              </span>
+                            </div>
                           </div>
 
                           <div className="flex items-center gap-2">
@@ -601,102 +650,79 @@ export default function ZoomSessionsTable({
                                 Join Live Class
                               </Button>
                             ) : (
-                              <Button
-                                size="sm"
-                                onClick={() =>
-                                  handleToggleClassroom(liveClass.id, true)
-                                }
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                disabled={isLoading}
-                              >
-                                <Video className="h-4 w-4 mr-2" />
-                                Start Class
-                              </Button>
+                              <div className="text-sm text-zinc-400 bg-zinc-800 px-3 py-1 rounded">
+                                Class is offline
+                              </div>
                             )}
                           </div>
                         </div>
 
-                        {/* Zoom Meeting Details */}
-                        {liveClass.zoomLink && (
-                          <div className="bg-zinc-700/50 p-3 rounded-lg">
-                            <h4 className="text-sm font-semibold text-white mb-2">
-                              Zoom Meeting Details
-                            </h4>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-                              <div>
-                                <span className="text-zinc-400">
-                                  Meeting ID:
-                                </span>
-                                <div className="text-white font-mono">
-                                  {liveClass.zoomMeetingId}
-                                </div>
-                              </div>
-                              <div>
-                                <span className="text-zinc-400">Password:</span>
-                                <div className="text-white font-mono">
-                                  {liveClass.zoomPassword}
-                                </div>
-                              </div>
-                              <div>
-                                <span className="text-zinc-400">
-                                  Join Link:
-                                </span>
-                                <div className="text-blue-400 font-mono text-xs truncate">
-                                  {liveClass.zoomLink}
-                                </div>
-                              </div>
-                            </div>
+                        {/* Class Statistics Row */}
+                        <div className="flex items-center gap-6 text-sm text-zinc-400">
+                          <div className="flex items-center gap-2">
+                            <Users className="h-4 w-4" />
+                            <span>
+                              Total Registrations:{" "}
+                              {liveClass.subscriptions?.length || 0}
+                            </span>
                           </div>
-                        )}
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            <span>
+                              Approved Users:{" "}
+                              {liveClass.subscriptions?.filter(
+                                (s: any) => s.isApproved
+                              )?.length || 0}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CreditCard className="h-4 w-4" />
+                            <span>
+                              Course Fee Paid:{" "}
+                              {liveClass.subscriptions?.filter(
+                                (s: any) => s.hasAccessToLinks
+                              )?.length || 0}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4" />
+                            <span>
+                              Pending Approval:{" "}
+                              {liveClass.subscriptions?.filter(
+                                (s: any) => s.status === "PENDING_APPROVAL"
+                              )?.length || 0}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </TableCell>
                   </TableRow>
 
-                  {/* Expanded Details */}
+                  {/* Advanced Controls for each class */}
                   {expandedSessions[liveClass.id] && (
-                    <TableRow className="border-zinc-700 bg-zinc-800/30">
+                    <TableRow className="border-zinc-700 bg-zinc-900/40">
                       <TableCell colSpan={7}>
                         <div className="p-4 space-y-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <h4 className="font-semibold text-white mb-2">
-                                Class Details
-                              </h4>
-                              <div className="space-y-2 text-sm text-zinc-300">
-                                <div>Title: {liveClass.title}</div>
-                                <div>Description: {liveClass.description}</div>
+                          {/* Class Details Section */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <Card className="bg-zinc-800/50 border-zinc-700">
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-sm text-zinc-300">
+                                  Class Information
+                                </CardTitle>
+                              </CardHeader>
+                              <CardContent className="text-sm text-zinc-400 space-y-1">
+                                <div>Slug: {liveClass.slug}</div>
                                 <div>
-                                  Start Time: {formatDate(liveClass.startTime)}
+                                  Active: {liveClass.isActive ? "Yes" : "No"}
                                 </div>
                                 <div>
                                   Registration Fee:{" "}
                                   {formatCurrency(liveClass.registrationFee)}
                                 </div>
-                                {liveClass.courseFeeEnabled && (
-                                  <div>
-                                    Course Fee:{" "}
-                                    {formatCurrency(liveClass.courseFee)}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <div>
-                              <h4 className="font-semibold text-white mb-2">
-                                Settings
-                              </h4>
-                              <div className="space-y-2 text-sm text-zinc-300">
-                                <div className="flex items-center justify-between">
-                                  <span>Registration Enabled:</span>
-                                  <Switch
-                                    checked={liveClass.registrationEnabled}
-                                    onCheckedChange={(enabled) =>
-                                      handleToggleRegistration(
-                                        liveClass.id,
-                                        enabled
-                                      )
-                                    }
-                                    disabled={updatingRegistration}
-                                  />
+                                <div>
+                                  Course Fee:{" "}
+                                  {formatCurrency(liveClass.courseFee)}
                                 </div>
                                 <div>
                                   Has Modules:{" "}
@@ -716,46 +742,106 @@ export default function ZoomSessionsTable({
                                     Orientation: {liveClass.currentOrientation}
                                   </div>
                                 )}
-                              </div>
-                            </div>
-                          </div>
+                              </CardContent>
+                            </Card>
 
-                          {liveClass.modules &&
-                            liveClass.modules.length > 0 && (
-                              <div>
-                                <h4 className="font-semibold text-white mb-2">
-                                  Modules
-                                </h4>
-                                <div className="space-y-2">
-                                  {liveClass.modules.map((module) => (
-                                    <div
-                                      key={module.id}
-                                      className="flex items-center justify-between p-2 bg-zinc-700/50 rounded"
-                                    >
-                                      <div>
-                                        <div className="font-medium text-white">
-                                          {module.title}
-                                        </div>
-                                        <div className="text-sm text-zinc-400">
-                                          {formatDate(module.startTime)} -{" "}
-                                          {formatDate(module.endTime)}
-                                        </div>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        {module.isFree && (
-                                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-600 text-white">
-                                            Free
-                                          </span>
-                                        )}
-                                        <span className="text-sm text-zinc-400">
-                                          Position: {module.position}
-                                        </span>
-                                      </div>
+                            {/* Zoom Meeting Details */}
+                            <Card className="bg-zinc-800/50 border-zinc-700">
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-sm text-zinc-300">
+                                  Zoom Meeting Details
+                                </CardTitle>
+                              </CardHeader>
+                              <CardContent className="text-sm text-zinc-400 space-y-1">
+                                {liveClass.isOnClassroom ? (
+                                  <>
+                                    <div>
+                                      Meeting ID:{" "}
+                                      {liveClass.zoomMeetingId || "Not Set"}
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
+                                    <div>
+                                      Password:{" "}
+                                      {liveClass.zoomPassword || "None"}
+                                    </div>
+                                    <div className="flex items-center gap-2 mt-2">
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="text-xs"
+                                        onClick={() => {
+                                          if (liveClass.zoomLink) {
+                                            navigator.clipboard.writeText(
+                                              liveClass.zoomLink
+                                            );
+                                            toast({
+                                              title: "Copied",
+                                              description:
+                                                "Zoom link copied to clipboard",
+                                            });
+                                          }
+                                        }}
+                                      >
+                                        Copy Link
+                                      </Button>
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="text-amber-400">
+                                    Class is not live - No meeting details
+                                    available
+                                  </div>
+                                )}
+                              </CardContent>
+                            </Card>
+
+                            {/* Quick Actions */}
+                            <Card className="bg-zinc-800/50 border-zinc-700">
+                              <CardHeader className="pb-2">
+                                <CardTitle className="text-sm text-zinc-300">
+                                  Quick Actions
+                                </CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="w-full text-xs"
+                                  onClick={() =>
+                                    handleViewRegistrations(liveClass)
+                                  }
+                                >
+                                  <Users className="h-3 w-3 mr-1" />
+                                  View All Registrations
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="w-full text-xs"
+                                  onClick={() =>
+                                    router.push(
+                                      `/live-classes/${liveClass.slug}`
+                                    )
+                                  }
+                                >
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  Preview as User
+                                </Button>
+                                <Link
+                                  href={`/dashboard/zoom/edit/${liveClass.id}`}
+                                  className="w-full"
+                                >
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="w-full text-xs"
+                                  >
+                                    <Edit className="h-3 w-3 mr-1" />
+                                    Edit Class Details
+                                  </Button>
+                                </Link>
+                              </CardContent>
+                            </Card>
+                          </div>
                         </div>
                       </TableCell>
                     </TableRow>

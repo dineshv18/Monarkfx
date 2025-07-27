@@ -37,6 +37,25 @@ export default function CourseAccessDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Format date and time properly
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   // Load Razorpay script
   useEffect(() => {
     const script = document.createElement("script");
@@ -81,8 +100,6 @@ export default function CourseAccessDialog({
         },
         { withCredentials: true }
       );
-
-      console.log("Course access payment initiated:", response.data);
 
       // If user already has access
       if (response.data.data.alreadyHasAccess) {
@@ -143,7 +160,7 @@ export default function CourseAccessDialog({
           contact: "",
         },
         theme: {
-          color: "#10B981",
+          color: "#d60606",
         },
       };
 
@@ -174,7 +191,7 @@ export default function CourseAccessDialog({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700 rounded-xl shadow-xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg w-[95vw] bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700 rounded-xl shadow-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -224,57 +241,57 @@ export default function CourseAccessDialog({
           </motion.div>
 
           <motion.div
-            className="bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200"
+            className="bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 p-4 rounded-lg border border-zinc-600"
             variants={item}
           >
-            <h3 className="font-bold text-xl text-gray-800">
-              {classData.title}
-            </h3>
-            <p className="text-gray-600 mt-1">{classData.description}</p>
+            <h3 className="font-bold text-xl text-white">{classData.title}</h3>
+            <p className="text-zinc-300 mt-1">{classData.description}</p>
           </motion.div>
 
           <motion.div className="space-y-3" variants={item}>
-            <div className="flex items-center text-gray-700">
-              <Calendar className="mr-3 h-5 w-5 text-[#10B981]" />
-              <span>{classData.formattedDate}</span>
+            <div className="flex items-center text-zinc-300">
+              <Calendar className="mr-3 h-5 w-5 text-green-400" />
+              <span className="font-medium">
+                {formatDate(classData.startTime)}
+              </span>
             </div>
-            <div className="flex items-center text-gray-700">
-              <Clock className="mr-3 h-5 w-5 text-[#10B981]" />
-              <span>{classData.formattedTime}</span>
+            <div className="flex items-center text-zinc-300">
+              <Clock className="mr-3 h-5 w-5 text-green-400" />
+              <span className="font-medium">
+                {formatTime(classData.startTime)}
+              </span>
             </div>
           </motion.div>
 
           <motion.div
-            className="bg-[#10B981]/10 p-4 rounded-lg flex justify-between items-center"
+            className="bg-green-600/20 p-4 rounded-lg flex justify-between items-center border border-green-500/30"
             variants={item}
           >
-            <span className="text-gray-700 font-medium">Course Fee</span>
-            <span className="text-2xl font-bold text-[#10B981]">
+            <span className="text-zinc-300 font-medium">Course Fee</span>
+            <span className="text-2xl font-bold text-green-400">
               ₹{classData.courseFee}
             </span>
           </motion.div>
 
           <motion.div
-            className="space-y-3 p-4 bg-blue-50 rounded-lg"
+            className="space-y-3 p-4 bg-blue-600/20 rounded-lg border border-blue-500/30"
             variants={item}
           >
-            <h4 className="font-semibold text-blue-800">What you'll get:</h4>
+            <h4 className="font-semibold text-blue-300">What you'll get:</h4>
             <div className="flex items-start gap-2">
-              <Video className="h-5 w-5 text-blue-600 mt-0.5" />
+              <Video className="h-5 w-5 text-blue-400 mt-0.5" />
               <div>
-                <p className="text-blue-800 font-medium">
-                  Access to Live Class
-                </p>
-                <p className="text-blue-600 text-sm">
+                <p className="text-white font-medium">Access to Live Class</p>
+                <p className="text-zinc-300 text-sm">
                   Join the class via Zoom with instructor interaction
                 </p>
               </div>
             </div>
             <div className="flex items-start gap-2">
-              <Lock className="h-5 w-5 text-blue-600 mt-0.5" />
+              <Lock className="h-5 w-5 text-blue-400 mt-0.5" />
               <div>
-                <p className="text-blue-800 font-medium">Secure Zoom Details</p>
-                <p className="text-blue-600 text-sm">
+                <p className="text-white font-medium">Secure Zoom Details</p>
+                <p className="text-zinc-300 text-sm">
                   Receive meeting ID, password, and direct join link
                 </p>
               </div>
@@ -282,26 +299,30 @@ export default function CourseAccessDialog({
           </motion.div>
 
           <motion.div
-            className="text-sm p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800"
+            className="text-sm p-3 bg-amber-600/20 border border-amber-500/30 rounded-lg text-amber-300"
             variants={item}
           >
             After payment, you'll immediately receive access to the class links.
           </motion.div>
         </motion.div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2 sm:gap-0 flex-col sm:flex-row">
           <Button
             variant="outline"
             onClick={onClose}
-            className="rounded-full border-gray-300"
+            className="w-full sm:w-auto rounded-lg border-zinc-600 text-zinc-300 hover:bg-zinc-800 hover:text-white"
           >
             Cancel
           </Button>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto"
+          >
             <Button
               onClick={initiateCourseAccess}
               disabled={isLoading || isProcessing}
-              className="bg-[#10B981] hover:bg-[#10B981] text-white rounded-full px-6 shadow-md"
+              className="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg px-6 shadow-lg hover:shadow-xl transition-all duration-200"
             >
               {isLoading ? (
                 <>
@@ -309,7 +330,7 @@ export default function CourseAccessDialog({
                   Processing...
                 </>
               ) : (
-                "Pay Course Fee"
+                `Pay ₹${classData.courseFee}`
               )}
             </Button>
           </motion.div>

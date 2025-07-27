@@ -205,36 +205,42 @@ export default function ClassCard({
                 <IndianRupee className="h-3 w-3 text-yellow-400" />
               </div>
               <div>
-                <p className="text-xs text-zinc-400 font-medium">Fees</p>
+                <p className="text-xs text-zinc-400 font-medium">
+                  Registration Fee
+                </p>
                 <p className="text-xs font-semibold text-white">
-                  ₹{classData.registrationFee} | ₹{classData.courseFee}
+                  ₹{classData.registrationFee}
                 </p>
               </div>
             </div>
 
-            {classData.currentRaga && (
+            {classData.focus && (
               <div className="flex items-center gap-2 p-2 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
                 <div className="p-1.5 bg-red-500/20 rounded-lg">
                   <BarChart3 className="h-3 w-3 text-red-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-400 font-medium">Focus</p>
+                  <p className="text-xs text-zinc-400 font-medium">
+                    Market Focus
+                  </p>
                   <p className="text-xs font-semibold text-white">
-                    {classData.currentRaga}
+                    {classData.focus}
                   </p>
                 </div>
               </div>
             )}
 
-            {classData.currentOrientation && (
+            {classData.level && (
               <div className="flex items-center gap-2 p-2 bg-zinc-800/50 rounded-lg border border-zinc-700/50">
                 <div className="p-1.5 bg-indigo-500/20 rounded-lg">
                   <Target className="h-3 w-3 text-indigo-400" />
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-400 font-medium">Strategy</p>
+                  <p className="text-xs text-zinc-400 font-medium">
+                    Skill Level
+                  </p>
                   <p className="text-xs font-semibold text-white">
-                    {classData.currentOrientation}
+                    {classData.level}
                   </p>
                 </div>
               </div>

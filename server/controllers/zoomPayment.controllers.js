@@ -67,11 +67,8 @@ export const getMyZoomSubscriptions = asyncHandler(async (req, res) => {
             minute: "2-digit",
           });
         })(),
-        duration: Math.ceil(
-          (new Date(sub.zoomLiveClass.endTime || new Date()) -
-            new Date(sub.zoomLiveClass.startTime)) /
-            (60 * 1000)
-        ),
+        // Duration calculation removed as endTime field doesn't exist in schema
+        duration: null,
       };
 
       // Only include zoom meeting details if user can actually join the class
@@ -491,9 +488,6 @@ export const verifyCourseAccessPayment = asyncHandler(async (req, res) => {
 
   const zoomLiveClass = await prisma.zoomLiveClass.findUnique({
     where: { id: classId },
-    include: {
-      modules: true,
-    },
   });
 
   if (!zoomLiveClass) {
@@ -1221,12 +1215,12 @@ export const getPendingApprovals = asyncHandler(async (req, res) => {
         select: {
           id: true,
           title: true,
-          currentRaga: true,
-          currentOrientation: true,
           registrationFee: true,
           courseFee: true,
           startTime: true,
           courseFeeEnabled: true,
+          focus: true,
+          level: true,
         },
       },
       payments: {
@@ -1244,8 +1238,8 @@ export const getPendingApprovals = asyncHandler(async (req, res) => {
     zoomSession: {
       id: sub.zoomLiveClass?.id,
       title: sub.zoomLiveClass?.title || "Unknown Session",
-      currentRange: sub.zoomLiveClass?.currentRaga,
-      currentOrientation: sub.zoomLiveClass?.currentOrientation,
+      focus: sub.zoomLiveClass?.focus,
+      level: sub.zoomLiveClass?.level,
       registrationFee: sub.zoomLiveClass?.registrationFee,
       courseFee: sub.zoomLiveClass?.courseFee,
       startTime: sub.zoomLiveClass?.startTime,

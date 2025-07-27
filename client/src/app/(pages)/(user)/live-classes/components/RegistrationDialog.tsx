@@ -37,6 +37,25 @@ export default function RegistrationDialog({
   const [isLoading, setIsLoading] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Format date and time properly
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   // Load Razorpay script
   useEffect(() => {
     const script = document.createElement("script");
@@ -159,7 +178,7 @@ export default function RegistrationDialog({
           contact: "",
         },
         theme: {
-          color: "#10B981",
+          color: "#d60606",
         },
       };
 
@@ -190,7 +209,7 @@ export default function RegistrationDialog({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-gradient-to-br from-gray-900 via-black to-gray-900 border-gray-700 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg w-[95vw] bg-gradient-to-br from-zinc-900/95 to-black/95 border-zinc-700 rounded-xl shadow-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -247,13 +266,17 @@ export default function RegistrationDialog({
               <User className="mr-3 h-5 w-5 text-green-400" />
               <span>Instructor: {classData.teacherName}</span>
             </div>
-            <div className="flex items-center text-white">
+            <div className="flex items-center text-zinc-300">
               <Calendar className="mr-3 h-5 w-5 text-green-400" />
-              <span>{classData.formattedDate}</span>
+              <span className="font-medium">
+                {formatDate(classData.startTime)}
+              </span>
             </div>
-            <div className="flex items-center text-white">
+            <div className="flex items-center text-zinc-300">
               <Clock className="mr-3 h-5 w-5 text-green-400" />
-              <span>{classData.formattedTime}</span>
+              <span className="font-medium">
+                {formatTime(classData.startTime)}
+              </span>
             </div>
           </motion.div>
 
@@ -308,15 +331,19 @@ export default function RegistrationDialog({
           </motion.div>
         </motion.div>
 
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2 sm:gap-0 flex-col sm:flex-row">
           <Button
             variant="outline"
             onClick={onClose}
-            className="rounded-full border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white"
+            className="w-full sm:w-auto rounded-lg border-zinc-600 text-zinc-300 hover:bg-zinc-800 hover:text-white"
           >
             Cancel
           </Button>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-full sm:w-auto"
+          >
             <Button
               onClick={initiateRegistration}
               disabled={
@@ -324,10 +351,10 @@ export default function RegistrationDialog({
                 isProcessing ||
                 classData?.registrationEnabled === false
               }
-              className={`rounded-full px-6 shadow-md ${
+              className={`w-full rounded-lg px-6 shadow-lg transition-all duration-200 ${
                 classData?.registrationEnabled === false
                   ? "bg-gray-600 cursor-not-allowed text-gray-400"
-                  : "bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white shadow-lg"
+                  : "bg-green-600 hover:bg-green-700 text-white hover:shadow-xl"
               }`}
             >
               {isLoading ? (
@@ -338,7 +365,7 @@ export default function RegistrationDialog({
               ) : classData?.registrationEnabled === false ? (
                 "Registration Disabled"
               ) : (
-                "Pay Registration Fee"
+                `Pay ₹${classData.registrationFee}`
               )}
             </Button>
           </motion.div>

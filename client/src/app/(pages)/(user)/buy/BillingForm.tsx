@@ -296,7 +296,7 @@ export default function BillingForm({
           contact: formData.mobileNumber,
         },
         theme: {
-          color: "#10B981",
+          color: "#d60606",
         },
         modal: {
           ondismiss: function () {

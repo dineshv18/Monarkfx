@@ -345,7 +345,7 @@ const MyLiveClasses = () => {
         handler: async function (response: any) {
           try {
             await axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/verify-course-access-payment`,
+              `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/verify-course-access`,
               {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
@@ -566,25 +566,17 @@ const MyLiveClasses = () => {
     const showCourseFee = apiFlags.showCourseFee || false;
     const showWaiting = apiFlags.showWaiting || false;
     const showClosed = apiFlags.showClosed || false;
+    const isOnline =
+      subscription.zoomSession.isOnline ||
+      subscription.apiFlags?.isOnline ||
+      subscription.isOnClassroom ||
+      false;
+    const registrationEnabled =
+      subscription.zoomSession.registrationEnabled !== false;
+    const courseFeeEnabled = subscription.zoomSession.courseFeeEnabled || false;
 
-    // HIGHEST PRIORITY: If API says show course fee button
-    if (showCourseFee) {
-      return {
-        type: "pay",
-        text:
-          coursePaymentInProgress === subscription.id
-            ? "Processing..."
-            : "Pay Course Fee",
-        color:
-          "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl",
-        disabled: coursePaymentInProgress === subscription.id,
-        action: () => handlePayCourseAccess(subscription),
-        showDemo: false, // Hide demo when course fee is pending
-      };
-    }
-
-    // SECOND PRIORITY: If user can join class (has access AND admin has started the class)
-    if (subscription.canJoinClass) {
+    // FIRST PRIORITY: If user has full access and class is live
+    if (subscription.hasAccessToLinks && isOnline) {
       return {
         type: "join",
         text: isJoining ? "Joining..." : "Join Live Class",
@@ -594,135 +586,150 @@ const MyLiveClasses = () => {
         action: () =>
           handleJoinClass(subscription.zoomSession.id, subscription.moduleId),
         showDemo: false, // Hide demo when can join
+        message: "Full access to live class",
       };
     }
 
-    // THIRD PRIORITY: If user is registered, check isOnline status immediately (no approval needed)
-    if (
-      showDemo &&
-      subscription.isRegistered &&
-      subscription.status !== "REJECTED"
-    ) {
-      const isOnline =
-        subscription.zoomSession.isOnline ||
-        subscription.apiFlags?.isOnline ||
-        subscription.isOnClassroom ||
-        false;
-
+    // SECOND PRIORITY: If user has full access but class is offline
+    if (subscription.hasAccessToLinks && !isOnline) {
       return {
-        type: "demo",
-        text: "Join Live Class",
-        color: isOnline
-          ? "bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl"
-          : "bg-zinc-500 cursor-not-allowed text-zinc-300",
-        disabled: !isOnline,
-        action: isOnline ? () => handleDemoAccess(subscription) : null,
-        showDemo: true,
-        message: isOnline
-          ? undefined
-          : "This button will become active once your class session begins.",
-      };
-    }
-
-    // If user has access but admin hasn't started the class yet
-    if (subscription.hasAccessToLinks && !subscription.isOnClassroom) {
-      return {
-        type: "waiting-live",
-        text: "Waiting for Class to Start",
-        color: "bg-zinc-500 cursor-not-allowed text-white",
-        disabled: true,
-        action: null,
-        showDemo: false, // Hide demo when waiting for live class
-      };
-    }
-
-    // If API says show waiting message
-    if (showWaiting) {
-      return {
-        type: "waiting-live",
-        text: "Waiting for Class to Start",
-        color: "bg-zinc-500 cursor-not-allowed text-white",
+        type: "waiting-admin",
+        text: "Waiting for Admin to Start Class",
+        color: "bg-amber-600 text-white cursor-not-allowed",
         disabled: true,
         action: null,
         showDemo: false,
+        message: "You have full access - Class will start when admin goes live",
       };
     }
 
-    // If subscription is cancelled
+    // THIRD PRIORITY: If admin approved registration but course fee needs to be paid
+    if (showCourseFee && subscription.isApproved && courseFeeEnabled) {
+      return {
+        type: "pay",
+        text:
+          coursePaymentInProgress === subscription.id
+            ? "Processing..."
+            : `Pay Course Fee - ₹${subscription.zoomSession.courseFee || 0}`,
+        color:
+          "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-600 text-white shadow-lg hover:shadow-xl",
+        disabled: coursePaymentInProgress === subscription.id,
+        action: () => handlePayCourseAccess(subscription),
+        showDemo: false, // Hide demo when course fee is pending
+        message: "Registration approved! Pay to get full access",
+      };
+    }
+
+    // FOURTH PRIORITY: If user is registered and approved, and no course fee required
+    if (
+      subscription.isRegistered &&
+      subscription.isApproved &&
+      !courseFeeEnabled
+    ) {
+      if (isOnline) {
+        return {
+          type: "demo",
+          text: "Join Live Class (Demo Access)",
+          color:
+            "bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl",
+          disabled: false,
+          action: () => handleDemoAccess(subscription),
+          showDemo: true,
+          message: "Demo access to live class",
+        };
+      } else {
+        return {
+          type: "waiting-demo",
+          text: "Demo Access Ready - Waiting for Class",
+          color: "bg-blue-500 cursor-not-allowed text-white",
+          disabled: true,
+          action: null,
+          showDemo: false,
+          message: "Demo access ready - Class will start when admin goes live",
+        };
+      }
+    }
+
+    // FIFTH PRIORITY: If user is registered but waiting for approval
+    if (
+      subscription.isRegistered &&
+      !subscription.isApproved &&
+      subscription.status === "PENDING_APPROVAL"
+    ) {
+      return {
+        type: "pending-approval",
+        text: "Waiting for Admin Approval",
+        color: "bg-yellow-600 cursor-not-allowed text-white",
+        disabled: true,
+        action: null,
+        showDemo: false,
+        message: "Registration complete! Waiting for admin approval",
+      };
+    }
+
+    // SIXTH PRIORITY: If subscription is cancelled
     if (subscription.status === "CANCELLED") {
       return {
         type: "cancelled",
-        text: "Re-Register",
+        text: "Re-Register for Class",
         color:
           "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl",
         disabled: false,
         action: () => handleReRegister(subscription),
         showDemo: false,
+        message: "Re-register to access this class",
       };
     }
 
-    // If subscription is rejected
+    // SEVENTH PRIORITY: If subscription is rejected
     if (subscription.status === "REJECTED") {
       return {
         type: "rejected",
-        text: "Re-Register",
+        text: "Registration Rejected - Re-Register",
         color:
-          "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl",
+          "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-600 text-white shadow-lg hover:shadow-xl",
         disabled: false,
         action: () => handleReRegister(subscription),
         showDemo: false,
+        message: "Your registration was rejected. You can try again.",
       };
     }
 
-    // If user is registered but waiting for approval (only if demo is not available)
-    if (subscription.isRegistered && !subscription.isApproved && !showDemo) {
+    // EIGHTH PRIORITY: If registration is disabled
+    if (!registrationEnabled || showClosed) {
+      return {
+        type: "closed",
+        text: "Registration Closed",
+        color: "bg-gray-500 cursor-not-allowed text-white",
+        disabled: true,
+        action: null,
+        showDemo: false,
+        message: "Registration for this class is closed",
+      };
+    }
+
+    // NINTH PRIORITY: If showing waiting status
+    if (showWaiting) {
       return {
         type: "waiting",
-        text: "Please wait",
-        color: "bg-zinc-500 cursor-not-allowed text-white",
+        text: "Class Not Available",
+        color: "bg-gray-500 cursor-not-allowed text-white",
         disabled: true,
         action: null,
         showDemo: false,
+        message: "This class is not currently available",
       };
     }
 
-    // Check registration status for button display
-    const registrationOpen =
-      subscription.zoomSession.registrationEnabled !== false;
-
-    // If registration is closed, show disabled button to all users (both registered and non-registered)
-    if (!registrationOpen || showClosed) {
-      return {
-        type: "disabled",
-        text: "Registration Closed",
-        color: "bg-zinc-500 cursor-not-allowed text-white",
-        disabled: true,
-        action: null,
-        showDemo: false,
-      };
-    }
-
-    // If user can register (new users when registration is open)
-    if (canRegister && !subscription.isRegistered && registrationOpen) {
-      return {
-        type: "register",
-        text: "Register for Class",
-        color:
-          "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white shadow-lg hover:shadow-xl",
-        disabled: false,
-        action: () => handleReRegister(subscription),
-        showDemo: false,
-      };
-    }
-
-    // Default case - subscription exists but something is wrong
+    // Default fallback
     return {
-      type: "error",
-      text: "Contact Support",
-      color: "bg-zinc-500 cursor-not-allowed text-zinc-300",
+      type: "unavailable",
+      text: "Not Available",
+      color: "bg-gray-400 cursor-not-allowed text-gray-600",
       disabled: true,
       action: null,
       showDemo: false,
+      message: "This class is currently not available",
     };
   };
 
