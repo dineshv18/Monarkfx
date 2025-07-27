@@ -122,21 +122,6 @@ export default function ClassDetails() {
     const registrationEnabled = classData?.registrationEnabled !== false;
     const courseFeeEnabled = classData?.courseFeeEnabled || false;
 
-    // Debug logging
-    console.log("Button state debug:", {
-      userIsRegistered,
-      userHasAccess,
-      userIsApproved,
-      showDemo,
-      showCourseFee,
-      showWaiting,
-      showClosed,
-      isOnline,
-      registrationEnabled,
-      courseFeeEnabled,
-      apiFlags,
-    });
-
     // FIRST PRIORITY: If user has full access and class is live
     if (userHasAccess && isOnline) {
       return {
@@ -690,13 +675,6 @@ export default function ClassDetails() {
   // Determine user status for all UI elements
   const { userIsRegistered, userHasAccess } = determineUserStatus();
   const buttonState = getButtonState();
-
-  // Debug logging for button state changes (only when data is available)
-  if (classData && apiChecksCompleted.checkSubscription) {
-    console.log("Current button state:", buttonState);
-    console.log("User status:", { userIsRegistered, userHasAccess });
-    console.log("Class data flags:", classData.apiFlags);
-  }
 
   return (
     <div className="min-h-screen bg-black font-plus-jakarta-sans">
