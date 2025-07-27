@@ -238,15 +238,15 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
           </div>
 
           {/* Main Checkout Section */}
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div className="grid gap-6 lg:gap-8 lg:grid-cols-2">
             {/* Billing Form Section */}
             <div className="order-2 lg:order-1">
               <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8">
-                <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                   <div className="p-2 sm:p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl">
-                    <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
+                    <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-green-400" />
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
                     Payment Details
                   </h2>
                 </div>
@@ -269,17 +269,17 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
 
             {/* Order Summary Section */}
             <div className="order-1 lg:order-2">
-              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 sticky top-4">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 lg:sticky lg:top-4">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                   <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl">
-                    <ShoppingBag className="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" />
+                    <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-blue-400" />
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-white">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
                     Order Summary
                   </h2>
                 </div>
 
-                <div className="bg-zinc-800/50 border border-zinc-600 rounded-lg sm:rounded-xl p-4 sm:p-6">
+                <div className="bg-zinc-800/50 border border-zinc-600 rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-6">
                   <CouponForm
                     onCouponApplied={handleCouponApplied}
                     originalPrice={originalTotalPrice}
@@ -291,13 +291,13 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                     courseId={courses.map((course) => course.id)}
                   />
 
-                  <div className="space-y-4 mt-6">
-                    <div className="flex justify-between text-zinc-300">
+                  <div className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
+                    <div className="flex justify-between text-zinc-300 text-sm sm:text-base">
                       <span>Subtotal:</span>
                       <span>{formatPrice(originalTotalPrice)}</span>
                     </div>
                     {currentTotalPrice < originalTotalPrice && (
-                      <div className="flex justify-between text-green-400">
+                      <div className="flex justify-between text-green-400 text-sm sm:text-base">
                         <span>Course Sale Discount:</span>
                         <span>
                           -{formatPrice(originalTotalPrice - currentTotalPrice)}
@@ -305,7 +305,7 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                       </div>
                     )}
                     {appliedCoupon && discountedPrice && (
-                      <div className="flex justify-between text-green-400">
+                      <div className="flex justify-between text-green-400 text-sm sm:text-base">
                         <span>Coupon Discount:</span>
                         <span>
                           -{formatPrice(currentTotalPrice - discountedPrice)}
@@ -313,35 +313,35 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
                       </div>
                     )}
                     <hr className="border-green-500/30" />
-                    <div className="flex justify-between text-xl font-bold text-white">
+                    <div className="flex justify-between text-lg sm:text-xl font-bold text-white">
                       <span>Total:</span>
                       <span className="text-green-400">
                         {formatPrice(discountedPrice || currentTotalPrice)}
                       </span>
                     </div>
                     {appliedCoupon && (
-                      <div className="flex justify-between items-center p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                        <span className="text-lg text-zinc-300">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+                        <span className="text-sm sm:text-base lg:text-lg text-zinc-300">
                           Applied Coupon:
                         </span>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs font-semibold text-green-400 bg-green-500/20 px-3 py-1 rounded-full border border-green-500/50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold text-green-400 bg-green-500/20 px-2 sm:px-3 py-1 rounded-full border border-green-500/50">
                             {appliedCoupon.code}
                           </span>
                           <Button
                             onClick={removeCoupon}
                             variant="ghost"
                             size="sm"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 p-1 sm:p-2"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </div>
                       </div>
                     )}
                   </div>
-                  <div className="mt-8 p-4 bg-green-500/10 rounded-lg border border-green-500/30">
-                    <p className="text-green-400 text-center text-sm sm:text-base">
+                  <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-green-500/10 rounded-lg border border-green-500/30">
+                    <p className="text-green-400 text-center text-xs sm:text-sm lg:text-base">
                       💳 Secure payment powered by Razorpay
                     </p>
                   </div>

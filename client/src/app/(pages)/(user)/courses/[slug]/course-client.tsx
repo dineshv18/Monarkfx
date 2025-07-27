@@ -349,10 +349,10 @@ const CourseClient: React.FC<CourseClientProps> = ({
   if (error) return <ErrorComponent error={error} />;
 
   return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sansye">
+    <div className="min-h-screen bg-black font-plus-jakarta-sansye overflow-x-hidden">
       {/* Course Header */}
-      <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden pt-10 ">
-        <div className="absolute inset-0 opacity-5 ">
+      <div className="bg-gradient-to-b from-zinc-900 to-black text-white relative overflow-hidden pt-10">
+        <div className="absolute inset-0 opacity-5">
           <div
             className="absolute inset-0"
             style={{
@@ -361,17 +361,16 @@ const CourseClient: React.FC<CourseClientProps> = ({
           />
         </div>
 
-        <div className="container mx-auto px-4 py-12 md:py-16 max-w-7xl relative z-10 ">
-          {" "}
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-7xl relative z-10">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Course Info */}
-            <div className="order-2 md:order-1 space-y-8">
+            <div className="order-2 lg:order-1 space-y-6 lg:space-y-8">
               {/* Badges */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="flex flex-wrap gap-3"
+                className="flex flex-wrap gap-2 lg:gap-3"
               >
                 {course.isBestseller && (
                   <div className="flex items-center bg-gradient-to-r from-yellow-500/30 to-amber-500/30 text-yellow-100 border border-yellow-400/50 px-4 py-2 rounded-full text-sm font-bold backdrop-blur-sm shadow-lg">
@@ -401,7 +400,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                 transition={{ duration: 0.4 }}
                 className="space-y-4 md:space-y-6"
               >
-                <h1 className="text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold capitalize leading-tight tracking-tight">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold capitalize leading-tight tracking-tight">
                   <span className="inline-block">{course.title}</span>
                 </h1>
                 {course.subheading && (
@@ -409,7 +408,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.2 }}
-                    className="text-base sm:text-lg md:text-xl text-white/80 font-medium max-w-3xl leading-relaxed"
+                    className="text-sm sm:text-base md:text-lg lg:text-xl text-white/80 font-medium max-w-3xl leading-relaxed"
                   >
                     {course.subheading}
                   </motion.p>
@@ -421,19 +420,19 @@ const CourseClient: React.FC<CourseClientProps> = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.3 }}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+                className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
               >
                 {/* Language Card */}
-                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
-                      <Languages className="w-6 h-6 text-green-400" />
+                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-3 lg:p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                  <div className="flex flex-col items-center text-center gap-2 lg:gap-3">
+                    <div className="p-2 lg:p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                      <Languages className="w-4 h-4 lg:w-6 lg:h-6 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-zinc-400 mb-1">
+                      <p className="text-xs lg:text-sm font-medium text-zinc-400 mb-1">
                         Language
                       </p>
-                      <span className="text-base font-bold text-white capitalize">
+                      <span className="text-sm lg:text-base font-bold text-white capitalize">
                         {course.language}
                       </span>
                     </div>
@@ -442,16 +441,16 @@ const CourseClient: React.FC<CourseClientProps> = ({
 
                 {/* Category Card */}
                 {course.category && (
-                  <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
-                    <div className="flex flex-col items-center text-center gap-3">
-                      <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
-                        <Folder className="w-6 h-6 text-green-400" />
+                  <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-3 lg:p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                    <div className="flex flex-col items-center text-center gap-2 lg:gap-3">
+                      <div className="p-2 lg:p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                        <Folder className="w-4 h-4 lg:w-6 lg:h-6 text-green-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-zinc-400 mb-1">
+                        <p className="text-xs lg:text-sm font-medium text-zinc-400 mb-1">
                           Category
                         </p>
-                        <span className="text-base font-bold text-white capitalize">
+                        <span className="text-sm lg:text-base font-bold text-white capitalize">
                           {course.category.name}
                         </span>
                       </div>
@@ -460,16 +459,16 @@ const CourseClient: React.FC<CourseClientProps> = ({
                 )}
 
                 {/* Chapters Count */}
-                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
-                      <Book className="w-6 h-6 text-green-400" />
+                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-3 lg:p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                  <div className="flex flex-col items-center text-center gap-2 lg:gap-3">
+                    <div className="p-2 lg:p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                      <Book className="w-4 h-4 lg:w-6 lg:h-6 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-zinc-400 mb-1">
+                      <p className="text-xs lg:text-sm font-medium text-zinc-400 mb-1">
                         Chapters
                       </p>
-                      <span className="text-base font-bold text-white">
+                      <span className="text-sm lg:text-base font-bold text-white">
                         {sectionsWithChapters.reduce(
                           (total, section) => total + section.chapters.length,
                           0
@@ -480,16 +479,16 @@ const CourseClient: React.FC<CourseClientProps> = ({
                 </div>
 
                 {/* Level Badge */}
-                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
-                  <div className="flex flex-col items-center text-center gap-3">
-                    <div className="p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
-                      <Award className="w-6 h-6 text-green-400" />
+                <div className="bg-zinc-900/60 backdrop-blur-sm rounded-xl p-3 lg:p-5 border border-green-500/30 hover:border-green-400/50 hover:bg-zinc-900/80 transition-all duration-300 group">
+                  <div className="flex flex-col items-center text-center gap-2 lg:gap-3">
+                    <div className="p-2 lg:p-3 bg-green-500/20 rounded-xl group-hover:bg-green-500/30 transition-colors">
+                      <Award className="w-4 h-4 lg:w-6 lg:h-6 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-zinc-400 mb-1">
+                      <p className="text-xs lg:text-sm font-medium text-zinc-400 mb-1">
                         Level
                       </p>
-                      <span className="text-base font-bold text-white">
+                      <span className="text-sm lg:text-base font-bold text-white">
                         {course.paid ? "Premium" : "Free"}
                       </span>
                     </div>
@@ -499,7 +498,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
             </div>
 
             {/* Video/Thumbnail */}
-            <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl ring-1 ring-green-500/20 group">
+            <div className="order-1 lg:order-2 relative aspect-video rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl ring-1 ring-green-500/20 group">
               {/* Thumbnail Image - Always visible when not playing */}
               <div
                 className={`absolute inset-0 transition-all duration-500 ${
@@ -516,10 +515,10 @@ const CourseClient: React.FC<CourseClientProps> = ({
                   unoptimized
                   priority
                 />
-                {!isPlaying && (
+                {!isPlaying && course.videoUrl && (
                   <div className="absolute inset-0 flex items-center justify-center z-20">
-                    <div className="p-4 rounded-full bg-green-500/20 backdrop-blur-sm border border-green-500/30 transition-transform duration-300 group-hover:scale-110">
-                      <PlayCircle className="w-12 h-12 text-green-400" />
+                    <div className="p-3 lg:p-4 rounded-full bg-green-500/20 backdrop-blur-sm border border-green-500/30 transition-transform duration-300 group-hover:scale-110">
+                      <PlayCircle className="w-8 h-8 lg:w-12 lg:h-12 text-green-400" />
                     </div>
                   </div>
                 )}
@@ -541,7 +540,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
                     onPause={() => setIsPlaying(false)}
                     onPlay={() => setIsPlaying(true)}
                     onError={() => setVideoError(true)}
-                    className="rounded-xl overflow-hidden"
+                    className="rounded-xl lg:rounded-2xl overflow-hidden"
                     fallback={<div className="absolute inset-0 bg-gray-200" />}
                   />
                 </div>
@@ -551,20 +550,26 @@ const CourseClient: React.FC<CourseClientProps> = ({
               {!videoError && course.videoUrl && (
                 <button
                   onClick={togglePlayPause}
-                  className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/20 transition-all duration-300"
+                  className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
+                    isPlaying
+                      ? "bg-transparent opacity-0 hover:opacity-100 hover:bg-black/30"
+                      : "bg-black/30 hover:bg-black/20"
+                  }`}
                 >
                   {isPlaying ? (
-                    <Pause className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                    <Pause className="w-12 h-12 lg:w-20 lg:h-20 text-white transition-transform hover:scale-110" />
                   ) : (
-                    <PlayCircle className="w-20 h-20 text-white transition-transform hover:scale-110" />
+                    <PlayCircle className="w-12 h-12 lg:w-20 lg:h-20 text-white transition-transform hover:scale-110" />
                   )}
                 </button>
               )}
 
               {/* Error Message */}
               {videoError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white">
-                  <p>Sorry, the video could not be played.</p>
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 text-white p-4">
+                  <p className="text-center text-sm lg:text-base">
+                    Sorry, the video could not be played.
+                  </p>
                 </div>
               )}
             </div>
@@ -574,9 +579,9 @@ const CourseClient: React.FC<CourseClientProps> = ({
 
       {/* Course Content */}
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Course Description, Content, and Reviews */}
-          <div className="md:col-span-2 order-2 md:order-none">
+          <div className="lg:col-span-2 order-2 lg:order-none">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}

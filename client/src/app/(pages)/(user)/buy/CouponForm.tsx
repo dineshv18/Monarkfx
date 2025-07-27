@@ -52,20 +52,20 @@ export default function CouponForm({
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-white">Apply Coupon</h3>
-      <div className="flex space-x-2">
+    <div className="space-y-3 sm:space-y-4">
+      <h3 className="text-base sm:text-lg font-semibold text-white">Apply Coupon</h3>
+      <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2">
         <Input
           type="text"
           placeholder="Enter coupon code"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-          className="flex-grow bg-zinc-700 border-zinc-600 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500"
+          className="flex-grow bg-zinc-700 border-zinc-600 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 text-sm sm:text-base"
         />
         <Button
           onClick={applyCoupon}
           disabled={isApplying}
-          className="bg-green-500 hover:bg-green-600 text-black font-bold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-green-500 hover:bg-green-600 text-black font-bold transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 text-sm sm:text-base"
         >
           {isApplying ? "Applying..." : "Apply"}
         </Button>

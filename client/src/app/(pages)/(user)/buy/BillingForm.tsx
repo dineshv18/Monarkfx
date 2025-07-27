@@ -338,20 +338,20 @@ export default function BillingForm({
       <div className="space-y-6">
         {/* Course Info Card */}
         <Card className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border-green-500/30">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
               <div>
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-base sm:text-lg font-semibold text-white">
                   {courseTitle}
                 </h3>
-                <p className="text-zinc-400 text-sm">Course Purchase</p>
+                <p className="text-zinc-400 text-xs sm:text-sm">Course Purchase</p>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-green-400">
-                  <IndianRupee className="inline h-6 w-6" />
+              <div className="text-left sm:text-right">
+                <div className="text-xl sm:text-2xl font-bold text-green-400">
+                  <IndianRupee className="inline h-5 w-5 sm:h-6 sm:w-6" />
                   {coursePrice.toLocaleString("en-IN")}
                 </div>
-                <p className="text-zinc-400 text-sm">Total Amount</p>
+                <p className="text-zinc-400 text-xs sm:text-sm">Total Amount</p>
               </div>
             </div>
           </CardContent>
@@ -359,59 +359,59 @@ export default function BillingForm({
 
         {/* Saved Addresses */}
         {addresses.length > 0 && (
-          <Card className="bg-zinc-800/50 border-zinc-700">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
-                <MapPin className="h-5 w-5 mr-2 text-green-400" />
-                Saved Addresses
-              </h3>
-              <div className="grid gap-3">
-                {addresses.map((address, index) => (
-                  <div
-                    key={index}
-                    className="p-4 bg-zinc-700/50 rounded-lg border border-zinc-600 hover:border-green-500/50 cursor-pointer transition-all"
-                    onClick={() => handleAddressSelect(address)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white font-medium">
-                          {address.fullName}
-                        </p>
-                        <p className="text-zinc-400 text-sm">
-                          {address.address}, {address.city}, {address.state} -{" "}
-                          {address.zipCode}
-                        </p>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className="border-green-500 text-green-400"
-                      >
-                        Use This
-                      </Badge>
+                  <Card className="bg-zinc-800/50 border-zinc-700">
+          <CardContent className="p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
+              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-green-400" />
+              Saved Addresses
+            </h3>
+            <div className="grid gap-3">
+              {addresses.map((address, index) => (
+                <div
+                  key={index}
+                  className="p-3 sm:p-4 bg-zinc-700/50 rounded-lg border border-zinc-600 hover:border-green-500/50 cursor-pointer transition-all"
+                  onClick={() => handleAddressSelect(address)}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                    <div>
+                      <p className="text-white font-medium text-sm sm:text-base">
+                        {address.fullName}
+                      </p>
+                      <p className="text-zinc-400 text-xs sm:text-sm">
+                        {address.address}, {address.city}, {address.state} -{" "}
+                        {address.zipCode}
+                      </p>
                     </div>
+                    <Badge
+                      variant="outline"
+                      className="border-green-500 text-green-400 text-xs w-fit"
+                    >
+                      Use This
+                    </Badge>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
         )}
 
         {/* Billing Form */}
         <Card className="bg-zinc-800/50 border-zinc-700">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
-              <CreditCard className="h-5 w-5 mr-2 text-green-400" />
+          <CardContent className="p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6 flex items-center">
+              <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-green-400" />
               Billing Information
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Referral Code */}
-              <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 p-4 rounded-lg border border-green-500/30">
+              <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 p-3 sm:p-4 rounded-lg border border-green-500/30">
                 <Label
                   htmlFor="referralCode"
-                  className="text-white flex items-center"
+                  className="text-white flex items-center text-sm sm:text-base"
                 >
-                  <CheckCircle className="h-4 w-4 mr-2 text-green-400" />
+                  <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-green-400" />
                   Referral Code (Optional)
                 </Label>
                 <Input
@@ -421,14 +421,14 @@ export default function BillingForm({
                   value={formData.referralCode}
                   onChange={handleInputChange}
                   placeholder="Enter referral code if you have one"
-                  className="mt-2 bg-zinc-700 border-zinc-600 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500"
+                  className="mt-2 bg-zinc-700 border-zinc-600 text-white placeholder:text-zinc-400 focus:border-green-500 focus:ring-green-500 text-sm sm:text-base"
                 />
                 <p className="text-xs text-zinc-400 mt-2">
                   Help someone earn commission by entering their referral code
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {/* Full Name */}
                 <div>
                   <Label
@@ -611,18 +611,18 @@ export default function BillingForm({
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 px-6 rounded-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 font-semibold text-lg shadow-lg"
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 font-semibold text-base sm:text-lg shadow-lg"
               >
                 {loading ? (
                   <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2"></div>
                     Processing...
                   </div>
                 ) : (
                   <div className="flex items-center justify-center">
-                    <CreditCard className="h-5 w-5 mr-2" />
-                    Pay ₹{coursePrice.toLocaleString("en-IN")} & Complete
-                    Purchase
+                    <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                    <span className="hidden sm:inline">Pay ₹{coursePrice.toLocaleString("en-IN")} & Complete Purchase</span>
+                    <span className="sm:hidden">Pay ₹{coursePrice.toLocaleString("en-IN")}</span>
                   </div>
                 )}
               </Button>

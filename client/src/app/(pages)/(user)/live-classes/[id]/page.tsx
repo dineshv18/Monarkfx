@@ -672,8 +672,6 @@ export default function ClassDetails() {
     );
   }
 
-  // Determine user status for all UI elements
-  const { userIsRegistered, userHasAccess } = determineUserStatus();
   const buttonState = getButtonState();
 
   return (
@@ -959,74 +957,135 @@ export default function ClassDetails() {
                 </motion.div>
               )}
 
-              {/* Reviews */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <ReviewSection zoomClassId={id} />
-              </motion.div>
+              {isAuthenticated && classData && (
+                <div className="container mx-auto px-4 pb-20">
+                  <ReviewSection
+                    zoomClassId={classData.id}
+                    isRegistered={isRegistered}
+                    hasAccess={hasAccessToLinks}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Pricing Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center">
-                      <CreditCard className="h-5 w-5 mr-2 text-green-400" />
-                      Pricing Details
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-zinc-400">Registration Fee</span>
-                      <span className="text-white font-semibold">
-                        ₹{classData.registrationFee}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-zinc-400">Course Fee</span>
-                      <span className="text-white font-semibold">
-                        ₹{classData.courseFee}
-                      </span>
-                    </div>
-                    <div className="h-px bg-zinc-700"></div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-zinc-400 font-medium">Total</span>
-                      <span className="text-white font-bold text-lg">
-                        ₹{classData.registrationFee + classData.courseFee}
-                      </span>
-                    </div>
+              {/* Pricing Card - Only show if user hasn't paid or registered */}
+              {(!isAuthenticated ||
+                (!classData?.apiFlags?.hasAccessToLinks &&
+                  !classData?.apiFlags?.isRegistered &&
+                  !classData?.hasAccessToLinks &&
+                  !classData?.isRegistered)) && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+                    <CardHeader>
+                      <CardTitle className="text-white flex items-center">
+                        <CreditCard className="h-5 w-5 mr-2 text-green-400" />
+                        Pricing Details
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-zinc-400">Registration Fee</span>
+                        <span className="text-white font-semibold">
+                          ₹{classData.registrationFee}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-zinc-400">Course Fee</span>
+                        <span className="text-white font-semibold">
+                          ₹{classData.courseFee}
+                        </span>
+                      </div>
+                      <div className="h-px bg-zinc-700"></div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-zinc-400 font-medium">Total</span>
+                        <span className="text-white font-bold text-lg">
+                          ₹{classData.registrationFee + classData.courseFee}
+                        </span>
+                      </div>
 
-                    {/* Action Button */}
-                    <div className="pt-4">
-                      <Button
-                        onClick={buttonState?.action || (() => {})}
-                        disabled={buttonState?.disabled}
-                        className={`w-full ${
-                          buttonState?.color || "bg-gray-500"
-                        } transition-all duration-200`}
-                      >
-                        {buttonState?.text || "Loading..."}
-                      </Button>
+                      {/* Action Button */}
+                      <div className="pt-4">
+                        <Button
+                          onClick={buttonState?.action || (() => {})}
+                          disabled={buttonState?.disabled}
+                          className={`w-full ${
+                            buttonState?.color || "bg-gray-500"
+                          } transition-all duration-200`}
+                        >
+                          {buttonState?.text || "Loading..."}
+                        </Button>
 
-                      {/* Status Message */}
-                      {buttonState?.message && (
-                        <p className="text-sm text-zinc-400 mt-2 text-center">
-                          {buttonState.message}
-                        </p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                        {/* Status Message */}
+                        {buttonState?.message && (
+                          <p className="text-sm text-zinc-400 mt-2 text-center">
+                            {buttonState.message}
+                          </p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+
+              {/* Status Card - Show when user has paid or registered */}
+              {isAuthenticated &&
+                (classData?.apiFlags?.hasAccessToLinks ||
+                  classData?.apiFlags?.isRegistered ||
+                  classData?.hasAccessToLinks ||
+                  classData?.isRegistered) && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+                      <CardHeader>
+                        <CardTitle className="text-white flex items-center">
+                          <CheckCircle2 className="h-5 w-5 mr-2 text-green-400" />
+                          Your Status
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {classData?.apiFlags?.hasAccessToLinks ||
+                        classData?.hasAccessToLinks ? (
+                          <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                            <CheckCircle2 className="h-5 w-5 text-green-400" />
+                            <div>
+                              <p className="text-green-400 font-semibold">
+                                Full Access Granted
+                              </p>
+                              <p className="text-zinc-400 text-sm">
+                                You can join the live class
+                              </p>
+                            </div>
+                          </div>
+                        ) : classData?.apiFlags?.isRegistered ||
+                          classData?.isRegistered ? (
+                          <div className="flex items-center gap-3 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                            <CheckCircle2 className="h-5 w-5 text-blue-400" />
+                            <div>
+                              <p className="text-blue-400 font-semibold">
+                                Registration Complete
+                              </p>
+                              <p className="text-zinc-400 text-sm">
+                                {classData?.apiFlags?.isApproved ||
+                                classData?.isApproved
+                                  ? "Approved - Ready to join"
+                                  : "Waiting for approval"}
+                              </p>
+                            </div>
+                          </div>
+                        ) : null}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )}
 
               {/* Class Features */}
               <motion.div
@@ -1109,15 +1168,6 @@ export default function ClassDetails() {
       </div>
 
       {/* Reviews Section - Only show after course fee payment */}
-      {isAuthenticated && classData && (
-        <div className="container mx-auto px-4 pb-20">
-          <ReviewSection
-            zoomClassId={classData.id}
-            isRegistered={isRegistered}
-            hasAccess={hasAccessToLinks}
-          />
-        </div>
-      )}
 
       {/* Dialogs */}
       {showPurchaseDialog && (
