@@ -185,31 +185,31 @@ export const createZoomLiveClass = asyncHandler(async (req, res) => {
     // Use a transaction to create the Zoom session and modules
     const zoomLiveClass = await prisma.$transaction(async (tx) => {
       // Create the main zoom live class
-      const liveClass = await tx.zoomLiveClass.create({
+      const liveClass = await tx.ZoomLiveClass.create({
         data: zoomLiveClassData,
-      }); // If modules are provided, create them (but without Zoom links initially)
-      if (modules && Array.isArray(modules) && modules.length > 0) {
-        // Create each module without Zoom meeting initially
-        for (let i = 0; i < modules.length; i++) {
-          const module = modules[i];
+      }); // Note: Modules functionality not currently implemented
+      // if (modules && Array.isArray(modules) && modules.length > 0) {
+      //   // Create each module without Zoom meeting initially
+      //   for (let i = 0; i < modules.length; i++) {
+      //     const module = modules[i];
 
-          await tx.zoomSessionModule.create({
-            data: {
-              title: module.title,
-              description: module.description,
-              startTime: module.startTime,
-              // endTime removed as it doesn't exist in ZoomSessionModule schema
-              // Zoom links will be null initially - created when Live Status is ON
-              zoomLink: null,
-              zoomMeetingId: null,
-              zoomPassword: null,
-              position: i + 1,
-              isFree: module.isFree || false, // Use module's own isFree property
-              zoomLiveClassId: liveClass.id,
-            },
-          });
-        }
-      }
+      //     await tx.zoomSessionModule.create({
+      //       data: {
+      //         title: module.title,
+      //         description: module.description,
+      //         startTime: module.startTime,
+      //         // endTime removed as it doesn't exist in ZoomSessionModule schema
+      //         // Zoom links will be null initially - created when Live Status is ON
+      //         zoomLink: null,
+      //         zoomMeetingId: null,
+      //         zoomPassword: null,
+      //         position: i + 1,
+      //         isFree: module.isFree || false, // Use module's own isFree property
+      //         zoomLiveClassId: liveClass.id,
+      //       },
+      //     });
+      //   }
+      // }
 
       return liveClass;
     });
@@ -430,7 +430,7 @@ export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
   try {
     await prisma.$transaction(async (tx) => {
       // 1. First, find all subscriptions for this class
-      const subscriptions = await tx.zoomSubscription.findMany({
+      const subscriptions = await tx.ZoomSubscription.findMany({
         where: { zoomLiveClassId: id },
         select: { id: true },
       });
@@ -440,7 +440,7 @@ export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
 
       // 3. Delete all related payments first
       if (subscriptionIds.length > 0) {
-        await tx.zoomPayment.deleteMany({
+        await tx.ZoomPayment.deleteMany({
           where: {
             subscriptionId: {
               in: subscriptionIds,
@@ -449,16 +449,17 @@ export const deleteZoomLiveClass = asyncHandler(async (req, res) => {
         });
       }
 
-      await tx.zoomSessionModule.deleteMany({
-        where: { zoomLiveClassId: id },
-      });
+      // Note: Modules functionality not currently implemented
+      // await tx.zoomSessionModule.deleteMany({
+      //   where: { zoomLiveClassId: id },
+      // });
 
-      await tx.zoomSubscription.deleteMany({
+      await tx.ZoomSubscription.deleteMany({
         where: { zoomLiveClassId: id },
       });
 
       // 6. Finally, delete the class itself
-      await tx.zoomLiveClass.delete({
+      await tx.ZoomLiveClass.delete({
         where: { id },
       });
       console.log(`Deleted zoom live class with ID: ${id}`);
@@ -768,7 +769,7 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
         console.error("Error creating main class Zoom meeting:", error);
         throw new ApiError(500, "Failed to create Zoom meeting for main class");
       } // Update main class with Zoom details
-      const updatedMainClass = await tx.zoomLiveClass.update({
+      const updatedMainClass = await tx.ZoomLiveClass.update({
         where: { id },
         data: {
           isOnClassroom: true,
@@ -793,7 +794,7 @@ export const toggleIsOnClassroom = asyncHandler(async (req, res) => {
       // Note: Modules functionality not currently implemented
 
       // Update main class and clear Zoom data
-      const updatedMainClass = await tx.zoomLiveClass.update({
+      const updatedMainClass = await tx.ZoomLiveClass.update({
         where: { id },
         data: {
           isOnClassroom: false,

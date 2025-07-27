@@ -9,7 +9,7 @@ import crypto from "crypto";
 export const getMyZoomSubscriptions = asyncHandler(async (req, res) => {
   try {
     // Get ALL user subscriptions regardless of payment/approval status
-    const subscriptions = await prisma.zoomSubscription.findMany({
+    const subscriptions = await prisma.ZoomSubscription.findMany({
       where: {
         userId: req.user.id,
         isRegistered: true, // Only show actual registrations
@@ -263,7 +263,7 @@ export const verifyRegistrationPayment = asyncHandler(async (req, res) => {
 
       // If we have a previous subscription ID, update that one
       if (previousSubscriptionId) {
-        subscription = await tx.zoomSubscription.update({
+        subscription = await tx.ZoomSubscription.update({
           where: { id: previousSubscriptionId },
           data: {
             startDate,
@@ -277,7 +277,7 @@ export const verifyRegistrationPayment = asyncHandler(async (req, res) => {
         });
       } else {
         // Check if user already has any subscription (active or not)
-        const existingSubscription = await tx.zoomSubscription.findFirst({
+        const existingSubscription = await tx.ZoomSubscription.findFirst({
           where: {
             userId: req.user.id,
             zoomLiveClassId,
@@ -285,7 +285,7 @@ export const verifyRegistrationPayment = asyncHandler(async (req, res) => {
         });
         if (existingSubscription) {
           // Update existing subscription
-          subscription = await tx.zoomSubscription.update({
+          subscription = await tx.ZoomSubscription.update({
             where: { id: existingSubscription.id },
             data: {
               startDate,
@@ -300,7 +300,7 @@ export const verifyRegistrationPayment = asyncHandler(async (req, res) => {
           });
         } else {
           // Create new subscription
-          subscription = await tx.zoomSubscription.create({
+          subscription = await tx.ZoomSubscription.create({
             data: {
               userId: req.user.id,
               zoomLiveClassId,
@@ -318,7 +318,7 @@ export const verifyRegistrationPayment = asyncHandler(async (req, res) => {
       }
 
       // Create payment record
-      const payment = await tx.zoomPayment.create({
+      const payment = await tx.ZoomPayment.create({
         data: {
           amount: zoomLiveClass.registrationFee,
           razorpay_order_id,
@@ -361,7 +361,7 @@ export const payCourseAccess = asyncHandler(async (req, res) => {
   }
 
   // Check if user already has a subscription
-  const existingSubscription = await prisma.zoomSubscription.findFirst({
+  const existingSubscription = await prisma.ZoomSubscription.findFirst({
     where: {
       userId: req.user.id,
       zoomLiveClassId: classId,
@@ -503,7 +503,7 @@ export const verifyCourseAccessPayment = asyncHandler(async (req, res) => {
   try {
     const result = await prisma.$transaction(async (tx) => {
       // Update subscription to grant immediate access after course fee payment
-      const updatedSubscription = await tx.zoomSubscription.update({
+      const updatedSubscription = await tx.ZoomSubscription.update({
         where: { id: existingSubscription.id },
         data: {
           status: "ACTIVE", // Keep status as ACTIVE after course fee payment
@@ -513,7 +513,7 @@ export const verifyCourseAccessPayment = asyncHandler(async (req, res) => {
       });
 
       // Create payment record
-      const payment = await tx.zoomPayment.create({
+      const payment = await tx.ZoomPayment.create({
         data: {
           amount: zoomLiveClass.courseFee,
           razorpay_order_id,
