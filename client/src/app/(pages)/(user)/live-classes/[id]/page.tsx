@@ -957,7 +957,7 @@ export default function ClassDetails() {
                 </motion.div>
               )}
 
-              {isAuthenticated && classData && (
+              {classData && (
                 <div className="container mx-auto px-4 pb-20">
                   <ReviewSection
                     zoomClassId={classData.id}
