@@ -192,35 +192,35 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
       <div className="relative z-10 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-xs sm:text-sm font-medium mb-4">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               SECURE CHECKOUT
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
               Complete Your{" "}
               <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
                 Purchase
               </span>
             </h1>
-            <p className="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base lg:text-lg text-zinc-300 max-w-2xl mx-auto px-4">
               You're just one step away from accessing premium trading knowledge
             </p>
           </div>
 
           {/* User Welcome Card */}
           {user && (
-            <div className="mb-8 sm:mb-12 max-w-4xl mx-auto">
-              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-green-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-                <div className="flex items-center gap-3 sm:gap-4">
+            <div className="mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto">
+              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-green-500/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6">
+                <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
                   <div className="p-2 sm:p-3 bg-green-500/20 rounded-xl">
-                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-400" />
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-green-400" />
                   </div>
                   <div>
-                    <h2 className="text-lg sm:text-xl font-semibold text-white">
+                    <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-white">
                       Welcome, {user.name}!
                     </h2>
-                    <p className="text-sm sm:text-base text-zinc-300">
+                    <p className="text-xs sm:text-sm lg:text-base text-zinc-300">
                       {user.email}
                     </p>
                   </div>
@@ -229,8 +229,8 @@ function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
             </div>
           )}
           {/* Course Cards */}
-          <div className="mb-8 sm:mb-12">
-            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-6 sm:mb-8 lg:mb-12">
+            <div className="grid gap-3 sm:gap-4 lg:gap-6 md:grid-cols-2 lg:grid-cols-3">
               {courses.map((course) => (
                 <CourseCard key={course.id} course={course} />
               ))}
