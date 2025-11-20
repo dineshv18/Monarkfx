@@ -5,28 +5,18 @@ import { prisma } from "../config/db.js";
 import { ApiResponsive } from "../utils/ApiResponsive.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-// Create new affiliate
+// Create new affiliate - SIMPLIFIED VERSION
 const createAffiliate = asyncHandler(async (req, res) => {
   const {
     name,
+    email,
     phone,
-    address,
     city,
     state,
-    country,
-    pincode,
-    bankName,
-    accountNumber,
-    ifscCode,
-    accountHolderName,
-    upiId,
-    commissionRate,
     notes,
-    govtIdNumber,
   } = req.body;
 
   const userId = req.user.id;
-  const email = req.user.email;
 
   // Check if affiliate already exists for this user
   const existingAffiliate = await prisma.affiliate.findFirst({
@@ -36,7 +26,7 @@ const createAffiliate = asyncHandler(async (req, res) => {
     throw new ApiError(400, "You have already applied for affiliate.");
   }
 
-  // Check if affiliate already exists with this email (should not happen, but for safety)
+  // Check if affiliate already exists with this email
   const emailAffiliate = await prisma.affiliate.findFirst({
     where: { email },
   });
@@ -52,20 +42,12 @@ const createAffiliate = asyncHandler(async (req, res) => {
       name,
       email,
       phone,
-      address,
       city,
       state,
-      country,
-      pincode,
-      bankName,
-      accountNumber,
-      ifscCode,
-      accountHolderName,
-      upiId,
-      commissionRate: commissionRate || 15.0,
+      country: "India", // Default country
+      commissionRate: 15.0, // Default commission rate
       referralCode,
       notes,
-      govtIdNumber,
       userId,
     },
   });

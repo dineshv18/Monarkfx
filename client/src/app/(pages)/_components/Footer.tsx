@@ -79,6 +79,7 @@ const Footer: React.FC = () => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "About Us", path: "/about" },
+    { name: "Blog", path: "https://monarkfx.com/blog/" },
     { name: "Courses", path: "/courses" },
     { name: "Live Classes", path: "/live-classes" },
     { name: "Business", path: "/business" },
@@ -289,17 +290,17 @@ const Footer: React.FC = () => {
           </motion.div>
         </div>
       </div>
-      {/* Developed & Designed by Ritesh */}
+      {/* Developed & Designed by CodeXprime */}
       <div className="w-full flex justify-center mt-4 z-50 pointer-events-auto relative">
         <span className="text-xs text-gray-400">
           Developed & Designed by{" "}
           <a
-            href="https://linktr.ee/riteshk_007"
+            href="https://codexprime.in"
             target="_blank"
             rel="noopener noreferrer"
             className="text-green-400 underline hover:text-green-300 transition-colors"
           >
-            Ritesh
+            CodeXprime
           </a>{" "}
           🧑🏼‍💻
         </span>

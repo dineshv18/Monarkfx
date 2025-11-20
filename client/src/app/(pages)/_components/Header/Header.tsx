@@ -21,6 +21,7 @@ import Cart from "../Cart";
 const menuItems = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
+  { name: "Blog", href: "https://monarkfx.com/blog/" },
   { name: "Contact", href: "/contact" },
   { name: "Business", href: "/business" },
 ];
@@ -137,11 +138,10 @@ const Header = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className={`fixed z-[9999] top-[10px] left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-7xl flex flex-col md:flex-row items-center justify-between transition-all duration-500 ${
-        isScrolled
+      className={`fixed z-[9999] top-[10px] left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-7xl flex flex-col md:flex-row items-center justify-between transition-all duration-500 ${isScrolled
           ? "bg-black/30 backdrop-blur-lg border border-white/10 rounded-2xl shadow-[0_0_15px_rgba(220,38,38,0.25)]"
           : "bg-transparent"
-      }`}
+        }`}
     >
       <div className="flex w-full md:w-auto items-center justify-between p-3">
         {/* Logo with animation */}
@@ -520,9 +520,8 @@ const NavTab: React.FC<NavTabProps> = ({
       onClick={onClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className={`relative z-10 block cursor-pointer px-4 py-1.5 text-sm uppercase text-white md:py-2 md:text-base transition-colors ${
-        isActive ? "font-medium" : "font-normal"
-      }`}
+      className={`relative z-10 block cursor-pointer px-4 py-1.5 text-sm uppercase text-white md:py-2 md:text-base transition-colors ${isActive ? "font-medium" : "font-normal"
+        }`}
     >
       <Link href={href}>{children}</Link>
     </motion.li>
