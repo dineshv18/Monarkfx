@@ -29,8 +29,7 @@ const UttamNagarOfficeCTA = () => {
                 Address:
               </span>
               <span className="text-green-200 text-base">
-                Metro Pillar Number 654, Second floor, B-28, Hari Nagar, B
-                Block, JJ Colony, Uttam Nagar, New Delhi, Delhi, 110059
+                Metro Pillar Number 654, Second floor B-28, Hari Nagar, B Block, JJ Colony, Uttam Nagar, New Delhi, Delhi, 110059 (Near - Uttam Nagar East Metro Station)
               </span>
             </div>
           </div>
@@ -39,7 +38,7 @@ const UttamNagarOfficeCTA = () => {
           </p>
           <div className="flex flex-wrap gap-4 mt-2">
             <a
-              href="tel:+919220797499"
+              href="tel:+918750475852"
               className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold transition shadow-md"
               target="_blank"
               rel="noopener noreferrer"
@@ -47,7 +46,7 @@ const UttamNagarOfficeCTA = () => {
               <FaPhoneAlt className="text-lg" /> Call Now
             </a>
             <a
-              href="https://wa.me/919220797499?text=I%20am%20interested%20in%20joining%20the%20office%20batch%20at%20Uttam%20Nagar"
+              href="https://wa.me/918750475852?text=I%20am%20interested%20in%20joining%20the%20office%20batch%20at%20Uttam%20Nagar"
               className="flex items-center gap-2 px-5 py-2 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold transition shadow-md"
               target="_blank"
               rel="noopener noreferrer"

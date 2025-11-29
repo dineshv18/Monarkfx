@@ -226,14 +226,14 @@ const Footer: React.FC = () => {
                     className="text-green-500 mt-1 flex-shrink-0"
                   />
                   <span className="text-gray-300">
-                    Uttam Nagar, New Delhi, India
+                    Metro Pillar Number 654, Second floor B-28, Hari Nagar, B Block, JJ Colony, Uttam Nagar, New Delhi, Delhi, 110059 (Near - Uttam Nagar East Metro Station)
                   </span>
                 </li>
 
                 <li className="flex items-center space-x-3">
                   <Phone size={18} className="text-green-500 flex-shrink-0" />
                   <span className="text-gray-300">
-                    +91 9220797499 / +91 9773927706
+                    +91 87504 75852 / +91 9220797499
                   </span>
                 </li>
                 <li className="flex items-center space-x-3">

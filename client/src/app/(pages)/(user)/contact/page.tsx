@@ -76,7 +76,7 @@ export default function Contact() {
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to send message. Please try again later."
+        "Failed to send message. Please try again later."
       );
     } finally {
       setIsSubmitting(false);
@@ -87,14 +87,14 @@ export default function Contact() {
     {
       icon: MapPin,
       title: "Visit Us",
-      details: "Uttam Nagar, New Delhi, India",
+      details: "Metro Pillar Number 654, Second floor B-28, Hari Nagar, B Block, JJ Colony, Uttam Nagar, New Delhi, Delhi, 110059 (Near - Uttam Nagar East Metro Station)",
       description: "Head Branch - Visit us for in-person consultations",
       color: "from-green-500 to-emerald-500",
     },
     {
       icon: Phone,
       title: "Call Us",
-      details: "+91 9220797499 / +91 9773927706",
+      details: "+91 87504 75852 / +91 9220797499 ",
       description: "Available during business hours",
       color: "from-blue-500 to-cyan-500",
     },
