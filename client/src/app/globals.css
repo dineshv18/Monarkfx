@@ -685,3 +685,60 @@ button[class*="plugin"],
 [data-seo="true"] {
   pointer-events: auto !important;
 }
+/* SEO Plugin - Fix Text Visibility */
+[data-seo="true"],
+[data-seo="true"] * {
+  color: inherit !important;
+}
+
+.plugin_open-btn,
+button[class*="plugin"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 999999 !important;
+  position: relative !important;
+}
+
+/* Plugin Modal/Popup Styling */
+[class*="plugin_modal"],
+[id*="plugin"] {
+  color: #000 !important;
+  background: white !important;
+}
+
+[class*="plugin_modal"] *,
+[id*="plugin"] * {
+  color: inherit !important;
+}
+
+/* Plugin Button specific fix */
+.plugin_open-btn * {
+  pointer-events: none;
+  color: currentColor !important;
+}
+
+/* Ensure plugin content is visible */
+[data-seo="true"] button,
+[data-seo="true"] a,
+[data-seo="true"] input,
+[data-seo="true"] textarea {
+  all: revert;
+  color: inherit !important;
+}
+/* Force visibility for SEO plugin */
+[data-seo="true"] {
+  filter: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #000 !important;
+  background: white !important;
+}
+
+[data-seo="true"] h1,
+[data-seo="true"] h2,
+[data-seo="true"] h3,
+[data-seo="true"] p,
+[data-seo="true"] span,
+[data-seo="true"] div {
+  color: #000 !important;
+}
