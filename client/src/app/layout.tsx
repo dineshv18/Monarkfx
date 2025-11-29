@@ -41,6 +41,17 @@ export default function RootLayout({
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="beforeInteractive"
         />
+
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk bg-black text-white overflow-x-hidden`}
+      >
+        {/* Global Tracking Scripts */}
+        <TrackingScripts />
+
+        <ClientProviders>{children}</ClientProviders>
+
+        <div className="fixed inset-0 -z-50 bg-gradient-to-br from-black via-gray-900 to-green-950 pointer-events-none" />
         <script>
           {`window.jQuery ||
 document.write("<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'><\/script>");`}
@@ -66,16 +77,6 @@ document.write("<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0
     eptagmanage.send();
           `}
         </script>
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk bg-black text-white overflow-x-hidden`}
-      >
-        {/* Global Tracking Scripts */}
-        <TrackingScripts />
-
-        <ClientProviders>{children}</ClientProviders>
-
-        <div className="fixed inset-0 -z-50 bg-gradient-to-br from-black via-gray-900 to-green-950 pointer-events-none" />
       </body>
     </html>
   );
