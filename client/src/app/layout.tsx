@@ -5,6 +5,7 @@ import { Space_Grotesk } from "next/font/google";
 import ClientProviders from "@/helper/Providers";
 import Script from "next/script";
 import TrackingScripts from "@/components/TrackingScripts";
+import RawSEO from "@/components/Tag";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -52,7 +53,7 @@ export default function RootLayout({
         <ClientProviders>{children}</ClientProviders>
 
         <div className="fixed inset-0 -z-50 bg-gradient-to-br from-black via-gray-900 to-green-950 pointer-events-none" />
-
+        <RawSEO />
       </body>
     </html>
   );
