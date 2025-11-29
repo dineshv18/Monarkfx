@@ -684,37 +684,46 @@ button[class*="plugin"],
 
 [data-seo="true"] {
   pointer-events: auto !important;
-}
-/* SEO Plugin - Fix Text Visibility */
-[data-seo="true"],
-[data-seo="true"] * {
-  color: inherit !important;
-}
+}/* SEO Plugin - Complete Styling */
 
-.plugin_open-btn,
-button[class*="plugin"] {
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  z-index: 999999 !important;
-  position: relative !important;
-}
+/* Base: Everything transparent by default */
 [data-seo="true"] {
   background: transparent !important;
-  color: inherit !important;
+  pointer-events: auto !important;
 }
 
 [data-seo="true"] * {
   background: transparent !important;
 }
 
-/* Only dialog/modal should be white */
+/* Small notification box - White background, black text */
+[data-seo="true"] > div:first-child,
+.plugin_chat-icon,
+[class*="plugin_notification"],
+div[style*="position: fixed"] {
+  background: white !important;
+  color: #000 !important;
+  border-radius: 12px !important;
+  padding: 15px 20px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+}
+
+/* Small box ke andar ka content */
+[data-seo="true"] > div:first-child *,
+.plugin_chat-icon *,
+[class*="plugin_notification"] * {
+  color: #000 !important;
+  background: transparent !important;
+}
+
+/* Large modal/dialog - White background */
 [class*="plugin_modal"],
 [class*="plugin_updates"],
 [id*="plugin_enquery"],
 [id*="plugin_updates"] {
   background: white !important;
   color: #000 !important;
-  padding: 20px !important;
+  padding: 30px !important;
   border-radius: 12px !important;
   box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
   width: fit-content !important;
@@ -723,7 +732,7 @@ button[class*="plugin"] {
   height: auto !important;
 }
 
-/* Dialog ke andar ka content */
+/* Modal content */
 [class*="plugin_modal"] *,
 [class*="plugin_updates"] *,
 [id*="plugin_enquery"] *,
@@ -732,25 +741,74 @@ button[class*="plugin"] {
   color: #000 !important;
 }
 
-/* Button styling */
+/* Text elements - Force black */
+[data-seo="true"] h1,
+[data-seo="true"] h2,
+[data-seo="true"] h3,
+[data-seo="true"] h4,
+[data-seo="true"] h5,
+[data-seo="true"] h6,
+[data-seo="true"] p,
+[data-seo="true"] span,
+[data-seo="true"] div,
+[data-seo="true"] a,
+[data-seo="true"] label {
+  color: #000 !important;
+}
+
+/* Buttons - Clickable */
 .plugin_open-btn,
-button[class*="plugin"] {
+button[class*="plugin"],
+[data-seo="true"] button {
   pointer-events: auto !important;
   cursor: pointer !important;
   z-index: 999999 !important;
   position: relative !important;
+  background: transparent !important;
+  color: #000 !important;
 }
 
 .plugin_open-btn * {
   pointer-events: none;
+  color: #000 !important;
 }
 
-/* Text visibility */
-[class*="plugin_modal"] h1,
-[class*="plugin_modal"] h2,
-[class*="plugin_modal"] h3,
-[class*="plugin_modal"] p,
-[class*="plugin_modal"] span,
-[class*="plugin_modal"] div {
+/* Close button (X) */
+[data-seo="true"] button[class*="close"],
+[data-seo="true"] [class*="close"] {
+  background: #ff0000 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 30px !important;
+  height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Icon styling */
+[data-seo="true"] svg,
+[data-seo="true"] img {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Links */
+[data-seo="true"] a {
+  color: #10b981 !important;
+  text-decoration: underline !important;
+}
+
+[data-seo="true"] a:hover {
+  color: #059669 !important;
+}
+
+/* Input fields if any */
+[data-seo="true"] input,
+[data-seo="true"] textarea {
+  background: white !important;
   color: #000 !important;
+  border: 1px solid #ddd !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
 }
