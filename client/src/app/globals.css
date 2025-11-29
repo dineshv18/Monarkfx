@@ -670,3 +670,9 @@ body {
     transform: translateY(0px);
   }
 }
+
+
+[data-seo-plugin="true"] {
+  pointer-events: auto !important;
+  z-index: 9999 !important;
+}
