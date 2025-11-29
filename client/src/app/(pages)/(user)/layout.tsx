@@ -6,9 +6,9 @@ import RawSEO from "@/components/Tag";
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="overflow-x-hidden">
+      <RawSEO />
       <Header />
       {children}
-      <RawSEO />
       <Footer />
       <MobileBottomNav />
     </div>
