@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback } from 'react';
+import { useEffect } from 'react';
 
 export default function RawSEO() {
-    useCallback(() => {
+    useEffect(() => {
         // Load jQuery if not present
         if (!(window as any).jQuery) {
             const jqueryScript = document.createElement('script');
