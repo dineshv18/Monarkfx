@@ -672,7 +672,20 @@ body {
 }
 
 
+/* SEO Plugin Styles - Add to globals.css */
+.plugin_open-btn,
+button[class*="plugin"] {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 99999 !important;
+  position: relative !important;
+}
+
 [data-seo-plugin="true"] {
   pointer-events: auto !important;
-  z-index: 9999 !important;
+}
+
+/* Ensure button is clickable */
+.plugin_open-btn * {
+  pointer-events: none;
 }

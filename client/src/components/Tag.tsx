@@ -75,6 +75,30 @@ export default function RawSEO(): JSX.Element {
             });
         };
 
+        const executeScripts = (container: HTMLElement): void => {
+            const scripts = container.querySelectorAll('script');
+            scripts.forEach((oldScript) => {
+                const newScript = document.createElement('script');
+
+                // Copy all attributes
+                Array.from(oldScript.attributes).forEach(attr => {
+                    newScript.setAttribute(attr.name, attr.value);
+                });
+
+                // Copy content
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+
+                // Replace old script with new one to execute it
+                if (oldScript.parentNode) {
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                }
+            });
+        };
+
         const loadSEOData = async (): Promise<void> => {
             if (window.seoScriptLoaded) {
                 return;
@@ -82,6 +106,9 @@ export default function RawSEO(): JSX.Element {
             window.seoScriptLoaded = true;
 
             await loadJQuery();
+
+            // Wait a bit for jQuery to be fully available
+            await new Promise(resolve => setTimeout(resolve, 100));
 
             const eppathurl: string = window.location.origin + window.location.pathname;
             const eptagmanage: XMLHttpRequest = new XMLHttpRequest();
@@ -106,6 +133,11 @@ export default function RawSEO(): JSX.Element {
                                     }
                                 });
 
+                                // Remove old titles
+                                if (window.jQuery) {
+                                    window.jQuery("head").find("title").remove();
+                                }
+
                                 const tempDiv = document.createElement('div');
                                 tempDiv.innerHTML = temp[0];
 
@@ -117,31 +149,55 @@ export default function RawSEO(): JSX.Element {
                                 });
                             }
 
-                            // Handle body content
-                            if (temp[1] && containerRef.current) {
+                            // Handle body content - CRITICAL FIX HERE
+                            if (temp[1]) {
                                 const tempDiv = document.createElement('div');
                                 tempDiv.innerHTML = temp[1];
 
+                                // Append directly to body for proper event handling
                                 Array.from(tempDiv.children).forEach((child) => {
                                     const cloned = child.cloneNode(true) as HTMLElement;
                                     cloned.setAttribute('data-seo-plugin', 'true');
-                                    containerRef.current?.appendChild(cloned);
+                                    document.body.appendChild(cloned);
                                     injectedElements.push(cloned);
                                 });
 
-                                // Re-execute scripts in body content for click handlers
-                                const scripts = containerRef.current.querySelectorAll('script');
-                                scripts.forEach((oldScript) => {
-                                    const newScript = document.createElement('script');
-                                    Array.from(oldScript.attributes).forEach(attr => {
-                                        newScript.setAttribute(attr.name, attr.value);
-                                    });
-                                    newScript.textContent = oldScript.textContent;
+                                // Execute all scripts after DOM insertion
+                                setTimeout(() => {
+                                    const bodyScripts = document.querySelectorAll('body script[data-seo-plugin="true"]');
+                                    bodyScripts.forEach((oldScript) => {
+                                        const newScript = document.createElement('script');
+                                        newScript.setAttribute('data-seo-plugin', 'true');
 
-                                    if (oldScript.parentNode) {
-                                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                                        Array.from(oldScript.attributes).forEach(attr => {
+                                            if (attr.name !== 'data-seo-plugin') {
+                                                newScript.setAttribute(attr.name, attr.value);
+                                            }
+                                        });
+
+                                        if ((oldScript as HTMLScriptElement).src) {
+                                            newScript.src = (oldScript as HTMLScriptElement).src;
+                                        } else {
+                                            newScript.textContent = oldScript.textContent;
+                                        }
+
+                                        if (oldScript.parentNode) {
+                                            oldScript.parentNode.replaceChild(newScript, oldScript);
+                                        }
+                                    });
+
+                                    // Force trigger click events setup if jQuery is available
+                                    if (window.jQuery) {
+                                        // Re-initialize any jQuery event handlers
+                                        window.jQuery(document).ready(() => {
+                                            // Trigger any custom initialization
+                                            const pluginBtn = document.querySelector('.plugin_open-btn');
+                                            if (pluginBtn) {
+                                                console.log('Plugin button found and ready');
+                                            }
+                                        });
                                     }
-                                });
+                                }, 200);
                             }
                         } catch (error) {
                             console.error('SEO injection error:', error);
@@ -159,10 +215,10 @@ export default function RawSEO(): JSX.Element {
             }
         };
 
-        // Small delay for hydration, but skip on initial mount
+        // Small delay for hydration
         const timer = setTimeout(() => {
             loadSEOData();
-        }, isInitialMount.current ? 0 : 100);
+        }, isInitialMount.current ? 150 : 200);
 
         isInitialMount.current = false;
 
@@ -172,5 +228,6 @@ export default function RawSEO(): JSX.Element {
         };
     }, [pathname]);
 
-    return <div ref={containerRef} style={{ display: 'contents' }} data-seo-container="true" />;
+    // Return empty fragment - body content will be injected directly to document.body
+    return <></>;
 }
