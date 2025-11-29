@@ -16,6 +16,39 @@
             }
         });
         injectedElements = [];
+
+        // Also remove by data attribute
+        if (window.jQuery) {
+            jQuery('[data-seo="true"]').remove();
+        }
+    }
+
+    function executeScripts(container) {
+        // Find all scripts in the injected content
+        var scripts = container.find('script');
+        scripts.each(function () {
+            var oldScript = this;
+            var newScript = document.createElement('script');
+
+            // Copy attributes
+            Array.from(oldScript.attributes).forEach(function (attr) {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+
+            // Copy content
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
+
+            // Replace to execute
+            try {
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            } catch (e) {
+                console.warn('Script execution error:', e);
+            }
+        });
     }
 
     function loadJQuery(callback) {
@@ -64,9 +97,6 @@
                         }
 
                         if (temp[1] && window.jQuery) {
-                            // Remove old SEO body elements
-                            jQuery("body").find("[data-seo='true']").remove();
-
                             var bodyContent = jQuery(temp[1]);
                             bodyContent.attr('data-seo', 'true');
                             jQuery("body").append(bodyContent);
@@ -75,6 +105,25 @@
                             bodyContent.each(function () {
                                 injectedElements.push(this);
                             });
+
+                            // CRITICAL: Execute scripts after insertion with delay
+                            setTimeout(function () {
+                                executeScripts(bodyContent);
+
+                                // Force re-bind click events
+                                setTimeout(function () {
+                                    if (window.jQuery) {
+                                        // Trigger any initialization functions
+                                        jQuery(document).trigger('seo-plugin-loaded');
+
+                                        // Debug: Check if button exists
+                                        var btn = jQuery('.plugin_open-btn');
+                                        if (btn.length > 0) {
+                                            console.log('SEO Plugin button found and scripts executed');
+                                        }
+                                    }
+                                }, 100);
+                            }, 50);
                         }
                     } catch (e) {
                         console.error('SEO Plugin Error:', e);
@@ -90,35 +139,33 @@
     // Initial load
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {
-            loadJQuery(initSEO);
+            setTimeout(function () {
+                loadJQuery(initSEO);
+            }, 500); // Delay for initial load
         });
     } else {
-        loadJQuery(initSEO);
+        setTimeout(function () {
+            loadJQuery(initSEO);
+        }, 500);
     }
 
     // Listen for Next.js route changes
-    var observer = new MutationObserver(function () {
-        if (window.location.pathname !== currentPath) {
-            loadJQuery(initSEO);
+    var lastUrl = location.href;
+    new MutationObserver(function () {
+        var url = location.href;
+        if (url !== lastUrl) {
+            lastUrl = url;
+            setTimeout(function () {
+                loadJQuery(initSEO);
+            }, 300); // Delay for route change
         }
-    });
-
-    // Watch for URL changes (Next.js client-side navigation)
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    }).observe(document, { subtree: true, childList: true });
 
     // Also listen for popstate (back/forward buttons)
     window.addEventListener('popstate', function () {
         setTimeout(function () {
             loadJQuery(initSEO);
-        }, 100);
-    });
-
-    // Listen for Next.js specific route change events
-    window.addEventListener('popstate', function () {
-        loadJQuery(initSEO);
+        }, 300);
     });
 
 })();
