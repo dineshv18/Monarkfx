@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   title: "MonarkFX - Global Trading Excellence",
   description:
     "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
+  verification: {
+    google: "ag1Iza1649hS0a-56hUID2i8REiGVerKmH3ZxRLBhHM",
+  },
 };
 
 export default function RootLayout({
