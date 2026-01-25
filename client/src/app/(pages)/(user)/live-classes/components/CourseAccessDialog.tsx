@@ -124,7 +124,7 @@ export default function CourseAccessDialog({
         name: "Monark FX",
         description: `Course Access for: ${classData.title}`,
         order_id: order.id,
-        image: "/logo.png",
+        image: "/logo-light.png",
         handler: async function (response: any) {
           try {
             setIsProcessing(true);
@@ -175,7 +175,7 @@ export default function CourseAccessDialog({
       console.error("Course access payment initiation failed:", error);
       toast.error(
         error.response?.data?.message ||
-          "Unable to initiate payment. Please try again."
+        "Unable to initiate payment. Please try again."
       );
     } finally {
       setIsLoading(false);

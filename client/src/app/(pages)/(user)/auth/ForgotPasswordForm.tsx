@@ -1,5 +1,4 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Mail, Loader2 } from "lucide-react";
 import InputField from "./InputField";
@@ -59,7 +58,7 @@ export default function ForgotPasswordForm({
         id="forgot-password-email"
         type="email"
         label="Email"
-        icon={<Mail className="h-4 w-4 text-green-500" />}
+        icon={<Mail className="h-4 w-4 text-zinc-500" />}
         register={register}
         name="email"
         errors={errors}
@@ -71,13 +70,17 @@ export default function ForgotPasswordForm({
           },
         }}
       />
-      <Button
+      <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors duration-200"
+        className="w-full py-3 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+        style={{
+          background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+        }}
       >
         {isSubmitting ? (
           <motion.div
+            className="flex items-center justify-center gap-2"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           >
@@ -86,7 +89,7 @@ export default function ForgotPasswordForm({
         ) : (
           "Send Reset Instructions"
         )}
-      </Button>
+      </button>
     </motion.form>
   );
 }

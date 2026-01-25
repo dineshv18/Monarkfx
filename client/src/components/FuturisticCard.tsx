@@ -64,7 +64,7 @@ export default function FuturisticCard({
     <motion.div
       ref={cardRef}
       className={cn(
-        "relative rounded-xl overflow-hidden cursor-pointer bg-black/90 border border-gray-800/60",
+        "relative rounded-xl overflow-hidden cursor-pointer bg-[#0a0a0a]/90 border border-gray-800/60",
         getAspectRatioClass(),
         borderGlow ? "group-hover:border-green-500/50" : "",
         className
@@ -83,9 +83,8 @@ export default function FuturisticCard({
         <motion.div
           className="absolute inset-0 opacity-70 pointer-events-none z-10"
           style={{
-            background: `radial-gradient(circle at ${mousePosition.x * 100}% ${
-              mousePosition.y * 100
-            }%, rgba(220, 38, 38, 0.15), transparent 40%)`,
+            background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100
+              }%, rgba(220, 38, 38, 0.15), transparent 40%)`,
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.7 }}

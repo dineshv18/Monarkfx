@@ -213,7 +213,7 @@ export default function BillingForm({
         name: "MonarkFX - Global Trading Excellence",
         description: `Purchase: ${courseTitle}`,
         order_id: order.id,
-        image: "/logo.png",
+        image: "/logo-light.png",
 
         handler: async function (response: any) {
           try {
@@ -359,41 +359,41 @@ export default function BillingForm({
 
         {/* Saved Addresses */}
         {addresses.length > 0 && (
-                  <Card className="bg-zinc-800/50 border-zinc-700">
-          <CardContent className="p-4 sm:p-6">
-            <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
-              <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-green-400" />
-              Saved Addresses
-            </h3>
-            <div className="grid gap-3">
-              {addresses.map((address, index) => (
-                <div
-                  key={index}
-                  className="p-3 sm:p-4 bg-zinc-700/50 rounded-lg border border-zinc-600 hover:border-green-500/50 cursor-pointer transition-all"
-                  onClick={() => handleAddressSelect(address)}
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-                    <div>
-                      <p className="text-white font-medium text-sm sm:text-base">
-                        {address.fullName}
-                      </p>
-                      <p className="text-zinc-400 text-xs sm:text-sm">
-                        {address.address}, {address.city}, {address.state} -{" "}
-                        {address.zipCode}
-                      </p>
+          <Card className="bg-zinc-800/50 border-zinc-700">
+            <CardContent className="p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
+                <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-green-400" />
+                Saved Addresses
+              </h3>
+              <div className="grid gap-3">
+                {addresses.map((address, index) => (
+                  <div
+                    key={index}
+                    className="p-3 sm:p-4 bg-zinc-700/50 rounded-lg border border-zinc-600 hover:border-green-500/50 cursor-pointer transition-all"
+                    onClick={() => handleAddressSelect(address)}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                      <div>
+                        <p className="text-white font-medium text-sm sm:text-base">
+                          {address.fullName}
+                        </p>
+                        <p className="text-zinc-400 text-xs sm:text-sm">
+                          {address.address}, {address.city}, {address.state} -{" "}
+                          {address.zipCode}
+                        </p>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="border-green-500 text-green-400 text-xs w-fit"
+                      >
+                        Use This
+                      </Badge>
                     </div>
-                    <Badge
-                      variant="outline"
-                      className="border-green-500 text-green-400 text-xs w-fit"
-                    >
-                      Use This
-                    </Badge>
                   </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Billing Form */}

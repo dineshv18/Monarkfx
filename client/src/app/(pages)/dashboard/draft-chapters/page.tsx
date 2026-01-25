@@ -11,7 +11,7 @@ export default function DraftChaptersPage() {
   ];
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="max-w-7xl mx-auto py-10">
       <h1 className="text-2xl font-bold mb-5">Draft Chapters</h1>
       <DynamicTable
         columns={columns}

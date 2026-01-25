@@ -177,7 +177,7 @@ export default function CreateZoomLiveClassPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 sm:p-6 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-4 sm:p-6 overflow-x-hidden">
       <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">

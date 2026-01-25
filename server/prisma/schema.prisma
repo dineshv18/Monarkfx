@@ -633,3 +633,28 @@ enum SaleStatus {
   CANCELLED
   REFUNDED
 }
+
+model Inquiry {
+  id          String        @id @default(uuid())
+  name        String
+  email       String
+  phone       String
+  city        String?
+  course      String?
+  batchTiming String?
+  message     String?
+  status      InquiryStatus @default(NEW)
+  source      String        @default("contact") // 'live-classes' or 'contact'
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  ENROLLED
+}

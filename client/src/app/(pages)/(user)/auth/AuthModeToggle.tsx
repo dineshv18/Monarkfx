@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { AuthModeToggleProps } from "@/type";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
@@ -9,46 +8,42 @@ export default function AuthModeToggle({
 }: AuthModeToggleProps) {
   return (
     <motion.div
-      className="w-full text-center mt-6"
+      className="w-full text-center mt-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.2 }}
     >
       {authMode !== "login" ? (
-        <Button
-          variant="ghost"
+        <button
           onClick={() => setAuthMode("login")}
-          className="text-green-500 hover:text-green-600 hover:bg-green-500/10 transition-colors duration-200"
+          className="flex items-center justify-center gap-2 mx-auto text-[#737373] hover:text-red-400 transition-colors text-sm"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className="w-4 h-4" />
           <span>Back to Login</span>
-        </Button>
+        </button>
       ) : (
         <div className="space-y-4">
-          <Button
-            variant="ghost"
+          <button
             onClick={() => setAuthMode("register")}
-            className="text-green-500 hover:text-green-600 hover:bg-green-500/10 transition-colors duration-200"
+            className="text-[#737373] hover:text-red-400 transition-colors text-sm"
           >
             Need an account?{" "}
-            <span className="font-semibold ml-1">Register</span>
-          </Button>
-          <div className="flex items-center justify-center space-x-2 text-sm text-zinc-400 flex-col md:flex-row">
-            <Button
-              variant="link"
+            <span className="text-red-500 font-medium">Register</span>
+          </button>
+          <div className="flex items-center justify-center gap-4 text-sm">
+            <button
               onClick={() => setAuthMode("forgotPassword")}
-              className="text-zinc-400 hover:text-green-400 transition-colors duration-200"
+              className="text-[#525252] hover:text-red-400 transition-colors"
             >
               Forgot Password?
-            </Button>
-            <span className="hidden md:block">•</span>
-            <Button
-              variant="link"
+            </button>
+            <span className="text-zinc-800">|</span>
+            <button
               onClick={() => setAuthMode("resendVerification")}
-              className="text-gray-500 hover:text-green-500 transition-colors duration-200"
+              className="text-[#525252] hover:text-red-400 transition-colors"
             >
               Resend Verification
-            </Button>
+            </button>
           </div>
         </div>
       )}

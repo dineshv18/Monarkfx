@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
@@ -81,20 +80,20 @@ export default function GoogleButton({ mode, courseSlug }: GoogleButtonProps) {
   });
 
   return (
-    <Button
+    <button
       type="button"
       onClick={() => googleLogin()}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-2 bg-zinc-900/50 hover:bg-zinc-800/50 text-white border border-green-500/30 mt-4 transition-all duration-200 disabled:opacity-50 backdrop-blur-sm"
+      className="w-full flex items-center justify-center gap-3 py-3 bg-transparent border border-zinc-800 rounded-lg text-white hover:border-zinc-700 transition-colors disabled:opacity-50"
     >
-      <Image src={"/google.png"} alt="Google" width={20} height={20} />
-      <span>
+      <Image src={"/google.png"} alt="Google" width={18} height={18} />
+      <span className="text-sm">
         {isLoading
           ? "Please wait..."
           : mode === "login"
-            ? "Sign in with Google"
+            ? "Continue with Google"
             : "Sign up with Google"}
       </span>
-    </Button>
+    </button>
   );
 }

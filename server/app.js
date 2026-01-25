@@ -25,7 +25,7 @@ import uploadRoutes from "./routes/upload.routes.js";
 import zoomReviewRoutes from "./routes/zoom-review.routes.js";
 import trackingScriptRoutes from "./routes/trackingScript.routes.js";
 import affiliateRoutes from "./routes/affiliate.routes.js";
-
+import inquiryRoutes from "./routes/inquiry.routes.js";
 const app = express();
 
 // Security & Parse Middlewares
@@ -109,7 +109,7 @@ app.use("/api/v1/upload", uploadRoutes);
 app.use("/api/v1/zoom-review", zoomReviewRoutes);
 app.use("/api/v1/tracking-scripts", trackingScriptRoutes);
 app.use("/api/v1/affiliate", affiliateRoutes);
-
+app.use("/api/v1/inquiry", inquiryRoutes);
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error("Error:", err);

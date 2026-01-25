@@ -126,11 +126,10 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
     if (daysLeft !== null && daysLeft !== undefined) {
       return (
         <span
-          className={`flex items-center px-3 py-1.5 text-xs font-medium rounded-full backdrop-blur-sm border ${
-            daysLeft < 5
+          className={`flex items-center px-3 py-1.5 text-xs font-medium rounded-full backdrop-blur-sm border ${daysLeft < 5
               ? "bg-red-500/20 text-red-300 border-red-500/40"
               : "bg-green-500/20 text-green-300 border-green-500/40"
-          }`}
+            }`}
         >
           <Clock className="h-3.5 w-3.5 mr-1.5" />
           {daysLeft} days left
@@ -170,16 +169,14 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
 
   return (
     <motion.div
-      className={`group relative w-full h-full ${
-        isExpired ? "opacity-80" : ""
-      }`}
+      className={`group relative w-full h-full ${isExpired ? "opacity-80" : ""
+        }`}
       whileHover={{ y: -8 }}
       transition={{ duration: 0.3 }}
     >
       <div
-        className={`relative w-full h-full overflow-hidden bg-gradient-to-br from-zinc-900/95 via-black/90 to-zinc-950/95 backdrop-blur-xl rounded-xl border border-zinc-700/50 shadow-lg transition-all duration-500 hover:shadow-green-500/20 ${
-          isExpired ? "border-2 border-red-500/30 bg-zinc-900/50" : ""
-        }`}
+        className={`relative w-full h-full overflow-hidden bg-gradient-to-br from-zinc-900/95 via-black/90 to-zinc-950/95 backdrop-blur-xl rounded-xl border border-zinc-700/50 shadow-lg transition-all duration-500 hover:shadow-green-500/20 ${isExpired ? "border-2 border-red-500/30 bg-zinc-900/50" : ""
+          }`}
       >
         {/* Network Background Pattern */}
         <div className="absolute inset-0 opacity-20">
@@ -202,14 +199,13 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
             alt={course.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className={`object-cover transition-transform duration-700 ${
-              isExpired ? "grayscale" : "group-hover:scale-110"
-            }`}
+            className={`object-cover transition-transform duration-700 ${isExpired ? "grayscale" : "group-hover:scale-110"
+              }`}
           />
 
           {/* Play button overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-            <div className="bg-black/70 backdrop-blur-sm rounded-full p-3 transform scale-75 group-hover:scale-100 transition-transform duration-300">
+            <div className="bg-[#0a0a0a]/70 backdrop-blur-sm rounded-full p-3 transform scale-75 group-hover:scale-100 transition-transform duration-300">
               <PlayCircle className="w-6 h-6 text-green-400" />
             </div>
           </div>
@@ -229,11 +225,10 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
                 daysLeft !== null &&
                 daysLeft !== undefined && (
                   <span
-                    className={`flex items-center backdrop-blur-sm px-3 py-2 rounded-full text-sm font-semibold border shadow-lg ${
-                      daysLeft < 7
+                    className={`flex items-center backdrop-blur-sm px-3 py-2 rounded-full text-sm font-semibold border shadow-lg ${daysLeft < 7
                         ? "bg-red-500/20 text-red-300 border-red-500/40"
                         : "bg-green-500/20 text-green-300 border-green-500/40"
-                    }`}
+                      }`}
                   >
                     <Clock className="w-4 h-4 mr-1.5" /> {daysLeft} days left
                   </span>
@@ -277,22 +272,20 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
           </div>
           {/* Course Title */}
           <h3
-            className={`text-lg font-bold line-clamp-2 transition-colors ${
-              isExpired
+            className={`text-lg font-bold line-clamp-2 transition-colors ${isExpired
                 ? "text-gray-400"
                 : "text-white/95 group-hover:text-green-100"
-            }`}
+              }`}
           >
             {course.title}
           </h3>
 
           {/* Description */}
           <div
-            className={`text-sm line-clamp-2 ${
-              isExpired
+            className={`text-sm line-clamp-2 ${isExpired
                 ? "text-gray-500"
                 : "text-zinc-400 group-hover:text-zinc-300"
-            }`}
+              }`}
           >
             {parse(course.description ?? "")}
           </div>
@@ -300,21 +293,19 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
           {/* Course Meta */}
           <div className="flex flex-wrap gap-2">
             <span
-              className={`flex items-center text-xs font-medium border ${
-                isExpired
+              className={`flex items-center text-xs font-medium border ${isExpired
                   ? "bg-gray-800/50 text-gray-400 border-gray-700/50"
-                  : "bg-black/40 text-green-400 border-green-500/30"
-              } px-2 py-1 rounded-full backdrop-blur-sm`}
+                  : "bg-[#0a0a0a]/40 text-green-400 border-green-500/30"
+                } px-2 py-1 rounded-full backdrop-blur-sm`}
             >
               <BookOpen className="w-3 h-3 mr-1" />
               {course.language}
             </span>
             <span
-              className={`flex items-center text-xs font-medium border ${
-                isExpired
+              className={`flex items-center text-xs font-medium border ${isExpired
                   ? "bg-gray-800/50 text-gray-400 border-gray-700/50"
-                  : "bg-black/40 text-green-400 border-green-500/30"
-              } px-2 py-1 rounded-full backdrop-blur-sm`}
+                  : "bg-[#0a0a0a]/40 text-green-400 border-green-500/30"
+                } px-2 py-1 rounded-full backdrop-blur-sm`}
             >
               <Folder className="w-3 h-3 mr-1" />
               {course?.category?.name}
@@ -327,11 +318,10 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span
-                    className={`flex items-center ${
-                      isExpired
+                    className={`flex items-center ${isExpired
                         ? "bg-red-500/20 text-red-300 border border-red-500/40"
                         : "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-0"
-                    } px-3 py-1.5 rounded-full font-semibold text-sm shadow-lg`}
+                      } px-3 py-1.5 rounded-full font-semibold text-sm shadow-lg`}
                   >
                     {isExpired ? (
                       <>
@@ -350,7 +340,7 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
                 </div>
                 <Progress
                   value={courseProgress.percentage}
-                  className="h-2 bg-black/50 rounded-full"
+                  className="h-2 bg-[#0a0a0a]/50 rounded-full"
                 />
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-zinc-500 font-medium">
@@ -358,11 +348,10 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
                   </span>
                   {expiryDate && (
                     <span
-                      className={`${
-                        isExpired
+                      className={`${isExpired
                           ? "text-red-400 font-semibold"
                           : "text-zinc-500"
-                      }`}
+                        }`}
                     >
                       {isExpired ? "Expired on: " : "Valid until: "}
                       {formatExpiryDate(expiryDate)}
@@ -415,7 +404,7 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
                       {Math.round(
                         ((course.price - (course.salePrice ?? 0)) /
                           course.price) *
-                          100
+                        100
                       )}
                       %
                     </span>
@@ -430,9 +419,8 @@ const SecureChainCourseCard: React.FC<SecureChainCourseCardProps> = ({
         {/* Hover Overlay */}
         <div
           className={`absolute inset-0 bg-gradient-to-t from-green-950/30 via-black/10 to-transparent 
-          opacity-0 transition-opacity duration-500 rounded-xl pointer-events-none ${
-            isHovered ? "opacity-100" : ""
-          }`}
+          opacity-0 transition-opacity duration-500 rounded-xl pointer-events-none ${isHovered ? "opacity-100" : ""
+            }`}
         />
 
         {/* Clickable Link */}

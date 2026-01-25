@@ -91,7 +91,7 @@ export default function FuturisticHero({
       </motion.div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 py-20 z-10 relative text-center">
+      <div className="max-w-7xl mx-auto px-4 py-20 z-10 relative text-center">
         <motion.div
           initial="hidden"
           animate="visible"

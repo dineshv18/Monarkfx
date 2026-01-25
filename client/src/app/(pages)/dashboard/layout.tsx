@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-black font-plus-jakarta-sans">
+      <div className="min-h-screen bg-[#0a0a0a] font-plus-jakarta-sans">
         {/* Background Pattern */}
         <div className="fixed inset-0 opacity-5 pointer-events-none">
           <div
@@ -42,7 +42,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
         <Sidenav />
         <main className="md:pl-60 pt-4 md:pt-0 relative z-10">
-          <div className="container mx-auto p-4 md:p-8 text-white">
+          <div className="max-w-7xl mx-auto p-4 md:p-8 text-white">
             {children}
           </div>
           <Toaster />

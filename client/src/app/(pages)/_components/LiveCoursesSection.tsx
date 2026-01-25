@@ -79,10 +79,10 @@ const LiveCoursesSection = () => {
     <section className="w-full bg-gradient-to-br from-zinc-900/95 to-black/95 py-12 sm:py-16 md:py-20 overflow-hidden relative">
       {/* Video Dialog */}
       {isVideoOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/70 p-4">
           <div className="relative bg-gray-900 rounded-2xl shadow-2xl p-0 w-full max-w-2xl">
             <button
-              className="absolute top-2 right-2 text-white bg-black/40 rounded-full p-2 hover:bg-black/70 transition z-10"
+              className="absolute top-2 right-2 text-white bg-[#0a0a0a]/40 rounded-full p-2 hover:bg-[#0a0a0a]/70 transition z-10"
               onClick={() => setIsVideoOpen(false)}
               aria-label="Close video"
             >
@@ -99,7 +99,7 @@ const LiveCoursesSection = () => {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
-            <div className="w-full aspect-video bg-black rounded-b-2xl overflow-hidden">
+            <div className="w-full aspect-video bg-[#0a0a0a] rounded-b-2xl overflow-hidden">
               <iframe
                 width="100%"
                 height="100%"
@@ -115,7 +115,7 @@ const LiveCoursesSection = () => {
         </div>
       )}
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0 }}

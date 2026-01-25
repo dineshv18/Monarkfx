@@ -113,7 +113,7 @@ export default function ImportUsersPage() {
     const removeFile = () => setFile(null);
 
     return (
-        <div className="container mx-auto py-10">
+        <div className="max-w-7xl mx-auto py-10">
             <Card>
                 <CardHeader>
                     <CardTitle>Import Users</CardTitle>

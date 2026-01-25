@@ -17,7 +17,7 @@ export const Testimonial = ({
 
   return (
     <motion.div
-      className="relative bg-black/80 backdrop-blur-md rounded-lg p-6 border border-white/10 overflow-hidden transition-all duration-300"
+      className="relative bg-[#0a0a0a]/80 backdrop-blur-md rounded-lg p-6 border border-white/10 overflow-hidden transition-all duration-300"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}

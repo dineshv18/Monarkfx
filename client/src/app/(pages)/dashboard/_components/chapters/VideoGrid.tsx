@@ -43,7 +43,7 @@ export function VideoGrid({ chapters, isLoading }: VideoGridProps) {
               controls={true}
               light={true}
               playIcon={
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50 hover:bg-black/40 transition-colors">
+                <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0a]/50 hover:bg-[#0a0a0a]/40 transition-colors">
                   <PlayCircle className="h-12 w-12 text-white" />
                 </div>
               }

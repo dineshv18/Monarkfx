@@ -132,7 +132,7 @@ export default function Home() {
 
         <div
           ref={containerRef}
-          className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-10"
+          className="max-w-7xl mx-auto px-4 sm:px-6 max-w-7xl relative z-10"
         >
           <div>
             {/* Enhanced Section Header */}
@@ -369,9 +369,8 @@ export default function Home() {
                             className={`absolute border-2 rounded-full`}
                             style={{
                               inset: `${index * 12 + 8}px`,
-                              borderColor: `rgba(34, 197, 94, ${
-                                0.3 - index * 0.05
-                              })`,
+                              borderColor: `rgba(34, 197, 94, ${0.3 - index * 0.05
+                                })`,
                             }}
                           />
                         ))}
@@ -393,9 +392,8 @@ export default function Home() {
                               left: "50%",
                               marginTop: "-6px",
                               marginLeft: "-6px",
-                              transform: `rotate(${
-                                index * 120
-                              }deg) translateY(-60px)`,
+                              transform: `rotate(${index * 120
+                                }deg) translateY(-60px)`,
                             }}
                           />
                         ))}
@@ -426,9 +424,8 @@ export default function Home() {
                             className={`absolute border-2 rounded-full`}
                             style={{
                               inset: `${index * 12 + 8}px`,
-                              borderColor: `rgba(34, 197, 94, ${
-                                0.3 - index * 0.05
-                              })`,
+                              borderColor: `rgba(34, 197, 94, ${0.3 - index * 0.05
+                                })`,
                             }}
                             animate={{
                               rotate: index % 2 === 0 ? 360 : -360,

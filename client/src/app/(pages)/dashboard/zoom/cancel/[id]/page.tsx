@@ -121,7 +121,7 @@ export default function CancelSubscriptionPage() {
 
   if (!subscription) {
     return (
-      <div className="container mx-auto py-6">
+      <div className="max-w-7xl mx-auto py-6">
         <p>Subscription not found</p>
         <Button
           onClick={() => router.push("/dashboard/zoom?tab=subscriptions")}
@@ -134,7 +134,7 @@ export default function CancelSubscriptionPage() {
 
   if (subscription.status !== "ACTIVE") {
     return (
-      <div className="container mx-auto py-6 space-y-6">
+      <div className="max-w-7xl mx-auto py-6 space-y-6">
         <div className="flex items-center gap-4 mb-6">
           <Button
             variant="ghost"
@@ -167,7 +167,7 @@ export default function CancelSubscriptionPage() {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="max-w-7xl mx-auto py-6 space-y-6">
       <div className="flex items-center gap-4 mb-6">
         <Button
           variant="ghost"

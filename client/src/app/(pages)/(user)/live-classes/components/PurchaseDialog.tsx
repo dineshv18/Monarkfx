@@ -174,11 +174,10 @@ export default function PurchaseDialog({
         amount: order.amount,
         currency: order.currency,
         name: "Monark FX",
-        description: `Purchase: ${zoomLiveClass.title}${
-          selectedModuleId ? ` - Module` : ""
-        }`,
+        description: `Purchase: ${zoomLiveClass.title}${selectedModuleId ? ` - Module` : ""
+          }`,
         order_id: order.id,
-        image: "/logo.png",
+        image: "/logo-light.png",
         handler: async function (response: any) {
           try {
             console.log("Payment successful, verifying:", response);
@@ -499,11 +498,10 @@ export default function PurchaseDialog({
             <Button
               onClick={initiatePayment}
               disabled={isLoading}
-              className={`${
-                isSelectedModuleFree()
+              className={`${isSelectedModuleFree()
                   ? "bg-green-600 hover:bg-green-700"
                   : "bg-green-600 hover:bg-green-700"
-              } text-white rounded-full px-6 shadow-md`}
+                } text-white rounded-full px-6 shadow-md`}
             >
               {isLoading ? (
                 <>

@@ -5,453 +5,484 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import Link from "next/link";
+import Image from "next/image";
+import { Loader2, Tag, X, ShoppingBag, ArrowLeft } from "lucide-react";
 
-import Script from "next/script";
-
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import BillingForm from "./BillingForm";
-import CouponForm from "./CouponForm";
 import { useAuth } from "@/helper/AuthContext";
-import { AddressData, CouponDetails, CourseDataNew, UserData } from "@/type";
-import CourseCard from "./CourseCard";
-import AddressList from "./AddressList";
+import { clearLocalCart, getLocalCart, LocalCartItem } from "@/helper/localCart";
 
-import {
-  Trash2,
-  XCircle,
-  CheckCircle,
-  CreditCard,
-  ShoppingBag,
-} from "lucide-react";
-import { formatPrice } from "@/helper/FormatPrice";
-import { CourseParams } from "@/components/CourseParams";
+interface CartItem {
+  id: string;
+  course: {
+    id: string;
+    title: string;
+    slug: string;
+    price: number;
+    salePrice?: number;
+    thumbnail?: string;
+    category?: { name: string };
+  };
+}
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Razorpay: any;
-  }
+interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+interface CouponData {
+  id: string;
+  code: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
 }
 
 export default function BuyPage() {
-  return (
-    <Suspense fallback={<BuyPageSkeleton />}>
-      <CourseParams>
-        {(courseSlugs) => <BuyPageContent courseSlugs={courseSlugs} />}
-      </CourseParams>
-    </Suspense>
-  );
-}
-
-function BuyPageContent({ courseSlugs }: { courseSlugs: string[] }) {
   const router = useRouter();
-  const [courses, setCourses] = useState<CourseDataNew[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { checkAuth, isAuthenticated, isLoading: authLoading } = useAuth();
+
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [user, setUser] = useState<UserData | null>(null);
-  const [addresses, setAddresses] = useState<AddressData[]>([]);
-  const [referralCode, setReferralCode] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  // Get referral code from URL parameters
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponData | null>(null);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get("ref");
-    if (refCode) {
-      setReferralCode(refCode);
+    if (!authLoading) {
+      initializeCheckout();
     }
-  }, []);
+  }, [authLoading, isAuthenticated]);
 
-  const { checkAuth } = useAuth();
-
-  const [discountedPrice, setDiscountedPrice] = useState<number | null>(null);
-  const [appliedCoupon, setAppliedCoupon] = useState<CouponDetails | null>(
-    null
-  );
-
-  useEffect(() => {
-    fetchData(courseSlugs);
-  }, []);
-
-  const fetchData = async (slugs: string[]) => {
+  const initializeCheckout = async () => {
     setIsLoading(true);
-    setError(null);
+
+    // Check if logged in
+    const authenticated = await checkAuth();
+    if (!authenticated) {
+      // Redirect to login with return URL
+      router.push("/auth?redirect=/buy&action=checkout");
+      return;
+    }
 
     try {
-      const isAuthenticated = await checkAuth();
-      if (!isAuthenticated) {
-        router.push("/auth");
-        return;
-      }
-
-      // Fetch course data
-      const courseDataPromises = slugs.map((slug) =>
-        axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/course/get-course-page/${slug}`
-        )
-      );
-      const courseResponses = await Promise.all(courseDataPromises);
-      const fetchedCourses = courseResponses.map(
-        (response) => response.data.data
-      );
-      setCourses(fetchedCourses);
-
       // Fetch user data
       const userResponse = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/user/get-user`,
-        {
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` } }
       );
       setUser(userResponse.data.user);
 
-      // Fetch saved addresses
-      const addressResponse = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/billing/addresses`,
-        {
-          headers: {
-            Authorization: `Bearer ${Cookies.get("accessToken")}`,
-          },
+      // Check if there are local cart items to sync
+      const localItems = getLocalCart();
+      if (localItems.length > 0) {
+        // Sync local cart to server
+        for (const item of localItems) {
+          try {
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/cart/add/${item.courseSlug}`
+            );
+          } catch (error) {
+            // Ignore if already in cart
+          }
         }
-      );
-      setAddresses(addressResponse.data.data);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        toast.error("Unauthorized access - Invalid token");
-        router.push("/auth");
-      } else {
-        setError("An error occurred while fetching data");
-        console.error("Fetch error:", error);
+        // Clear local cart after sync
+        clearLocalCart();
       }
+
+      // Fetch server cart
+      const cartResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/cart`);
+      if (cartResponse.data?.data) {
+        setCartItems(cartResponse.data.data);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error loading checkout");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCouponApplied = (
-    discountedPrice: number,
-    couponDetails: CouponDetails
-  ) => {
-    setDiscountedPrice(discountedPrice);
-    setAppliedCoupon(couponDetails);
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) {
+      toast.error("Please enter a coupon code");
+      return;
+    }
+
+    setIsApplyingCoupon(true);
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/coupon/apply`,
+        { code: couponCode.trim() }
+      );
+
+      if (response.data?.success && response.data?.data) {
+        setAppliedCoupon(response.data.data);
+        toast.success("Coupon applied successfully!");
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Invalid coupon code");
+    } finally {
+      setIsApplyingCoupon(false);
+    }
   };
 
-  const removeCoupon = () => {
-    setDiscountedPrice(null);
+  const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
+    setCouponCode("");
+    toast.success("Coupon removed");
   };
 
-  const handleAddressSelect = (address: AddressData) => {
-    // This function is now handled by the BillingForm component
-    toast.success("Address selected - please fill the form manually");
+  const handleConfirmPayment = async () => {
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      // Create order/enrollment for each course in cart
+      for (const item of cartItems) {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/enrollment/enroll`,
+          {
+            courseId: item.course.id,
+            couponId: appliedCoupon?.id,
+          },
+          {
+            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
+          }
+        );
+
+        // Remove from cart after enrollment
+        await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/cart/${item.id}`);
+      }
+
+      setIsSuccess(true);
+      toast.success("Enrollment successful!");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Payment failed");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  if (isLoading) {
-    return <BuyPageSkeleton />;
-  }
+  const formatPrice = (price: number) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price);
 
-  if (error) {
-    return <ErrorCard error={error} retry={() => fetchData(courseSlugs)} />;
-  }
-
-  if (!courses.length) {
-    return <div>No course data available.</div>;
-  }
-
-  const originalTotalPrice = courses.reduce(
-    (total, course) => total + course.price,
+  // Calculate totals
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.course.price,
     0
   );
-
-  const currentTotalPrice = courses.reduce(
-    (total, course) => total + (course.salePrice || course.price),
+  const saleDiscount = cartItems.reduce(
+    (sum, item) => sum + (item.course.price - (item.course.salePrice || item.course.price)),
     0
   );
+  const afterSalePrice = subtotal - saleDiscount;
+
+  let couponDiscount = 0;
+  if (appliedCoupon) {
+    if (appliedCoupon.discountType === "percentage") {
+      couponDiscount = (afterSalePrice * appliedCoupon.discountValue) / 100;
+    } else {
+      couponDiscount = appliedCoupon.discountValue;
+    }
+  }
+
+  const finalTotal = afterSalePrice - couponDiscount;
+
+  if (isLoading || authLoading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 text-red-600 animate-spin mx-auto" />
+          <p className="text-[#525252] mt-4">Loading checkout...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="max-w-lg mx-auto px-4 text-center">
+          <div className="w-16 h-16 mx-auto mb-8 rounded-full bg-red-950/30 flex items-center justify-center">
+            <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
+            Thank you for enrolling.
+          </h1>
+          <p className="text-[#737373] mb-8">
+            You have been successfully enrolled. Access your courses from your profile.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link href="/user-profile">
+              <button className="px-6 py-3 text-white text-sm font-medium rounded-lg" style={{ background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)" }}>
+                View My Courses
+              </button>
+            </Link>
+            <Link href="/courses">
+              <button className="px-6 py-3 text-white text-sm border border-zinc-800 rounded-lg hover:border-red-900/50 transition-colors">
+                Browse More
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="max-w-lg mx-auto px-4 text-center">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-900/20 flex items-center justify-center">
+            <ShoppingBag className="w-8 h-8 text-zinc-600" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mb-4" style={{ fontFamily: "'Inter', sans-serif" }}>
+            Your cart is empty
+          </h1>
+          <p className="text-[#737373] mb-8">
+            Add some courses to proceed with checkout.
+          </p>
+          <Link href="/courses">
+            <button className="px-6 py-3 text-white text-sm font-medium rounded-lg" style={{ background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)" }}>
+              Browse Courses
+            </button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sans">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Hero */}
+      <section className="py-12 lg:py-16 border-b border-zinc-900">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link href="/cart" className="inline-flex items-center gap-2 text-[#737373] hover:text-white text-sm mb-6 transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Cart
+          </Link>
+          <span className="text-[#525252] text-xs tracking-[0.3em] uppercase block mb-4">
+            Checkout
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-bold text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
+            Secure Enrollment
+          </h1>
+        </div>
+      </section>
 
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 left-1/4 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-2xl" />
-      </div>
-
-      <div className="relative z-10 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header Section */}
-          <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              SECURE CHECKOUT
-            </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
-              Complete Your{" "}
-              <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
-                Purchase
-              </span>
-            </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-zinc-300 max-w-2xl mx-auto px-4">
-              You're just one step away from accessing premium trading knowledge
-            </p>
-          </div>
-
-          {/* User Welcome Card */}
-          {user && (
-            <div className="mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto">
-              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-green-500/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6">
-                <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
-                  <div className="p-2 sm:p-3 bg-green-500/20 rounded-xl">
-                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-green-400" />
+      {/* Main Content */}
+      <section className="py-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-5 gap-10">
+            {/* Left: Details */}
+            <div className="lg:col-span-3 space-y-10">
+              {/* Student Info */}
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="text-red-600 text-sm font-medium">01</span>
+                  <h2 className="text-[#525252] text-xs tracking-[0.2em] uppercase">
+                    Student Information
+                  </h2>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between py-3 border-b border-zinc-900">
+                    <span className="text-[#525252]">Name</span>
+                    <span className="text-white">{user?.name}</span>
                   </div>
-                  <div>
-                    <h2 className="text-base sm:text-lg lg:text-xl font-semibold text-white">
-                      Welcome, {user.name}!
-                    </h2>
-                    <p className="text-xs sm:text-sm lg:text-base text-zinc-300">
-                      {user.email}
-                    </p>
+                  <div className="flex justify-between py-3 border-b border-zinc-900">
+                    <span className="text-[#525252]">Email</span>
+                    <span className="text-white">{user?.email}</span>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-          {/* Course Cards */}
-          <div className="mb-6 sm:mb-8 lg:mb-12">
-            <div className="grid gap-3 sm:gap-4 lg:gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
-          </div>
 
-          {/* Main Checkout Section */}
-          <div className="grid gap-6 lg:gap-8 lg:grid-cols-2">
-            {/* Billing Form Section */}
-            <div className="order-2 lg:order-1">
-              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8">
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <div className="p-2 sm:p-3 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl">
-                    <CreditCard className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-green-400" />
-                  </div>
-                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
-                    Payment Details
+              {/* Cart Items */}
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="text-red-600 text-sm font-medium">02</span>
+                  <h2 className="text-[#525252] text-xs tracking-[0.2em] uppercase">
+                    Your Courses ({cartItems.length})
                   </h2>
                 </div>
-                <BillingForm
-                  courseId={courses[0]?.id || ""}
-                  courseTitle={courses[0]?.title || ""}
-                  coursePrice={discountedPrice || currentTotalPrice}
-                  onSuccess={() => {
-                    toast.success("Purchase completed successfully!");
-                    router.push("/dashboard");
-                  }}
-                  referralCode={referralCode}
-                  addresses={addresses}
-                  onAddressSelect={handleAddressSelect}
-                  appliedCoupon={appliedCoupon}
-                  originalPrice={originalTotalPrice}
-                />
-              </div>
-            </div>
-
-            {/* Order Summary Section */}
-            <div className="order-1 lg:order-2">
-              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 lg:sticky lg:top-4">
-                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-                  <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl">
-                    <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6 text-blue-400" />
-                  </div>
-                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
-                    Order Summary
-                  </h2>
-                </div>
-
-                <div className="bg-zinc-800/50 border border-zinc-600 rounded-lg sm:rounded-xl p-3 sm:p-4 lg:p-6">
-                  <CouponForm
-                    onCouponApplied={handleCouponApplied}
-                    originalPrice={originalTotalPrice}
-                    salePrice={
-                      currentTotalPrice < originalTotalPrice
-                        ? currentTotalPrice
-                        : undefined
-                    }
-                    courseId={courses.map((course) => course.id)}
-                  />
-
-                  <div className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                    <div className="flex justify-between text-zinc-300 text-sm sm:text-base">
-                      <span>Subtotal:</span>
-                      <span>{formatPrice(originalTotalPrice)}</span>
+                <div className="space-y-4">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="flex gap-4 py-4 border-b border-zinc-900">
+                      <div className="relative w-20 h-14 rounded-lg overflow-hidden bg-zinc-900 flex-shrink-0">
+                        {item.course.thumbnail ? (
+                          <Image
+                            src={item.course.thumbnail}
+                            alt={item.course.title}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-red-600 font-bold text-xs">MFX</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-white text-sm line-clamp-1">
+                          {item.course.title}
+                        </h3>
+                        {item.course.category && (
+                          <p className="text-[#525252] text-xs mt-1">{item.course.category.name}</p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        {item.course.salePrice && item.course.salePrice < item.course.price ? (
+                          <>
+                            <p className="text-[#525252] text-xs line-through">
+                              {formatPrice(item.course.price)}
+                            </p>
+                            <p className="text-red-500 font-medium text-sm">
+                              {formatPrice(item.course.salePrice)}
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-white font-medium text-sm">
+                            {formatPrice(item.course.price)}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    {currentTotalPrice < originalTotalPrice && (
-                      <div className="flex justify-between text-green-400 text-sm sm:text-base">
-                        <span>Course Sale Discount:</span>
-                        <span>
-                          -{formatPrice(originalTotalPrice - currentTotalPrice)}
-                        </span>
-                      </div>
-                    )}
-                    {appliedCoupon && discountedPrice && (
-                      <div className="flex justify-between text-green-400 text-sm sm:text-base">
-                        <span>Coupon Discount:</span>
-                        <span>
-                          -{formatPrice(currentTotalPrice - discountedPrice)}
-                        </span>
-                      </div>
-                    )}
-                    <hr className="border-green-500/30" />
-                    <div className="flex justify-between text-lg sm:text-xl font-bold text-white">
-                      <span>Total:</span>
-                      <span className="text-green-400">
-                        {formatPrice(discountedPrice || currentTotalPrice)}
+                  ))}
+                </div>
+              </div>
+
+              {/* Coupon */}
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="text-red-600 text-sm font-medium">03</span>
+                  <h2 className="text-[#525252] text-xs tracking-[0.2em] uppercase">
+                    Coupon Code
+                  </h2>
+                </div>
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between p-4 bg-red-900/10 border border-red-900/30 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <Tag className="w-4 h-4 text-red-500" />
+                      <span className="text-white font-medium text-sm">{appliedCoupon.code}</span>
+                      <span className="text-green-500 text-sm">
+                        (-{appliedCoupon.discountType === "percentage"
+                          ? `${appliedCoupon.discountValue}%`
+                          : formatPrice(appliedCoupon.discountValue)})
                       </span>
                     </div>
-                    {appliedCoupon && (
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                        <span className="text-sm sm:text-base lg:text-lg text-zinc-300">
-                          Applied Coupon:
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold text-green-400 bg-green-500/20 px-2 sm:px-3 py-1 rounded-full border border-green-500/50">
-                            {appliedCoupon.code}
-                          </span>
-                          <Button
-                            onClick={removeCoupon}
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 p-1 sm:p-2"
-                          >
-                            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    )}
+                    <button onClick={handleRemoveCoupon} className="text-[#525252] hover:text-red-500 transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
-                  <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-green-500/10 rounded-lg border border-green-500/30">
-                    <p className="text-green-400 text-center text-xs sm:text-sm lg:text-base">
-                      💳 Secure payment powered by Razorpay
-                    </p>
+                ) : (
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                      placeholder="Enter coupon code"
+                      className="flex-1 px-4 py-3 bg-transparent border-b border-zinc-800 text-white text-sm focus:border-red-700 focus:outline-none placeholder-[#525252] uppercase"
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      disabled={isApplyingCoupon}
+                      className="px-5 py-3 text-sm text-white border border-zinc-800 rounded-lg hover:border-red-900/50 transition-colors disabled:opacity-50"
+                    >
+                      {isApplyingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
+                    </button>
                   </div>
-                </div>
+                )}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
-function BuyPageSkeleton() {
-  return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sans">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
+            {/* Right: Summary */}
+            <div className="lg:col-span-2">
+              <div className="sticky top-28 bg-[#0f0f0f] border border-zinc-800 rounded-xl p-6">
+                <h3 className="text-white font-semibold mb-6" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Payment Summary
+                </h3>
 
-      <div className="relative z-10 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header Skeleton */}
-          <div className="text-center mb-8 sm:mb-12">
-            <Skeleton className="h-6 w-32 mx-auto mb-4 bg-zinc-800" />
-            <Skeleton className="h-12 w-80 mx-auto mb-4 bg-zinc-800" />
-            <Skeleton className="h-6 w-96 mx-auto bg-zinc-800" />
-          </div>
+                <div className="space-y-3 text-sm pb-6 border-b border-zinc-800">
+                  <div className="flex justify-between">
+                    <span className="text-[#737373]">Subtotal</span>
+                    <span className="text-white">{formatPrice(subtotal)}</span>
+                  </div>
+                  {saleDiscount > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-[#737373]">Sale Discount</span>
+                      <span className="text-green-500">-{formatPrice(saleDiscount)}</span>
+                    </div>
+                  )}
+                  {couponDiscount > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-[#737373]">Coupon Discount</span>
+                      <span className="text-green-500">-{formatPrice(couponDiscount)}</span>
+                    </div>
+                  )}
+                </div>
 
-          {/* Course Cards Skeleton */}
-          <div className="mb-8 sm:mb-12">
-            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl p-4"
+                <div className="flex justify-between py-6 border-b border-zinc-800">
+                  <span className="text-white font-medium">Total</span>
+                  <span className="text-2xl font-bold text-red-500" style={{ fontFamily: "'Inter', sans-serif" }}>
+                    {formatPrice(finalTotal)}
+                  </span>
+                </div>
+
+                <button
+                  onClick={handleConfirmPayment}
+                  disabled={isProcessing}
+                  className="w-full py-4 mt-6 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                  style={{
+                    background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                  }}
                 >
-                  <Skeleton className="h-48 bg-zinc-800 rounded-lg mb-4" />
-                  <Skeleton className="h-6 w-3/4 bg-zinc-800 mb-2" />
-                  <Skeleton className="h-4 w-full bg-zinc-800" />
+                  {isProcessing ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    `Pay ${formatPrice(finalTotal)}`
+                  )}
+                </button>
+
+                {/* Trust */}
+                <div className="mt-6 pt-6 border-t border-zinc-800 space-y-3">
+                  <div className="flex items-center gap-3 text-[#525252] text-xs">
+                    <span className="w-1 h-1 rounded-full bg-zinc-700" />
+                    <span>ISO 21008:2018 Certified</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[#525252] text-xs">
+                    <span className="w-1 h-1 rounded-full bg-zinc-700" />
+                    <span>Secure payment via Razorpay</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-[#525252] text-xs">
+                    <span className="w-1 h-1 rounded-full bg-zinc-700" />
+                    <span>Education-only services</span>
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Checkout Sections Skeleton */}
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl p-6">
-              <Skeleton className="h-8 w-48 mb-6 bg-zinc-800" />
-              <div className="space-y-4">
-                <Skeleton className="h-12 bg-zinc-800" />
-                <Skeleton className="h-12 bg-zinc-800" />
-                <Skeleton className="h-32 bg-zinc-800" />
-                <Skeleton className="h-12 bg-zinc-800" />
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700 rounded-xl p-6">
-              <Skeleton className="h-8 w-48 mb-6 bg-zinc-800" />
-              <div className="space-y-4">
-                <Skeleton className="h-6 bg-zinc-800" />
-                <Skeleton className="h-6 bg-zinc-800" />
-                <Skeleton className="h-6 bg-zinc-800" />
-                <Skeleton className="h-8 bg-zinc-800" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
+      </section>
 
-function ErrorCard({ error, retry }: { error: string; retry: () => void }) {
-  return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sans">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-      </div>
-
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-gradient-to-br from-zinc-900/80 to-black/80 border border-red-500/30 rounded-xl sm:rounded-2xl p-6 sm:p-8">
-          <div className="text-center">
-            <div className="p-3 bg-red-500/20 rounded-xl w-fit mx-auto mb-4">
-              <XCircle className="h-12 w-12 text-red-400" />
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
-              Something went wrong
-            </h3>
-            <p className="text-zinc-300 mb-6 text-sm sm:text-base">{error}</p>
-            <Button
-              onClick={retry}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl"
-            >
-              Try Again
-            </Button>
-          </div>
-        </div>
-      </div>
+      <div className="h-24 md:hidden" />
     </div>
   );
 }

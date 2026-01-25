@@ -1,489 +1,415 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
+import { ShoppingCart, Loader2, ChevronLeft, ChevronRight, Check } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import axios from "axios";
 import { toast } from "sonner";
-import { CourseDataNew } from "@/type";
-import CourseCards from "../../_components/CourseCards";
-import SkeletonCardGrid from "../../_components/SkeletonCardGrid";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Search,
-  SlidersHorizontal,
-  BookOpen,
-  TrendingUp,
-  Users,
-  Star,
-  Loader2,
-} from "lucide-react";
-import { useCustomDebounce } from "@/hooks/useCustomDebounce";
-import { Card, CardContent } from "@/components/ui/card";
-import SecureChainCourseCard from "../../_components/SecureChainCourseCard";
+import { useAuth } from "@/helper/AuthContext";
+import { addToLocalCart, isInLocalCart, LocalCartItem } from "@/helper/localCart";
 
-const Courses = () => {
-  const searchParams = useSearchParams();
-  const marketParam = searchParams.get("market");
+interface Category {
+  id: string;
+  name: string;
+  slug?: string;
+}
 
-  const [courses, setCourses] = useState<CourseDataNew[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+interface Course {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  price: number;
+  salePrice?: number;
+  duration?: string;
+  thumbnail?: string;
+  category?: Category;
+  isPublished: boolean;
+  subheading?: string;
+}
+
+const COURSES_PER_PAGE = 20;
+
+const CoursesPage = () => {
+  const heroRef = useRef(null);
+  const gridRef = useRef(null);
+  const isHeroInView = useInView(heroRef, { once: true });
+  const isGridInView = useInView(gridRef, { once: true, margin: "-50px" });
+
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [sortBy, setSortBy] = useState("free_first");
-  const [priceFilter, setPriceFilter] = useState("all");
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    []
-  );
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
+  const [addedToCart, setAddedToCart] = useState<Set<string>>(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const loadingRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated } = useAuth();
 
-  const debouncedSearch = useCustomDebounce(searchQuery, 500);
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, selectedCategory]);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/category`
-      );
-      if (!response.ok) throw new Error("Failed to fetch categories");
-      const data = await response.json();
-      if (data.success) {
-        setCategories(data.data);
-        // If market param exists, find and set matching category
-        if (marketParam) {
-          const matchingCategory = data.data.find(
-            (cat: { name: string }) =>
-              cat.name.toLowerCase() === marketParam.toLowerCase()
-          );
-          if (matchingCategory) {
-            setSelectedCategory(matchingCategory.id);
-          }
+  // Check local cart items on mount
+  useEffect(() => {
+    if (!isAuthenticated) {
+      courses.forEach((course) => {
+        if (isInLocalCart(course.id)) {
+          setAddedToCart((prev) => new Set(prev).add(course.id));
         }
+      });
+    }
+  }, [courses, isAuthenticated]);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const categoryParam = selectedCategory !== "all" ? `&category=${selectedCategory}` : "";
+      const [coursesRes, categoriesRes] = await Promise.all([
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/course/get-courses?page=${currentPage}&limit=${COURSES_PER_PAGE}${categoryParam}`),
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category`),
+      ]);
+
+      // Handle courses response
+      if (coursesRes.data?.data) {
+        const data = coursesRes.data.data;
+        if (data.courses && Array.isArray(data.courses)) {
+          setCourses(data.courses);
+          setTotalPages(data.totalPages || 1);
+        } else if (Array.isArray(data)) {
+          setCourses(data);
+          setTotalPages(1);
+        } else {
+          setCourses([]);
+        }
+      } else {
+        setCourses([]);
+      }
+
+      // Handle categories response
+      if (categoriesRes.data?.data) {
+        setCategories(Array.isArray(categoriesRes.data.data) ? categoriesRes.data.data : []);
       }
     } catch (error) {
-      toast.error("Failed to load categories");
+      console.error("Error fetching data:", error);
+      setCourses([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const fetchCourses = useCallback(
-    async (page: number, append: boolean = false) => {
+  const handleAddToCart = async (course: Course, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // If already in cart, don't add again
+    if (addedToCart.has(course.id)) {
+      toast.info("Already in cart");
+      return;
+    }
+
+    setAddingToCart(course.id);
+
+    // If authenticated, use server cart
+    if (isAuthenticated) {
       try {
-        if (page === 1) {
-          setIsLoading(true);
-        } else {
-          setIsLoadingMore(true);
-        }
-
-        const queryParams = new URLSearchParams({
-          page: page.toString(),
-          ...(debouncedSearch && { search: debouncedSearch }),
-          ...(selectedCategory !== "all" && { category: selectedCategory }),
-          ...(sortBy && { sort: sortBy }),
-          ...(priceFilter !== "all" && { priceFilter: priceFilter }),
-          ...(marketParam && { market: marketParam }),
-        });
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/course/get-courses?${queryParams}`
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/cart/add/${course.slug}`
         );
-
-        if (!response.ok) throw new Error("Failed to fetch courses");
-
-        const data = await response.json();
-        if (data.success) {
-          if (append) {
-            setCourses((prev) => [...prev, ...data.data.courses]);
-          } else {
-            setCourses(data.data.courses);
-          }
-          setTotalPages(data.data.totalPages);
-          setHasMore(page < data.data.totalPages);
+        if (response.data?.success) {
+          toast.success("Added to cart");
+          setAddedToCart((prev) => new Set(prev).add(course.id));
         }
-      } catch (error) {
-        toast.error("An error occurred while fetching courses");
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-        setIsLoadingMore(false);
-      }
-    },
-    [debouncedSearch, selectedCategory, sortBy, priceFilter, marketParam]
-  );
-
-  // Infinite scroll observer
-  const lastElementRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (isLoading || isLoadingMore) return;
-
-      if (observerRef.current) observerRef.current.disconnect();
-
-      observerRef.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && hasMore) {
-            const nextPage = currentPage + 1;
-            setCurrentPage(nextPage);
-            fetchCourses(nextPage, true);
-          }
-        },
-        {
-          rootMargin: "100px",
+      } catch (error: any) {
+        if (error.response?.data?.message?.includes("already")) {
+          toast.info("Already in cart");
+          setAddedToCart((prev) => new Set(prev).add(course.id));
+        } else {
+          toast.error(error.response?.data?.message || "Failed to add to cart");
         }
-      );
-
-      if (node) observerRef.current.observe(node);
-    },
-    [isLoading, isLoadingMore, hasMore, currentPage, fetchCourses]
-  );
-
-  useEffect(() => {
-    fetchCategories();
-  }, [marketParam]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-    setCourses([]);
-    setHasMore(true);
-    fetchCourses(1, false);
-  }, [fetchCourses]);
-
-  // Cleanup observer on unmount
-  useEffect(() => {
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
       }
-    };
-  }, []);
+    } else {
+      // Use local cart for guests
+      const cartItem: LocalCartItem = {
+        id: `local_${course.id}`,
+        courseId: course.id,
+        courseSlug: course.slug,
+        title: course.title,
+        price: course.price,
+        salePrice: course.salePrice,
+        thumbnail: course.thumbnail,
+        category: course.category?.name,
+      };
 
-  const handleReset = () => {
-    setSearchQuery("");
-    setSelectedCategory("all");
-    setSortBy("free_first");
-    setPriceFilter("all");
-    setCurrentPage(1);
-    setCourses([]);
-    setHasMore(true);
-  };
-
-  const getBackgroundTitle = () => {
-    if (marketParam) {
-      switch (marketParam.toLowerCase()) {
-        case "forex":
-          return {
-            title: "Forex Trading",
-            subtitle:
-              "Master currency trading with our professional forex courses",
-          };
-        case "equity":
-          return {
-            title: "Stock Market",
-            subtitle: "Excel in equity trading with our comprehensive courses",
-          };
-        case "crypto":
-          return {
-            title: "Cryptocurrency",
-            subtitle: "Learn crypto trading with our expert courses",
-          };
-        default:
-          return {
-            title: "Our Trading",
-            subtitle:
-              "Master the markets with our professional trading courses",
-          };
-      }
+      addToLocalCart(cartItem);
+      toast.success("Added to cart");
+      setAddedToCart((prev) => new Set(prev).add(course.id));
     }
-    return {
-      title: "Our Trading",
-      subtitle: "Master the markets with our professional trading courses",
-    };
+
+    setAddingToCart(null);
   };
 
-  const { title, subtitle } = getBackgroundTitle();
+  const handleCategoryChange = (catId: string) => {
+    setSelectedCategory(catId);
+    setCurrentPage(1);
+  };
 
-  // Calculate stats
-  const totalCourses = courses.length;
-  const premiumCourses = courses.filter(
-    (course: any) => course.price > 0
-  ).length;
-  const freeCourses = courses.filter(
-    (course: any) => course.price === 0
-  ).length;
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
 
   return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sans">
+    <div className="min-h-screen bg-[#0a0a0a]">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-b from-zinc-900 via-black to-black overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-        </div>
+      <section ref={heroRef} className="relative py-12 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="text-[#525252] text-xs tracking-[0.3em] uppercase block mb-6">
+              Programs
+            </span>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
-                <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
-              </div>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
-              {title}{" "}
-              <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
-                Courses
-              </span>
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              Professional Market
+              <br />
+              <span className="text-red-600">Education Programs</span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
-              {subtitle}
+            <p className="text-[#737373] text-lg max-w-xl mx-auto">
+              Structured learning across Stocks, Forex & Crypto
             </p>
-
-            {/* Stats Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto mb-8 sm:mb-12 px-4">
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
-                      <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    {totalCourses}
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Total Courses
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-blue-500/20 rounded-lg">
-                      <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    {premiumCourses}
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Premium Courses
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300 sm:col-span-2 lg:col-span-1">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-purple-500/20 rounded-lg">
-                      <Users className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    {freeCourses}
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Free Courses
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* Content Section */}
-      <div className="bg-black py-8 sm:py-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          {/* Filters Section */}
-          <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-zinc-700 p-4 sm:p-6 mb-8 sm:mb-12 shadow-xl">
-            <div className="flex flex-col gap-4 sm:gap-6">
-              <div className="w-full">
-                <div className="relative">
-                  <Input
-                    placeholder="Search courses..."
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                      setCourses([]);
-                      setHasMore(true);
-                    }}
-                    className="pl-10 w-full bg-black/50 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-green-500 text-sm sm:text-base"
-                  />
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 h-4 w-4 sm:h-5 sm:w-5" />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4 w-full">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                  <Select
-                    value={selectedCategory}
-                    onValueChange={(value) => {
-                      setSelectedCategory(value);
-                      setCurrentPage(1);
-                      setCourses([]);
-                      setHasMore(true);
-                    }}
-                  >
-                    <SelectTrigger className="w-full bg-black/50 border-zinc-700 text-white text-sm sm:text-base">
-                      <SelectValue placeholder="All Categories" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-700">
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {categories.map((category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={category.id}
-                          className="text-white"
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={priceFilter}
-                    onValueChange={(value) => {
-                      setPriceFilter(value);
-                      setCurrentPage(1);
-                      setCourses([]);
-                      setHasMore(true);
-                    }}
-                  >
-                    <SelectTrigger className="w-full bg-black/50 border-zinc-700 text-white text-sm sm:text-base">
-                      <SelectValue placeholder="Price Filter" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-700">
-                      <SelectItem value="all" className="text-white">
-                        All Courses
-                      </SelectItem>
-                      <SelectItem value="free" className="text-white">
-                        Free Courses
-                      </SelectItem>
-                      <SelectItem value="paid" className="text-white">
-                        Paid Courses
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select
-                    value={sortBy}
-                    onValueChange={(value) => {
-                      setSortBy(value);
-                      setCurrentPage(1);
-                      setCourses([]);
-                      setHasMore(true);
-                    }}
-                  >
-                    <SelectTrigger className="w-full bg-black/50 border-zinc-700 text-white text-sm sm:text-base">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-zinc-900 border-zinc-700">
-                      <SelectItem value="free_first" className="text-white">
-                        Free First
-                      </SelectItem>
-                      <SelectItem value="newest" className="text-white">
-                        Newest First
-                      </SelectItem>
-                      <SelectItem value="oldest" className="text-white">
-                        Oldest First
-                      </SelectItem>
-                      <SelectItem value="price_high" className="text-white">
-                        Price: High to Low
-                      </SelectItem>
-                      <SelectItem value="price_low" className="text-white">
-                        Price: Low to High
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Button
-                  variant="outline"
-                  onClick={handleReset}
-                  className="w-full sm:w-auto border-green-500/30 text-green-400 hover:bg-green-500/10 text-sm sm:text-base"
+      {/* Categories Filter */}
+      {categories.length > 0 && (
+        <section className="pb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-wrap gap-3 justify-center">
+              <button
+                onClick={() => handleCategoryChange("all")}
+                className={`px-5 py-2.5 text-sm rounded-lg transition-colors ${selectedCategory === "all"
+                  ? "bg-red-900/30 text-red-400 border border-red-900/50"
+                  : "text-[#737373] hover:text-white border border-zinc-800 hover:border-zinc-700"
+                  }`}
+              >
+                All Programs
+              </button>
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategoryChange(cat.id)}
+                  className={`px-5 py-2.5 text-sm rounded-lg transition-colors ${selectedCategory === cat.id
+                    ? "bg-red-900/30 text-red-400 border border-red-900/50"
+                    : "text-[#737373] hover:text-white border border-zinc-800 hover:border-zinc-700"
+                    }`}
                 >
-                  <SlidersHorizontal className="mr-2 h-4 w-4" />
-                  Reset Filters
-                </Button>
-              </div>
+                  {cat.name}
+                </button>
+              ))}
             </div>
           </div>
+        </section>
+      )}
 
-          {/* Content Section */}
-          {isLoading && <SkeletonCardGrid />}
-
-          {!isLoading && courses.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {courses.map((course, index) => {
-                // Add ref to last element for infinite scroll
-                if (courses.length === index + 1) {
-                  return (
-                    <div key={course.id} ref={lastElementRef}>
-                      <SecureChainCourseCard course={course} />
-                    </div>
-                  );
-                } else {
-                  return (
-                    <SecureChainCourseCard key={course.id} course={course} />
-                  );
-                }
-              })}
+      {/* Courses Grid */}
+      <section ref={gridRef} className="py-12 border-t border-zinc-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {isLoading ? (
+            <div className="text-center py-20">
+              <Loader2 className="w-8 h-8 text-red-600 animate-spin mx-auto" />
+              <p className="text-[#525252] mt-4">Loading programs...</p>
             </div>
-          )}
+          ) : courses.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-[#737373] text-lg">No programs available.</p>
+              <p className="text-[#525252] text-sm mt-2">Check back soon for new courses.</p>
+            </div>
+          ) : (
+            <>
+              {/* 4 Column Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {courses.map((course, index) => (
+                  <motion.div
+                    key={course.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isGridInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.4, delay: Math.min(index * 0.05, 0.5) }}
+                  >
+                    <Link href={`/courses/${course.slug}`} className="block group">
+                      <div className="bg-[#0f0f0f] border border-zinc-800 rounded-xl overflow-hidden hover:border-red-900/50 transition-all duration-300 h-full">
+                        {/* Thumbnail */}
+                        <div className="relative aspect-video bg-zinc-900">
+                          {course.thumbnail ? (
+                            <Image
+                              src={course.thumbnail}
+                              alt={course.title}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-950/30 to-black">
+                              <span className="text-red-600 font-bold text-2xl" style={{ fontFamily: "'Inter', sans-serif" }}>
+                                {course.category?.name?.slice(0, 3).toUpperCase() || "MFX"}
+                              </span>
+                            </div>
+                          )}
+                          {/* Category Badge */}
+                          {course.category && (
+                            <div className="absolute top-3 left-3">
+                              <span className="px-3 py-1 text-xs bg-[#0a0a0a]/70 backdrop-blur-sm text-white rounded-full border border-zinc-700">
+                                {course.category.name}
+                              </span>
+                            </div>
+                          )}
+                        </div>
 
-          {/* Loading More Indicator */}
-          {isLoadingMore && (
-            <div className="flex justify-center items-center py-6 sm:py-8">
-              <div className="flex items-center gap-2 sm:gap-3 text-green-400">
-                <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
-                <span className="text-sm sm:text-base">
-                  Loading more courses...
-                </span>
+                        {/* Content */}
+                        <div className="p-4">
+                          <h3
+                            className="text-base font-semibold text-white mb-2 group-hover:text-red-50 transition-colors line-clamp-2"
+                            style={{ fontFamily: "'Inter', sans-serif" }}
+                          >
+                            {course.title}
+                          </h3>
+
+                          {course.subheading && (
+                            <p className="text-[#525252] text-xs mb-3 line-clamp-2">
+                              {course.subheading}
+                            </p>
+                          )}
+
+                          {/* Price & Cart */}
+                          <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
+                            <div className="flex items-center gap-2">
+                              {course.salePrice && course.salePrice < course.price ? (
+                                <>
+                                  <span className="text-[#525252] text-xs line-through">
+                                    {formatPrice(course.price)}
+                                  </span>
+                                  <span className="text-red-500 font-bold">
+                                    {formatPrice(course.salePrice)}
+                                  </span>
+                                </>
+                              ) : course.price === 0 ? (
+                                <span className="text-green-500 font-bold text-sm">Free</span>
+                              ) : (
+                                <span className="text-white font-bold">
+                                  {formatPrice(course.price)}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Cart Button */}
+                            <button
+                              onClick={(e) => handleAddToCart(course, e)}
+                              disabled={addingToCart === course.id}
+                              className={`p-2 rounded-lg transition-colors disabled:opacity-50 ${addedToCart.has(course.id)
+                                ? "bg-red-900/30 text-red-400"
+                                : "text-[#737373] hover:text-red-400 bg-zinc-900 hover:bg-zinc-800"
+                                }`}
+                            >
+                              {addingToCart === course.id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : addedToCart.has(course.id) ? (
+                                <Check className="w-4 h-4" />
+                              ) : (
+                                <ShoppingCart className="w-4 h-4" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
               </div>
-            </div>
-          )}
 
-          {/* No More Courses Indicator */}
-          {!isLoading && !hasMore && courses.length > 0 && (
-            <div className="text-center py-6 sm:py-8">
-              <div className="text-zinc-500 text-xs sm:text-sm">
-                You've reached the end of all courses
-              </div>
-            </div>
-          )}
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-4 mt-12">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-[#737373] hover:text-white border border-zinc-800 rounded-lg hover:border-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    Previous
+                  </button>
 
-          {!isLoading && courses.length === 0 && (
-            <div className="text-center py-8 sm:py-12 bg-gradient-to-br from-zinc-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-zinc-700">
-              <h3 className="text-lg sm:text-xl font-semibold text-white px-4">
-                No courses found
-              </h3>
-              <p className="text-sm sm:text-base text-zinc-400 mt-2 px-4">
-                Try adjusting your search or filters
-              </p>
-            </div>
+                  <div className="flex items-center gap-2">
+                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        pageNum = currentPage - 2 + i;
+                      }
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setCurrentPage(pageNum)}
+                          className={`w-10 h-10 text-sm rounded-lg transition-colors ${currentPage === pageNum
+                            ? "bg-red-900/30 text-red-400 border border-red-900/50"
+                            : "text-[#737373] hover:text-white border border-zinc-800 hover:border-zinc-700"
+                            }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-[#737373] hover:text-white border border-zinc-800 rounded-lg hover:border-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
-      </div>
+      </section>
+
+      {/* Bottom Note */}
+      <section className="py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[#525252] text-sm">
+            All programs include certification upon completion.
+            <br />
+            <Link href="/contact" className="text-red-600 hover:text-red-500 transition-colors">
+              Contact us
+            </Link>{" "}
+            for program details and enrollment.
+          </p>
+        </div>
+      </section>
+
+      <div className="h-24 md:hidden" />
     </div>
   );
 };
 
-export default Courses;
+export default CoursesPage;

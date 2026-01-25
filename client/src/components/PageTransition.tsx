@@ -57,7 +57,7 @@ export default function PageTransition({ children }: PageTransitionProps) {
         {children}
         {!isFirstMount && (
           <motion.div
-            className="fixed inset-0 bg-black/80 z-[100] pointer-events-none"
+            className="fixed inset-0 bg-[#0a0a0a]/80 z-[100] pointer-events-none"
             initial={{ scaleY: 1, originY: 0 }}
             animate={{
               scaleY: 0,

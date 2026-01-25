@@ -45,7 +45,7 @@ export default function VideoDialog({ isOpen, onClose }: VideoDialogProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="relative bg-black rounded-lg overflow-hidden shadow-xl flex-1 min-h-0"
+            className="relative bg-[#0a0a0a] rounded-lg overflow-hidden shadow-xl flex-1 min-h-0"
           >
             <div className="w-full h-full">
               <ReactPlayer

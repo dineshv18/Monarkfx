@@ -110,7 +110,7 @@ export default function VerifyCertificate({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -133,7 +133,7 @@ export default function VerifyCertificate({
 
   if (error) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -159,7 +159,7 @@ export default function VerifyCertificate({
   }
 
   return (
-    <div className="min-h-screen bg-black py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0a0a0a] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
@@ -301,7 +301,7 @@ export default function VerifyCertificate({
                 Certificate ID
               </p>
               <div className="flex items-center gap-3">
-                <code className="text-green-400 font-mono text-sm bg-black/50 px-3 py-2 rounded-lg flex-1">
+                <code className="text-green-400 font-mono text-sm bg-[#0a0a0a]/50 px-3 py-2 rounded-lg flex-1">
                   {certificateData?.certificateId}
                 </code>
                 <Button

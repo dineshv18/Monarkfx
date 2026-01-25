@@ -90,7 +90,7 @@ export default function DeleteZoomSessionPage() {
 
   if (!session) {
     return (
-      <div className="container mx-auto py-6">
+      <div className="max-w-7xl mx-auto py-6">
         <p>Session not found</p>
         <Button onClick={() => router.push("/dashboard/zoom")}>
           Back to Live Classes
@@ -100,7 +100,7 @@ export default function DeleteZoomSessionPage() {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="max-w-7xl mx-auto py-6 space-y-6">
       <div className="flex items-center gap-4 mb-6">
         <Button
           variant="ghost"

@@ -265,7 +265,7 @@ export default function AdminCertificates() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white p-6">
+      <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
         <div className="max-w-7xl mx-auto">
           <div className="animate-pulse">
             <div className="h-12 bg-zinc-800 rounded-lg mb-8"></div>
@@ -282,7 +282,7 @@ export default function AdminCertificates() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div

@@ -21,8 +21,7 @@ async function getCourse(slug: string) {
     }
 
     const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_API_URL
+      `${process.env.NEXT_PUBLIC_API_URL
       }/course/get-course-page/${slug}?v=${Date.now()}`,
       {
         cache: "no-store",
@@ -89,23 +88,24 @@ export default async function CoursePage({ params }: Props) {
 
   if (courseData.error || !courseData.data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black font-plus-jakarta-sans">
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
         <div className="max-w-md w-full space-y-8 text-center p-6">
           <div className="flex flex-col items-center justify-center">
-            <AlertTriangle className="h-16 w-16 text-yellow-400 animate-bounce" />
-            <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+            <div className="p-4 bg-red-900/20 rounded-full mb-6">
+              <AlertTriangle className="h-12 w-12 text-red-500" />
+            </div>
+            <h1 className="text-2xl font-bold text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
               Course Not Found
             </h1>
-            <p className="mt-4 text-gray-600">
-              The course you're looking for might have been moved or deleted.
+            <p className="mt-4 text-[#737373]">
+              The course you&apos;re looking for might have been moved or deleted.
             </p>
             <a
               href="/courses"
-              className="mt-8 inline-flex items-center px-6 py-3 border border-transparent
-                text-base font-medium rounded-md shadow-sm text-white bg-blue-600
-                hover:bg-blue-700 transition-colors duration-200 ease-in-out"
+              className="mt-8 inline-flex items-center px-6 py-3 text-sm font-medium rounded-lg text-white transition-colors"
+              style={{ background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)" }}
             >
-              Explore Trading Courses
+              Browse All Courses
             </a>
           </div>
         </div>

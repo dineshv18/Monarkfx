@@ -19,7 +19,7 @@ export default function ParallaxSection({
   backgroundSrc,
   className,
   bgClasses,
-  overlayColor = "bg-black/70",
+  overlayColor = "bg-[#0a0a0a]/70",
   direction = "up",
   speed = 0.5,
 }: ParallaxSectionProps) {

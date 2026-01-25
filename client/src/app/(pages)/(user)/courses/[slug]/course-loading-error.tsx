@@ -5,10 +5,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const LoadingSkeleton = () => {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-[#0a0a0a]">
       {/* Header Skeleton */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800">
-        <div className="container mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-4">
@@ -41,7 +41,7 @@ export const LoadingSkeleton = () => {
       </div>
 
       {/* Content Skeleton */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="md:col-span-2">
@@ -92,7 +92,7 @@ export const LoadingSkeleton = () => {
 
 export const ErrorComponent = ({ error }: { error: string | null }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-green-600">

@@ -1,283 +1,278 @@
 "use client";
-import {
-  Youtube,
-  Loader2,
-  Video,
-  Star,
-  Zap,
-  TrendingUp,
-  IndianRupee,
-  Search,
-} from "lucide-react";
-import { useState, useEffect } from "react";
+
+import React, { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import { toast } from "sonner";
 import axios from "axios";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/helper/AuthContext";
-import ClassCard from "./components/ClassCard";
-import VideoDialog from "./components/VideoDialog";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
-export default function LiveClasses() {
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
-  const [classes, setClasses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
-  const { toast } = useToast();
-  const { isAuthenticated } = useAuth();
+const expectations = [
+  "Same structured curriculum as offline programs",
+  "Live sessions with real-time doubt resolution",
+  "Recorded sessions available for revision",
+  "Personal mentorship support",
+  "Flexible batch timings",
+  "Certificate upon completion",
+];
 
-  useEffect(() => {
-    fetchClasses();
-  }, []);
+const courses = [
+  { value: "", label: "Select a program" },
+  { value: "IAT", label: "Institution Advance Trading (IAT)" },
+  { value: "ACT", label: "Alpha Crypto Trader (ACT)" },
+  { value: "AFT", label: "Alpha Forex Trader (AFT)" },
+  { value: "MOX", label: "Monark Options X (MOX)" },
+  { value: "Bundle", label: "Forex + Crypto Bundle" },
+];
 
-  const fetchClasses = async () => {
+const LiveClassesPage = () => {
+  const heroRef = useRef(null);
+  const formRef = useRef(null);
+  const isHeroInView = useInView(heroRef, { once: true });
+  const isFormInView = useInView(formRef, { once: true, margin: "-100px" });
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    city: "",
+    course: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.email || !formData.phone) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      setLoading(true);
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/zoom-live-class/classes?includeAll=true`;
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/inquiry`,
+        { ...formData, source: "live-classes" }
+      );
 
-      const response = await axios.get(apiUrl);
-
-      const classesData = response.data.data;
-
-      // Validate that each class has either id or slug for navigation
-      const validatedClasses = classesData.map((classItem: any) => {
-        if (!classItem.id && !classItem.slug) {
-          console.warn("Class missing both ID and slug:", classItem.title);
-        }
-        return classItem;
-      });
-
-      setClasses(validatedClasses);
-    } catch (error: any) {
-      console.error("Error fetching live classes:", error);
-      const errorMessage =
-        error.response?.data?.message ||
-        "Failed to load live classes. Please try again.";
-
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      if (response.data.success) {
+        setIsSuccess(true);
+        setFormData({ name: "", email: "", phone: "", city: "", course: "", message: "" });
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  // Calculate stats
-  const totalClasses = classes.length;
-
-  // Filter classes based on search and status
-  const filteredClasses = classes.filter((cls: any) => {
-    const matchesSearch =
-      cls.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cls.description?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus =
-      filterStatus === "all" ||
-      (filterStatus === "upcoming" && new Date(cls.startTime) > new Date()) ||
-      (filterStatus === "live" && cls.isOnline) ||
-      (filterStatus === "past" && new Date(cls.startTime) < new Date());
-
-    return matchesSearch && matchesStatus;
-  });
-
   return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sans">
+    <div className="min-h-screen bg-[#0a0a0a]">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-b from-zinc-900 via-black to-black overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-        </div>
+      <section ref={heroRef} className="relative py-10 md:py-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
+          >
+            <span className="text-[#525252] text-xs tracking-[0.3em] uppercase block mb-6">
+              Online Programs
+            </span>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
-                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
-              </div>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
-              Live Trading Sessions
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              Online Learning,
+              <br />
+              <span className="text-red-600">Institutional Standards</span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
-              Master the art of trading with our expert-led live sessions. Learn
-              technical analysis, market strategies, and real-time trading
-              techniques from seasoned professionals.
+            <p className="text-[#737373] text-lg">
+              Same curriculum. Same discipline. Anywhere.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4">
-              <button
-                onClick={() =>
-                  document
-                    .getElementById("classes-section")
-                    ?.scrollIntoView({ behavior: "smooth" })
-                }
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <Zap className="h-4 w-4 sm:h-5 sm:w-5" />
-                Start Trading
-              </button>
-
-              <button
-                onClick={() => setIsVideoOpen(true)}
-                className="w-full sm:w-auto group flex items-center justify-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
-              >
-                <Youtube className="h-4 w-4 sm:h-5 sm:w-5 transition-transform group-hover:scale-110" />
-                <span>Watch Demo</span>
-              </button>
-            </div>
-
-            {/* Stats Section - Responsive */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-2xl mx-auto px-4">
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
-                      <Video className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    {totalClasses}
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Trading Sessions
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-yellow-500/20 rounded-lg">
-                      <IndianRupee className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    98-100%
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Success Rate
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </section>
 
-      {/* Video Dialog */}
-      <VideoDialog isOpen={isVideoOpen} onClose={() => setIsVideoOpen(false)} />
-
-      {/* Classes Section */}
-      <div className="bg-black py-12 sm:py-16 md:py-20">
-        <div
-          id="classes-section"
-          className="container mx-auto px-4 sm:px-6 lg:px-8"
-        >
-          <div className="text-center mb-12 sm:mb-16">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="p-2 sm:p-3 bg-green-500/20 rounded-lg sm:rounded-xl">
-                <Star className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-green-400" />
-              </div>
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-white px-2">
-              Available Trading Sessions
+      {/* What to Expect */}
+      <section className="py-16 border-t border-zinc-900">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2
+              className="text-[#525252] text-xs tracking-[0.2em] uppercase mb-8"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              What to Expect
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed px-4">
-              Join our expert traders for live interactive sessions designed to
-              enhance your trading skills and market knowledge. Book your spot
-              today!
-            </p>
-          </div>
 
-          {/* Search and Filter Section */}
-          <div className="mb-8 sm:mb-12">
-            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400 h-4 w-4" />
-                      <Input
-                        placeholder="Search trading sessions..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 text-sm sm:text-base"
-                      />
-                    </div>
-                  </div>
-                  <Select value={filterStatus} onValueChange={setFilterStatus}>
-                    <SelectTrigger className="w-full sm:w-48 bg-zinc-800 border-zinc-700 text-white text-sm sm:text-base">
-                      <SelectValue placeholder="Filter by status" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-zinc-800 border-zinc-700">
-                      <SelectItem value="all">All Sessions</SelectItem>
-                      <SelectItem value="upcoming">Upcoming</SelectItem>
-                      <SelectItem value="live">Live Now</SelectItem>
-                      <SelectItem value="past">Past Sessions</SelectItem>
-                    </SelectContent>
-                  </Select>
+            <div className="space-y-4">
+              {expectations.map((item, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <span className="text-red-700 text-sm">•</span>
+                  <span className="text-[#a3a3a3]">{item}</span>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Classes Grid - Responsive */}
-          {loading ? (
-            <div className="flex justify-center items-center py-12 sm:py-20">
-              <div className="text-center">
-                <Loader2 className="h-8 w-8 sm:h-12 sm:w-12 animate-spin text-green-400 mx-auto mb-3 sm:mb-4" />
-                <p className="text-sm sm:text-base text-zinc-400">
-                  Loading trading sessions...
-                </p>
-              </div>
-            </div>
-          ) : filteredClasses.length === 0 ? (
-            <div className="text-center py-12 sm:py-20">
-              <div className="p-3 sm:p-4 bg-zinc-900/50 rounded-full w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 flex items-center justify-center">
-                <Video className="h-8 w-8 sm:h-10 sm:w-10 text-zinc-400" />
-              </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 px-4">
-                {searchTerm || filterStatus !== "all"
-                  ? "No sessions found"
-                  : "No trading sessions available"}
-              </h3>
-              <p className="text-sm sm:text-base text-zinc-400 px-4">
-                {searchTerm || filterStatus !== "all"
-                  ? "Try adjusting your search or filters"
-                  : "Check back later for new sessions"}
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {filteredClasses.map((classItem: any) => (
-                <ClassCard
-                  key={classItem.id || classItem.slug}
-                  classData={classItem}
-                  isAuthenticated={isAuthenticated}
-                />
               ))}
             </div>
-          )}
+          </motion.div>
         </div>
-      </div>
+      </section>
+
+      {/* Inquiry Form */}
+      <section ref={formRef} className="py-20 border-t border-zinc-900">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isFormInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7 }}
+          >
+            <h2
+              className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              Request Information
+            </h2>
+            <p className="text-[#525252] text-center mb-12">
+              Our academic advisor will contact you
+            </p>
+
+            {isSuccess ? (
+              <div className="text-center py-16">
+                <p className="text-[#a3a3a3] text-lg mb-2">Thank you.</p>
+                <p className="text-[#525252]">
+                  Our academic advisor will contact you within 24 hours.
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <div>
+                  <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors"
+                    placeholder="Enter your name"
+                    required
+                  />
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-8">
+                  <div>
+                    <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors"
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                      Phone *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors"
+                      placeholder="Enter your phone"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-8">
+                  <div>
+                    <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleChange}
+                      className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors"
+                      placeholder="Enter your city"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                      Program Interest
+                    </label>
+                    <select
+                      name="course"
+                      value={formData.course}
+                      onChange={handleChange}
+                      className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white focus:outline-none focus:border-red-700 transition-colors"
+                    >
+                      {courses.map((c) => (
+                        <option key={c.value} value={c.value} className="bg-[#0a0a0a]">
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                    Message (Optional)
+                  </label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={3}
+                    className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors resize-none"
+                    placeholder="Any questions or requirements?"
+                  />
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-4 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                    style={{
+                      background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                    }}
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit Inquiry"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Bottom padding for mobile nav */}
+      <div className="h-24 md:hidden" />
     </div>
   );
-}
+};
+
+export default LiveClassesPage;

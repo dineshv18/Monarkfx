@@ -188,7 +188,7 @@ const Categories = () => {
 
   if (loading && categories.length === 0) {
     return (
-      <div className="min-h-screen bg-black text-white p-6">
+      <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
@@ -199,7 +199,7 @@ const Categories = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

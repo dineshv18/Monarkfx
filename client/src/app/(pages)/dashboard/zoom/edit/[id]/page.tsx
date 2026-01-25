@@ -125,9 +125,8 @@ export default function EditZoomClassPage() {
 
       toast({
         title: "Success",
-        description: `Live class ${
-          enabled ? "started" : "stopped"
-        } successfully`,
+        description: `Live class ${enabled ? "started" : "stopped"
+          } successfully`,
       });
     } catch (error) {
       console.error("Error toggling classroom:", error);
@@ -241,7 +240,7 @@ export default function EditZoomClassPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black text-white p-6">
+      <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
@@ -261,7 +260,7 @@ export default function EditZoomClassPage() {
 
   if (!classData) {
     return (
-      <div className="min-h-screen bg-black text-white p-6">
+      <div className="min-h-screen bg-[#0a0a0a] text-white p-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
@@ -286,7 +285,7 @@ export default function EditZoomClassPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 sm:p-6 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white p-4 sm:p-6 overflow-x-hidden">
       <div className="max-w-4xl mx-auto w-full">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">

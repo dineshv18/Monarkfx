@@ -13,7 +13,7 @@ export const generatePDF = async (data) => {
             doc.on('end', () => resolve(Buffer.concat(buffers)));
 
             // Add logo
-            // doc.image('path/to/logo.png', 50, 45, { width: 50 });
+            // doc.image('path/to/logo-light.png', 50, 45, { width: 50 });
 
             // Header
             doc.fontSize(20)

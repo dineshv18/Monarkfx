@@ -52,7 +52,7 @@ const HomeCategoryGrid: React.FC = () => {
               <Link
                 key={cat.id}
                 href={`/category/${cat.id}`}
-                className="group block rounded-xl bg-black border border-zinc-800 shadow-sm hover:shadow-lg p-5 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="group block rounded-xl bg-[#0a0a0a] border border-zinc-800 shadow-sm hover:shadow-lg p-5 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400"
               >
                 <div className="flex flex-col items-center justify-center h-full">
                   <div className="w-12 h-12 rounded-full bg-green-900 flex items-center justify-center mb-3 text-green-600 text-xl font-bold shadow-sm">

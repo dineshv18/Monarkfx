@@ -1,5 +1,4 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { User, Mail, Lock, Loader2 } from "lucide-react";
 import InputField from "./InputField";
@@ -48,7 +47,7 @@ export default function RegisterForm({
   return (
     <motion.form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4"
+      className="space-y-5"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -57,7 +56,7 @@ export default function RegisterForm({
         id="register-name"
         type="text"
         label="Name"
-        icon={<User className="h-4 w-4 text-green-500" />}
+        icon={<User className="h-4 w-4 text-zinc-500" />}
         register={register}
         name="name"
         errors={errors}
@@ -73,7 +72,7 @@ export default function RegisterForm({
         id="register-email"
         type="email"
         label="Email"
-        icon={<Mail className="h-4 w-4 text-green-500" />}
+        icon={<Mail className="h-4 w-4 text-zinc-500" />}
         register={register}
         name="email"
         errors={errors}
@@ -89,7 +88,7 @@ export default function RegisterForm({
         id="register-password"
         type="password"
         label="Password"
-        icon={<Lock className="h-4 w-4 text-green-500" />}
+        icon={<Lock className="h-4 w-4 text-zinc-500" />}
         register={register}
         name="password"
         errors={errors}
@@ -115,10 +114,14 @@ export default function RegisterForm({
         }}
         showPasswordToggle
       />
-      <Button
+
+      <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors duration-200"
+        className="w-full py-3 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+        style={{
+          background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+        }}
       >
         {isLoading ? (
           <div className="flex items-center justify-center gap-2">
@@ -126,16 +129,16 @@ export default function RegisterForm({
             <span>Please wait...</span>
           </div>
         ) : (
-          "Register"
+          "Create Account"
         )}
-      </Button>
+      </button>
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-zinc-700"></div>
+          <span className="w-full border-t border-zinc-800" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-zinc-900 text-zinc-400">
+          <span className="px-3 bg-[#0a0a0a] text-[#525252] text-xs">
             Or continue with
           </span>
         </div>

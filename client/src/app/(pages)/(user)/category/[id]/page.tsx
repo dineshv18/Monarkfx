@@ -91,7 +91,7 @@ const CategoryDetailPage = () => {
             {/* Search removed as per request */}
             <div className="flex flex-col sm:flex-row gap-4 flex-grow justify-start">
               <Select value={priceFilter} onValueChange={setPriceFilter}>
-                <SelectTrigger className="w-full sm:w-[160px] bg-black/50 border-zinc-700 text-white">
+                <SelectTrigger className="w-full sm:w-[160px] bg-[#0a0a0a]/50 border-zinc-700 text-white">
                   <SelectValue placeholder="Price" />
                 </SelectTrigger>
                 <SelectContent className="bg-zinc-900 border-zinc-700">
@@ -101,7 +101,7 @@ const CategoryDetailPage = () => {
                 </SelectContent>
               </Select>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-full sm:w-[160px] bg-black/50 border-zinc-700 text-white">
+                <SelectTrigger className="w-full sm:w-[160px] bg-[#0a0a0a]/50 border-zinc-700 text-white">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent className="bg-zinc-900 border-zinc-700">

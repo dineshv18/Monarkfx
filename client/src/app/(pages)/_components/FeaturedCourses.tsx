@@ -145,7 +145,7 @@ const CourseSection = ({
       </div>
 
       <div
-        className={`container mx-auto px-4 max-w-7xl relative z-10 ${containerClassName}`}
+        className={`max-w-7xl mx-auto px-4 max-w-7xl relative z-10 ${containerClassName}`}
       >
         {/* Section Header */}
         <motion.div
@@ -222,8 +222,8 @@ const CourseSection = ({
 };
 
 const SectionSkeleton = () => (
-  <section className="py-20 bg-black">
-    <div className="container mx-auto px-4 max-w-7xl">
+  <section className="py-20 bg-[#0a0a0a]">
+    <div className="max-w-7xl mx-auto px-4 max-w-7xl">
       <div className="text-center mb-16">
         <Skeleton className="h-16 w-16 mx-auto mb-6 rounded-2xl" />
         <Skeleton className="h-12 w-96 mx-auto mb-4" />
@@ -373,7 +373,7 @@ const FeaturedCourses = ({
 
   // Otherwise show all sections
   return (
-    <div className="space-y-0 bg-black">
+    <div className="space-y-0 bg-[#0a0a0a]">
       {sections.map(
         (section) =>
           section.data && (

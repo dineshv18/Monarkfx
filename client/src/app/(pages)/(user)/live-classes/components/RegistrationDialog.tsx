@@ -138,7 +138,7 @@ export default function RegistrationDialog({
         name: "Monark FX",
         description: `Registration for: ${classData.title}`,
         order_id: order.id,
-        image: "/logo.png",
+        image: "/logo-light.png",
         handler: async function (response: any) {
           try {
             setIsProcessing(true);
@@ -193,7 +193,7 @@ export default function RegistrationDialog({
       console.error("Registration initiation failed:", error);
       toast.error(
         error.response?.data?.message ||
-          "Unable to initiate registration. Please try again."
+        "Unable to initiate registration. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -308,11 +308,10 @@ export default function RegistrationDialog({
           </motion.div>
 
           <motion.div
-            className={`text-sm p-3 border rounded-lg ${
-              classData?.registrationEnabled === false
+            className={`text-sm p-3 border rounded-lg ${classData?.registrationEnabled === false
                 ? "bg-red-900/20 border-red-500/30 text-red-300"
                 : "bg-green-900/20 border-green-500/30 text-green-300"
-            }`}
+              }`}
             variants={item}
           >
             {classData?.registrationEnabled === false ? (
@@ -351,11 +350,10 @@ export default function RegistrationDialog({
                 isProcessing ||
                 classData?.registrationEnabled === false
               }
-              className={`w-full rounded-lg px-6 shadow-lg transition-all duration-200 ${
-                classData?.registrationEnabled === false
+              className={`w-full rounded-lg px-6 shadow-lg transition-all duration-200 ${classData?.registrationEnabled === false
                   ? "bg-gray-600 cursor-not-allowed text-gray-400"
                   : "bg-green-600 hover:bg-green-700 text-white hover:shadow-xl"
-              }`}
+                }`}
             >
               {isLoading ? (
                 <>

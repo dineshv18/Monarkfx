@@ -268,7 +268,7 @@ export default function Purchase() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
         <div className="grid gap-6 md:grid-cols-3">
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-32 rounded-xl" />
@@ -280,7 +280,7 @@ export default function Purchase() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold tracking-tight">My Purchases</h1>
@@ -490,7 +490,7 @@ export default function Purchase() {
                             </span>
                             {purchase.course.salePrice &&
                               purchase.purchasePrice <=
-                                purchase.course.salePrice && (
+                              purchase.course.salePrice && (
                                 <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-md">
                                   Discount
                                 </span>
@@ -566,7 +566,7 @@ export default function Purchase() {
                                 Math.ceil(
                                   (new Date(purchase.expiryDate).getTime() -
                                     new Date().getTime()) /
-                                    (1000 * 60 * 60 * 24)
+                                  (1000 * 60 * 60 * 24)
                                 )
                               )}{" "}
                               days left

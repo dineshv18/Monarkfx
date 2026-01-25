@@ -39,7 +39,7 @@ export default function FuturisticHero() {
   const springMoveY = useSpring(moveY, { damping: 50, stiffness: 400 });
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-black">
+    <div className="relative w-full min-h-screen overflow-hidden bg-[#0a0a0a]">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden opacity-30">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e15_1px,transparent_1px),linear-gradient(to_bottom,#22c55e15_1px,transparent_1px)] bg-[size:32px_32px]" />
@@ -126,7 +126,7 @@ export default function FuturisticHero() {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <motion.button
-                className="relative group overflow-hidden bg-black border border-green-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
+                className="relative group overflow-hidden bg-[#0a0a0a] border border-green-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -141,7 +141,7 @@ export default function FuturisticHero() {
 
               <Link href="/testimonials" className="block">
                 <motion.button
-                  className="relative group overflow-hidden bg-black border border-white/20 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
+                  className="relative group overflow-hidden bg-[#0a0a0a] border border-white/20 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -169,9 +169,8 @@ export default function FuturisticHero() {
                     className="w-8 h-8 rounded-full border-2 border-black overflow-hidden relative"
                   >
                     <Image
-                      src={`https://randomuser.me/api/portraits/men/${
-                        20 + i
-                      }.jpg`}
+                      src={`https://randomuser.me/api/portraits/men/${20 + i
+                        }.jpg`}
                       alt={`User ${i}`}
                       width={32}
                       height={32}
@@ -213,7 +212,7 @@ export default function FuturisticHero() {
 
               {/* Simulated trading chart */}
               <motion.div
-                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 backdrop-blur-sm bg-black/40"
+                className="absolute inset-0 rounded-lg overflow-hidden border border-white/10 backdrop-blur-sm bg-[#0a0a0a]/40"
                 initial={{ y: 20 }}
                 animate={{
                   y: [0, -10, 0],
@@ -311,7 +310,7 @@ export default function FuturisticHero() {
 
               {/* Floating trading elements */}
               <motion.div
-                className="absolute top-10 -right-4 bg-black/80 backdrop-blur-sm border border-white/10 rounded px-3 py-2 text-white text-sm"
+                className="absolute top-10 -right-4 bg-[#0a0a0a]/80 backdrop-blur-sm border border-white/10 rounded px-3 py-2 text-white text-sm"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{
                   opacity: 1,
@@ -334,7 +333,7 @@ export default function FuturisticHero() {
               </motion.div>
 
               <motion.div
-                className="absolute bottom-20 -left-4 bg-black/80 backdrop-blur-sm border border-white/10 rounded px-3 py-2 text-white text-sm"
+                className="absolute bottom-20 -left-4 bg-[#0a0a0a]/80 backdrop-blur-sm border border-white/10 rounded px-3 py-2 text-white text-sm"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{
                   opacity: 1,

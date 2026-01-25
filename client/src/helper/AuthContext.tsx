@@ -21,6 +21,7 @@ interface AuthContextType {
     id: string;
     name: string;
     role?: string;
+    email?: string;
   } | null;
   isLoading: boolean;
 }
@@ -48,6 +49,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(true);
         setUser(response?.user || null);
         hasCheckedAuth.current = true;
+
+        // Sync local cart to server on login
+        try {
+          const localCart = localStorage.getItem("monarkfx_guest_cart");
+          if (localCart) {
+            const items = JSON.parse(localCart);
+            if (Array.isArray(items) && items.length > 0) {
+              for (const item of items) {
+                try {
+                  await axios.post(
+                    `${process.env.NEXT_PUBLIC_API_URL}/cart/add/${item.courseSlug}`
+                  );
+                } catch (err) {
+                  // Ignore errors (already in cart, etc.)
+                }
+              }
+              // Clear local cart after sync
+              localStorage.removeItem("monarkfx_guest_cart");
+              window.dispatchEvent(new CustomEvent("localCartUpdated", { detail: [] }));
+            }
+          }
+        } catch (syncError) {
+          console.error("Error syncing local cart:", syncError);
+        }
+
         return true;
       } else {
         setIsAuthenticated(false);

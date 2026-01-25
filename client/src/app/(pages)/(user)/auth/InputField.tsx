@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { Path, UseFormRegister, FieldErrors } from "react-hook-form";
 
@@ -33,29 +31,34 @@ export default function InputField<T extends Record<string, unknown>>({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id} className="text-green-400">{label}</Label>
+      <label
+        htmlFor={id}
+        className="text-[#525252] text-xs tracking-wide uppercase block"
+      >
+        {label}
+      </label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500">
+        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500">
           {icon}
         </span>
-        <Input
+        <input
           id={id}
           type={showPasswordToggle && showPassword ? "text" : type}
-          className={`pl-10 ${showPasswordToggle ? "pr-10" : ""} bg-zinc-800 border-zinc-700 text-white focus:border-green-500 focus:ring-1 focus:ring-green-500`}
+          className={`w-full pl-10 ${showPasswordToggle ? "pr-10" : "pr-4"} py-3 bg-transparent border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-red-700 transition-colors`}
           {...register(name, validationRules)}
         />
         {showPasswordToggle && (
           <button
             type="button"
             onClick={togglePasswordVisibility}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         )}
       </div>
       {errors[name] && (
-        <p className="text-green-500 text-sm">
+        <p className="text-red-500 text-xs">
           {errors[name]?.message as string}
         </p>
       )}

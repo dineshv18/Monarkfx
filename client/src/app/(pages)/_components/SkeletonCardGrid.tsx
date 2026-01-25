@@ -28,7 +28,7 @@ const SkeletonCard = () => {
           <Skeleton className="bg-gray-800 h-4 w-1/4" />
         </div>
       </CardContent>
-      <CardFooter className="px-3 py-2  rounded-b-lg border-t border-gray-800 bg-black">
+      <CardFooter className="px-3 py-2  rounded-b-lg border-t border-gray-800 bg-[#0a0a0a]">
         <div className="flex items-center justify-between w-full">
           <Skeleton className="bg-gray-800 h-4 w-16 rounded-md" />
 
@@ -41,7 +41,7 @@ const SkeletonCard = () => {
 
 const SkeletonCardGrid = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 container mx-auto max-w-7xl px-4 py-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto max-w-7xl px-4 py-8">
       {Array.from({ length: 8 }).map((_, index) => (
         <SkeletonCard key={index} />
       ))}

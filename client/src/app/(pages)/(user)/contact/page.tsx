@@ -1,571 +1,298 @@
 "use client";
 
-import { useState, useRef } from "react";
-import axios from "axios";
-import { toast } from "sonner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Send,
-  MessageSquare,
-  Award,
-  Users,
-  BookOpen,
-  ArrowRight,
-  Info,
-  CheckCircle,
-} from "lucide-react";
+import React, { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { toast } from "sonner";
+import axios from "axios";
 
-export default function Contact() {
+const ContactPage = () => {
+  const heroRef = useRef(null);
+  const contentRef = useRef(null);
+  const isHeroInView = useInView(heroRef, { once: true });
+  const isContentInView = useInView(contentRef, { once: true, margin: "-100px" });
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    subject: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Animation refs
-  const heroRef = useRef(null);
-  const formRef = useRef(null);
-  const infoRef = useRef(null);
-  const mapRef = useRef(null);
-
-  const isHeroInView = useInView(heroRef, { once: true });
-  const isFormInView = useInView(formRef, { once: true });
-  const isInfoInView = useInView(infoRef, { once: true });
-  const isMapInView = useInView(mapRef, { once: true });
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/contact/submit`,
-        formData
+        `${process.env.NEXT_PUBLIC_API_URL}/inquiry`,
+        { ...formData, source: "contact" }
       );
 
-      if (response.data?.success) {
-        toast.success(response.data.message || "Message sent successfully!");
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          subject: "",
-          message: "",
-        });
+      if (response.data.success) {
+        setIsSuccess(true);
+        setFormData({ name: "", email: "", phone: "", message: "" });
       }
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-        "Failed to send message. Please try again later."
-      );
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const contactInfo = [
-    {
-      icon: MapPin,
-      title: "Visit Us",
-      details: "Metro Pillar Number 654, Second floor B-28, Hari Nagar, B Block, JJ Colony, Uttam Nagar, New Delhi, Delhi, 110059 (Near - Uttam Nagar East Metro Station)",
-      description: "Head Branch - Visit us for in-person consultations",
-      color: "from-green-500 to-emerald-500",
-    },
-    {
-      icon: Phone,
-      title: "Call Us",
-      details: "+91 87504 75852 / +91 9220797499 ",
-      description: "Available during business hours",
-      color: "from-blue-500 to-cyan-500",
-    },
-    {
-      icon: Mail,
-      title: "Email Us",
-      details: "service@monarkfx.com",
-
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      icon: Clock,
-      title: "Working Hours",
-      details: "Mon - Sat: 9AM to 6PM",
-      description: "Classes run throughout the day",
-      color: "from-orange-500 to-red-500",
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-black text-white font-plus-jakarta-sans">
-      {/* Add CSS for grid pattern */}
-      <style jsx global>{`
-        .bg-dot-pattern {
-          background-image: radial-gradient(
-            circle,
-            #cccccc 1px,
-            transparent 1px
-          );
-          background-size: 20px 20px;
-        }
-
-        .bg-grid-pattern {
-          background-image: linear-gradient(
-              to right,
-              rgba(34, 197, 94, 0.1) 1px,
-              transparent 1px
-            ),
-            linear-gradient(
-              to bottom,
-              rgba(34, 197, 94, 0.1) 1px,
-              transparent 1px
-            );
-          background-size: 20px 20px;
-        }
-      `}</style>
-
-      {/* Hero Section with Animated Elements */}
-      <div className="relative bg-gradient-to-b from-zinc-900 via-black to-black overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
-          />
-        </div>
-
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Hero Section */}
+      <section ref={heroRef} className="relative py-10 md:py-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-2xl"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.2, 0.4, 0.2],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1,
-            }}
-          />
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:pt-24 xl:pt-32 relative z-10">
-          <motion.div
-            ref={heroRef}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
+            transition={{ duration: 0.8 }}
           >
-            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <div className="p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-xl sm:rounded-2xl border border-green-500/30">
-                <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-green-400" />
-              </div>
-            </div>
+            <span className="text-[#525252] text-xs tracking-[0.3em] uppercase block mb-6">
+              Contact
+            </span>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
-              Get in{" "}
-              <span className="bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
-                Touch
-              </span>
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              Get in Touch
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-300 mb-6 sm:mb-8 leading-relaxed max-w-3xl mx-auto px-4">
-              Ready to start your trading journey? Get in touch with our expert
-              team for personalized guidance and course information.
+            <p className="text-[#737373] text-lg">
+              We're here to answer your questions
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-8 sm:mb-12 px-4">
-              <motion.a
-                href="#contact-form"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                Send Message
-              </motion.a>
-
-              <motion.a
-                href="/business"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full sm:w-auto group flex items-center justify-center gap-2 text-zinc-300 hover:text-white transition-all duration-300 px-4 sm:px-6 py-3 sm:py-4 border border-zinc-700 rounded-xl hover:border-green-500/50 hover:bg-zinc-900/50"
-              >
-                <span>Join Affiliate Program</span>
-              </motion.a>
-            </div>
-
-            {/* Stats Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto px-4">
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-green-500/20 rounded-lg">
-                      <Users className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    1000+
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Students Trained
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-blue-500/20 rounded-lg">
-                      <Award className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    ISO
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Certified Institute
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-purple-500/20 rounded-lg">
-                      <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    All
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Exclusive Courses
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-                <CardContent className="p-4 sm:p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-1.5 sm:p-2 bg-yellow-500/20 rounded-lg">
-                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl font-bold text-white mb-1">
-                    24h
-                  </div>
-                  <div className="text-xs sm:text-sm text-zinc-400">
-                    Response Time
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           </motion.div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12">
-          {/* Contact Form */}
-          <motion.div
-            ref={formRef}
-            initial={{ opacity: 0, x: -50 }}
-            animate={isFormInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="space-y-6 sm:space-y-8"
-            id="contact-form"
-          >
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-500/20 text-green-400 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
-                <Info className="h-3 w-3 sm:h-4 sm:w-4" />
-                Send us a Message
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 px-2">
-                Get Started Today
+      {/* Content Section */}
+      <section ref={contentRef} className="py-16 border-t border-zinc-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+            {/* Left: Contact Information */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={isContentInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.7 }}
+            >
+              <h2
+                className="text-[#525252] text-xs tracking-[0.2em] uppercase mb-8"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                Contact Information
               </h2>
-              <p className="text-sm sm:text-base text-zinc-400 px-2">
-                Fill out the form below and we'll get back to you within 24
-                hours.
-              </p>
-            </div>
 
-            <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-              <CardContent className="p-6 sm:p-8">
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-4 sm:space-y-6"
-                >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="space-y-8">
+                {/* Address */}
+                <div>
+                  <span className="text-[#525252] text-xs uppercase tracking-wide block mb-2">
+                    Address
+                  </span>
+                  <p className="text-[#a3a3a3] leading-relaxed">
+                    Metro Pillar No. 654, 2nd Floor B-28
+                    <br />
+                    Hari Nagar, Uttam Nagar
+                    <br />
+                    New Delhi, 110059
+                  </p>
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <span className="text-[#525252] text-xs uppercase tracking-wide block mb-2">
+                    Phone
+                  </span>
+                  <p className="text-[#a3a3a3]">
+                    <a href="tel:+918750475852" className="hover:text-red-400 transition-colors">
+                      +91 87504 75852
+                    </a>
+                    <br />
+                    <a href="tel:+919220797499" className="hover:text-red-400 transition-colors">
+                      +91 92207 97499
+                    </a>
+                  </p>
+                </div>
+
+                {/* Email */}
+                <div>
+                  <span className="text-[#525252] text-xs uppercase tracking-wide block mb-2">
+                    Email
+                  </span>
+                  <p className="text-[#a3a3a3]">
+                    <a href="mailto:service@monarkfx.com" className="hover:text-red-400 transition-colors">
+                      service@monarkfx.com
+                    </a>
+                  </p>
+                </div>
+
+                {/* Hours */}
+                <div>
+                  <span className="text-[#525252] text-xs uppercase tracking-wide block mb-2">
+                    Office Hours
+                  </span>
+                  <p className="text-[#a3a3a3]">
+                    Monday – Saturday
+                    <br />
+                    10:00 AM – 7:00 PM IST
+                  </p>
+                </div>
+              </div>
+
+              {/* Map */}
+              <div className="mt-12">
+                <div className="rounded-xl overflow-hidden" style={{ filter: "grayscale(100%) contrast(1.1)" }}>
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.1234567890123!2d77.0456789!3d28.6234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDM3JzI0LjQiTiA3N8KwMDInNDQuNCJF!5e0!3m2!1sen!2sin!4v1234567890123"
+                    width="100%"
+                    height="200"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right: Contact Form */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={isContentInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              <h2
+                className="text-[#525252] text-xs tracking-[0.2em] uppercase mb-8"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                Send a Message
+              </h2>
+
+              {isSuccess ? (
+                <div className="py-16">
+                  <p className="text-[#a3a3a3] text-lg mb-2">Thank you.</p>
+                  <p className="text-[#525252]">
+                    We'll get back to you within 24 hours.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div>
+                    <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors"
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-8">
                     <div>
-                      <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
-                        Full Name *
+                      <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                        Email *
                       </label>
-                      <Input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Ram"
-                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 text-sm sm:text-base"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
-                        Email Address *
-                      </label>
-                      <Input
+                      <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="ram@example.com"
-                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 text-sm sm:text-base"
+                        className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors"
+                        placeholder="Your email"
                         required
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
+                        Phone
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors"
+                        placeholder="Your phone"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
-                      Phone Number *
-                    </label>
-                    <Input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="+91 98765 43210"
-                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 text-sm sm:text-base"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
-                      Subject
-                    </label>
-                    <div className="relative">
-                      <select
-                        name="subject"
-                        value={
-                          formData.subject.startsWith("Other:")
-                            ? "Other"
-                            : formData.subject
-                        }
-                        onChange={(e) => {
-                          if (e.target.value === "Other") {
-                            setFormData((prev) => ({
-                              ...prev,
-                              subject: "Other:",
-                            }));
-                          } else {
-                            setFormData((prev) => ({
-                              ...prev,
-                              subject: e.target.value,
-                            }));
-                          }
-                        }}
-                        className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3 text-sm sm:text-base"
-                        required
-                      >
-                        <option value="">Select a subject</option>
-                        <option value="Course Inquiry">Course Inquiry</option>
-                        <option value="Office Classes">Office Classes</option>
-                        <option value="Live Classes">Live Classes</option>
-                        <option value="Course Fees">Course Fees</option>
-                        <option value="Certificate">Certificate</option>
-                        <option value="Technical Support">
-                          Technical Support
-                        </option>
-                        <option value="Affiliate Program">
-                          Affiliate Program
-                        </option>
-                        <option value="Feedback">Feedback</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      {/* Show input if 'Other' is selected */}
-                      {formData.subject.startsWith("Other:") && (
-                        <input
-                          type="text"
-                          name="otherSubject"
-                          value={formData.subject.replace("Other:", "")}
-                          onChange={(e) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              subject: `Other:${e.target.value}`,
-                            }))
-                          }
-                          placeholder="Please specify your subject"
-                          className="mt-2 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 w-full rounded-md py-2 px-3 text-sm sm:text-base"
-                          required
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium text-zinc-300 mb-2">
+                    <label className="text-[#525252] text-xs tracking-wide uppercase block mb-3">
                       Message *
                     </label>
-                    <Textarea
+                    <textarea
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      placeholder="Tell us about your trading goals and how we can help..."
-                      rows={6}
-                      className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-400 focus:border-green-500 resize-none text-sm sm:text-base"
+                      rows={4}
+                      className="w-full px-0 py-3 bg-transparent border-0 border-b border-zinc-800 text-white placeholder-zinc-700 focus:outline-none focus:border-red-700 transition-colors resize-none"
+                      placeholder="How can we help?"
                       required
                     />
                   </div>
 
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-emerald-600 hover:to-green-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-base"
-                  >
-                    {isSubmitting ? (
-                      <div className="flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        Sending...
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <Send className="h-4 w-4" />
-                        Send Message
-                      </div>
-                    )}
-                  </Button>
+                  <div className="pt-4">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-10 py-4 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                      style={{
+                        background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                      }}
+                    >
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                    </button>
+                  </div>
                 </form>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Contact Information */}
-          <motion.div
-            ref={infoRef}
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInfoInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="space-y-6 sm:space-y-8"
-          >
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-blue-500/20 text-blue-400 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
-                <Info className="h-3 w-3 sm:h-4 sm:w-4" />
-                Contact Information
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 px-2">
-                Multiple Ways to Reach Us
-              </h2>
-              <p className="text-sm sm:text-base text-zinc-400 px-2">
-                Choose the most convenient way to get in touch with our expert
-                trading team.
-              </p>
-            </div>
-
-            <div className="space-y-4 sm:space-y-6">
-              {contactInfo.map((info, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInfoInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300 group">
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="flex items-start gap-3 sm:gap-4">
-                        <div
-                          className={`p-2 sm:p-3 bg-gradient-to-r ${info.color} rounded-lg group-hover:scale-110 transition-transform duration-300`}
-                        >
-                          <info.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-white mb-1 text-sm sm:text-base">
-                            {info.title}
-                          </h3>
-                          <p className="text-green-400 font-medium mb-1 text-sm sm:text-base">
-                            {info.details}
-                          </p>
-                          <p className="text-zinc-400 text-xs sm:text-sm">
-                            {info?.description}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+              )}
+            </motion.div>
+          </div>
         </div>
+      </section>
 
-        {/* Map Section */}
-        <motion.div
-          ref={mapRef}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isMapInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mt-12 sm:mt-16 lg:mt-20"
-        >
-          <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700 hover:border-green-500/30 transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2 text-lg sm:text-xl">
-                <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
-                Visit Our Branch
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64 sm:h-80 lg:h-96 rounded-lg overflow-hidden border border-zinc-700">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.1810840039375!2d77.0610743755005!3d28.62433437566924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d058569e87c21%3A0xf42cb1ff733f175d!2sMonark%20FX%20-%20Stock%20Market%20Institute!5e0!3m2!1sen!2sin!4v1753284393656!5m2!1sen!2sin"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+      {/* Social Links */}
+      <section className="py-12 border-t border-zinc-900">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex flex-wrap justify-center gap-8 text-[#525252] text-sm">
+            <a href="https://www.instagram.com/monarkfx" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-colors">
+              Instagram
+            </a>
+            <a href="https://www.linkedin.com/company/monarkfx" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-colors">
+              LinkedIn
+            </a>
+            <a href="https://twitter.com/monarkfx" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-colors">
+              Twitter
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom padding for mobile nav */}
+      <div className="h-24 md:hidden" />
     </div>
   );
-}
+};
+
+export default ContactPage;

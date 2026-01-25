@@ -364,10 +364,10 @@ export default function ClassDetails() {
             },
             ...(canJoinClass && meetingDetails
               ? {
-                  zoomLink: meetingDetails.link || prev.zoomLink,
-                  zoomMeetingId: meetingDetails.meetingId || prev.zoomMeetingId,
-                  zoomPassword: meetingDetails.password || prev.zoomPassword,
-                }
+                zoomLink: meetingDetails.link || prev.zoomLink,
+                zoomMeetingId: meetingDetails.meetingId || prev.zoomMeetingId,
+                zoomPassword: meetingDetails.password || prev.zoomPassword,
+              }
               : {}),
           };
         });
@@ -635,7 +635,7 @@ export default function ClassDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex justify-center items-center">
+      <div className="min-h-screen bg-[#0a0a0a] flex justify-center items-center">
         <div className="text-center">
           <motion.div
             animate={{ rotate: 360 }}
@@ -652,7 +652,7 @@ export default function ClassDetails() {
 
   if (!classData) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
         <div className="text-center">
           <div className="p-4 bg-red-500/20 rounded-2xl border border-red-500/30 mb-4">
             <AlertCircle className="h-8 w-8 text-red-400 mx-auto" />
@@ -675,7 +675,7 @@ export default function ClassDetails() {
   const buttonState = getButtonState();
 
   return (
-    <div className="min-h-screen bg-black font-plus-jakarta-sans">
+    <div className="min-h-screen bg-[#0a0a0a] font-plus-jakarta-sans">
       {/* Hero Section with proper spacing */}
       <div className="relative bg-gradient-to-b from-zinc-900 via-black to-black overflow-hidden py-20 md:pt-32">
         {/* Background Pattern */}
@@ -688,7 +688,7 @@ export default function ClassDetails() {
           />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 relative z-10">
           {/* Back Button */}
           <div className="mb-8">
             <Button
@@ -742,7 +742,7 @@ export default function ClassDetails() {
                 {isAuthenticated && (
                   <>
                     {classData?.apiFlags?.hasAccessToLinks ||
-                    classData.hasAccessToLinks ? (
+                      classData.hasAccessToLinks ? (
                       <div className="absolute top-4 right-4">
                         <span className="bg-green-600 text-white font-bold shadow-lg px-2 py-1 rounded-md flex items-center justify-center gap-2">
                           <Play className="h-3 w-3 mr-1" />
@@ -893,8 +893,8 @@ export default function ClassDetails() {
                     <>
                       {(buttonState.type === "join" ||
                         buttonState.type === "demo") && (
-                        <Play className="h-5 w-5 mr-2" />
-                      )}
+                          <Play className="h-5 w-5 mr-2" />
+                        )}
                       {buttonState.type === "pay" && (
                         <CreditCard className="h-5 w-5 mr-2" />
                       )}
@@ -929,8 +929,8 @@ export default function ClassDetails() {
       </div>
 
       {/* Content Section */}
-      <div className="bg-black py-20">
-        <div className="container mx-auto px-4 max-w-7xl">
+      <div className="bg-[#0a0a0a] py-20">
+        <div className="max-w-7xl mx-auto px-4 max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
@@ -958,7 +958,7 @@ export default function ClassDetails() {
               )}
 
               {classData && (
-                <div className="container mx-auto px-4 pb-20">
+                <div className="max-w-7xl mx-auto px-4 pb-20">
                   <ReviewSection
                     zoomClassId={classData.id}
                     isRegistered={isRegistered}
@@ -976,62 +976,61 @@ export default function ClassDetails() {
                   !classData?.apiFlags?.isRegistered &&
                   !classData?.hasAccessToLinks &&
                   !classData?.isRegistered)) && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                >
-                  <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
-                    <CardHeader>
-                      <CardTitle className="text-white flex items-center">
-                        <CreditCard className="h-5 w-5 mr-2 text-green-400" />
-                        Pricing Details
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">Registration Fee</span>
-                        <span className="text-white font-semibold">
-                          ₹{classData.registrationFee}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-zinc-400">Course Fee</span>
-                        <span className="text-white font-semibold">
-                          ₹{classData.courseFee}
-                        </span>
-                      </div>
-                      <div className="h-px bg-zinc-700"></div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-zinc-400 font-medium">Total</span>
-                        <span className="text-white font-bold text-lg">
-                          ₹{classData.registrationFee + classData.courseFee}
-                        </span>
-                      </div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <Card className="bg-gradient-to-br from-zinc-900/80 to-black/80 border-zinc-700">
+                      <CardHeader>
+                        <CardTitle className="text-white flex items-center">
+                          <CreditCard className="h-5 w-5 mr-2 text-green-400" />
+                          Pricing Details
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-400">Registration Fee</span>
+                          <span className="text-white font-semibold">
+                            ₹{classData.registrationFee}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-400">Course Fee</span>
+                          <span className="text-white font-semibold">
+                            ₹{classData.courseFee}
+                          </span>
+                        </div>
+                        <div className="h-px bg-zinc-700"></div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-400 font-medium">Total</span>
+                          <span className="text-white font-bold text-lg">
+                            ₹{classData.registrationFee + classData.courseFee}
+                          </span>
+                        </div>
 
-                      {/* Action Button */}
-                      <div className="pt-4">
-                        <Button
-                          onClick={buttonState?.action || (() => {})}
-                          disabled={buttonState?.disabled}
-                          className={`w-full ${
-                            buttonState?.color || "bg-gray-500"
-                          } transition-all duration-200`}
-                        >
-                          {buttonState?.text || "Loading..."}
-                        </Button>
+                        {/* Action Button */}
+                        <div className="pt-4">
+                          <Button
+                            onClick={buttonState?.action || (() => { })}
+                            disabled={buttonState?.disabled}
+                            className={`w-full ${buttonState?.color || "bg-gray-500"
+                              } transition-all duration-200`}
+                          >
+                            {buttonState?.text || "Loading..."}
+                          </Button>
 
-                        {/* Status Message */}
-                        {buttonState?.message && (
-                          <p className="text-sm text-zinc-400 mt-2 text-center">
-                            {buttonState.message}
-                          </p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )}
+                          {/* Status Message */}
+                          {buttonState?.message && (
+                            <p className="text-sm text-zinc-400 mt-2 text-center">
+                              {buttonState.message}
+                            </p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )}
 
               {/* Status Card - Show when user has paid or registered */}
               {isAuthenticated &&
@@ -1053,7 +1052,7 @@ export default function ClassDetails() {
                       </CardHeader>
                       <CardContent className="space-y-4">
                         {classData?.apiFlags?.hasAccessToLinks ||
-                        classData?.hasAccessToLinks ? (
+                          classData?.hasAccessToLinks ? (
                           <div className="flex items-center gap-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
                             <CheckCircle2 className="h-5 w-5 text-green-400" />
                             <div>
@@ -1075,7 +1074,7 @@ export default function ClassDetails() {
                               </p>
                               <p className="text-zinc-400 text-sm">
                                 {classData?.apiFlags?.isApproved ||
-                                classData?.isApproved
+                                  classData?.isApproved
                                   ? "Approved - Ready to join"
                                   : "Waiting for approval"}
                               </p>

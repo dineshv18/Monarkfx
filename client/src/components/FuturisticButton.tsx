@@ -32,13 +32,13 @@ export default function FuturisticButton({
   const getVariantClasses = () => {
     switch (variant) {
       case "primary":
-        return "bg-black text-white hover:bg-green-600/90 border-green-600/40 shadow-green-600/20";
+        return "bg-[#0a0a0a] text-white hover:bg-green-600/90 border-green-600/40 shadow-green-600/20";
       case "secondary":
         return "bg-white/5 backdrop-blur-md text-white hover:bg-white/10 border-white/20 shadow-white/10";
       case "outline":
         return "bg-transparent text-white hover:bg-white/5 border-green-600/60 shadow-green-600/20";
       default:
-        return "bg-black text-white hover:bg-green-600/90 border-green-600/40 shadow-green-600/20";
+        return "bg-[#0a0a0a] text-white hover:bg-green-600/90 border-green-600/40 shadow-green-600/20";
     }
   };
 

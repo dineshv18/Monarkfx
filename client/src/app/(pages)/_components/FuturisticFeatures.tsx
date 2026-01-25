@@ -144,7 +144,7 @@ export default function FuturisticFeatures() {
   };
 
   return (
-    <div className="py-24 bg-black relative overflow-hidden">
+    <div className="py-24 bg-[#0a0a0a] relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 opacity-30 z-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#22c55e15_1px,transparent_1px),linear-gradient(to_bottom,#22c55e15_1px,transparent_1px)] bg-[size:32px_32px]" />
@@ -188,7 +188,7 @@ export default function FuturisticFeatures() {
               onMouseLeave={() => setHoveredFeature(null)}
             >
               <motion.div
-                className="relative h-full bg-black/50 backdrop-blur-md rounded-lg border border-white/10 p-6 overflow-hidden transition-all duration-300"
+                className="relative h-full bg-[#0a0a0a]/50 backdrop-blur-md rounded-lg border border-white/10 p-6 overflow-hidden transition-all duration-300"
                 animate={{
                   scale: hoveredFeature === feature.id ? 1.02 : 1,
                   borderColor:
@@ -209,7 +209,7 @@ export default function FuturisticFeatures() {
 
                 {/* Icon */}
                 <motion.div
-                  className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center text-white mb-5 relative z-10"
+                  className="w-12 h-12 rounded-full bg-[#0a0a0a]/50 backdrop-blur-md border border-white/20 flex items-center justify-center text-white mb-5 relative z-10"
                   animate={{
                     borderColor:
                       hoveredFeature === feature.id
@@ -262,7 +262,7 @@ export default function FuturisticFeatures() {
           transition={{ duration: 0.7, delay: 0.4 }}
         >
           <motion.button
-            className="relative group overflow-hidden bg-black border border-green-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
+            className="relative group overflow-hidden bg-[#0a0a0a] border border-green-500 text-white py-3 px-8 rounded-md transition-all duration-300 ease-in-out"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
           >

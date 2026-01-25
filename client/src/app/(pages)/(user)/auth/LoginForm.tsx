@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Mail, Lock, Loader2 } from "lucide-react";
 import InputField from "./InputField";
@@ -87,7 +86,7 @@ export default function LoginForm({
 
   return (
     <motion.div
-      className="w-full max-w-md mx-auto space-y-6"
+      className="w-full space-y-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -96,14 +95,14 @@ export default function LoginForm({
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-zinc-700" />
+          <span className="w-full border-t border-zinc-800" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-zinc-900 text-zinc-400">OR</span>
+          <span className="px-3 bg-[#0a0a0a] text-[#525252] text-xs">OR</span>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <InputField<LoginInputs>
           id="login-email"
           type="email"
@@ -152,10 +151,13 @@ export default function LoginForm({
           showPasswordToggle
         />
 
-        <Button
+        <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-green-600 hover:bg-green-700 text-white transition-colors duration-200"
+          className="w-full py-3 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+          style={{
+            background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+          }}
         >
           {isLoading ? (
             <motion.div
@@ -169,7 +171,7 @@ export default function LoginForm({
           ) : (
             "Login"
           )}
-        </Button>
+        </button>
       </form>
     </motion.div>
   );

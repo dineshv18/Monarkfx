@@ -91,10 +91,10 @@ const CourseForm = ({
   } = useForm<CourseDataNew>({
     defaultValues: initialData
       ? {
-          ...initialData,
-          // Make sure slug is set properly from initialData
-          slug: initialData.slug || "",
-        }
+        ...initialData,
+        // Make sure slug is set properly from initialData
+        slug: initialData.slug || "",
+      }
       : {},
     mode: "onSubmit",
   });
@@ -394,7 +394,7 @@ const CourseForm = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 bg-black text-white">
+    <div className="max-w-4xl mx-auto py-8 px-4 bg-[#0a0a0a] text-white">
       <Card className="shadow-xl bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700">
         <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 border-b border-zinc-700 rounded-t-lg">
           <div>
@@ -1039,8 +1039,7 @@ const CourseForm = ({
                           </Label>
                           <Controller
                             name={
-                              `is${
-                                type.charAt(0).toUpperCase() + type.slice(1)
+                              `is${type.charAt(0).toUpperCase() + type.slice(1)
                               }` as keyof CourseDataNew
                             }
                             control={control}
@@ -1051,9 +1050,8 @@ const CourseForm = ({
                                   field.onChange(checked);
                                   if (isEditing) {
                                     handleToggle(
-                                      `is${
-                                        type.charAt(0).toUpperCase() +
-                                        type.slice(1)
+                                      `is${type.charAt(0).toUpperCase() +
+                                      type.slice(1)
                                       }` as keyof CourseDataNew
                                     );
                                   }

@@ -12,72 +12,81 @@ export default function AuthPage({
   const courseSlug = searchParams["course-slug"];
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-black">
-      {/* Left Section */}
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#0a0a0a]">
+      {/* Left Section - Brand */}
       <div className="hidden md:block md:w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-green-600/30 via-black/50 to-black/80 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-red-950/30 via-black/80 to-black z-10" />
         <Image
           src="/bg.jpeg"
           alt="Trading Background"
           fill
-          className="object-cover object-center opacity-85 scale-105"
+          className="object-cover object-center opacity-60 scale-105"
           sizes="(max-width: 768px) 100vw, 50vw"
           priority
           quality={100}
         />
-        <div className="absolute inset-0 backdrop-blur-[1.5px] z-20" />
+        <div className="absolute inset-0 backdrop-blur-[2px] z-20" />
+
         <motion.div
           className="absolute inset-0 z-30 flex flex-col items-center justify-center p-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.div
-            className="text-center space-y-8"
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <motion.h1
-              className="text-5xl md:text-7xl font-bold text-white"
-              initial={{ y: -20 }}
-              animate={{ y: 0 }}
+          <div className="text-center space-y-8">
+            {/* Logo */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Image
+                src="/logo-light.png"
+                alt="Monark FX"
+                width={200}
+                height={60}
+                className="h-14 w-auto object-contain mx-auto"
+              />
+            </motion.div>
+
+            {/* Tagline */}
+            <motion.div
+              className="space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              Monark FX
-            </motion.h1>
+              <p className="text-xl text-white/80 font-light">
+                Financial Market Education
+              </p>
+            </motion.div>
+
+            {/* Certification Badge */}
             <motion.div
-              className="space-y-6"
+              className="flex items-center justify-center gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              <p className="text-xl md:text-2xl text-white/90 font-light">
-                Your Gateway to Financial Markets
-              </p>
-              <div className="flex items-center justify-center space-x-3">
-                <span className="h-[2px] w-12 bg-green-500" />
-                <span className="text-white/80 text-sm font-medium">
-                  ISO 21008:2018 Certified
-                </span>
-                <span className="h-[2px] w-12 bg-green-500" />
-              </div>
+              <span className="h-px w-8 bg-red-800" />
+              <span className="text-[#525252] text-xs tracking-[0.15em] uppercase">
+                ISO 21008:2018 Certified
+              </span>
+              <span className="h-px w-8 bg-red-800" />
             </motion.div>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
 
-      {/* Right Section */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-black">
+      {/* Right Section - Auth Form */}
+      <div className="flex-1 flex items-center justify-center p-6 bg-[#0a0a0a]">
         <motion.div
           className="w-full max-w-md"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="bg-zinc-900 p-3 md:p-8 rounded-2xl shadow-xl border border-green-500/30">
-            <AuthComponent courseSlug={courseSlug} />
-          </div>
+          <AuthComponent courseSlug={courseSlug} />
         </motion.div>
       </div>
     </div>
