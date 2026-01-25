@@ -46,7 +46,7 @@ export const createInquiry = async (req, res) => {
         try {
             const mailOptions = {
                 from: process.env.FROM_EMAIL || `"MonarkFX Inquiry" <${process.env.SMTP_USER || process.env.SMPT_USER}>`,
-                to: "service@monarkfx.com",
+                to: process.env.TO_EMAIL || "service@monarkfx.com",
                 subject: `New ${source === "live-classes" ? "Online Classes" : "Contact"} Inquiry - ${name}`,
                 html: `
           <h2>New Inquiry Received</h2>

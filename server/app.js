@@ -26,6 +26,7 @@ import zoomReviewRoutes from "./routes/zoom-review.routes.js";
 import trackingScriptRoutes from "./routes/trackingScript.routes.js";
 import affiliateRoutes from "./routes/affiliate.routes.js";
 import inquiryRoutes from "./routes/inquiry.routes.js";
+import registrationRoutes from "./routes/registration.routes.js";
 const app = express();
 
 // Security & Parse Middlewares
@@ -110,6 +111,7 @@ app.use("/api/v1/zoom-review", zoomReviewRoutes);
 app.use("/api/v1/tracking-scripts", trackingScriptRoutes);
 app.use("/api/v1/affiliate", affiliateRoutes);
 app.use("/api/v1/inquiry", inquiryRoutes);
+app.use("/api/v1/registration", registrationRoutes);
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error("Error:", err);
