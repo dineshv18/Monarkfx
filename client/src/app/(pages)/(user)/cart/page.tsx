@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import {
     getLocalCart,
     removeFromLocalCart,
-    clearLocalCart,
     LocalCartItem,
 } from "@/helper/localCart";
 
@@ -86,6 +85,7 @@ const CartPage = () => {
                 toast.success("Removed from cart");
             } catch (error) {
                 toast.error("Failed to remove item");
+                console.log(error);
             }
         } else if (courseId) {
             removeFromLocalCart(courseId);

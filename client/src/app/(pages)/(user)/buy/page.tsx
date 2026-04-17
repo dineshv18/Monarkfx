@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ import Image from "next/image";
 import { Loader2, Tag, X, ShoppingBag, ArrowLeft } from "lucide-react";
 
 import { useAuth } from "@/helper/AuthContext";
-import { clearLocalCart, getLocalCart, LocalCartItem } from "@/helper/localCart";
+import { clearLocalCart, getLocalCart } from "@/helper/localCart";
 
 interface CartItem {
   id: string;

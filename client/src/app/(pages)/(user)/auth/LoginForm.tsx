@@ -17,7 +17,6 @@ interface LoginInputs extends OriginalLoginInputs {
 
 export default function LoginForm({
   handleLoading,
-  setAuthMode,
   courseSlug,
 }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);

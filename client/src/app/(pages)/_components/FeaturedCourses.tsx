@@ -4,19 +4,8 @@ import axios from "axios";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  TrendingUp,
-  BarChart3,
-  BookOpen,
-  Award,
-  Gift,
   ArrowRight,
-  Star,
-  Users,
-  Clock,
-  Zap,
   AlertTriangle,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import SecureChainCourseCard from "./SecureChainCourseCard";
