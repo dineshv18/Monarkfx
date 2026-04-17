@@ -3,14 +3,12 @@ import React from "react";
 
 const Support = () => {
   return (
-    <>
-    
-      <div className="flex items-center justify-center px-4 py-16 pt-24">
-        <div className="max-w-3xl mx-auto bg-white">
-          <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
+      <div className="min-h-screen bg-[var(--color-soft-gray)] px-4 py-16 pt-24">
+        <div className="max-w-3xl mx-auto bg-white rounded-[var(--radius-lg)] border border-[var(--color-border-gray)] shadow-[var(--shadow-soft)] p-8 md:p-10">
+          <h1 className="text-4xl font-heading font-bold text-[var(--color-dark-gray)] mb-6 text-center">
             Support
           </h1>
-          <p className="text-lg text-gray-600 leading-relaxed">
+          <p className="text-lg text-[var(--color-text-mid)] leading-relaxed">
             Welcome to our support page. We are committed to providing you with
             the best assistance possible. Our support team is available 24/7 to
             help you with any issues or questions you may have. Whether you need
@@ -22,7 +20,6 @@ const Support = () => {
           </p>
         </div>
       </div>
-    </>
   );
 };
 

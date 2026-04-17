@@ -16,7 +16,7 @@ export default function AuthModeToggle({
       {authMode !== "login" ? (
         <button
           onClick={() => setAuthMode("login")}
-          className="flex items-center justify-center gap-2 mx-auto text-[#737373] hover:text-red-400 transition-colors text-sm"
+          className="flex items-center justify-center gap-2 mx-auto text-[var(--color-text-mid)] hover:text-[var(--color-primary-red)] transition-colors text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Login</span>
@@ -25,22 +25,22 @@ export default function AuthModeToggle({
         <div className="space-y-4">
           <button
             onClick={() => setAuthMode("register")}
-            className="text-[#737373] hover:text-red-400 transition-colors text-sm"
+            className="text-[var(--color-text-mid)] hover:text-[var(--color-primary-red)] transition-colors text-sm"
           >
             Need an account?{" "}
-            <span className="text-red-500 font-medium">Register</span>
+            <span className="text-[var(--color-primary-red)] font-medium">Register</span>
           </button>
           <div className="flex items-center justify-center gap-4 text-sm">
             <button
               onClick={() => setAuthMode("forgotPassword")}
-              className="text-[#525252] hover:text-red-400 transition-colors"
+              className="text-[var(--color-text-mid)] hover:text-[var(--color-primary-red)] transition-colors"
             >
               Forgot Password?
             </button>
-            <span className="text-zinc-800">|</span>
+            <span className="text-[var(--color-border-gray)]">|</span>
             <button
               onClick={() => setAuthMode("resendVerification")}
-              className="text-[#525252] hover:text-red-400 transition-colors"
+              className="text-[var(--color-text-mid)] hover:text-[var(--color-primary-red)] transition-colors"
             >
               Resend Verification
             </button>

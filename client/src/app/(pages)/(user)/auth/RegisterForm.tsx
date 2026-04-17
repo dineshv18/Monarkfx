@@ -118,10 +118,7 @@ export default function RegisterForm({
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full py-3 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
-        style={{
-          background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
-        }}
+        className="w-full py-3 text-white font-semibold rounded-[var(--radius-button)] transition-all disabled:opacity-50 bg-[var(--color-primary-red)] hover:bg-[var(--color-dark-red)]"
       >
         {isLoading ? (
           <div className="flex items-center justify-center gap-2">
@@ -135,10 +132,10 @@ export default function RegisterForm({
 
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-zinc-800" />
+          <span className="w-full border-t border-[var(--color-border-gray)]" />
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-3 bg-[#0a0a0a] text-[#525252] text-xs">
+          <span className="px-3 bg-white text-[var(--color-text-mid)] text-xs">
             Or continue with
           </span>
         </div>

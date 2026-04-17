@@ -43,23 +43,23 @@ const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-white border border-[#E8E8E8] rounded-[24px]">
         <DialogHeader>
-          <DialogTitle>Purchase Required</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="font-heading text-[#1A1A1A]">Purchase Required</DialogTitle>
+          <DialogDescription className="text-[#4A4A4A]">
             This content is part of a paid course. To access it, you need to
             purchase the course.
           </DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-lg font-semibold text-primary">
+          <div className="p-4 bg-[#FFF0F2] rounded-[12px]">
+            <p className="text-lg font-semibold text-[#D72638] font-mono-data">
               Course Price: ${coursePrice.toLocaleString("en-IN")}
             </p>
           </div>
 
-          <ul className="space-y-2 text-sm text-gray-600">
+          <ul className="space-y-2 text-sm text-[#4A4A4A]">
             <li className="flex items-center gap-2">✓ Lifetime access</li>
             <li className="flex items-center gap-2">✓ All chapters included</li>
             <li className="flex items-center gap-2">
@@ -69,7 +69,7 @@ const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
         </div>
 
         <DialogFooter className="mt-6">
-          <Button onClick={handlePurchase} disabled={isLoading}>
+          <Button onClick={handlePurchase} disabled={isLoading} className="bg-[#D72638] hover:bg-[#A01020] text-white rounded-[12px]">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

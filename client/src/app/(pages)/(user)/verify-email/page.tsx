@@ -90,13 +90,13 @@ function VerifyEmailContent() {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-zinc-950 via-black to-zinc-950 p-4">
-      <Card className="w-full max-w-md bg-zinc-900/50 border border-green-500/20 shadow-xl hover:shadow-green-500/5 transition-all duration-300 backdrop-blur-sm">
-        <CardHeader className="space-y-2 text-center pb-6 border-b border-green-500/20">
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-primary)] p-4">
+      <Card className="w-full max-w-md border border-[var(--color-border-gray)] shadow-[var(--shadow-soft)]">
+        <CardHeader className="space-y-2 text-center pb-6 border-b border-[var(--color-border-gray)]">
+          <CardTitle className="text-2xl font-heading font-bold text-[var(--color-dark-gray)]">
             Email Verification
           </CardTitle>
-          <CardDescription className="text-zinc-400 text-base">
+          <CardDescription className="text-[var(--color-text-mid)] text-base">
             {loading
               ? "Verifying your email address..."
               : verificationStatus === "success"
@@ -108,7 +108,7 @@ function VerifyEmailContent() {
           {loading ? (
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-green-500/20 blur-xl animate-pulse"></div>
-              <Loader2 className="h-12 w-12 animate-spin text-green-400 relative z-10" />
+              <Loader2 className="h-12 w-12 animate-spin text-[var(--color-primary-red)] relative z-10" />
             </div>
           ) : verificationStatus === "success" ? (
             <div className="text-center space-y-4">
@@ -125,14 +125,14 @@ function VerifyEmailContent() {
             <div className="text-center space-y-4">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-green-500/20 blur-xl"></div>
-                <XCircle className="h-16 w-16 text-green-400 mx-auto relative z-10" />
+                <XCircle className="h-16 w-16 text-[var(--color-primary-red)] mx-auto relative z-10" />
               </div>
-              <p className="text-green-400 font-medium text-lg">
+              <p className="text-[var(--color-primary-red)] font-medium text-lg">
                 Email verification failed
               </p>
               <Button
                 onClick={() => router.push("/auth")}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium px-8 py-2 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-green-500/20"
+                className="bg-[var(--color-primary-red)] text-white font-medium px-8 py-2 rounded-[var(--radius-button)] transition-all duration-300 hover:bg-[var(--color-dark-red)]"
               >
                 Go to Login
               </Button>
@@ -148,7 +148,7 @@ export default function VerifyEmailPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-zinc-950 via-black to-zinc-950">
+        <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg-primary)]">
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-green-500/20 blur-xl animate-pulse"></div>
             <Loader2 className="h-12 w-12 animate-spin text-green-400 relative z-10" />

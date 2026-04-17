@@ -73,10 +73,7 @@ export default function ForgotPasswordForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full py-3 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
-        style={{
-          background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
-        }}
+        className="w-full py-3 text-white font-semibold rounded-[var(--radius-button)] transition-all disabled:opacity-50 bg-[var(--color-primary-red)] hover:bg-[var(--color-dark-red)]"
       >
         {isSubmitting ? (
           <motion.div

@@ -84,7 +84,7 @@ export default function GoogleButton({ mode, courseSlug }: GoogleButtonProps) {
       type="button"
       onClick={() => googleLogin()}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-3 py-3 bg-transparent border border-zinc-800 rounded-lg text-white hover:border-zinc-700 transition-colors disabled:opacity-50"
+      className="w-full flex items-center justify-center gap-3 py-3 bg-white border border-[var(--color-border-gray)] rounded-[var(--radius-button)] text-[var(--color-dark-gray)] hover:border-[var(--color-primary-red)] hover:bg-[var(--color-red-tint)] transition-colors disabled:opacity-50"
     >
       <Image src={"/google.png"} alt="Google" width={18} height={18} />
       <span className="text-sm">

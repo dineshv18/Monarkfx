@@ -39,7 +39,7 @@ export default function AuthComponent({ courseSlug }: AuthComponentProps) {
   }[mode] || "");
 
   return (
-    <div className="bg-[#0a0a0a] border border-zinc-900 rounded-xl p-6 md:p-8">
+    <div className="bg-white border border-[var(--color-border-gray)] rounded-[var(--radius-lg)] p-6 md:p-8 shadow-[var(--shadow-soft)]">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -48,12 +48,11 @@ export default function AuthComponent({ courseSlug }: AuthComponentProps) {
         className="mb-8"
       >
         <h1
-          className="text-2xl font-bold text-white mb-2"
-          style={{ fontFamily: "'Inter', sans-serif" }}
+          className="text-3xl font-heading font-bold text-[var(--color-black)] mb-2"
         >
           {getCardTitle(authMode)}
         </h1>
-        <p className="text-[#525252] text-sm">
+        <p className="text-[var(--color-text-mid)] text-sm">
           {getCardDescription(authMode)}
         </p>
       </motion.div>

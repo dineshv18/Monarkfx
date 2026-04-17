@@ -33,32 +33,32 @@ export default function InputField<T extends Record<string, unknown>>({
     <div className="space-y-2">
       <label
         htmlFor={id}
-        className="text-[#525252] text-xs tracking-wide uppercase block"
+        className="text-[var(--color-text-mid)] text-xs tracking-wide uppercase block"
       >
         {label}
       </label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500">
+        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--color-text-mid)]">
           {icon}
         </span>
         <input
           id={id}
           type={showPasswordToggle && showPassword ? "text" : type}
-          className={`w-full pl-10 ${showPasswordToggle ? "pr-10" : "pr-4"} py-3 bg-transparent border border-zinc-800 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-red-700 transition-colors`}
+          className={`w-full pl-10 ${showPasswordToggle ? "pr-10" : "pr-4"} py-3 bg-white border border-[var(--color-border-gray)] rounded-[var(--radius-button)] text-[var(--color-dark-gray)] placeholder-[var(--color-text-mid)] focus:outline-none focus:border-[var(--color-primary-red)] focus:ring-2 focus:ring-[rgba(215,38,56,0.18)] transition-all`}
           {...register(name, validationRules)}
         />
         {showPasswordToggle && (
           <button
             type="button"
             onClick={togglePasswordVisibility}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--color-text-mid)] hover:text-[var(--color-primary-red)] transition-colors"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         )}
       </div>
       {errors[name] && (
-        <p className="text-red-500 text-xs">
+        <p className="text-[var(--color-primary-red)] text-xs">
           {errors[name]?.message as string}
         </p>
       )}

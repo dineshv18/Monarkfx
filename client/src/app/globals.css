@@ -2,9 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-inter: "Inter", sans-serif;
+  --font-space-grotesk: "Space Grotesk", sans-serif;
+  
+  --font-body: var(--font-inter);
+  --font-heading: var(--font-space-grotesk);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-  overscroll-behavior: none;
+  font-family: var(--font-body);
+  background: #fff;
+  color: #000;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: #000;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .lenis.lenis-smooth {
@@ -58,39 +83,74 @@ body {
 
 @layer base {
   :root {
+    --red: #D72638;
+    --dark-red: #A01020;
+    --black: #0A0A0A;
+    --dark-gray: #1A1A1A;
+    --mid-gray: #4A4A4A;
+    --light-gray: #F5F5F5;
+    --red-tint: #FFF0F2;
+    --border: #E8E8E8;
+    --white: #FFFFFF;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-pill: 999px;
+    --shadow-soft: 0 4px 24px rgba(0,0,0,0.06);
+    --shadow-red: 0 8px 40px rgba(215,38,56,0.14);
+    --shadow-strong: 0 16px 60px rgba(0,0,0,0.12);
+    --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+
+    /* compatibility aliases used in existing components */
+    --color-bg-primary: var(--white);
+    --color-primary-red: var(--red);
+    --color-dark-red: var(--dark-red);
+    --color-red-tint: var(--red-tint);
+    --color-black: var(--black);
+    --color-dark-gray: var(--dark-gray);
+    --color-text-mid: var(--mid-gray);
+    --color-soft-gray: var(--light-gray);
+    --color-border-gray: var(--border);
+    --color-white: var(--white);
+    --radius-button: var(--radius-md);
+    --radius-card: var(--radius-lg);
+    --shadow-hover: var(--shadow-red);
+    --ease-premium: var(--transition);
+
     --background: 0 0% 6%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 84% 60%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 13%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 13%;
-    --muted-foreground: 0 0% 64%;
-    --accent: 0 0% 13%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 0 84% 60%;
-    --chart-1: 0 84% 60%;
-    --chart-2: 0 72% 51%;
-    --chart-3: 0 62% 45%;
-    --chart-4: 0 52% 40%;
-    --chart-5: 0 42% 35%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 7%;
-    --sidebar-foreground: 0 0% 96%;
-    --sidebar-primary: 0 84% 60%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 14%;
-    --sidebar-accent-foreground: 0 0% 96%;
-    --sidebar-border: 0 0% 14%;
-    --sidebar-ring: 0 84% 60%;
+    --foreground: 0 0% 6%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 354 70% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 35%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 354 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 354 70% 50%;
+    --chart-1: 354 70% 50%;
+    --chart-2: 354 61% 41%;
+    --chart-3: 0 0% 10%;
+    --chart-4: 0 0% 32%;
+    --chart-5: 0 0% 65%;
+    --radius: 0.75rem;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 354 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 91%;
+    --sidebar-ring: 354 70% 50%;
     
     /* Monark FX Brand Colors */
     --monark-red: #DC2626;
@@ -147,8 +207,110 @@ body {
   }
 }
 
-.font-space-grotesk {
-  font-family: var(--font-space-grotesk);
+.font-heading {
+  font-family: var(--font-playfair), serif;
+}
+
+.font-body {
+  font-family: var(--font-inter), sans-serif;
+}
+
+.font-mono-data {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-display { font-family: var(--font-playfair), serif; }
+.font-body { font-family: var(--font-inter), sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+.btn-primary {
+  background: #D72638;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(215, 38, 56, 0.25);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #A01020;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(215, 38, 56, 0.35);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #D72638;
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  border: 2px solid #D72638;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #FFF0F2;
+  transform: translateY(-2px);
+}
+
+.section-label {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #D72638;
+}
+
+.feature-card-hover:hover .feature-bar {
+  opacity: 1 !important;
+  transform: scaleX(1) !important;
+}
+
+.card-base {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-base:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(215, 38, 56, 0.1);
+}
+
+.section-wrapper {
+  width: 100%;
+  padding: 80px 0;
+}
+
+.section-wrapper > .container-xl {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.section-white {
+  background: var(--color-bg-primary);
+}
+
+.section-soft {
+  background: var(--color-soft-gray);
+}
+
+.section-divider-red {
+  width: 72px;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-red);
 }
 
 /* Prose styling for content */
@@ -156,31 +318,31 @@ body {
   @apply max-w-none text-base leading-relaxed;
 
   h1 {
-    @apply text-3xl font-bold text-white mb-6 mt-8;
+    @apply text-3xl font-bold text-[var(--color-dark-gray)] mb-6 mt-8 font-heading;
   }
 
   h2 {
-    @apply text-2xl font-semibold text-white mb-4 mt-6;
+    @apply text-2xl font-semibold text-[var(--color-dark-gray)] mb-4 mt-6 font-heading;
   }
 
   h3 {
-    @apply text-xl font-semibold text-white mb-3 mt-5;
+    @apply text-xl font-semibold text-[var(--color-dark-gray)] mb-3 mt-5 font-heading;
   }
 
   h4 {
-    @apply text-lg font-medium text-white mb-3 mt-4;
+    @apply text-lg font-medium text-[var(--color-dark-gray)] mb-3 mt-4 font-heading;
   }
 
   p {
-    @apply text-white mb-4 leading-relaxed;
+    @apply text-[var(--color-text-mid)] mb-4 leading-relaxed;
   }
 
   strong {
-    @apply font-semibold text-gray-200;
+    @apply font-semibold text-[var(--color-dark-gray)];
   }
 
   em {
-    @apply italic text-white;
+    @apply italic text-[var(--color-text-mid)];
   }
 
   ul {
@@ -192,7 +354,7 @@ body {
   }
 
   li {
-    @apply text-white mb-1 leading-relaxed;
+    @apply text-[var(--color-text-mid)] mb-1 leading-relaxed;
   }
 
   a {
@@ -200,15 +362,17 @@ body {
   }
 
   blockquote {
-    @apply pl-4 border-l-4 border-red-500 italic text-white my-4;
+    @apply pl-4 border-l-4 italic my-4;
+    border-color: var(--color-primary-red);
+    color: var(--color-text-mid);
   }
 
   pre {
-    @apply bg-zinc-900 rounded-lg p-4 overflow-x-auto my-4;
+    @apply bg-[var(--color-soft-gray)] rounded-lg p-4 overflow-x-auto my-4;
   }
 
   code {
-    @apply bg-zinc-900 px-1.5 py-0.5 rounded text-sm font-mono text-white;
+    @apply bg-[var(--color-soft-gray)] px-1.5 py-0.5 rounded text-sm font-mono text-[var(--color-dark-gray)];
   }
 
   table {
@@ -216,11 +380,13 @@ body {
   }
 
   th {
-    @apply bg-zinc-900 text-left p-2 font-semibold border border-zinc-700 text-white;
+    @apply bg-[var(--color-soft-gray)] text-left p-2 font-semibold border text-[var(--color-dark-gray)];
+    border-color: var(--color-border-gray);
   }
 
   td {
-    @apply p-2 border border-zinc-700 text-white;
+    @apply p-2 border text-[var(--color-text-mid)];
+    border-color: var(--color-border-gray);
   }
 
   img {
@@ -228,7 +394,8 @@ body {
   }
 
   hr {
-    @apply my-8 border-t border-zinc-700;
+    @apply my-8 border-t;
+    border-color: var(--color-border-gray);
   }
 
   dl {
@@ -236,11 +403,11 @@ body {
   }
 
   dt {
-    @apply font-semibold text-white mb-1;
+    @apply font-semibold text-[var(--color-dark-gray)] mb-1;
   }
 
   dd {
-    @apply pl-4 mb-3 text-white;
+    @apply pl-4 mb-3 text-[var(--color-text-mid)];
   }
 
   li:empty {

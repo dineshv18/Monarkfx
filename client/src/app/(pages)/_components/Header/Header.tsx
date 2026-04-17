@@ -2,215 +2,136 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, User, LogOut, BookOpen } from "lucide-react";
-import { useAuth } from "@/helper/AuthContext";
-import Cart from "../Cart";
+import { TrendingUp, ArrowUpRight } from "lucide-react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Courses", href: "/courses" },
-  { name: "Live Classes", href: "/live-classes" },
-  { name: "Blogs", href: "/blog" },
+  { name: "Pricing", href: "/pricing" },
   { name: "Contact", href: "/contact" },
 ];
+
+const WHATSAPP_URL =
+  "https://wa.me/918750475852?text=Hi,%20I%20want%20to%20enroll%20in%20your%20trading%20program";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { user, isAuthenticated, logout } = useAuth();
   const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
     return () => {
-      document.body.style.overflow = "unset";
+      document.body.style.overflow = "";
     };
   }, [isMobileMenuOpen]);
 
-  const handleLogout = async () => {
-    await logout();
-    setIsProfileOpen(false);
-  };
-
   return (
     <>
-      {/* Header */}
+      {/* ─── HEADER ─────────────────────────────────────────── */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-          ? "bg-[#0a0a0a]/90 backdrop-blur-md"
-          : "bg-[#0a0a0a]/75 backdrop-blur-sm"
+          ? "bg-white/95 backdrop-blur-xl border-b border-zinc-100 shadow-[0_2px_32px_rgba(0,0,0,0.07)]"
+          : "bg-transparent"
           }`}
-        style={{
-          borderBottom: "1px solid rgba(139, 0, 0, 0.15)",
-        }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 lg:h-24">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <motion.div
-                className="relative"
-                animate={{
-                  scale: isScrolled ? 0.95 : 1,
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                <Image
-                  src="/logo-light.png"
-                  alt="Monark FX"
-                  width={160}
-                  height={48}
-                  className="h-20 lg:h-24 w-auto object-contain"
-                  priority
-                />
-              </motion.div>
+        <div className="max-w-[1180px] mx-auto px-5 sm:px-8">
+          <div className="flex items-center justify-between h-[70px] sm:h-[76px] lg:h-20">
+
+            {/* ── Logo ── */}
+            <Link href="/" className="flex items-center gap-3 no-underline group">
+              <Image src="/logo-dark.png" alt="Logo" width={200} height={200} />
             </Link>
 
-            {/* Desktop Navigation - Center */}
+            {/* ── Desktop Nav ── */}
             <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <Link key={link.name} href={link.href} className="relative group">
-                  <span
-                    className={`px-4 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${pathname === link.href
-                      ? "text-red-400"
-                      : "text-zinc-300 group-hover:text-red-400"
+              {navLinks.map((link) => {
+                const active = pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={`relative px-4 py-2 rounded-lg text-[14px] font-medium tracking-wide
+                                transition-all duration-200 no-underline
+                                ${active
+                        ? "text-[#D72638] bg-red-50"
+                        : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
                       }`}
-                    style={{ fontFamily: "'Inter', sans-serif" }}
                   >
                     {link.name}
-                  </span>
-                  {/* Underline animation */}
-                  <span
-                    className={`absolute bottom-0 left-1/2 h-[2px] bg-gradient-to-r from-red-700 to-red-500 transition-all duration-300 ${pathname === link.href
-                      ? "w-3/4 -translate-x-1/2"
-                      : "w-0 -translate-x-1/2 group-hover:w-3/4"
-                      }`}
-                  />
-                </Link>
-              ))}
+                    {active && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        className="absolute bottom-[5px] left-1/2 -translate-x-1/2
+                                   w-1 h-1 rounded-full bg-[#D72638]"
+                      />
+                    )}
+                  </Link>
+                );
+              })}
             </nav>
 
-            {/* Right Section */}
-            <div className="flex items-center gap-2 lg:gap-4">
-              {/* Cart */}
-              <div className="hidden lg:block">
-                <Cart />
-              </div>
+            {/* ── CTA + Hamburger ── */}
+            <div className="flex items-center gap-3">
+              {/* Desktop CTA */}
+              <Link href={WHATSAPP_URL} target="_blank" className="hidden lg:block no-underline">
+                <motion.button
+                  whileHover={{ y: -2, boxShadow: "0 12px 28px rgba(215,38,56,0.36)" }}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 px-6 py-[10px] rounded-xl
+                             bg-[#D72638] hover:bg-[#C0202F] text-white text-[14px] font-semibold
+                             border border-[#D72638] shadow-[0_4px_16px_rgba(215,38,56,0.28)]
+                             transition-colors duration-200 cursor-pointer outline-none"
+                >
+                  Join Workshop
+                  <ArrowUpRight className="w-4 h-4" strokeWidth={2.5} />
+                </motion.button>
+              </Link>
 
-              {/* Profile / Auth - Desktop */}
-              {isAuthenticated ? (
-                <div className="hidden lg:block relative">
-                  <button
-                    onClick={() => setIsProfileOpen(!isProfileOpen)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors hover:bg-white/5"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-700 to-red-900 flex items-center justify-center">
-                      <span className="text-white text-sm font-medium">
-                        {user?.name?.charAt(0) || "U"}
-                      </span>
-                    </div>
-                    <ChevronDown
-                      className={`w-4 h-4 text-zinc-400 transition-transform duration-300 ${isProfileOpen ? "rotate-180" : ""
-                        }`}
-                    />
-                  </button>
-
-                  <AnimatePresence>
-                    {isProfileOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute right-0 mt-2 w-52 bg-zinc-950 border border-zinc-800/50 rounded-xl overflow-hidden"
-                      >
-                        <div className="p-4 border-b border-zinc-800/50">
-                          <p className="text-white font-medium truncate text-sm">
-                            {user?.name}
-                          </p>
-                          <p className="text-xs text-zinc-500 truncate mt-0.5">
-                            {user?.email}
-                          </p>
-                        </div>
-                        <div className="p-2">
-                          <Link
-                            href="/user-profile"
-                            className="flex items-center gap-3 px-3 py-2.5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                          >
-                            <User className="w-4 h-4" />
-                            <span className="text-sm">My Profile</span>
-                          </Link>
-                          <Link
-                            href="/user-profile/my-courses"
-                            className="flex items-center gap-3 px-3 py-2.5 text-zinc-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-                          >
-                            <BookOpen className="w-4 h-4" />
-                            <span className="text-sm">My Courses</span>
-                          </Link>
-                          <button
-                            onClick={handleLogout}
-                            className="flex items-center gap-3 px-3 py-2.5 text-red-400 hover:text-red-300 hover:bg-white/5 rounded-lg transition-colors w-full"
-                          >
-                            <LogOut className="w-4 h-4" />
-                            <span className="text-sm">Logout</span>
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ) : (
-                <Link href="/auth" className="hidden lg:block">
-                  <button
-                    className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white transition-colors"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    Login
-                  </button>
-                </Link>
-              )}
-
-
-              {/* Mobile Menu Button */}
+              {/* Hamburger */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 text-zinc-400 hover:text-white transition-colors"
+                aria-label="Toggle menu"
+                className="lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[5px]
+                           rounded-xl border border-zinc-200 bg-white shadow-sm
+                           transition-all duration-200 hover:border-zinc-300 cursor-pointer"
               >
-                {isMobileMenuOpen ? (
-                  <X className="w-6 h-6" />
-                ) : (
-                  <Menu className="w-6 h-6" />
-                )}
+                <motion.span
+                  animate={isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="block w-[18px] h-[1.5px] bg-zinc-800 rounded-full origin-center"
+                />
+                <motion.span
+                  animate={isMobileMenuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="block w-[18px] h-[1.5px] bg-zinc-800 rounded-full"
+                />
+                <motion.span
+                  animate={isMobileMenuOpen ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="block w-[18px] h-[1.5px] bg-zinc-800 rounded-full origin-center"
+                />
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu - Full Screen Overlay */}
+      {/* ─── MOBILE MENU ────────────────────────────────────── */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -219,108 +140,91 @@ const Header = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-40 bg-[#0a0a0a]/90 backdrop-blur-md lg:hidden"
+              transition={{ duration: 0.22 }}
+              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
 
-            {/* Menu Panel */}
+            {/* Slide-down panel */}
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3, ease: "easeInOut" }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-sm bg-zinc-950 border-l border-zinc-800/50 lg:hidden h-[92vh]"
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ type: "spring", stiffness: 380, damping: 36 }}
+              className="fixed top-0 left-0 right-0 z-50 lg:hidden
+                         bg-white border-b border-zinc-100
+                         shadow-[0_16px_48px_rgba(0,0,0,0.12)]
+                         rounded-b-3xl overflow-hidden"
+              style={{ paddingTop: "76px" }}
             >
-              <div className="flex flex-col h-full">
-                {/* Mobile Menu Header */}
-                <div className="flex items-center justify-between px-6 py-2 border-b border-zinc-800/50">
-                  <Image
-                    src="/logo-light.png"
-                    alt="Monark FX"
-                    width={120}
-                    height={100}
-                    className="h-20 w-auto object-contain"
-                  />
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 text-zinc-400 hover:text-white transition-colors"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
+              {/* Logo row inside panel (visible at top for context) */}
+              <div className="px-6 pt-2 pb-3 flex items-center gap-2 border-b border-zinc-50">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center
+                                bg-gradient-to-br from-[#D72638] to-[#9B1A28]">
+                  <TrendingUp className="w-[13px] h-[13px] text-white" strokeWidth={2.5} />
                 </div>
+                <span className="text-[13px] font-semibold text-zinc-400 tracking-widest uppercase">
+                  Navigation
+                </span>
+              </div>
 
-                {/* Navigation Links */}
-                <nav className="flex-1 overflow-y-auto py-6 px-4">
-                  {navLinks.map((link, index) => (
+              {/* Nav links */}
+              <nav className="px-4 py-3">
+                {navLinks.map((link, i) => {
+                  const active = pathname === link.href;
+                  return (
                     <motion.div
                       key={link.name}
-                      initial={{ opacity: 0, x: 20 }}
+                      initial={{ opacity: 0, x: -12 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
+                      transition={{ delay: i * 0.045, type: "spring", stiffness: 300 }}
                     >
                       <Link
                         href={link.href}
-                        className={`block py-4 px-4 text-lg font-medium border-b border-zinc-800/30 transition-colors ${pathname === link.href
-                          ? "text-red-400"
-                          : "text-zinc-300 hover:text-red-400"
+                        className={`flex items-center justify-between px-4 py-4 mb-1
+                                    rounded-2xl text-[16px] font-medium no-underline
+                                    transition-all duration-150
+                                    ${active
+                            ? "bg-red-50 text-[#D72638]"
+                            : "text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900"
                           }`}
-                        style={{ fontFamily: "'Inter', sans-serif" }}
                       >
-                        {link.name}
+                        <span>{link.name}</span>
+                        {active ? (
+                          <span className="w-2 h-2 rounded-full bg-[#D72638]" />
+                        ) : (
+                          <ArrowUpRight className="w-4 h-4 text-zinc-300" />
+                        )}
                       </Link>
                     </motion.div>
-                  ))}
+                  );
+                })}
+              </nav>
 
-                  {/* User section in mobile */}
-                  {isAuthenticated && (
-                    <div className="mt-6 pt-6 border-t border-zinc-800/50">
-                      <div className="px-4 mb-4">
-                        <p className="text-white font-medium">{user?.name}</p>
-                        <p className="text-sm text-zinc-500">{user?.email}</p>
-                      </div>
-                      <Link
-                        href="/user-profile"
-                        className="block py-3 px-4 text-zinc-400 hover:text-white transition-colors"
-                      >
-                        My Profile
-                      </Link>
-                      <Link
-                        href="/user-profile/my-courses"
-                        className="block py-3 px-4 text-zinc-400 hover:text-white transition-colors"
-                      >
-                        My Courses
-                      </Link>
-                      <button
-                        onClick={handleLogout}
-                        className="block w-full text-left py-3 px-4 text-red-400 hover:text-red-300 transition-colors"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </nav>
-
-                {/* Mobile CTA */}
-                <div className="p-6 border-t border-zinc-800/50">
-                  {!isAuthenticated && (
-                    <Link href="/auth" className="block mb-3">
-                      <button className="w-full py-3 text-zinc-300 font-medium border border-zinc-700 rounded-lg hover:bg-white/5 transition-colors">
-                        Login
-                      </button>
-                    </Link>
-                  )}
-                  <Link href="/courses" className="block">
+              {/* CTA */}
+              <div className="px-5 pt-2 pb-7">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.22 }}
+                >
+                  <Link href={WHATSAPP_URL} target="_blank" className="no-underline block">
                     <button
-                      className="w-full py-3 text-white font-semibold rounded-lg"
-                      style={{
-                        background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
-                      }}
+                      className="w-full py-4 rounded-2xl flex items-center justify-center gap-2
+                                 bg-[#D72638] hover:bg-[#C0202F] active:scale-[0.98]
+                                 text-white text-[16px] font-semibold
+                                 shadow-[0_6px_20px_rgba(215,38,56,0.32)]
+                                 transition-all duration-200 cursor-pointer border-none outline-none"
                     >
-                      Enroll Now
+                      Join Trading Program
+                      <ArrowUpRight className="w-5 h-5" strokeWidth={2.5} />
                     </button>
                   </Link>
-                </div>
+
+                  <p className="text-center text-[12px] text-zinc-400 mt-3 tracking-wide">
+                    Free consultation · No spam
+                  </p>
+                </motion.div>
               </div>
             </motion.div>
           </>
@@ -328,7 +232,7 @@ const Header = () => {
       </AnimatePresence>
 
       {/* Spacer */}
-      <div className="h-20 lg:h-24" />
+      <div className="h-[70px] sm:h-[76px] lg:h-20" />
     </>
   );
 };

@@ -425,22 +425,22 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-zinc-900 via-black to-black font-plus-jakarta-sans">
+    <div className="flex flex-col min-h-screen bg-[#F5F5F5] font-plus-jakarta-sans">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
+      <div className="absolute inset-0 opacity-[0.03]">
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d72638' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         />
       </div>
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-3xl animate-pulse" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-[#D72638]/10 to-[#A01020]/10 blur-3xl animate-pulse" />
         <div
-          className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 blur-2xl animate-pulse"
+          className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-[#D72638]/10 to-[#A01020]/10 blur-2xl animate-pulse"
           style={{ animationDelay: "1s" }}
         />
       </div>
@@ -450,7 +450,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
           <div
             className={`${
               isSidebarOpen ? "w-[350px]" : "w-0"
-            } transition-all duration-300 ease-in-out overflow-hidden border-r border-zinc-700/50 shadow-2xl bg-gradient-to-b from-zinc-900/95 to-black/95 backdrop-blur-sm`}
+            } transition-all duration-300 ease-in-out overflow-hidden border-r border-[#E8E8E8] shadow-[var(--shadow-soft)] bg-white`}
           >
             <ScrollArea className="h-full">{SidebarContent}</ScrollArea>
           </div>
@@ -458,7 +458,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
             <SheetContent
               side="left"
-              className="w-[350px] sm:w-[400px] p-0 bg-gradient-to-b from-zinc-900/95 to-black/95 border-r border-zinc-700/50"
+              className="w-[350px] sm:w-[400px] p-0 bg-white border-r border-[#E8E8E8]"
             >
               <ScrollArea className="h-full pt-12">{SidebarContent}</ScrollArea>
             </SheetContent>
@@ -468,7 +468,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
         <div className="flex flex-col flex-1 overflow-hidden mt-20">
           <ScrollArea className="flex-1">
             <div className="p-6 space-y-6">
-              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden">
+              <div className="bg-white border border-[#E8E8E8] rounded-2xl shadow-[var(--shadow-soft)] overflow-hidden">
                 <VideoPlayer
                   videoUrl={videoUrl}
                   isLoading={isVideoLoading}
@@ -483,7 +483,7 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
                   chapterId={selectedChapter?.id || ""}
                 />
               </div>
-              <div className="bg-gradient-to-br from-zinc-900/80 to-black/80 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden">
+              <div className="bg-white border border-[#E8E8E8] rounded-2xl shadow-[var(--shadow-soft)] overflow-hidden">
                 <ChapterDetails
                   chapter={selectedChapter}
                   videoDuration={currentVideoDuration}
@@ -496,12 +496,12 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
             variant="outline"
             size="sm"
             onClick={toggleSidebar}
-            className={`fixed z-50 h-12 px-3 bg-gradient-to-r from-zinc-900/95 to-black/95 backdrop-blur-sm hover:from-green-600/20 hover:to-emerald-600/20 border border-zinc-700/50 hover:border-green-500/50 shadow-2xl hover:shadow-green-500/20 transition-all duration-300 ease-in-out group left-0 top-1/2 -translate-y-1/2 rounded-r-xl`}
+            className={`fixed z-50 h-12 px-3 bg-white backdrop-blur-sm border border-[#E8E8E8] hover:border-[#D72638] shadow-[var(--shadow-soft)] transition-all duration-300 ease-in-out group left-0 top-1/2 -translate-y-1/2 rounded-r-xl`}
           >
             {isSidebarOpen ? (
-              <ChevronLeft className="h-5 w-5 text-zinc-300 group-hover:text-green-400 group-hover:scale-110 transition-all duration-200" />
+              <ChevronLeft className="h-5 w-5 text-[#4A4A4A] group-hover:text-[#D72638] group-hover:scale-110 transition-all duration-200" />
             ) : (
-              <ChevronRight className="h-5 w-5 text-zinc-300 group-hover:text-green-400 group-hover:scale-110 transition-all duration-200" />
+              <ChevronRight className="h-5 w-5 text-[#4A4A4A] group-hover:text-[#D72638] group-hover:scale-110 transition-all duration-200" />
             )}
           </Button>
         </div>
