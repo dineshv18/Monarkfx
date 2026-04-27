@@ -63,7 +63,7 @@ export default function ThankYouPage() {
                         variant="outline"
                         className="w-full sm:w-auto min-w-[160px] group"
                     >
-                        <Link href="tel:+919220797499">
+                        <Link href="tel:+919315071969">
                             Call Us Now
                             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Link>

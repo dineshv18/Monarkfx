@@ -47,7 +47,7 @@ const socials = [
 
 const contact = [
   { icon: Mail, label: "Email", value: "service@monarkfx.com", href: "mailto:service@monarkfx.com" },
-  { icon: Phone, label: "Phone", value: "+91 87504 75852", href: "tel:+918750475852" },
+  { icon: Phone, label: "Phone", value: "+91 87504 75852 / +91 93150 71969", href: "tel:+918750475852" },
   { icon: MapPin, label: "Address", value: "Uttam Nagar, New Delhi — 110059", href: "#" },
 ];
 

@@ -279,7 +279,7 @@ export default function Disclaimer() {
                                 (Near - Uttam Nagar East Metro Station)
                             </p>
                             <p>
-                                <strong className="text-foreground">Phone:</strong> <a href="tel:+918750475852" className="text-primary hover:underline">+91 87504 75852</a> / <a href="tel:+919220797499" className="text-primary hover:underline">+91 9220797499</a>
+                                <strong className="text-foreground">Phone:</strong> <a href="tel:+918750475852" className="text-primary hover:underline">+91 87504 75852</a> / <a href="tel:+919315071969" className="text-primary hover:underline">+91 93150 71969</a>
                             </p>
                             <p>
                                 <strong className="text-foreground">Email:</strong> <a href="mailto:service@monarkfx.com" className="text-primary hover:underline">service@monarkfx.com</a>

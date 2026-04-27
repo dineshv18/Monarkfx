@@ -12,7 +12,7 @@ import {
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "service@monarkfx.com", href: "mailto:service@monarkfx.com" },
-  { icon: Phone, label: "Phone", value: "+91 87504 75852 / +91 9220797499", href: "tel:+918750475852" },
+  { icon: Phone, label: "Phone", value: "+91 87504 75852 / +91 93150 71969", href: "tel:+918750475852" },
   { icon: MapPin, label: "Address", value: "Metro Pillar No. 654, Hari Nagar, New Delhi", href: "#" },
   { icon: Clock, label: "Hours", value: "Mon – Sat: 10:00 AM – 7:00 PM IST", href: "#" },
 ];
