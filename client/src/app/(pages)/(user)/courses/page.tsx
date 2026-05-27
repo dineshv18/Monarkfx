@@ -1,29 +1,32 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
     Check, ArrowRight, MessageCircle, ShieldCheck, Zap,
     Plus, Minus, Layout, Globe, Coins, Users, Clock,
-    CreditCard, TrendingUp, Award, Star, Sparkles,
+    CreditCard, TrendingUp, Award, Star, Sparkles, Flame, Wifi, MapPin,
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
+import Image from "next/image";
 
 const WHATSAPP_URL = "https://wa.me/918750475852?text=";
 const getEnrollUrl = (course: string) =>
-    `${WHATSAPP_URL}${encodeURIComponent(`Hi MonarkFX, I want to enroll in the ${course}.`)}`;
+    `${WHATSAPP_URL}${encodeURIComponent(`Hi MonarkFX Team,\n\nI want to enroll in the *${course}* program. Please share batch details, fees, and schedule.\n\nThank you!`)}`;
 
 /* ─── DATA ─────────────────────────────────────────────────── */
 const mentorshipBatches = [
     {
         id: "indian", title: "Indian Market Mastery", icon: Layout,
+        image: "/courses/indian.png",
         desc: "Dominate Nifty, Bank Nifty, F&O, and Equity Stocks with institutional precision.",
         options: [
-            { label: "Online", price: "15,000", emi: "5,500/mo × 3", tag: "Most Flexible" },
-            { label: "Offline", price: "18,000", emi: "6,500/mo × 3", tag: "Best Experience" },
+            { label: "Online", price: "14,999", originalPrice: "22,000", emi: "5,000", emiMonths: "3", duration: "2 Months", tag: "Most Flexible" },
+            { label: "Offline", price: "17,999", originalPrice: "25,000", emi: "6,000", emiMonths: "3", duration: "2 Months", tag: "Best Experience" },
         ],
         features: [
-            "6 Core Modules + Live Sessions",
+            "2 Month Intensive Program",
             "3 Sessions/Week with Mentor",
             "Nifty/Bank Nifty Specialist Strategies",
             "Module-based Risk Frameworks",
@@ -33,13 +36,14 @@ const mentorshipBatches = [
     },
     {
         id: "forex", title: "Forex & Gold Specialist", icon: Globe,
+        image: "/courses/forex.png",
         desc: "Master EUR/USD, GBP/JPY, and XAUUSD with institutional order flow concepts.",
         options: [
-            { label: "Online", price: "15,000", emi: "5,500/mo × 3" },
-            { label: "Offline", price: "18,000", emi: "6,500/mo × 3" },
+            { label: "Online", price: "14,999", originalPrice: "22,000", emi: "5,000", emiMonths: "3", duration: "2 Months", tag: "Most Flexible" },
+            { label: "Offline", price: "17,999", originalPrice: "25,000", emi: "6,000", emiMonths: "3", duration: "2 Months", tag: "Best Experience" },
         ],
         features: [
-            "6 Core Modules + Live Sessions",
+            "2 Month Intensive Program",
             "3 Sessions/Week with Mentor",
             "Forex Pairs & Gold Specialization",
             "Global Market Session Timings",
@@ -49,13 +53,14 @@ const mentorshipBatches = [
     },
     {
         id: "crypto", title: "Crypto Institutional Edge", icon: Coins,
+        image: "/courses/crypto.png",
         desc: "Dominate Spot & Futures across BTC, ETH, and high-alpha altcoin projects.",
         options: [
-            { label: "Online", price: "15,000", emi: "5,500/mo × 3" },
-            { label: "Offline", price: "18,000", emi: "6,500/mo × 3" },
+            { label: "Online", price: "14,999", originalPrice: "22,000", emi: "5,000", emiMonths: "3", duration: "2 Months", tag: "Most Flexible" },
+            { label: "Offline", price: "17,999", originalPrice: "25,000", emi: "6,000", emiMonths: "3", duration: "2 Months", tag: "Best Experience" },
         ],
         features: [
-            "6 Core Modules + Live Sessions",
+            "2 Month Intensive Program",
             "3 Sessions/Week with Mentor",
             "Spot & Futures Execution Alpha",
             "Exchange Setup & Wallet Security",
@@ -88,10 +93,11 @@ const SectionLabel = ({ text }: { text: string }) => (
 );
 
 const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches[0]; index: number; isInView: boolean }) => {
-    const [mode, setMode] = useState(0);
+    const [mode, setMode] = useState(1); // offline first
     const opt = batch.options[mode];
     const [hovered, setHovered] = useState(false);
     const Icon = batch.icon;
+    const discountPct = Math.round((1 - parseInt(opt.price.replace(",","")) / parseInt(opt.originalPrice.replace(",",""))) * 100);
 
     return (
         <motion.div
@@ -104,85 +110,126 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
             <motion.div
                 whileHover={{ y: -8 }}
                 transition={{ duration: 0.28 }}
-                className="h-full flex flex-col rounded-[28px] p-7 sm:p-8 bg-white relative overflow-hidden"
+                className="h-full flex flex-col rounded-2xl bg-white relative overflow-hidden"
                 style={{
                     border: hovered ? "1.5px solid rgba(215,38,56,0.32)" : "1.5px solid #EBEBEB",
                     boxShadow: hovered ? "0 28px 64px rgba(0,0,0,0.07), 0 0 0 4px rgba(215,38,56,0.03)" : "0 8px 28px rgba(0,0,0,0.03)",
                     transition: "border-color 0.24s, box-shadow 0.24s",
                 }}
             >
-                {/* Number watermark */}
-                <span className="absolute top-5 right-6 font-black leading-none select-none pointer-events-none"
-                    style={{ fontFamily: "var(--font-playfair), serif", fontSize: 52, color: hovered ? "rgba(215,38,56,0.05)" : "rgba(0,0,0,0.035)", transition: "color 0.24s", lineHeight: 1 }}>
-                    0{index + 1}
-                </span>
+                {/* Image */}
+                <div className="relative h-44 overflow-hidden shrink-0 bg-[#0A0A0A]">
+                    <Image src={batch.image} alt={batch.title} fill
+                        className="object-cover transition-transform duration-500"
+                        style={{ transform: hovered ? "scale(1.06)" : "scale(1)" }}
+                        sizes="(max-width: 768px) 100vw, 33vw" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.2) 55%, transparent 100%)" }} />
 
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-[13px] flex items-center justify-center mb-6"
-                    style={{
-                        background: hovered ? "rgba(215,38,56,0.1)" : "rgba(215,38,56,0.06)",
-                        border: hovered ? "1px solid rgba(215,38,56,0.25)" : "1px solid rgba(215,38,56,0.1)",
-                        transition: "all 0.24s",
-                    }}>
-                    <Icon className="w-5 h-5 text-[#D72638]" strokeWidth={2} />
+                    {/* Limited offer top-left */}
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+                        style={{ background: "rgba(215,38,56,0.9)", backdropFilter: "blur(4px)" }}>
+                        <Flame className="w-3 h-3 text-white" />
+                        <span className="text-white text-[9px] font-extrabold uppercase tracking-[0.1em]"
+                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Limited Offer</span>
+                    </div>
+
+                    {/* Discount badge top-right */}
+                    <div className="absolute top-3 right-3 w-11 h-11 rounded-full flex flex-col items-center justify-center"
+                        style={{ background: "linear-gradient(135deg, #D72638, #A01020)", boxShadow: "0 4px 12px rgba(215,38,56,0.5)" }}>
+                        <span className="text-white text-[7px] font-bold leading-none">SAVE</span>
+                        <span className="text-white text-[13px] font-black leading-tight">{discountPct}%</span>
+                    </div>
+
+                    {/* Icon + duration bottom */}
+                    <div className="absolute bottom-3 left-3 flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                            style={{ background: "rgba(215,38,56,0.85)", backdropFilter: "blur(4px)" }}>
+                            <Icon className="w-4 h-4 text-white" strokeWidth={2} />
+                        </div>
+                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg"
+                            style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+                            <Clock className="w-3 h-3 text-[#D72638]" />
+                            <span className="text-white text-[9px] font-bold">{opt.duration}</span>
+                        </div>
+                    </div>
+
+                    {/* Title bottom-right */}
+                    <div className="absolute bottom-3 right-3 left-28">
+                        <p className="text-white font-black leading-tight text-right tracking-[-0.02em]"
+                            style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(13px, 1.2vw, 16px)" }}>
+                            {batch.title}
+                        </p>
+                    </div>
                 </div>
 
-                {/* Title + desc */}
-                <h3 className="font-black text-zinc-900 tracking-[-0.025em] leading-tight mb-3"
-                    style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(20px, 1.6vw, 24px)" }}>
-                    {batch.title}
-                </h3>
-                <p className="text-zinc-500 text-[14px] leading-[1.7] font-light mb-6"
+                <div className="flex flex-col flex-1 p-5 sm:p-6 relative">
+                {/* Desc */}
+                <p className="text-zinc-500 text-[13px] leading-[1.65] font-light mb-4"
                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                     {batch.desc}
                 </p>
 
-                {/* Toggle */}
-                <div className="flex bg-zinc-100 rounded-xl p-1 mb-6">
-                    {batch.options.map((o, i) => (
-                        <button key={o.label} onClick={() => setMode(i)}
-                            className="flex-1 py-2 rounded-[10px] text-[13px] font-bold cursor-pointer transition-all duration-200 border-none"
-                            style={{
-                                fontFamily: "var(--font-dm-sans), sans-serif",
-                                background: mode === i ? "#fff" : "transparent",
-                                color: mode === i ? "#0A0A0A" : "#999",
-                                boxShadow: mode === i ? "0 2px 10px rgba(0,0,0,0.07)" : "none",
-                            }}>
-                            {o.label}
-
-                        </button>
-                    ))}
+                {/* Offline / Online toggle — OFFLINE FIRST */}
+                <div className="flex bg-zinc-100 rounded-xl p-1 mb-4">
+                    {[batch.options[1], batch.options[0]].map((o, i) => {
+                        const actualIdx = i === 0 ? 1 : 0;
+                        return (
+                            <button key={o.label} onClick={() => setMode(actualIdx)}
+                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] text-[12px] font-bold cursor-pointer transition-all duration-200 border-none"
+                                style={{
+                                    fontFamily: "var(--font-dm-sans), sans-serif",
+                                    background: mode === actualIdx ? "#fff" : "transparent",
+                                    color: mode === actualIdx ? "#0A0A0A" : "#999",
+                                    boxShadow: mode === actualIdx ? "0 2px 8px rgba(0,0,0,0.07)" : "none",
+                                }}>
+                                {actualIdx === 1
+                                    ? <MapPin className="w-3 h-3" style={{ color: mode === actualIdx ? "#D72638" : "#BBB" }} />
+                                    : <Wifi className="w-3 h-3" style={{ color: mode === actualIdx ? "#D72638" : "#BBB" }} />}
+                                {o.label}
+                            </button>
+                        );
+                    })}
                 </div>
 
-                {/* Price */}
-                <div className="mb-6">
-                    <div className="flex items-baseline gap-2 mb-1">
+                {/* Price block */}
+                <motion.div
+                    key={`${batch.id}-${mode}`}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="mb-5 p-4 rounded-2xl"
+                    style={{ background: "linear-gradient(135deg, #FFF5F5, #FFF)", border: "1px solid rgba(215,38,56,0.12)" }}
+                >
+                    <div className="flex items-center gap-2 mb-1">
+                        <span className="text-zinc-400 text-[13px] line-through">₹{opt.originalPrice}</span>
+                        <span className="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5 uppercase tracking-wide">
+                            {discountPct}% off
+                        </span>
+                    </div>
+                    <div className="flex items-baseline gap-2 mb-2">
                         <span className="text-zinc-900 font-black leading-none"
-                            style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(38px, 4vw, 46px)" }}>
+                            style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(36px, 4vw, 44px)" }}>
                             ₹{opt.price}
                         </span>
-                        <span className="text-zinc-400 text-[13px] font-semibold uppercase tracking-wide"
-                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-                            + GST
-                        </span>
+                        <span className="text-zinc-500 text-[13px] font-semibold">+ GST</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <CreditCard className="w-3.5 h-3.5 text-[#D72638] shrink-0" />
-                        <span className="text-zinc-500 text-[13px] font-semibold"
+                        <span className="text-[#D72638] text-[12px] font-bold"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-                            EMI: ₹{opt.emi}
+                            EMI: ₹{opt.emi}/mo × {opt.emiMonths} months
                         </span>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Features */}
-                <div className="flex flex-col gap-3 flex-1 mb-8">
+                <div className="flex flex-col gap-2.5 flex-1 mb-5">
                     {batch.features.map((f, i) => (
-                        <div key={i} className="flex items-start gap-3">
-                            <div className="w-[18px] h-[18px] rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 mt-[2px]">
-                                <Check className="w-2.5 h-2.5 text-emerald-500" strokeWidth={3} />
+                        <div key={i} className="flex items-start gap-2.5">
+                            <div className="w-4 h-4 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 mt-[2px]">
+                                <Check className="w-2 h-2 text-emerald-500" strokeWidth={3.5} />
                             </div>
-                            <span className="text-zinc-600 text-[13px] sm:text-[14px] leading-snug font-light"
+                            <span className="text-zinc-600 text-[12px] sm:text-[13px] leading-snug"
                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                 {f}
                             </span>
@@ -190,31 +237,33 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                     ))}
                 </div>
 
-                {/* CTA */}
-                <Link href={getEnrollUrl(batch.title)} target="_blank" className="no-underline">
+                {/* WhatsApp CTA */}
+                <Link href={getEnrollUrl(`${batch.title} — ${opt.label}`)} target="_blank" className="no-underline">
                     <motion.button
-                        whileHover={{ y: -2, boxShadow: "0 12px 32px rgba(0,0,0,0.15)" }}
+                        whileHover={{ y: -2, boxShadow: "0 12px 32px rgba(37,211,102,0.4)" }}
                         whileTap={{ scale: 0.97 }}
-                        className="w-full py-4 rounded-2xl flex items-center justify-center gap-2
-                       bg-zinc-900 hover:bg-[#D72638] text-white text-[14px] sm:text-[15px] font-bold
-                       border-none cursor-pointer
-                       shadow-[0_6px_20px_rgba(0,0,0,0.1)]
-                       transition-colors duration-300"
-                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-                        Enroll Now
-                        <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
+                        className="w-full py-3.5 rounded-2xl flex items-center justify-center gap-2.5 font-bold text-[14px] border-none cursor-pointer transition-all duration-200"
+                        style={{
+                            fontFamily: "var(--font-dm-sans), sans-serif",
+                            background: "#25D366",
+                            color: "#fff",
+                            boxShadow: "0 6px 20px rgba(37,211,102,0.28)",
+                        }}>
+                        <FaWhatsapp size={17} />
+                        Enroll via WhatsApp
                     </motion.button>
                 </Link>
 
                 {/* Bottom bar */}
-                <div className="mt-5 h-[3px] rounded-full"
+                <div className="mt-4 h-[3px] rounded-full"
                     style={{
                         background: "linear-gradient(90deg, #D72638, rgba(215,38,56,0.1))",
-                        transform: hovered ? "scaleX(1)" : "scaleX(0.15)",
+                        transform: hovered ? "scaleX(1)" : "scaleX(0.12)",
                         transformOrigin: "left",
                         transition: "transform 0.36s cubic-bezier(0.22, 1, 0.36, 1)",
-                        opacity: hovered ? 1 : 0.4,
+                        opacity: hovered ? 1 : 0.35,
                     }} />
+                </div>
             </motion.div>
         </motion.div>
     );
@@ -509,8 +558,8 @@ const CoursesPage = () => {
                             </p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                 {[
-                                    "Save over ₹23,000 Total", "All 3 Market Mentorships",
-                                    "5 Months Extended Training", "3 Months Free Trading Room",
+                                    "Indian + Forex + Crypto", "All 3 Market Mentorships",
+                                    "1 Year Elite Membership", "Lifetime Mentorship Access",
                                     "Lifetime Content Access", "Priority Multi-Market Support",
                                 ].map((label, i) => (
                                     <div key={i} className="flex items-center gap-3">
@@ -528,22 +577,21 @@ const CoursesPage = () => {
                             <div className="rounded-2xl p-7 mb-6"
                                 style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                                 <p className="text-white/40 text-[11px] font-extrabold uppercase tracking-[0.15em] mb-3"
-                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Institutional Online</p>
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Online · 4 Months</p>
                                 <div className="flex items-baseline gap-2 mb-1">
                                     <span className="text-white font-black leading-none"
-                                        style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(44px, 5vw, 40px)" }}>₹25,000</span>
-                                    <span className="text-white/30 text-[15px]">+ GST</span>
+                                        style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(44px, 5vw, 40px)" }}>₹29,999</span>
                                 </div>
                                 <p className="text-[#D72638] text-[13px] font-bold mb-5"
-                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>EMI: ₹6,500/mo × 6 Months</p>
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>EMI: ₹5,500/mo × 6 Months</p>
 
                                 <div className="h-px bg-white/[0.07] my-5" />
 
                                 <p className="text-white/30 text-[11px] font-bold uppercase tracking-wide mb-1.5"
-                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>In-Person Offline</p>
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Offline · 4 Months</p>
                                 <p className="text-white/70 text-[20px] font-extrabold"
                                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-                                    ₹35,000 <span className="text-white/25 text-[13px]">+ GST</span>
+                                    ₹34,999 <span className="text-white/25 text-[13px]">+ GST</span>
                                 </p>
                             </div>
 
@@ -588,9 +636,9 @@ const CoursesPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
                         {[
                             { title: "Live Trading Room", price: "1,999", dur: "month", desc: "Real-time market analysis and mentor-guided trade execution.", dark: false },
-                            { title: "Signal & Analysis", price: "999", dur: "month", desc: "Premium high-probability setups with precise SL/TP targets.", dark: false },
-                            { title: "Elite Community", price: "4,999", dur: "year", desc: "Exclusive graduate networking events and mentor private calls.", dark: false },
-                            { title: "Prop Firm Prep", price: "12,999", dur: "once", desc: "Intensive training to pass global funded challenges (FTMO, etc).", dark: true },
+                            { title: "Setup & Trade Analysis", price: "2,999", dur: "month", desc: "Daily premium trade setups with detailed entry, SL, TP and market analysis.", dark: false },
+                            { title: "Elite Community", price: "5,999", dur: "year", desc: "Exclusive graduate networking events and mentor private calls.", dark: false },
+                            { title: "Prop Firm Prep", price: "11,999", dur: "once", desc: "Intensive training to pass global funded account challenges (FTMO, etc).", dark: true },
                         ].map((plan, i) => (
                             <motion.div
                                 key={i}
@@ -669,6 +717,189 @@ const CoursesPage = () => {
                 </div>
             </section>
 
+            {/* ══ 6.5 STARTER WORKSHOP ════════════════════════════ */}
+            <section className="py-14 sm:py-16 px-5 sm:px-8 bg-[#0A0A0A] relative overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
+                    style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "52px 52px" }} />
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D72638]/40 to-transparent" />
+
+                <div className="relative max-w-[1120px] mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ duration: 0.6 }}
+                        className="rounded-[28px] overflow-hidden flex flex-col sm:flex-row"
+                        style={{ background: "#111", border: "1.5px solid #1C1C1C", boxShadow: "0 24px 60px rgba(0,0,0,0.3)" }}
+                    >
+                        {/* Left */}
+                        <div className="flex-1 px-8 sm:px-12 py-10 sm:py-12">
+                            <span className="inline-block bg-[#D72638]/10 text-[#D72638] text-[10px] font-extrabold tracking-[0.16em] uppercase px-3 py-1.5 rounded-full mb-5"
+                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                Begin Here
+                            </span>
+                            <h2 className="font-black text-white tracking-[-0.025em] mb-3"
+                                style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(22px, 3vw, 36px)" }}>
+                                5-Day Trading Starter Workshop
+                            </h2>
+                            <p className="text-zinc-500 text-[14px] leading-relaxed mb-6 max-w-[400px]"
+                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                Not ready for full mentorship? Build your foundation in 5 days with live sessions, real charts, and mentor Q&A.
+                            </p>
+                            <div className="flex flex-col gap-2.5">
+                                {["Institutional Basics — zero knowledge needed", "Risk Fundamentals & Capital Protection", "Daily Live Q&A with Mentor", "Strategy Cheat Sheets Included"].map((f, i) => (
+                                    <div key={i} className="flex items-center gap-2.5">
+                                        <div className="w-4 h-4 rounded-full bg-[#D72638]/15 border border-[#D72638]/25 flex items-center justify-center shrink-0">
+                                            <Check className="w-2 h-2 text-[#D72638]" strokeWidth={3} />
+                                        </div>
+                                        <span className="text-zinc-400 text-[13px]" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{f}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        {/* Right */}
+                        <div className="px-8 sm:px-12 py-10 sm:py-12 flex flex-col items-start sm:items-end justify-center sm:border-l border-[#1C1C1C] sm:min-w-[240px]">
+                            <p className="text-zinc-600 text-[11px] font-bold uppercase tracking-widest mb-2"
+                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>One-time</p>
+                            <p className="font-black text-white leading-none mb-1"
+                                style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(44px, 5vw, 60px)" }}>
+                                ₹999
+                            </p>
+                            <p className="text-zinc-600 text-[12px] mb-6" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>+ GST</p>
+                            <Link href={getEnrollUrl("5-Day Starter Workshop")} target="_blank" className="no-underline w-full sm:w-auto">
+                                <motion.button
+                                    whileHover={{ y: -2, boxShadow: "0 12px 32px rgba(37,211,102,0.4)" }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className="w-full flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-2xl font-bold text-[14px] border-none cursor-pointer"
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "#25D366", color: "#fff", boxShadow: "0 6px 20px rgba(37,211,102,0.28)" }}>
+                                    <FaWhatsapp size={17} />
+                                    Book My Spot
+                                </motion.button>
+                            </Link>
+                            <p className="text-[#D72638] text-[11px] font-bold mt-3 text-center w-full"
+                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                ₹999 credit towards full program
+                            </p>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* ══ 6.8 SCALE YOUR EDGE (memberships) ══════════════ */}
+            <section className="relative bg-[#F7F7F7] overflow-hidden py-14 sm:py-16 px-5 sm:px-8">
+                <div className="absolute inset-0 pointer-events-none"
+                    style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.04) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+                <div className="relative max-w-[1120px] mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }} transition={{ duration: 0.6 }}
+                        className="text-center mb-14">
+                        <SectionLabel text="Ecosystem Membership" />
+                        <h2 className="font-black text-zinc-950 leading-[1.02] tracking-[-0.04em] mb-4"
+                            style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 4vw, 54px)" }}>
+                            Scale Your Edge
+                        </h2>
+                        <p className="text-zinc-500 max-w-[480px] mx-auto leading-[1.8] font-light"
+                            style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: "clamp(15px, 1.1vw, 18px)" }}>
+                            Professional trading is a career, not a course. Stay connected with live insights and an elite community.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                        {/* Elite Trading Lab */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.05 }}>
+                            <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.25 }}
+                                className="h-full flex flex-col rounded-[24px] p-8 bg-white"
+                                style={{ border: "1.5px solid #EBEBEB", boxShadow: "0 8px 28px rgba(0,0,0,0.04)" }}>
+                                <h3 className="font-black text-zinc-900 tracking-[-0.025em] mb-3"
+                                    style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(22px, 2vw, 28px)" }}>
+                                    Elite Trading Lab
+                                </h3>
+                                <div className="flex items-baseline gap-2 mb-4">
+                                    <span className="font-black text-zinc-900 leading-none"
+                                        style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(36px, 4vw, 46px)" }}>₹9,999</span>
+                                    <span className="text-zinc-400 text-[14px]">/month</span>
+                                </div>
+                                <p className="text-zinc-500 text-[13px] leading-relaxed mb-5"
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                    Daily live market analysis, community trade ideas, and mentor-led calls.
+                                </p>
+                                <div className="flex flex-col gap-2.5 flex-1 mb-6">
+                                    {[
+                                        "Daily Live Market Analysis",
+                                        "Real-time Trade Ideas & Setups",
+                                        "Mentor-led Community Calls",
+                                        "Monthly Q&A with Mentors",
+                                        "Access to Trade Journal Templates",
+                                        "Monthly Performance Review",
+                                    ].map((f, i) => (
+                                        <div key={i} className="flex items-center gap-2.5">
+                                            <div className="w-4 h-4 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
+                                                <Check className="w-2 h-2 text-emerald-500" strokeWidth={3.5} />
+                                            </div>
+                                            <span className="text-zinc-600 text-[13px]" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{f}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <Link href={getEnrollUrl("Elite Trading Lab")} target="_blank" className="no-underline">
+                                    <motion.button whileHover={{ y: -2, boxShadow: "0 12px 32px rgba(37,211,102,0.4)" }} whileTap={{ scale: 0.97 }}
+                                        className="w-full py-3.5 rounded-2xl flex items-center justify-center gap-2.5 font-bold text-[14px] border-none cursor-pointer"
+                                        style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "#25D366", color: "#fff", boxShadow: "0 6px 20px rgba(37,211,102,0.25)" }}>
+                                        <FaWhatsapp size={17} />
+                                        Inquire Access
+                                    </motion.button>
+                                </Link>
+                            </motion.div>
+                        </motion.div>
+
+                        {/* Mastery Combo */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.12 }}>
+                            <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.25 }}
+                                className="relative h-full flex flex-col rounded-[24px] p-8 overflow-hidden"
+                                style={{ background: "linear-gradient(140deg, #0A0A0A 0%, #181818 100%)", border: "1.5px solid #1C1C1C", boxShadow: "0 32px 80px rgba(0,0,0,0.22)" }}>
+                                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D72638]/35 to-transparent" />
+                                <span className="absolute top-6 right-6 inline-block bg-[#D72638] text-white text-[9px] font-extrabold uppercase tracking-[0.14em] px-3 py-1.5 rounded-lg"
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Best Value</span>
+                                <h3 className="font-black text-white tracking-[-0.025em] mb-3"
+                                    style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(22px, 2vw, 28px)" }}>
+                                    Mastery Combo
+                                </h3>
+                                <div className="flex items-baseline gap-2 mb-1">
+                                    <span className="font-black text-white leading-none"
+                                        style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(36px, 4vw, 46px)" }}>₹29,999</span>
+                                    <span className="text-white/30 text-[14px]">+ GST</span>
+                                </div>
+                                <p className="text-[#D72638] text-[12px] font-bold mb-4"
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>EMI: ₹5,000/mo × 6 months</p>
+                                <p className="text-zinc-500 text-[14px] leading-relaxed mb-6 flex-1"
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                    All 3 — Indian + Forex + Crypto. 4 month program. 1 year membership + lifetime mentorship.
+                                </p>
+                                {["All 3 Market Mentorships (4 Months)", "1 Year Elite Membership", "Lifetime Mentorship Access", "Priority Support"].map((f, i) => (
+                                    <div key={i} className="flex items-center gap-2.5 mb-2">
+                                        <div className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                                            style={{ background: "rgba(215,38,56,0.18)", border: "1px solid rgba(215,38,56,0.3)" }}>
+                                            <Check className="w-2 h-2 text-[#D72638]" strokeWidth={3} />
+                                        </div>
+                                        <span className="text-zinc-400 text-[13px]" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{f}</span>
+                                    </div>
+                                ))}
+                                <Link href={getEnrollUrl("Mastery Combo — All 3 Courses")} target="_blank" className="no-underline mt-6">
+                                    <motion.button whileHover={{ y: -2, boxShadow: "0 12px 32px rgba(37,211,102,0.4)" }} whileTap={{ scale: 0.97 }}
+                                        className="w-full py-4 rounded-2xl flex items-center justify-center gap-2.5 font-bold text-[15px] border-none cursor-pointer"
+                                        style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "#25D366", color: "#fff", boxShadow: "0 8px 24px rgba(37,211,102,0.3)" }}>
+                                        <FaWhatsapp size={18} />
+                                        Enroll via WhatsApp
+                                    </motion.button>
+                                </Link>
+                            </motion.div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
             {/* ══ 7. FAQ ════════════════════════════════════════════ */}
             <section ref={faqRef} className="relative bg-[#F7F7F7] py-14 sm:py-16 px-5 sm:px-8">
                 <div className="max-w-[760px] mx-auto">
@@ -729,3 +960,7 @@ const CoursesPage = () => {
 };
 
 export default CoursesPage;
+
+
+
+

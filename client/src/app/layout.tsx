@@ -37,10 +37,6 @@ export default function RootLayout({
 
         <div className="fixed inset-0 -z-50 bg-[var(--color-bg-primary)] pointer-events-none" />
         {/* SEO Plugin - Load from public folder */}
-        <Script
-          src="/seo-plugin.js"
-          strategy="lazyOnload"
-        />
       </body>
     </html>
   );

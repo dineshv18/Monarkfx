@@ -1,350 +1,323 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { ArrowUpRight, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 const testimonials = [
     {
-        name: "Rahul S.",
-        role: "Equity Trader",
-        initials: "RS",
-        text: "The structured approach to market analysis completely changed how I view trading. Highly professional mentorship.",
-        stars: 5,
-        color: "#D72638",
+        id: 1,
+        name: "Vineet Sharma",
+        instagram: "Vineet.sharma.8888",
+        instaUrl: "https://www.instagram.com/Vineet.sharma.8888",
+        image: "/reviews/vineet.jpeg",
+        quote: "Monark FX is Best place to actually learn trading, not just theory. Mentors at Monark FX are responsive and supportive throughout. Happy to be in Monark FX family. We Grow together.",
     },
     {
-        name: "Priya M.",
-        role: "Forex Student",
-        initials: "PM",
-        text: "Learned forex trading with proper risk management. The offline sessions were incredibly valuable.",
-        stars: 5,
-        color: "#A01020",
+        id: 2,
+        name: "Mukul",
+        instagram: "mukulgupta022",
+        instaUrl: "https://www.instagram.com/mukulgupta022",
+        image: "/reviews/mukul.jpeg",
+        quote: "The concepts weren't clear to me before, but the way everything is explained has made it much easier to understand. I've felt real growth in my knowledge and confidence. I would definitely recommend this institute to others.",
     },
     {
-        name: "Amit K.",
-        role: "Crypto Trader",
-        initials: "AK",
-        text: "Solid fundamentals-based crypto education. No get-rich-quick promises, just real market knowledge.",
-        stars: 5,
-        color: "#1A1A1A",
+        id: 3,
+        name: "Piyush",
+        instagram: "_pyranth",
+        instaUrl: "https://www.instagram.com/_pyranth",
+        image: "/reviews/piyush.jpeg",
+        quote: "Joined MonarkFX and my entire approach to trading transformed completely.",
     },
     {
-        name: "Neha R.",
-        role: "Options Trader",
-        initials: "NR",
-        text: "Options trading finally makes sense. The practical sessions helped me develop consistent strategies.",
-        stars: 5,
-        color: "#D72638",
+        id: 4,
+        name: "Sidharth",
+        instagram: "sidharth_gudhenia",
+        instaUrl: "https://www.instagram.com/sidharth_gudhenia",
+        image: "/reviews/sidharth.jpeg",
+        quote: "Monark FX is genuinely one of the best platforms to learn Forex, Crypto, and the Indian markets. The team is highly supportive and always available to guide you. I've personally noticed a significant boost in my trading knowledge and confidence. Strongly recommended for anyone who wants to start from scratch and grow into a professional trader.",
     },
     {
-        name: "Vikram P.",
-        role: "Swing Trader",
-        initials: "VP",
-        text: "The discipline-first approach sets Monark FX apart. Real education, not entertainment.",
-        stars: 5,
-        color: "#A01020",
+        id: 5,
+        name: "Abhishek",
+        instagram: "_abhishek_prajapati01",
+        instaUrl: "https://www.instagram.com/_abhishek_prajapati01",
+        image: "/reviews/abhishek.jpeg",
+        quote: "My experience with MONARK FX INSTITUTE has been excellent. It is truly one of the best institutes for Forex trading. The mentorship, live market guidance, and strong focus on risk management really help in building confidence and consistency.",
     },
     {
-        name: "Sneha T.",
-        role: "Full-time Trader",
-        initials: "ST",
-        text: "Comprehensive curriculum with personal attention. Worth every session.",
-        stars: 5,
-        color: "#1A1A1A",
+        id: 6,
+        name: "Ishaan Makkar",
+        instagram: "ishaan.makkar",
+        instaUrl: "https://www.instagram.com/ishaan.makkar",
+        image: "/reviews/ishaan-makkar.jpeg",
+        quote: "I've had a positive experience with MonarkFX Trading Institute. The team is knowledgeable, approachable, and provides consistent support. What stands out is their practical approach, including real-time market insights and well-organized study material. I would recommend MonarkFX to anyone serious about learning trading.",
+    },
+    {
+        id: 7,
+        name: "Venu Narwal",
+        instagram: "heyvenunarwal",
+        instaUrl: "https://www.instagram.com/heyvenunarwal",
+        image: "/reviews/heyvenunarwal.jpeg",
+        quote: "I joined Monark FX when I had started losing faith in the traditional 9–5 routine. What I really appreciate is that they don't just focus on theory — they guide you on how the real market works. The best part is the mindset they build. They teach you how to think like a trader and become consistent.",
+    },
+    {
+        id: 8,
+        name: "Govind",
+        instagram: "_itsgovindofficial_",
+        instaUrl: "https://www.instagram.com/_itsgovindofficial_/",
+        image: "/reviews/itsgovindofficial.jpeg",
+        quote: "I was searching for the best trading institute in Delhi then I found Monark FX. After a few days I was able to trade in a very professional manner. The best part is their trading community and teachers. Dinesh sir tries to deliver each and every thing in a very clear and systematic manner. Monark FX is one of the best institutes.",
+    },
+    {
+        id: 9,
+        name: "Surender Singh",
+        instagram: "surender_singh13",
+        instaUrl: "https://www.instagram.com/surender_singh13",
+        image: "/reviews/surender.jpeg",
+        quote: "I recently completed my trading course at Monark FX, and it has been a great learning experience. The mentors are highly supportive and explain topics like technical analysis, risk management, and live market trading with real examples. Highly recommended for beginners as well as aspiring traders.",
+    },
+    {
+        id: 10,
+        name: "Rahul Miglani",
+        instagram: "rahul_miglani21",
+        instaUrl: "https://www.instagram.com/rahul_miglani21/",
+        image: "/reviews/rahul.jpeg",
+        quote: "I've been learning forex for 6 months but true value was added when I joined Monark Institute. Dinesh sir helped me with a different style of trading and knowledge which is not available online. I am grateful to be a part of their trading floor. I have felt real confidence in planning and executing trades. Highly recommended.",
+    },
+    {
+        id: 11,
+        name: "Kirat",
+        instagram: "kirat_marwahh",
+        instaUrl: "https://www.instagram.com/kirat_marwahh",
+        image: "/reviews/kirat.jpeg",
+        quote: "Monark FX provided a comprehensive learning experience with clear explanations and practical examples. The trainers were knowledgeable and patient, making complex concepts easier to understand. The support system was responsive, addressing doubts promptly. I feel more equipped to make informed decisions in the market now.",
+    },
+    {
+        id: 12,
+        name: "Sidharth Gudhenia",
+        instagram: "sidharth_gudhenia",
+        instaUrl: "https://www.instagram.com/sidharth_gudhenia",
+        image: "/reviews/sidharth (2).jpeg",
+        quote: "Monark FX is genuinely one of the best platforms to learn Forex, Crypto, and the Indian markets. The environment is positive and keeps you motivated. I've personally noticed a significant boost in my trading knowledge and confidence for their clear setup and disciplined rules.",
     },
 ];
 
-/* ── Individual card ── */
-const TestimonialCard = ({
-    t,
-    index,
-    isInView,
-}: {
-    t: (typeof testimonials)[number];
-    index: number;
-    isInView: boolean;
-}) => {
-    const [hovered, setHovered] = React.useState(false);
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: index * 0.09, ease: [0.22, 1, 0.36, 1] }}
-            onHoverStart={() => setHovered(true)}
-            onHoverEnd={() => setHovered(false)}
-        >
-            <motion.div
-                whileHover={{ y: -7 }}
-                transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-                className="relative h-full flex flex-col rounded-[28px] p-6 sm:p-8 overflow-hidden cursor-default bg-white"
-                style={{
-                    border: hovered
-                        ? "1.5px solid rgba(215,38,56,0.28)"
-                        : "1.5px solid #EEEEEE",
-                    boxShadow: hovered
-                        ? "0 28px 60px rgba(215,38,56,0.09), 0 0 0 4px rgba(215,38,56,0.03)"
-                        : "0 8px 28px rgba(0,0,0,0.03)",
-                    transition: "border-color 0.24s, box-shadow 0.24s",
-                }}
-            >
-                {/* Big quote watermark */}
-                <div
-                    className="absolute top-4 right-6 pointer-events-none transition-opacity duration-300"
-                    style={{ opacity: hovered ? 0.12 : 0.06 }}
-                >
-                    <Quote
-                        className="w-14 h-14 text-[#D72638]"
-                        fill="currentColor"
-                    />
-                </div>
-
-                {/* Stars */}
-                <div className="flex items-center gap-1 mb-5">
-                    {[...Array(t.stars)].map((_, i) => (
-                        <Star
-                            key={i}
-                            className="w-3.5 h-3.5 text-[#D72638]"
-                            fill="currentColor"
-                        />
-                    ))}
-                </div>
-
-                {/* Quote text */}
-                <p
-                    className="text-zinc-600 italic leading-[1.85] flex-1 mb-7 relative z-10 font-light"
-                    style={{
-                        fontFamily: "var(--font-dm-sans), sans-serif",
-                        fontSize: "clamp(14px, 0.95vw, 16px)",
-                    }}
-                >
-                    &ldquo;{t.text}&rdquo;
-                </p>
-
-                {/* Divider */}
-                <div
-                    className="h-px mb-5 transition-all duration-300"
-                    style={{
-                        background: hovered
-                            ? "linear-gradient(90deg, rgba(215,38,56,0.2), transparent)"
-                            : "#F2F2F2",
-                    }}
-                />
-
-                {/* Author row */}
-                <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                        {/* Avatar */}
-                        <div
-                            className="w-10 h-10 rounded-full shrink-0 flex items-center justify-center"
-                            style={{
-                                background: t.color,
-                                boxShadow: hovered
-                                    ? `0 4px 14px ${t.color}55`
-                                    : "0 2px 8px rgba(0,0,0,0.12)",
-                                transition: "box-shadow 0.24s",
-                            }}
-                        >
-                            <span
-                                className="text-white text-[12px] font-extrabold"
-                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                            >
-                                {t.initials}
-                            </span>
-                        </div>
-
-                        <div>
-                            <p
-                                className="text-zinc-900 text-[14px] font-bold leading-tight mb-0.5"
-                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                            >
-                                {t.name}
-                            </p>
-                            <p
-                                className="text-zinc-400 text-[11px] font-medium"
-                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                            >
-                                {t.role}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Verified badge */}
-                    <span
-                        className="text-[9px] font-extrabold text-emerald-500 uppercase tracking-[0.1em]
-                       bg-emerald-500/10 border border-emerald-500/20
-                       px-2.5 py-1 rounded-full whitespace-nowrap shrink-0"
-                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                    >
-                        Verified
-                    </span>
-                </div>
-            </motion.div>
-        </motion.div>
-    );
-};
-
-const TestimonialsSection = () => {
+export default function TestimonialsSection() {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [isHovering, setIsHovering] = useState(false);
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-60px" });
+    const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+    const active = testimonials[activeIndex];
+
+    const next = () => { setActiveIndex(prev => (prev + 1) % testimonials.length); resetTimer(); };
+    const go = (i: number) => { setActiveIndex(i); resetTimer(); };
+
+    // Auto-advance every 6 seconds
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const resetTimer = () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+        timerRef.current = setInterval(next, 6000);
+    };
+    React.useEffect(() => {
+        resetTimer();
+        return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    }, []);
 
     return (
-        <section
-            ref={ref}
-            className="relative overflow-hidden py-14 sm:py-16"
-            style={{
-                background: "linear-gradient(180deg, #fff 0%, #FFF4F5 100%)",
-            }}
-        >
-            {/* ── Dot grid ── */}
-            <div
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                    backgroundImage:
-                        "radial-gradient(circle, rgba(215,38,56,0.055) 1px, transparent 1px)",
-                    backgroundSize: "44px 44px",
-                }}
-            />
+        <section ref={ref} className="relative w-full overflow-hidden bg-white py-24 sm:py-32"
+            style={{ borderTop: "1px solid #F0F0F0" }}>
 
-            {/* ── Top-left blob ── */}
-            <div
-                className="absolute -top-20 -left-20 w-[380px] h-[380px] rounded-full pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(circle, rgba(215,38,56,0.06) 0%, transparent 68%)",
-                }}
-            />
+            {/* Dot grid bg */}
+            <div className="absolute inset-0 pointer-events-none"
+                style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.04) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
 
-            <div className="relative max-w-[1120px] mx-auto px-5 sm:px-8">
+            <div className="relative max-w-5xl mx-auto px-6 sm:px-8">
 
-                {/* ── Header ── */}
+                {/* Section label + heading */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 14 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-14 sm:mb-16"
+                    transition={{ duration: 0.5 }}
+                    className="mb-14"
                 >
-                    {/* Google rating pill */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ delay: 0.1, type: "spring", stiffness: 220 }}
-                        className="inline-flex items-center gap-3 bg-white border border-zinc-200
-                       rounded-full px-5 py-2.5 mb-7
-                       shadow-[0_8px_28px_rgba(0,0,0,0.06)]"
-                    >
-                        <div className="flex items-center gap-1">
-                            {[...Array(5)].map((_, i) => (
-                                <Star
-                                    key={i}
-                                    className="w-3.5 h-3.5 text-[#D72638]"
-                                    fill={i < 4 ? "currentColor" : "none"}
-                                />
-                            ))}
-                        </div>
-                        <span
-                            className="text-zinc-900 text-[16px] font-extrabold"
-                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                        >
-                            4.7
-                        </span>
-                        <span className="w-px h-4 bg-zinc-200" />
-                        <span
-                            className="text-zinc-400 text-[12px] font-medium"
-                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                        >
-                            Google Verified Reviews
-                        </span>
-                    </motion.div>
-
-                    {/* Eyebrow */}
-                    <div className="flex items-center justify-center gap-3 mb-4">
+                    <div className="flex items-center gap-3 mb-4">
                         <div className="w-8 h-[2px] rounded-full bg-[#D72638]" />
-                        <span
-                            className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.22em]"
-                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                        >
-                            Testimonials
+                        <span className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.22em]"
+                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                            Student Reviews
                         </span>
                         <div className="w-8 h-[2px] rounded-full bg-[#D72638]" />
                     </div>
-
-                    <h2
-                        className="font-black text-zinc-950 leading-[1.02] tracking-[-0.04em] mb-4"
-                        style={{
-                            fontFamily: "var(--font-playfair), serif",
-                            fontSize: "clamp(34px, 4.5vw, 56px)",
-                        }}
-                    >
-                        Voices of{" "}
-                        <span className="text-[#D72638]">Excellence</span>
+                    <h2 className="font-black text-zinc-950 leading-[1.05] tracking-[-0.03em]"
+                        style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 48px)" }}>
+                        What Our Students{" "}
+                        <span style={{ color: "#D72638" }}>Say About Us</span>
                     </h2>
-
-                    <p
-                        className="text-zinc-500 max-w-[460px] mx-auto leading-[1.8] font-light"
-                        style={{
-                            fontFamily: "var(--font-dm-sans), sans-serif",
-                            fontSize: "clamp(15px, 1.1vw, 18px)",
-                        }}
-                    >
-                        Discover how our structured mentorship is transforming the trading
-                        careers of our students.
-                    </p>
                 </motion.div>
 
-                {/* ── Cards grid ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                    {testimonials.map((t, i) => (
-                        <TestimonialCard key={i} t={t} index={i} isInView={isInView} />
-                    ))}
-                </div>
-
-                {/* ── Bottom trust bar ── */}
+                {/* Main split layout */}
                 <motion.div
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 24 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.72, duration: 0.5 }}
-                    className="mt-14 sm:mt-16 flex items-center justify-center
-                     flex-wrap gap-x-3 gap-y-2 text-center"
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-16 items-center cursor-pointer"
+                    onClick={next}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={() => setIsHovering(false)}
                 >
-                    <span
-                        className="text-zinc-400 text-[13px] font-medium"
-                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                    >
-                        Trusted by
-                    </span>
-                    <span
-                        className="text-[#D72638] text-[17px] font-black"
-                        style={{ fontFamily: "var(--font-playfair), serif" }}
-                    >
-                        250+
-                    </span>
-                    <span
-                        className="text-zinc-400 text-[13px] font-medium"
-                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                    >
-                        graduates —
-                    </span>
-                    <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                            <Star
-                                key={i}
-                                className="w-3.5 h-3.5 text-[#D72638]"
-                                fill="currentColor"
-                            />
-                        ))}
+                    {/* LEFT — quote */}
+                    <div className="space-y-7">
+                        {/* Counter */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={active.id + "-label"}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.3 }}
+                                className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-zinc-400"
+                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+                            >
+                                <span className="w-6 h-px bg-zinc-300" />
+                                MonarkFX Student
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Quote */}
+                        <div className="relative overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.blockquote
+                                    key={active.id}
+                                    initial={{ opacity: 0, y: 40 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -40 }}
+                                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                                    className="text-2xl sm:text-3xl  font-light leading-[1.35] tracking-tight text-zinc-900"
+                                    style={{ fontFamily: "var(--font-playfair), serif" }}
+                                >
+                                    &ldquo;{active.quote}&rdquo;
+                                </motion.blockquote>
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Author */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={active.name}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.3, delay: 0.15 }}
+                                className="flex items-center gap-4"
+                            >
+                                <div className="w-8 h-px bg-zinc-300" />
+                                <div>
+                                    <p className="text-sm font-bold text-zinc-900"
+                                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                        {active.name}
+                                    </p>
+                                    {active.instagram ? (
+                                        <a
+                                            href={active.instaUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={e => e.stopPropagation()}
+                                            className="text-[11px] font-semibold no-underline flex items-center gap-1"
+                                            style={{ color: "#E1306C", fontFamily: "var(--font-dm-sans), sans-serif" }}
+                                        >
+                                            @{active.instagram}
+                                            <ArrowRight className="w-3 h-3" />
+                                        </a>
+                                    ) : (
+                                        <p className="text-xs text-zinc-400"
+                                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                            MonarkFX Mentorship Student
+                                        </p>
+                                    )}
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
-                    <span
-                        className="text-zinc-800 text-[14px] font-extrabold"
-                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                    >
-                        4.7 on Google
-                    </span>
+
+                    {/* RIGHT — image */}
+                    <div className="relative w-full md:w-52 h-72 md:h-80 shrink-0">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={active.id + "-img"}
+                                initial={{ opacity: 0, filter: "blur(16px)", scale: 1.04 }}
+                                animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+                                exit={{ opacity: 0, filter: "blur(16px)", scale: 0.96 }}
+                                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                                className="absolute inset-0"
+                            >
+                                <div className="w-full h-full rounded-2xl overflow-hidden"
+                                    style={{ border: "1.5px solid #EBEBEB", boxShadow: "0 20px 48px rgba(0,0,0,0.1)" }}>
+                                    <Image
+                                        src={active.image}
+                                        alt={active.name}
+                                        fill
+                                        className="object-cover object-top"
+                                        sizes="(max-width: 768px) 100vw, 208px"
+                                    />
+                                    {/* Red gradient bottom */}
+                                    <div className="absolute inset-0"
+                                        style={{ background: "linear-gradient(to top, rgba(215,38,56,0.35) 0%, transparent 50%)" }} />
+                                    {/* Name bottom */}
+                                    <div className="absolute bottom-3 left-3 right-3">
+                                        <p className="text-white font-black text-[13px] leading-tight"
+                                            style={{ fontFamily: "var(--font-playfair), serif", textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}>
+                                            {active.name}
+                                        </p>
+                                        {active.instagram && (
+                                            <a href={active.instaUrl} target="_blank" rel="noopener noreferrer"
+                                                onClick={e => e.stopPropagation()}
+                                                className="text-[10px] font-semibold no-underline"
+                                                style={{ color: "#FFB3C6" }}>
+                                                @{active.instagram}
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Next hint */}
+                        <motion.div
+                            animate={{ opacity: isHovering ? 1 : 0, scale: isHovering ? 1 : 0.85 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-xs text-zinc-400 whitespace-nowrap"
+                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+                        >
+                            <span>Next</span>
+                            <ArrowUpRight className="w-3 h-3" />
+                        </motion.div>
+                    </div>
                 </motion.div>
+
+                {/* Dots */}
+                <div className="flex items-center gap-2 mt-14 flex-wrap">
+                    {testimonials.map((t, i) => (
+                        <button
+                            key={i}
+                            onClick={() => go(i)}
+                            className="relative p-1 cursor-pointer"
+                            title={t.name}
+                        >
+                            <span className={`block rounded-full transition-all duration-300 ${i === activeIndex
+                                ? "w-6 h-2 bg-[#D72638]"
+                                : "w-2 h-2 bg-zinc-300 hover:bg-zinc-400"
+                                }`} />
+                        </button>
+                    ))}
+                    <span className="ml-2 text-xs text-zinc-400"
+                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                        {activeIndex + 1} / {testimonials.length}
+                    </span>
+                </div>
             </div>
         </section>
     );
-};
-
-export default TestimonialsSection;
+}

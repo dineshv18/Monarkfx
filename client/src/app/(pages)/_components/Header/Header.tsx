@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { TrendingUp, ArrowUpRight } from "lucide-react";
+
+import { Phone, X, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
@@ -11,228 +11,188 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Courses", href: "/courses" },
-  { name: "Pricing", href: "/pricing" },
   { name: "Contact", href: "/contact" },
 ];
 
 const WHATSAPP_URL =
   "https://wa.me/918750475852?text=Hi,%20I%20want%20to%20enroll%20in%20your%20trading%20program";
 
+const PHONE_NUMBER = "+91 87504 75852";
+
+const AnimatedNavLink = ({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+}) => (
+  <Link
+    href={href}
+    className={`group relative inline-flex items-center h-6 text-[13px] font-medium whitespace-nowrap transition-colors duration-200
+      ${active ? "text-white" : "text-gray-400 hover:text-white"}`}
+  >
+    {children}
+    {active && (
+      <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-[#D72638] rounded-full" />
+    )}
+  </Link>
+);
+
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [shapeClass, setShapeClass] = useState("rounded-full");
+  const shapeTimer = useRef<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 24);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (shapeTimer.current) clearTimeout(shapeTimer.current);
+    if (isOpen) {
+      setShapeClass("rounded-2xl");
+    } else {
+      shapeTimer.current = setTimeout(() => setShapeClass("rounded-full"), 300);
+    }
+    return () => {
+      if (shapeTimer.current) clearTimeout(shapeTimer.current);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
-    setIsMobileMenuOpen(false);
+    setIsOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMobileMenuOpen]);
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   return (
     <>
-      {/* ─── HEADER ─────────────────────────────────────────── */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-          ? "bg-white/95 backdrop-blur-xl border-b border-zinc-100 shadow-[0_2px_32px_rgba(0,0,0,0.07)]"
-          : "bg-transparent"
-          }`}
+        className={`fixed top-3 left-1/2 -translate-x-1/2 z-50
+                     flex flex-col items-center
+                     px-5 py-1
+                     border border-white/10 bg-[#1a1a1aaa] backdrop-blur-md
+                     w-[calc(100%-2rem)] sm:w-auto
+                     shadow-[0_8px_32px_rgba(0,0,0,0.4)]
+                     transition-[border-radius] duration-0
+                     ${shapeClass}`}
       >
-        <div className="max-w-[1180px] mx-auto px-5 sm:px-8">
-          <div className="flex items-center justify-between h-[70px] sm:h-[76px] lg:h-20">
+        {/* Main row */}
+        <div className="flex items-center justify-between w-full gap-x-6 sm:gap-x-8">
 
-            {/* ── Logo ── */}
-            <Link href="/" className="flex items-center gap-3 no-underline group">
-              <Image src="/logo-dark.png" alt="Logo" width={200} height={200} />
-            </Link>
+          {/* Logo */}
+          <Link href="/" className="flex items-center shrink-0">
+            <Image
+              src="/logo.png"
+              alt="MonarkFX"
+              width={110}
+              height={80}
+              className="h-16 w-auto object-contain "
+            />
+          </Link>
 
-            {/* ── Desktop Nav ── */}
-            <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) => {
-                const active = pathname === link.href;
-                return (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className={`relative px-4 py-2 rounded-lg text-[14px] font-medium tracking-wide
-                                transition-all duration-200 no-underline
-                                ${active
-                        ? "text-[#D72638] bg-red-50"
-                        : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
-                      }`}
-                  >
-                    {link.name}
-                    {active && (
-                      <motion.span
-                        layoutId="nav-pill"
-                        className="absolute bottom-[5px] left-1/2 -translate-x-1/2
-                                   w-1 h-1 rounded-full bg-[#D72638]"
-                      />
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* ── CTA + Hamburger ── */}
-            <div className="flex items-center gap-3">
-              {/* Desktop CTA */}
-              <Link href={WHATSAPP_URL} target="_blank" className="hidden lg:block no-underline">
-                <motion.button
-                  whileHover={{ y: -2, boxShadow: "0 12px 28px rgba(215,38,56,0.36)" }}
-                  whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-6 py-[10px] rounded-xl
-                             bg-[#D72638] hover:bg-[#C0202F] text-white text-[14px] font-semibold
-                             border border-[#D72638] shadow-[0_4px_16px_rgba(215,38,56,0.28)]
-                             transition-colors duration-200 cursor-pointer outline-none"
-                >
-                  Join Workshop
-                  <ArrowUpRight className="w-4 h-4" strokeWidth={2.5} />
-                </motion.button>
-              </Link>
-
-              {/* Hamburger */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label="Toggle menu"
-                className="lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[5px]
-                           rounded-xl border border-zinc-200 bg-white shadow-sm
-                           transition-all duration-200 hover:border-zinc-300 cursor-pointer"
+          {/* Desktop nav */}
+          <nav className="hidden lg:flex items-center gap-5">
+            {navLinks.map((link) => (
+              <AnimatedNavLink
+                key={link.href}
+                href={link.href}
+                active={pathname === link.href}
               >
-                <motion.span
-                  animate={isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="block w-[18px] h-[1.5px] bg-zinc-800 rounded-full origin-center"
-                />
-                <motion.span
-                  animate={isMobileMenuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-                  transition={{ duration: 0.2 }}
-                  className="block w-[18px] h-[1.5px] bg-zinc-800 rounded-full"
-                />
-                <motion.span
-                  animate={isMobileMenuOpen ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="block w-[18px] h-[1.5px] bg-zinc-800 rounded-full origin-center"
-                />
-              </button>
-            </div>
+                {link.name}
+              </AnimatedNavLink>
+            ))}
+          </nav>
+
+          {/* Desktop CTAs */}
+          <div className="hidden lg:flex items-center gap-2.5">
+            <a
+              href={`tel:+918750475852`}
+              className="flex items-center gap-1.5 px-3 py-[7px] rounded-full
+                         border border-white/15 bg-white/5 text-gray-300
+                         hover:border-white/40 hover:text-white
+                         text-xs font-medium transition-colors duration-200"
+            >
+              <Phone className="w-3 h-3 shrink-0" />
+              {PHONE_NUMBER}
+            </a>
+
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-[7px] rounded-full text-xs font-bold
+                         bg-gradient-to-br from-gray-100 to-gray-300 text-black
+                         hover:from-gray-200 hover:to-gray-400
+                         transition-all duration-200 shadow-[0_0_16px_rgba(255,255,255,0.15)]"
+            >
+              Join Now
+            </a>
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            className="lg:hidden flex items-center justify-center w-8 h-8 text-gray-300 focus:outline-none"
+          >
+            {isOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        {/* Mobile dropdown */}
+        <div
+          className={`lg:hidden flex flex-col items-center w-full
+                       transition-all duration-300 ease-in-out overflow-hidden
+                       ${isOpen ? "max-h-[400px] opacity-100 pt-4" : "max-h-0 opacity-0 pt-0 pointer-events-none"}`}
+        >
+          <nav className="flex flex-col items-center gap-4 w-full">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`w-full text-center text-base transition-colors duration-200
+                  ${pathname === link.href ? "text-white font-semibold" : "text-gray-400 hover:text-white"}`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex flex-col items-center gap-3 mt-5 w-full pb-1">
+            <a
+              href={`tel:+918750475852`}
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-full
+                         border border-white/15 bg-white/5 text-gray-300
+                         hover:border-white/40 hover:text-white
+                         text-sm font-medium transition-colors duration-200"
+            >
+              <Phone className="w-4 h-4" />
+              {PHONE_NUMBER}
+            </a>
+
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 rounded-full text-center text-sm font-bold
+                         bg-gradient-to-br from-gray-100 to-gray-300 text-black
+                         hover:from-gray-200 hover:to-gray-400
+                         transition-all duration-200"
+            >
+              Join Now via WhatsApp
+            </a>
           </div>
         </div>
       </header>
 
-      {/* ─── MOBILE MENU ────────────────────────────────────── */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.22 }}
-              className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
 
-            {/* Slide-down panel */}
-            <motion.div
-              initial={{ opacity: 0, y: -16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ type: "spring", stiffness: 380, damping: 36 }}
-              className="fixed top-0 left-0 right-0 z-50 lg:hidden
-                         bg-white border-b border-zinc-100
-                         shadow-[0_16px_48px_rgba(0,0,0,0.12)]
-                         rounded-b-3xl overflow-hidden"
-              style={{ paddingTop: "76px" }}
-            >
-              {/* Logo row inside panel (visible at top for context) */}
-              <div className="px-6 pt-2 pb-3 flex items-center gap-2 border-b border-zinc-50">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center
-                                bg-gradient-to-br from-[#D72638] to-[#9B1A28]">
-                  <TrendingUp className="w-[13px] h-[13px] text-white" strokeWidth={2.5} />
-                </div>
-                <span className="text-[13px] font-semibold text-zinc-400 tracking-widest uppercase">
-                  Navigation
-                </span>
-              </div>
-
-              {/* Nav links */}
-              <nav className="px-4 py-3">
-                {navLinks.map((link, i) => {
-                  const active = pathname === link.href;
-                  return (
-                    <motion.div
-                      key={link.name}
-                      initial={{ opacity: 0, x: -12 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.045, type: "spring", stiffness: 300 }}
-                    >
-                      <Link
-                        href={link.href}
-                        className={`flex items-center justify-between px-4 py-4 mb-1
-                                    rounded-2xl text-[16px] font-medium no-underline
-                                    transition-all duration-150
-                                    ${active
-                            ? "bg-red-50 text-[#D72638]"
-                            : "text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900"
-                          }`}
-                      >
-                        <span>{link.name}</span>
-                        {active ? (
-                          <span className="w-2 h-2 rounded-full bg-[#D72638]" />
-                        ) : (
-                          <ArrowUpRight className="w-4 h-4 text-zinc-300" />
-                        )}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </nav>
-
-              {/* CTA */}
-              <div className="px-5 pt-2 pb-7">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.22 }}
-                >
-                  <Link href={WHATSAPP_URL} target="_blank" className="no-underline block">
-                    <button
-                      className="w-full py-4 rounded-2xl flex items-center justify-center gap-2
-                                 bg-[#D72638] hover:bg-[#C0202F] active:scale-[0.98]
-                                 text-white text-[16px] font-semibold
-                                 shadow-[0_6px_20px_rgba(215,38,56,0.32)]
-                                 transition-all duration-200 cursor-pointer border-none outline-none"
-                    >
-                      Join Trading Program
-                      <ArrowUpRight className="w-5 h-5" strokeWidth={2.5} />
-                    </button>
-                  </Link>
-
-                  <p className="text-center text-[12px] text-zinc-400 mt-3 tracking-wide">
-                    Free consultation · No spam
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* Spacer */}
-      <div className="h-[70px] sm:h-[76px] lg:h-20" />
     </>
   );
 };

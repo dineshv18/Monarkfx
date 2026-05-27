@@ -4,225 +4,220 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpen, Award } from "lucide-react";
-
-const points = [
-    { icon: <BookOpen style={{ width: 14, height: 14 }} />, text: "Live market learning with mentors" },
-    { icon: <BadgeCheck style={{ width: 14, height: 14 }} />, text: "Institutional-grade curriculum" },
-    { icon: <Award style={{ width: 14, height: 14 }} />, text: "Certification on successful completion" },
-];
+import { ArrowRight, Instagram, Youtube, Send, Twitter } from "lucide-react";
+import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 
 const WHATSAPP_URL = "https://wa.me/918750475852?text=Hi,%20I'd%20like%20to%20learn%20more%20about%20MonarkFX%20mentorship";
 
+const socials = [
+  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/monarkfx", color: "#E1306C" },
+  { name: "YouTube",   icon: Youtube,   href: "https://www.youtube.com/",            color: "#FF0000" },
+  { name: "Telegram",  icon: Send,       href: "https://t.me/",                       color: "#229ED9" },
+  { name: "Twitter",   icon: Twitter,    href: "https://twitter.com/monarkfx",        color: "#1DA1F2" },
+];
+
+const stats = [
+  { value: "250+",  label: "Students Trained" },
+  { value: "7+",    label: "Expert Mentors" },
+  { value: "2021",  label: "Established" },
+  { value: "4.7★",  label: "Google Rating" },
+];
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 28, filter: "blur(6px)" },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+  transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] },
+});
+
 const AboutSection = () => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
 
-    return (
-        <section
-            ref={ref}
-            style={{ position: "relative", background: "#fff", overflow: "hidden", padding: "120px 0" }}
+  return (
+    <section
+      ref={ref}
+      className="py-16 px-4 bg-[#fafafa]"
+      style={{ borderTop: "1px solid #F0F0F0" }}
+    >
+      <div className="max-w-6xl mx-auto">
+
+        {/* ── Top bar: label + socials ── */}
+        <div className="flex justify-between items-center mb-10">
+          <motion.div
+            {...fadeUp(0)}
+            animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}
+            className="flex items-center gap-2"
+          >
+            <span className="text-[#D72638] animate-spin inline-block">✱</span>
+            <span className="text-xs font-bold text-zinc-500 tracking-[0.2em] uppercase">
+              About MonarkFX
+            </span>
+          </motion.div>
+
+          <motion.div
+            {...fadeUp(0.1)}
+            animate={isInView ? fadeUp(0.1).animate : fadeUp(0.1).initial}
+            className="flex gap-2"
+          >
+            {socials.map((s) => {
+              const Icon = s.icon;
+              return (
+                <a
+                  key={s.name}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 border border-zinc-200 bg-white rounded-lg flex items-center justify-center hover:border-zinc-400 transition-colors duration-200"
+                >
+                  <Icon className="w-4 h-4" style={{ color: s.color }} />
+                </a>
+              );
+            })}
+          </motion.div>
+        </div>
+
+        {/* ── Hero image with clip path ── */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
+          animate={isInView ? { opacity: 1, scale: 1, filter: "blur(0px)" } : {}}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mb-6"
         >
-            {/* Faint red dot top-left */}
-            <div style={{
-                position: "absolute", top: 0, left: 0, width: 450, height: 450, borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(215,38,56,0.06) 0%, transparent 70%)",
-                transform: "translate(-30%, -30%)", pointerEvents: "none",
-            }} />
-
-            <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-
-                    {/* ── LEFT: Image ── */}
-                    <motion.div
-                        initial={{ opacity: 0, x: -32 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                        style={{ position: "relative" }}
-                    >
-                        {/* ISO badge — floating */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ delay: 0.55, duration: 0.5 }}
-                            style={{
-                                position: "absolute", top: -20, right: -10, zIndex: 20,
-                                background: "#fff",
-                                border: "1px solid #EEE",
-                                borderRadius: 16,
-                                padding: "12px 20px",
-                                boxShadow: "0 15px 35px rgba(0,0,0,0.08)",
-                                display: "flex", alignItems: "center", gap: 10,
-                            }}
-                        >
-                            <div style={{
-                                width: 36, height: 36, borderRadius: 10,
-                                background: "#FFF0F2",
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                            }}>
-                                <Award style={{ width: 18, height: 18, color: "#D72638" }} />
-                            </div>
-                            <div>
-                                <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: 13, fontWeight: 800, color: "#000", lineHeight: 1 }}>
-                                    ISO Certified
-                                </p>
-                                <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: 11, color: "#999", marginTop: 3 }}>
-                                    21008:2018
-                                </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Est. badge — bottom-left */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ delay: 0.65, duration: 0.5 }}
-                            style={{
-                                position: "absolute", bottom: -24, left: 24, zIndex: 20,
-                                background: "#000",
-                                borderRadius: 16,
-                                padding: "14px 24px",
-                                boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
-                            }}
-                        >
-                            <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: 24, fontWeight: 900, color: "#D72638", lineHeight: 1 }}>
-                                2021
-                            </p>
-                            <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: 11, color: "#666", marginTop: 4, textTransform: "uppercase", letterSpacing: "0.15em" }}>
-                                Established
-                            </p>
-                        </motion.div>
-
-                        {/* Image Wrapper */}
-                        <div style={{
-                            position: "relative", zIndex: 1,
-                            borderRadius: 32, overflow: "hidden",
-                            border: "1px solid #EEE",
-                            boxShadow: "0 30px 60px rgba(0,0,0,0.05)",
-                        }}>
-                             <div style={{
-                                position: "absolute", top: 24, left: 0, width: 4, height: 100,
-                                background: "linear-gradient(to bottom, #D72638, transparent)",
-                                borderRadius: "0 4px 4px 0", zIndex: 10,
-                            }} />
-                            <Image
-                                src="/bg.jpeg"
-                                alt="About MonarkFX"
-                                width={800}
-                                height={600}
-                                className="w-full object-cover"
-                                style={{ height: "clamp(350px, 45vw, 550px)", display: "block" }}
-                            />
-                        </div>
-                    </motion.div>
-
-                    {/* ── RIGHT: Content ── */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 32 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                        {/* Label */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ delay: 0.25 }}
-                            style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 24 }}
-                        >
-                            <div style={{ width: 32, height: 2, background: "#D72638", borderRadius: 2 }} />
-                            <span style={{
-                                fontFamily: "var(--font-inter), sans-serif", fontSize: 12, fontWeight: 800,
-                                color: "#D72638", letterSpacing: "0.2em", textTransform: "uppercase",
-                            }}>
-                                Prestige Education
-                            </span>
-                        </motion.div>
-
-                        {/* Heading */}
-                        <h2 style={{
-                            fontFamily: "var(--font-playfair), serif",
-                            fontSize: "clamp(34px, 4vw, 52px)",
-                            fontWeight: 800, color: "#000",
-                            lineHeight: 1.1, letterSpacing: "-0.01em",
-                            marginBottom: 24,
-                        }}>
-                            We Build Elite{" "}
-                            <span style={{
-                                color: "#D72638"
-                            }}>
-                                Traders
-                            </span>{" "}
-                            Through Discipline.
-                        </h2>
-
-                        {/* Body Text */}
-                        <div style={{ marginBottom: 40 }}>
-                            <p style={{
-                                fontFamily: "var(--font-inter), sans-serif", fontSize: 18,
-                                color: "#444", lineHeight: 1.8, marginBottom: 16, fontWeight: 500,
-                            }}>
-                                MonarkFX is an ISO 21008:2018 Certified Financial Market Academy, dedicated to the art of institutional trading.
-                            </p>
-                            <p style={{
-                                fontFamily: "var(--font-inter), sans-serif", fontSize: 16,
-                                color: "#666", lineHeight: 1.8,
-                            }}>
-                                We strip away the noise and focus on the mechanics of Price Action across Equities, Forex, and Digital Assets. Our mission is to transform retail mindsets into institutional execution.
-                            </p>
-                        </div>
-
-                        {/* Checklist */}
-                        <div style={{ marginBottom: 48, display: "flex", flexDirection: "column", gap: 16 }}>
-                            {points.map((point, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, x: 14 }}
-                                    animate={isInView ? { opacity: 1, x: 0 } : {}}
-                                    transition={{ delay: 0.35 + i * 0.1, duration: 0.5 }}
-                                    style={{ display: "flex", alignItems: "center", gap: 16 }}
-                                >
-                                    <div style={{
-                                        width: 36, height: 36, borderRadius: 10,
-                                        background: "rgba(215,38,56,0.08)",
-                                        display: "flex", alignItems: "center", justifyContent: "center",
-                                        color: "#D72638", flexShrink: 0,
-                                    }}>
-                                        {point.icon}
-                                    </div>
-                                    <span style={{
-                                        fontFamily: "var(--font-inter), sans-serif", fontSize: 16,
-                                        color: "#2A2A2A", fontWeight: 700,
-                                    }}>
-                                        {point.text}
-                                    </span>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        {/* CTAs */}
-                        <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
-                            <Link href={WHATSAPP_URL} target="_blank" style={{ textDecoration: "none" }}>
-                                <motion.button
-                                    whileHover={{ y: -4, boxShadow: "0 15px 45px rgba(215,38,56,0.25)" }}
-                                    whileTap={{ scale: 0.97 }}
-                                    style={{
-                                        display: "inline-flex", alignItems: "center", gap: 10,
-                                        background: "#D72638", color: "#fff",
-                                        fontFamily: "var(--font-inter), sans-serif", fontWeight: 800, fontSize: 16,
-                                        padding: "16px 36px", borderRadius: 16, border: "none", cursor: "pointer",
-                                        boxShadow: "0 8px 30px rgba(215,38,56,0.2)", transition: "all 0.3s",
-                                    }}
-                                >
-                                    Consult our Mentors <ArrowRight style={{ width: 17, height: 17 }} />
-                                </motion.button>
-                            </Link>
-                        </div>
-                    </motion.div>
-
-                </div>
+          {/* ISO badge */}
+          <div
+            className="absolute top-4 right-4 z-20 bg-white border border-zinc-100 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-md"
+          >
+            <div className="w-8 h-8 rounded-lg bg-[#FFF0F2] flex items-center justify-center">
+              <span className="text-[#D72638] font-black text-xs">ISO</span>
             </div>
-        </section>
-    );
+            <div>
+              <p className="text-xs font-bold text-zinc-900 leading-none">Certified</p>
+              <p className="text-[10px] text-zinc-400 mt-0.5">21008:2018</p>
+            </div>
+          </div>
+
+          <svg className="w-full" viewBox="0 0 100 40" style={{ display: "block" }}>
+            <defs>
+              <clipPath id="about-clip" clipPathUnits="objectBoundingBox">
+                <path d="M0.0998072 1H0.422076H0.749756C0.767072 1 0.774207 0.961783 0.77561 0.942675V0.807325C0.777053 0.743631 0.791844 0.731953 0.799059 0.734076H0.969813C0.996268 0.730255 1.00088 0.693206 0.999875 0.675159V0.0700637C0.999875 0.0254777 0.985045 0.00477707 0.977629 0H0.902473C0.854975 0 0.890448 0.138535 0.850165 0.138535H0.0204424C0.00408849 0.142357 0 0.180467 0 0.199045V0.410828C0 0.449045 0.0136283 0.46603 0.0204424 0.469745H0.0523086C0.0696245 0.471019 0.0735527 0.497877 0.0733523 0.511146V0.915605C0.0723903 0.983121 0.090588 1 0.0998072 1Z" />
+              </clipPath>
+            </defs>
+            <image
+              clipPath="url(#about-clip)"
+              preserveAspectRatio="xMidYMid slice"
+              width="100%"
+              height="100%"
+              href="/bg.jpeg"
+            />
+          </svg>
+        </motion.div>
+
+        {/* ── Mini stats strip ── */}
+        <motion.div
+          {...fadeUp(0.3)}
+          animate={isInView ? fadeUp(0.3).animate : fadeUp(0.3).initial}
+          className="flex flex-wrap gap-x-6 gap-y-2 items-center mb-12 text-sm"
+        >
+          {stats.map((s, i) => (
+            <React.Fragment key={i}>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[#D72638] font-bold">{s.value}</span>
+                <span className="text-zinc-500">{s.label}</span>
+              </div>
+              {i < stats.length - 1 && <span className="text-zinc-200 hidden sm:block">|</span>}
+            </React.Fragment>
+          ))}
+        </motion.div>
+
+        {/* ── Main grid ── */}
+        <div className="grid md:grid-cols-3 gap-10">
+
+          {/* Left: headline + description */}
+          <div className="md:col-span-2">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-[1.1] text-zinc-900 mb-8 tracking-tight">
+              {isInView && (
+                <VerticalCutReveal
+                  splitBy="words"
+                  staggerDuration={0.08}
+                  staggerFrom="first"
+                  transition={{ type: "spring", stiffness: 260, damping: 28, delay: 0.4 }}
+                >
+                  Building Elite Traders Through Discipline & Precision.
+                </VerticalCutReveal>
+              )}
+            </h2>
+
+            <motion.div
+              {...fadeUp(0.5)}
+              animate={isInView ? fadeUp(0.5).animate : fadeUp(0.5).initial}
+              className="grid sm:grid-cols-2 gap-6 text-zinc-600 text-sm leading-relaxed"
+            >
+              <p>
+                MonarkFX is an ISO 21008:2018 Certified Financial Market Academy. Since 2021, we've been transforming retail traders into institutional-grade professionals across Stocks, Forex, and Crypto.
+              </p>
+              <p>
+                Our curriculum is built on real Price Action, not theory. With 7+ expert mentors, 1,000+ live sessions yearly, and a 4.7★ Google rating — we deliver results that speak for themselves.
+              </p>
+            </motion.div>
+          </div>
+
+          {/* Right: brand + CTA */}
+          <div className="md:col-span-1 flex flex-col justify-between">
+            <motion.div
+              {...fadeUp(0.6)}
+              animate={isInView ? fadeUp(0.6).animate : fadeUp(0.6).initial}
+              className="text-right mb-6"
+            >
+              <p className="text-[#D72638] text-2xl font-black tracking-widest uppercase">MonarkFX</p>
+              <p className="text-zinc-500 text-sm mt-1">Financial Market Academy</p>
+            </motion.div>
+
+            <motion.div
+              {...fadeUp(0.7)}
+              animate={isInView ? fadeUp(0.7).animate : fadeUp(0.7).initial}
+              className="mb-6"
+            >
+              <p className="text-zinc-800 font-semibold text-sm mb-1">
+                Ready to master the markets?
+              </p>
+              <p className="text-zinc-500 text-xs">
+                Join our next batch. Limited seats available.
+              </p>
+            </motion.div>
+
+            <motion.div
+              {...fadeUp(0.8)}
+              animate={isInView ? fadeUp(0.8).animate : fadeUp(0.8).initial}
+            >
+              <Link href="/contact" className="no-underline">
+                <button
+                  className="group flex items-center gap-2 hover:gap-4 transition-all duration-300
+                             bg-zinc-900 hover:bg-black text-white text-sm font-bold
+                             px-6 py-3 rounded-xl border border-zinc-700
+                             shadow-lg shadow-zinc-900/20 cursor-pointer w-full justify-center md:w-auto md:justify-start"
+                >
+                  Contact Us
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+
+              <Link href={WHATSAPP_URL} target="_blank" className="no-underline mt-3 block">
+                <button
+                  className="group flex items-center gap-2 hover:gap-4 transition-all duration-300
+                             bg-[#D72638] hover:bg-[#C0202F] text-white text-sm font-bold
+                             px-6 py-3 rounded-xl border border-[#D72638]
+                             shadow-lg shadow-red-900/20 cursor-pointer w-full justify-center md:w-auto md:justify-start"
+                >
+                  Join via WhatsApp
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default AboutSection;
