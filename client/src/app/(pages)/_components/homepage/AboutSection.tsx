@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
@@ -17,7 +17,7 @@ const socials = [
 ];
 
 const stats = [
-  { value: "250+",  label: "Students Trained" },
+  { value: "1,000+",  label: "Students Trained" },
   { value: "7+",    label: "Expert Mentors" },
   { value: "2021",  label: "Established" },
   { value: "4.7★",  label: "Google Rating" },
@@ -221,3 +221,4 @@ const AboutSection = () => {
 };
 
 export default AboutSection;
+

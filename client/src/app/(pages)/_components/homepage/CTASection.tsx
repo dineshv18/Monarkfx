@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
@@ -9,7 +9,7 @@ const WHATSAPP_URL = `https://wa.me/918750475852?text=${encodeURIComponent("Hi M
 const ADVISOR_URL = `https://wa.me/918750475852?text=${encodeURIComponent("Hi MonarkFX Team,\n\nI'd like to speak with an advisor about your trading programs.\n\nThank you!")}`;
 
 const trust = [
-    { icon: TrendingUp, text: "250+ Traders Trained" },
+    { icon: TrendingUp, text: "1,000+ Traders Trained" },
     { icon: Award, text: "ISO 21008:2018 Certified" },
     { icon: Users, text: "7+ Expert Mentors" },
 ];
@@ -151,3 +151,4 @@ const CTASection = () => {
 };
 
 export default CTASection;
+

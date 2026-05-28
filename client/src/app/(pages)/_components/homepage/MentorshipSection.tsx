@@ -166,7 +166,7 @@ const MentorshipSection = () => {
                         <div className="flex items-center gap-6 mt-8 pt-8 border-t border-zinc-100 w-full">
                             {[
                                 { v: "7+", l: "Mentors" },
-                                { v: "250+", l: "Students" },
+                                { v: "1,000+", l: "Students" },
                                 { v: "4.7★", l: "Rating" },
                             ].map((s, i) => (
                                 <div key={i}>
@@ -197,5 +197,6 @@ const MentorshipSection = () => {
 };
 
 export default MentorshipSection;
+
 
 

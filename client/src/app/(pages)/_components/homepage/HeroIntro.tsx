@@ -29,7 +29,7 @@ function AvatarStack() {
             ))}
             <div className="relative w-11 h-11 rounded-full border-2 border-white flex items-center justify-center shrink-0 text-[10px] font-bold text-white"
                 style={{ zIndex: 0, background: "#D72638", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>
-                250+
+                1,000+
             </div>
         </div>
     );

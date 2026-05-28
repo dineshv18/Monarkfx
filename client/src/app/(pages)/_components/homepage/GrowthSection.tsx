@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
@@ -20,7 +20,7 @@ const chartData = [
 ];
 
 const stats = [
-    { value: "250+", label: "Students Trained" },
+    { value: "1,000+", label: "Students Trained" },
     { value: "7+", label: "Expert Mentors" },
     { value: "1,000+", label: "Live Sessions" },
     { value: "4.7★", label: "Google Rating" },
@@ -86,7 +86,7 @@ const GrowthSection = () => {
                         fontSize: "clamp(15px, 1.3vw, 18px)",
                         color: "#666", lineHeight: 1.8, maxWidth: 620,
                     }}>
-                        From our first batch in 2021 to over 250+ trained professionals —
+                        From our first batch in 2021 to over 1,000+ trained professionals —
                         MonarkFX has been growing with purpose, discipline, and results.
                     </p>
                 </motion.div>
@@ -201,3 +201,4 @@ const GrowthSection = () => {
 };
 
 export default GrowthSection;
+
