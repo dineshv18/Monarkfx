@@ -26,6 +26,18 @@ export default function RootLayout({
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="beforeInteractive"
         />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17830556034"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17830556034');
+          `}
+        </Script>
       </head>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased bg-[var(--color-bg-primary)] text-[var(--color-text-mid)] font-body overflow-x-hidden`}
