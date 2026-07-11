@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
@@ -287,9 +287,10 @@ const Footer = () => (
             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
             <span className="text-[#D72638] font-bold">LEGAL NOTICE:</span>{' '}
             All course enrollments — online or offline — are strictly{' '}
-            <span className="text-white font-semibold">NON-REFUNDABLE</span>.
-            Once enrolled, no refund shall be entertained under any circumstances,
-            in compliance with Indian education regulations and consumer protection norms.
+            <Link href="/refund-policy" className="text-white font-semibold hover:underline">
+              NON-REFUNDABLE
+            </Link>
+            . Once enrolled, no refund shall be entertained under any circumstances.
           </p>
         </div>
       </div>
