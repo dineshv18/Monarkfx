@@ -98,6 +98,7 @@ const nav = [
       { name: "Privacy Policy", href: "/privacy-policy" },
       { name: "Terms of Service", href: "/terms" },
       { name: "Disclaimer", href: "/disclaimer" },
+      { name: "Refund Policy", href: "/refund-policy" },
     ],
   },
 ];
@@ -276,6 +277,24 @@ const Footer = () => (
       <TextHoverEffect text="MonarkFX" />
     </div>
 
+    {/* ════ NON-REFUNDABLE NOTICE ══════════════════════════════════════ */}
+    <div className="relative" style={{ borderTop: "1px solid rgba(215,38,56,0.2)", background: "rgba(215,38,56,0.04)" }}>
+      <div className="max-w-[1120px] mx-auto px-5 sm:px-8 py-4 sm:py-5
+                      flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-center">
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#D72638] animate-pulse" />
+          <p className="text-zinc-400 text-[12px] sm:text-[13px] font-medium"
+            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+            <span className="text-[#D72638] font-bold">LEGAL NOTICE:</span>{' '}
+            All course enrollments — online or offline — are strictly{' '}
+            <span className="text-white font-semibold">NON-REFUNDABLE</span>.
+            Once enrolled, no refund shall be entertained under any circumstances,
+            in compliance with Indian education regulations and consumer protection norms.
+          </p>
+        </div>
+      </div>
+    </div>
+
     {/* ════ BOTTOM BAR ══════════════════════════════════════ */}
     <div className="relative" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(255,255,255,0.02)" }}>
       <div className="max-w-[1120px] mx-auto px-5 sm:px-8 py-5 sm:py-6
@@ -286,11 +305,18 @@ const Footer = () => (
           © {new Date().getFullYear()} MonarkFX Academy. All rights reserved.
         </p>
 
+        <a href="https://groxmedia.in" target="_blank" rel="noopener noreferrer"
+          className="text-zinc-600 hover:text-white text-[13px] font-medium no-underline transition-colors duration-200"
+          style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+          Designed &amp; Developed by <span className="text-[#D72638]">Grox Media</span>
+        </a>
+
         <div className="flex items-center gap-1">
           {[
             { name: "Privacy Policy", href: "/privacy-policy" },
             { name: "Terms", href: "/terms" },
             { name: "Disclaimer", href: "/disclaimer" },
+            { name: "Refund Policy", href: "/refund-policy" },
           ].map((l, i, arr) => (
             <React.Fragment key={l.name}>
               <Link href={l.href}

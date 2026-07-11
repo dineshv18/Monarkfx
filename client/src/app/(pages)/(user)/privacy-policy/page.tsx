@@ -53,6 +53,13 @@ export default function PrivacyPolicy() {
           >
             Disclaimer
           </Link>
+          <span className="text-muted-foreground">•</span>
+          <Link
+            href="/refund-policy"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            Refund Policy
+          </Link>
         </div>
       </div>
 

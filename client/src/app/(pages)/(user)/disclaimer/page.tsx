@@ -54,6 +54,13 @@ export default function Disclaimer() {
                     <span className="text-sm font-medium text-primary">
                         Disclaimer
                     </span>
+                    <span className="text-muted-foreground">•</span>
+                    <Link
+                        href="/refund-policy"
+                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                    >
+                        Refund Policy
+                    </Link>
                 </div>
             </div>
 
