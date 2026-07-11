@@ -281,18 +281,14 @@ const Footer = () => (
     <div className="relative" style={{ borderTop: "1px solid rgba(215,38,56,0.2)", background: "rgba(215,38,56,0.04)" }}>
       <div className="max-w-[1120px] mx-auto px-5 sm:px-8 py-4 sm:py-5
                       flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-center">
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#D72638] animate-pulse" />
-          <p className="text-zinc-400 text-[12px] sm:text-[13px] font-medium"
+        <Link href="/refund-policy" className="flex items-center justify-center gap-2 group hover:underline decoration-zinc-500/30">
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#D72638] animate-pulse shrink-0" />
+          <p className="text-zinc-400 text-[12px] sm:text-[13px] font-medium text-center"
             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-            <span className="text-[#D72638] font-bold">LEGAL NOTICE:</span>{' '}
-            All course enrollments — online or offline — are strictly{' '}
-            <Link href="/refund-policy" className="text-white font-semibold hover:underline">
-              NON-REFUNDABLE
-            </Link>
-            . Once enrolled, no refund shall be entertained under any circumstances.
+            <span className="text-[#D72638] font-bold">NOTE:</span>{' '}
+            All services and courses (online or offline) are strictly non-refundable once purchased or enrolled.
           </p>
-        </div>
+        </Link>
       </div>
     </div>
 
