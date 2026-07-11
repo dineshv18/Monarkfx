@@ -150,7 +150,7 @@ export default function RefundPolicy() {
               While our no-refund policy after enrollment is absolute, the following limited scenarios may be considered on a case-by-case basis at the sole discretion of Monark FX:
             </p>
             <ul className="list-disc pl-6 space-y-2">
-              <li><strong className="text-foreground">Technical Failure:</strong> If a student is unable to access any course content due to a proven and verifiable technical failure on our platform that remains unresolved for more than 30 consecutive days, and no alternative solution can be provided.</li>
+
               <li><strong className="text-foreground">Course Non-Delivery:</strong> If a course that has been fully paid for is cancelled by Monark FX and no alternative course of equivalent value is offered.</li>
             </ul>
             <p className="mt-4">
