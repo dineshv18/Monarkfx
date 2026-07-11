@@ -75,7 +75,7 @@ export default function RefundPolicy() {
           Refund Policy
         </h1>
         <p className="text-muted-foreground mb-8">
-          Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+          Last Updated: June 11, 2026
         </p>
 
         <div className="space-y-8 text-muted-foreground leading-relaxed">
