@@ -7,7 +7,7 @@ import axios from "axios";
 import {
   Mail, Phone, MapPin, Clock, Send, CheckCircle2, ArrowRight,
 } from "lucide-react";
-import { FaWhatsapp, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { FaWhatsapp, FaInstagram, FaYoutube, FaTelegramPlane, FaLinkedin } from "react-icons/fa";
 import PageHero from "../../_components/PageHero";
 import dynamic from "next/dynamic";
 const ContactMap = dynamic(() => import("../../_components/ContactMap"), { ssr: false });
@@ -20,9 +20,11 @@ const CONTACT_INFO = [
 ];
 
 const SOCIALS = [
-  { Icon: FaInstagram, label: "Instagram", href: "https://www.instagram.com/monarkfx" },
-  { Icon: FaTwitter,   label: "Twitter",   href: "https://twitter.com/monarkfx" },
-  { Icon: FaLinkedin,  label: "LinkedIn",  href: "https://www.linkedin.com/company/monarkfx" },
+  { Icon: FaInstagram,     label: "Instagram — MonarkFX",       href: "https://www.instagram.com/monark__fx/" },
+  { Icon: FaInstagram,     label: "Instagram — Monark Traders", href: "https://www.instagram.com/monarktraders/" },
+  { Icon: FaYoutube,       label: "YouTube",                    href: "https://www.youtube.com/@MonarkFX" },
+  { Icon: FaTelegramPlane, label: "Telegram",                   href: "https://t.me/+1002651091579" },
+  { Icon: FaLinkedin,      label: "LinkedIn",                   href: "https://www.linkedin.com/company/monarkfx/" },
 ];
 
 const inputCls =

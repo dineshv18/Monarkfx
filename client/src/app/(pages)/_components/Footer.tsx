@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Instagram, Twitter, Mail, Phone, Youtube, Send,
+  Instagram, Mail, Phone, Youtube, Send, Linkedin,
   MapPin, ArrowUpRight, Shield,
 } from "lucide-react";
 import Image from "next/image";
@@ -104,10 +104,11 @@ const nav = [
 ];
 
 const socials = [
-  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/monarkfx" },
-  { name: "YouTube", icon: Youtube, href: "https://www.youtube.com/" },
-  { name: "Telegram", icon: Send, href: "https://t.me/" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com/monarkfx" },
+  { name: "Instagram — MonarkFX", icon: Instagram, href: "https://www.instagram.com/monark__fx/" },
+  { name: "Instagram — Monark Traders", icon: Instagram, href: "https://www.instagram.com/monarktraders/" },
+  { name: "YouTube", icon: Youtube, href: "https://www.youtube.com/@MonarkFX" },
+  { name: "Telegram", icon: Send, href: "https://t.me/+1002651091579" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/monarkfx/" },
 ];
 
 const contact = [
