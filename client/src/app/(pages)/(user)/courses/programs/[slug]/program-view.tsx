@@ -361,7 +361,7 @@ function StickyEnrollBar({
                                 </p>
                             </div>
                             <Link
-                                href={enrollUrl(program.name, mode)}
+                                href={enrollUrl(program.name, mode, price)}
                                 target="_blank"
                                 className="no-underline shrink-0"
                             >
@@ -515,7 +515,7 @@ export default function ProgramView({
 
                             <div className="flex flex-col sm:flex-row gap-3">
                                 <Link
-                                    href={enrollUrl(program.name, mode)}
+                                    href={enrollUrl(program.name, mode, price)}
                                     target="_blank"
                                     className="no-underline"
                                 >
@@ -1029,7 +1029,7 @@ export default function ProgramView({
                     </div>
 
                     <Link
-                        href={enrollUrl(program.name, mode)}
+                        href={enrollUrl(program.name, mode, price)}
                         target="_blank"
                         className="no-underline block w-full sm:w-auto sm:inline-block"
                     >
