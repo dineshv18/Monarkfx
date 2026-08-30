@@ -10,8 +10,7 @@ import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 const WHATSAPP_URL = "https://wa.me/918750475852?text=Hi,%20I'd%20like%20to%20learn%20more%20about%20MonarkFX%20mentorship";
 
 const socials = [
-  { name: "Instagram — MonarkFX",       icon: Instagram, href: "https://www.instagram.com/monark__fx/",       color: "#E1306C" },
-  { name: "Instagram — Monark Traders", icon: Instagram, href: "https://www.instagram.com/monarktraders/",    color: "#E1306C" },
+  { name: "Instagram",                  icon: Instagram, href: "https://www.instagram.com/monarktraders/",    color: "#E1306C" },
   { name: "YouTube",                    icon: Youtube,   href: "https://www.youtube.com/@MonarkFX",           color: "#FF0000" },
   { name: "Telegram",                   icon: Send,      href: "https://t.me/+1002651091579",                 color: "#229ED9" },
   { name: "LinkedIn",                   icon: Linkedin,  href: "https://www.linkedin.com/company/monarkfx/",  color: "#0A66C2" },

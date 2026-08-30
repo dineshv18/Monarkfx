@@ -104,8 +104,7 @@ const nav = [
 ];
 
 const socials = [
-  { name: "Instagram — MonarkFX", icon: Instagram, href: "https://www.instagram.com/monark__fx/" },
-  { name: "Instagram — Monark Traders", icon: Instagram, href: "https://www.instagram.com/monarktraders/" },
+  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/monarktraders/" },
   { name: "YouTube", icon: Youtube, href: "https://www.youtube.com/@MonarkFX" },
   { name: "Telegram", icon: Send, href: "https://t.me/+1002651091579" },
   { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/monarkfx/" },

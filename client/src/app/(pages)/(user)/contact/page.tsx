@@ -20,8 +20,7 @@ const CONTACT_INFO = [
 ];
 
 const SOCIALS = [
-  { Icon: FaInstagram,     label: "Instagram — MonarkFX",       href: "https://www.instagram.com/monark__fx/" },
-  { Icon: FaInstagram,     label: "Instagram — Monark Traders", href: "https://www.instagram.com/monarktraders/" },
+  { Icon: FaInstagram,     label: "Instagram",                  href: "https://www.instagram.com/monarktraders/" },
   { Icon: FaYoutube,       label: "YouTube",                    href: "https://www.youtube.com/@MonarkFX" },
   { Icon: FaTelegramPlane, label: "Telegram",                   href: "https://t.me/+1002651091579" },
   { Icon: FaLinkedin,      label: "LinkedIn",                   href: "https://www.linkedin.com/company/monarkfx/" },
