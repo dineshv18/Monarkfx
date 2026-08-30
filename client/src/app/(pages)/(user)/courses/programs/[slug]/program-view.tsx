@@ -305,7 +305,15 @@ function FaqAccordion({ program }: { program: Program }) {
 }
 
 /* ── Sticky enroll bar (mobile + desktop) ── */
-function StickyEnrollBar({ program }: { program: Program }) {
+function StickyEnrollBar({
+    program,
+    mode,
+    price,
+}: {
+    program: Program;
+    mode: "Online" | "Offline";
+    price: string;
+}) {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
@@ -347,11 +355,11 @@ function StickyEnrollBar({ program }: { program: Program }) {
                                     className="text-white/45 text-[11px] sm:text-[12px]"
                                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
                                 >
-                                    {program.duration} · from ₹{program.priceOnline} + GST
+                                    {mode} · {program.duration} · ₹{price} + GST
                                 </p>
                             </div>
                             <Link
-                                href={enrollUrl(program.name)}
+                                href={enrollUrl(program.name, mode)}
                                 target="_blank"
                                 className="no-underline shrink-0"
                             >
@@ -384,6 +392,9 @@ export default function ProgramView({
     program: Program;
     related: Program[];
 }) {
+    const [mode, setMode] = useState<"Online" | "Offline">("Offline");
+    const price = mode === "Online" ? program.priceOnline : program.priceOffline;
+
     return (
         <main className="bg-white pb-20 sm:pb-0">
             {/* ═══ HERO ═══ */}
@@ -440,26 +451,69 @@ export default function ProgramView({
                                 {program.tagline}
                             </p>
 
-                            <div className="flex flex-wrap items-center gap-4 mb-8">
-                                <div className="flex items-center gap-2 text-white/70 text-[13px] font-semibold">
-                                    <Clock className="w-4 h-4 text-[#D72638]" />
-                                    {program.duration}
-                                </div>
-                                <div className="w-px h-4 bg-white/15" />
-                                <div className="flex items-center gap-2 text-white/70 text-[13px] font-semibold">
-                                    <Wifi className="w-4 h-4 text-[#D72638]" />
-                                    Online ₹{program.priceOnline}
-                                </div>
-                                <div className="w-px h-4 bg-white/15" />
-                                <div className="flex items-center gap-2 text-white/70 text-[13px] font-semibold">
-                                    <MapPin className="w-4 h-4 text-[#D72638]" />
-                                    Offline ₹{program.priceOffline}
-                                </div>
+                            <div className="flex items-center gap-2 text-white/70 text-[13px] font-semibold mb-5">
+                                <Clock className="w-4 h-4 text-[#D72638]" />
+                                {program.duration} intensive program
                             </div>
+
+                            {/* Mode toggle */}
+                            <div
+                                className="inline-flex p-1 rounded-xl mb-4"
+                                style={{
+                                    background: "rgba(255,255,255,0.06)",
+                                    border: "1px solid rgba(255,255,255,0.12)",
+                                }}
+                            >
+                                {(["Offline", "Online"] as const).map((m) => {
+                                    const activeMode = mode === m;
+                                    return (
+                                        <button
+                                            key={m}
+                                            type="button"
+                                            onClick={() => setMode(m)}
+                                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-bold cursor-pointer border-none transition-all duration-200"
+                                            style={{
+                                                fontFamily: "var(--font-dm-sans), sans-serif",
+                                                background: activeMode ? "#D72638" : "transparent",
+                                                color: activeMode ? "#fff" : "rgba(255,255,255,0.55)",
+                                            }}
+                                        >
+                                            {m === "Online" ? (
+                                                <Wifi className="w-3.5 h-3.5" />
+                                            ) : (
+                                                <MapPin className="w-3.5 h-3.5" />
+                                            )}
+                                            {m}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Dynamic price */}
+                            <div className="flex items-baseline gap-2 mb-1">
+                                <span
+                                    className="font-black text-white leading-none"
+                                    style={{
+                                        fontFamily: "var(--font-playfair), serif",
+                                        fontSize: "clamp(30px, 4vw, 42px)",
+                                    }}
+                                >
+                                    ₹{price}
+                                </span>
+                                <span className="text-white/45 text-[13px] font-semibold">
+                                    + GST
+                                </span>
+                            </div>
+                            <p
+                                className="text-white/40 text-[12px] mb-8"
+                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+                            >
+                                {mode} batch · interest-free EMI available
+                            </p>
 
                             <div className="flex flex-col sm:flex-row gap-3">
                                 <Link
-                                    href={enrollUrl(program.name)}
+                                    href={enrollUrl(program.name, mode)}
                                     target="_blank"
                                     className="no-underline"
                                 >
@@ -473,7 +527,7 @@ export default function ProgramView({
                                             boxShadow: "0 6px 20px rgba(37,211,102,0.3)",
                                         }}
                                     >
-                                        <FaWhatsapp size={17} /> Enroll via WhatsApp
+                                        <FaWhatsapp size={17} /> Enroll {mode} — ₹{price}
                                     </motion.button>
                                 </Link>
                                 <a href="#curriculum" className="no-underline">
@@ -894,7 +948,7 @@ export default function ProgramView({
                         Ready to start {program.shortName}?
                     </h2>
                     <p
-                        className="text-white/50 leading-[1.75] font-light mb-8"
+                        className="text-white/50 leading-[1.75] font-light mb-6"
                         style={{
                             fontFamily: "var(--font-dm-sans), sans-serif",
                             fontSize: "clamp(15px, 1.2vw, 18px)",
@@ -903,10 +957,44 @@ export default function ProgramView({
                         Talk to our team on WhatsApp for the next batch date, fees and EMI
                         options.
                     </p>
+
+                    {/* Mode toggle (final CTA) */}
+                    <div
+                        className="inline-flex p-1 rounded-xl mb-6"
+                        style={{
+                            background: "rgba(255,255,255,0.06)",
+                            border: "1px solid rgba(255,255,255,0.12)",
+                        }}
+                    >
+                        {(["Offline", "Online"] as const).map((m) => {
+                            const activeMode = mode === m;
+                            return (
+                                <button
+                                    key={m}
+                                    type="button"
+                                    onClick={() => setMode(m)}
+                                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-bold cursor-pointer border-none transition-all duration-200"
+                                    style={{
+                                        fontFamily: "var(--font-dm-sans), sans-serif",
+                                        background: activeMode ? "#D72638" : "transparent",
+                                        color: activeMode ? "#fff" : "rgba(255,255,255,0.55)",
+                                    }}
+                                >
+                                    {m === "Online" ? (
+                                        <Wifi className="w-3.5 h-3.5" />
+                                    ) : (
+                                        <MapPin className="w-3.5 h-3.5" />
+                                    )}
+                                    {m}
+                                </button>
+                            );
+                        })}
+                    </div>
+
                     <Link
-                        href={enrollUrl(program.name)}
+                        href={enrollUrl(program.name, mode)}
                         target="_blank"
-                        className="no-underline inline-block w-full sm:w-auto"
+                        className="no-underline block w-full sm:w-auto sm:inline-block"
                     >
                         <motion.button
                             whileHover={{ y: -3, boxShadow: "0 20px 56px rgba(37,211,102,0.5)" }}
@@ -918,13 +1006,13 @@ export default function ProgramView({
                                 boxShadow: "0 10px 36px rgba(37,211,102,0.32)",
                             }}
                         >
-                            <FaWhatsapp size={19} /> Enroll via WhatsApp
+                            <FaWhatsapp size={19} /> Enroll {mode} — ₹{price} + GST
                         </motion.button>
                     </Link>
                 </div>
             </section>
 
-            <StickyEnrollBar program={program} />
+            <StickyEnrollBar program={program} mode={mode} price={price} />
         </main>
     );
 }
