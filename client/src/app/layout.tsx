@@ -6,6 +6,7 @@ import Script from "next/script";
 import TrackingScripts from "@/components/TrackingScripts";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://monarkfx.com"),
   title: "MonarkFX - Global Trading Excellence",
   description:
     "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",

@@ -167,7 +167,7 @@ const MentorshipSection = () => {
                             {[
                                 { v: "7+", l: "Mentors" },
                                 { v: "1,000+", l: "Students" },
-                                { v: "4.7★", l: "Rating" },
+                                { v: "4.9★", l: "Rating" },
                             ].map((s, i) => (
                                 <div key={i}>
                                     <p className="font-black text-zinc-900 leading-none text-[22px]"

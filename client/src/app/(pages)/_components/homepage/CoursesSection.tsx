@@ -5,26 +5,27 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight, Clock, Layout, Globe, Coins, Check } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import Image from "next/image";
+import Link from "next/link";
 
 const WA = "https://wa.me/918750475852?text=";
 
 const COURSES = [
     {
-        id: "indian", code: "IMM", name: "Indian Market Mastery",
+        id: "indian", slug: "indian-market-mastery", code: "IMM", name: "Indian Market Mastery",
         level: "Nifty · BankNifty · F&O · Equity",
         icon: Layout, tag: "Most Popular", tagColor: "#D72638", image: "/courses/indian.png",
         desc: "Dominate Nifty, Bank Nifty, F&O and Equity Stocks using Smart Money & ICT frameworks.",
         features: ["2 Month Intensive Program", "3 Sessions/Week with Mentor", "Nifty/BankNifty Strategies", "Risk Management Framework", "1 Month Free Trading Room"],
     },
     {
-        id: "forex", code: "FGS", name: "Forex & Gold Specialist",
+        id: "forex", slug: "forex-gold-specialist", code: "FGS", name: "Forex & Gold Specialist",
         level: "EUR/USD · GBP/JPY · XAUUSD",
         icon: Globe, tag: "Trending", tagColor: "#F59E0B", image: "/courses/forex.png",
         desc: "Master currency pairs and Gold with institutional order flow, session timing and macro setups.",
         features: ["2 Month Intensive Program", "3 Sessions/Week with Mentor", "Forex Pairs & Gold Strategies", "Global Session Timing Mastery", "1 Month Free Trading Room"],
     },
     {
-        id: "crypto", code: "CIE", name: "Crypto Institutional Edge",
+        id: "crypto", slug: "crypto-institutional-edge", code: "CIE", name: "Crypto Institutional Edge",
         level: "BTC · ETH · Altcoins · Futures",
         icon: Coins, tag: "Advanced", tagColor: "#8B5CF6", image: "/courses/crypto.png",
         desc: "Dominate Spot & Futures across BTC, ETH and high-alpha altcoins with on-chain analysis.",
@@ -46,7 +47,7 @@ function getWAMsg(selected: string[], mode: string, price: string) {
 const CoursesSection = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-80px" });
-    const [selected, setSelected] = useState<string[]>([]);
+    const [selected, setSelected] = useState<string[]>(["forex", "crypto"]);
     const [mode, setMode] = useState<"Online" | "Offline">("Offline");
 
     const toggle = (id: string) => {
@@ -106,7 +107,7 @@ const CoursesSection = () => {
                 </motion.div>
 
                 {/* Course Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6" style={{ marginBottom: 32 }}>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch" style={{ marginBottom: 32 }}>
                     {COURSES.map((course, i) => {
                         const isSelected = selected.includes(course.id);
                         const Icon = course.icon;
@@ -116,13 +117,12 @@ const CoursesSection = () => {
                                 initial={{ opacity: 0, y: 28 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                                 transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                                onClick={() => toggle(course.id)}
-                                className="cursor-pointer"
+                                className="h-full"
                             >
                                 <motion.div
                                     whileHover={{ y: -5 }}
                                     transition={{ duration: 0.22 }}
-                                    className="rounded-2xl overflow-hidden relative"
+                                    className="rounded-2xl overflow-hidden relative h-full flex flex-col"
                                     style={{
                                         border: isSelected ? "2px solid #D72638" : "1.5px solid #E8E8E8",
                                         boxShadow: isSelected
@@ -169,12 +169,12 @@ const CoursesSection = () => {
                                     </div>
 
                                     {/* Content below image */}
-                                    <div className="px-4 pt-3 pb-4">
-                                        {/* Select indicator + tag row */}
+                                    <div className="px-4 pt-3 pb-4 flex flex-col flex-1">
+                                        {/* tag row */}
                                         <div className="flex items-center justify-between mb-3">
                                             <span className="text-[11px] font-bold uppercase tracking-[0.08em]"
                                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: isSelected ? "#D72638" : "#AAA" }}>
-                                                {isSelected ? "✓ Selected" : "Tap to Select"}
+                                                {isSelected ? "✓ Selected" : "Not selected"}
                                             </span>
                                             <span className="text-[9px] font-extrabold uppercase tracking-[0.06em] px-2 py-0.5 rounded-full"
                                                 style={{ color: course.tagColor, background: `${course.tagColor}18`, border: `1px solid ${course.tagColor}40` }}>
@@ -189,7 +189,7 @@ const CoursesSection = () => {
                                         </p>
 
                                         {/* Features */}
-                                        <div className="flex flex-col gap-1.5">
+                                        <div className="flex flex-col gap-1.5 mb-4">
                                             {course.features.map((f, fi) => (
                                                 <div key={fi} className="flex items-center gap-2">
                                                     <div className="w-3.5 h-3.5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
@@ -201,6 +201,35 @@ const CoursesSection = () => {
                                                     </span>
                                                 </div>
                                             ))}
+                                        </div>
+
+                                        {/* Action buttons */}
+                                        <div className="flex gap-2 mt-auto pt-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => toggle(course.id)}
+                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-bold border cursor-pointer transition-all duration-200"
+                                                style={{
+                                                    fontFamily: "var(--font-dm-sans), sans-serif",
+                                                    background: isSelected ? "#D72638" : "#fff",
+                                                    color: isSelected ? "#fff" : "#0A0A0A",
+                                                    borderColor: isSelected ? "#D72638" : "#E0E0E0",
+                                                }}
+                                            >
+                                                {isSelected ? <><Check className="w-3.5 h-3.5" strokeWidth={3} /> Selected</> : "Select"}
+                                            </button>
+                                            <Link
+                                                href={`/courses/programs/${course.slug}`}
+                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-bold no-underline transition-all duration-200"
+                                                style={{
+                                                    fontFamily: "var(--font-dm-sans), sans-serif",
+                                                    background: "#0A0A0A",
+                                                    color: "#fff",
+                                                }}
+                                            >
+                                                View Course
+                                                <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                                            </Link>
                                         </div>
                                     </div>
                                 </motion.div>

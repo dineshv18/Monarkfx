@@ -20,7 +20,7 @@ const stats = [
   { value: "1,000+",  label: "Students Trained" },
   { value: "7+",    label: "Expert Mentors" },
   { value: "2021",  label: "Established" },
-  { value: "4.7★",  label: "Google Rating" },
+  { value: "4.9★",  label: "Google Rating" },
 ];
 
 const fadeUp = (delay = 0) => ({
@@ -107,7 +107,7 @@ const AboutSection = () => {
               preserveAspectRatio="xMidYMid slice"
               width="100%"
               height="100%"
-              href="/bg.jpeg"
+              href="/team-monarkfx.jpeg"
             />
           </svg>
         </motion.div>
@@ -156,7 +156,7 @@ const AboutSection = () => {
                 MonarkFX is an ISO 21008:2018 Certified Financial Market Academy. Since 2021, we've been transforming retail traders into institutional-grade professionals across Stocks, Forex, and Crypto.
               </p>
               <p>
-                Our curriculum is built on real Price Action, not theory. With 7+ expert mentors, 1,000+ live sessions yearly, and a 4.7★ Google rating — we deliver results that speak for themselves.
+                Our curriculum is built on real Price Action, not theory. With 7+ expert mentors, 1,000+ live sessions yearly, and a 4.9★ Google rating — we deliver results that speak for themselves.
               </p>
             </motion.div>
           </div>

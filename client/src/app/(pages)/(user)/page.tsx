@@ -15,16 +15,39 @@ import CTASection from "../_components/homepage/CTASection";
 export default function Home() {
   return (
     <>
+      {/* 1. Hook — headline + one-line credibility */}
       <HeroIntro />
+
+      {/* 2. Visual hook — hero slider / gallery */}
       <HeroSection />
+
+      {/* 3. Instant proof numbers */}
       <StatsSection />
-      <AboutSection />
-      <WhyChooseUs />
-      {/* <MentorshipSection /> */}
+
+
+      {/* 4. THE PRODUCT — "Choose Your Market" */}
       <CoursesSection />
+
+      {/* 5. Pricing straight after — no hunting for cost */}
       <PricingPreview />
+
+      {/* 6. Best-value combo — the upsell right where price is on their mind */}
       <BundleOffer />
+
+
+
+      {/* 8. Who runs it — brand story */}
+      <AboutSection />
+
+      {/* 9. Social proof — real student reviews close the doubt */}
       <TestimonialsSection />
+
+      {/* 7. Why us over any other institute — differentiators, ISO badge */}
+      <WhyChooseUs />
+
+      {/* <MentorshipSection /> */}
+
+      {/* 10. Final push to enroll */}
       <CTASection />
       <div className="h-24 md:hidden" />
     </>

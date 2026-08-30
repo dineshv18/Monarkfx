@@ -40,7 +40,7 @@ const STATS = [
     { label: "STUDENTS TRAINED", value: "1,000+", emoji: "🎓" },
     { label: "EXPERT MENTORS", value: "7+", emoji: "👨‍💼" },
     { label: "LIVE SESSIONS YEARLY", value: "1,000+", emoji: "📈" },
-    { label: "GOOGLE RATING", value: "4.7★", emoji: "⭐" },
+    { label: "GOOGLE RATING", value: "4.9★", emoji: "⭐" },
     { label: "ISO CERTIFIED ACADEMY", value: "21008:2018", emoji: "🏆" },
     { label: "YEARS OF EXCELLENCE", value: "6+", emoji: "🚀" },
 ];

@@ -190,7 +190,7 @@ const WhyChooseUs = () => {
                         <div className="flex-1 flex flex-col items-center justify-center text-center gap-2">
                             <p className="text-[#D72638] font-black leading-none"
                                 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(52px, 6vw, 72px)" }}>
-                                <CounterAnim target={250} suffix="+" />
+                                <CounterAnim target={1000} suffix="+" />
                             </p>
                             <p className="text-zinc-400 text-[11px] font-bold uppercase tracking-[0.15em]"
                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -287,7 +287,7 @@ const WhyChooseUs = () => {
                                 <div>
                                     <p className="text-[#D72638] font-black text-[22px] leading-none"
                                         style={{ fontFamily: "var(--font-playfair), serif" }}>
-                                        4.7★
+                                        4.9★
                                     </p>
                                     <p className="text-zinc-500 text-[11px] uppercase tracking-[0.1em] font-bold mt-1"
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>

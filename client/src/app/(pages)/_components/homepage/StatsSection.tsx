@@ -11,7 +11,7 @@ const stats = [
     { value: 7, suffix: "+", label: "Expert Mentors", sub: "Industry veterans", icon: Users, isDecimal: false, isIncrease: true },
     { value: 1000, suffix: "+", label: "Live Sessions", sub: "Conducted yearly", icon: Video, isDecimal: false, isIncrease: true },
     { value: 1000, suffix: "+", label: "Students Trained", sub: "Across India", icon: TrendingUp, isDecimal: false, isIncrease: true },
-    { value: 4.7, suffix: "★", label: "Google Rating", sub: "Verified reviews", icon: Star, isDecimal: true, isIncrease: true },
+    { value: 4.9, suffix: "★", label: "Google Rating", sub: "Verified reviews", icon: Star, isDecimal: true, isIncrease: true },
 ];
 
 const useCounter = (end: number, active: boolean, isDecimal?: boolean, duration = 1800) => {

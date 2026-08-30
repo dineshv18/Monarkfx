@@ -23,7 +23,7 @@ const stats = [
     { value: "1,000+", label: "Students Trained" },
     { value: "7+", label: "Expert Mentors" },
     { value: "1,000+", label: "Live Sessions" },
-    { value: "4.7★", label: "Google Rating" },
+    { value: "4.9★", label: "Google Rating" },
 ];
 
 const GrowthSection = () => {

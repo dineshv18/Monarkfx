@@ -21,7 +21,7 @@ const getEnrollUrl = (course: string) =>
 /* ─── DATA ─────────────────────────────────────────────────── */
 const mentorshipBatches = [
     {
-        id: "indian", title: "Indian Market Mastery", icon: Layout,
+        id: "indian", slug: "indian-market-mastery", title: "Indian Market Mastery", icon: Layout,
         image: "/courses/indian.png",
         desc: "Dominate Nifty, Bank Nifty, F&O, and Equity Stocks with institutional precision.",
         options: [
@@ -38,7 +38,7 @@ const mentorshipBatches = [
         ],
     },
     {
-        id: "forex", title: "Forex & Gold Specialist", icon: Globe,
+        id: "forex", slug: "forex-gold-specialist", title: "Forex & Gold Specialist", icon: Globe,
         image: "/courses/forex.png",
         desc: "Master EUR/USD, GBP/JPY, and XAUUSD with institutional order flow concepts.",
         options: [
@@ -55,7 +55,7 @@ const mentorshipBatches = [
         ],
     },
     {
-        id: "crypto", title: "Crypto Institutional Edge", icon: Coins,
+        id: "crypto", slug: "crypto-institutional-edge", title: "Crypto Institutional Edge", icon: Coins,
         image: "/courses/crypto.png",
         desc: "Dominate Spot & Futures across BTC, ETH, and high-alpha altcoin projects.",
         options: [
@@ -110,10 +110,11 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
             onHoverStart={() => setHovered(true)}
             onHoverEnd={() => setHovered(false)}
         >
+            <Link href={`/courses/programs/${batch.slug}`} className="no-underline block h-full">
             <motion.div
                 whileHover={{ y: -8 }}
                 transition={{ duration: 0.28 }}
-                className="h-full flex flex-col rounded-2xl bg-white relative overflow-hidden"
+                className="h-full flex flex-col rounded-2xl bg-white relative overflow-hidden cursor-pointer"
                 style={{
                     border: hovered ? "1.5px solid rgba(215,38,56,0.32)" : "1.5px solid #EBEBEB",
                     boxShadow: hovered ? "0 28px 64px rgba(0,0,0,0.07), 0 0 0 4px rgba(215,38,56,0.03)" : "0 8px 28px rgba(0,0,0,0.03)",
@@ -177,7 +178,7 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                         {[batch.options[1], batch.options[0]].map((o, i) => {
                             const actualIdx = i === 0 ? 1 : 0;
                             return (
-                                <button key={o.label} onClick={() => setMode(actualIdx)}
+                                <button key={o.label} onClick={(e) => { e.preventDefault(); setMode(actualIdx); }}
                                     className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] text-[12px] font-bold cursor-pointer transition-all duration-200 border-none"
                                     style={{
                                         fontFamily: "var(--font-dm-sans), sans-serif",
@@ -240,22 +241,17 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                         ))}
                     </div>
 
-                    {/* WhatsApp CTA */}
-                    <Link href={getEnrollUrl(`${batch.title} — ${opt.label}`)} target="_blank" className="no-underline">
-                        <motion.button
-                            whileHover={{ y: -2, boxShadow: "0 12px 32px rgba(37,211,102,0.4)" }}
-                            whileTap={{ scale: 0.97 }}
-                            className="w-full py-3.5 rounded-2xl flex items-center justify-center gap-2.5 font-bold text-[14px] border-none cursor-pointer transition-all duration-200"
-                            style={{
-                                fontFamily: "var(--font-dm-sans), sans-serif",
-                                background: "#25D366",
-                                color: "#fff",
-                                boxShadow: "0 6px 20px rgba(37,211,102,0.28)",
-                            }}>
-                            <FaWhatsapp size={17} />
-                            Enroll via WhatsApp
-                        </motion.button>
-                    </Link>
+                    {/* View details CTA — whole card links to the SEO course page */}
+                    <div
+                        className="w-full py-3.5 rounded-2xl flex items-center justify-center gap-2 font-bold text-[14px] transition-all duration-200"
+                        style={{
+                            fontFamily: "var(--font-dm-sans), sans-serif",
+                            background: hovered ? "#D72638" : "#0A0A0A",
+                            color: "#fff",
+                        }}>
+                        View Course Details
+                        <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
+                    </div>
 
                     {/* Bottom bar */}
                     <div className="mt-4 h-[3px] rounded-full"
@@ -268,6 +264,7 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                         }} />
                 </div>
             </motion.div>
+            </Link>
         </motion.div>
     );
 };
@@ -775,7 +772,7 @@ const CoursesPage = () => {
                         style={{ background: "#F8F8F8", border: "1px solid #EEEEEE" }}>
                         {[
                             { value: "1,000+", label: "Students" },
-                            { value: "4.7★", label: "Google Rating" },
+                            { value: "4.9★", label: "Google Rating" },
                             { value: "ISO", label: "Certified" },
                             { value: "₹10Cr+", label: "PnL Generated" },
                         ].map((s, i) => (

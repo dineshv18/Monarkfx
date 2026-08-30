@@ -171,7 +171,7 @@ const AboutPage = () => {
                 transition={{ duration: 0.8, delay: 0.3 }}>
                 <motion.div className="rounded-2xl overflow-hidden shadow-2xl"
                   whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}>
-                  <img src="/bg.jpeg" alt="MonarkFX Academy"
+                  <img src="/team-monarkfx.jpeg" alt="MonarkFX Academy"
                     className="w-full h-[420px] object-cover object-center" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent flex items-end justify-center p-5">
                     <Link href="/courses" className="no-underline">
@@ -238,7 +238,7 @@ const AboutPage = () => {
               { icon: Award,      value: "1,000+",       label: "Students Trained" },
               { icon: Users,      value: "7+",         label: "Expert Mentors" },
               { icon: Calendar,   value: "2021",       label: "Established" },
-              { icon: TrendingUp, value: "4.7★",       label: "Google Rating" },
+              { icon: TrendingUp, value: "4.9★",       label: "Google Rating" },
             ].map((s, i) => {
               const Icon = s.icon;
               return (

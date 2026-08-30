@@ -24,7 +24,7 @@ export default function FuturisticHero({
   className,
   ctaText = "Get Started",
   ctaLink,
-  backgroundImage = "/bg.jpeg",
+  backgroundImage = "/team-monarkfx.jpeg",
   onCtaClick,
 }: FuturisticHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);

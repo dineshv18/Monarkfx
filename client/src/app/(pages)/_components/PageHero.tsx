@@ -1,36 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, CSSProperties } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
 
-/* ── Cybercore animated beam background ── */
+/* ── Cybercore grid background (grid only, no glow) ── */
 function CybercoreBackground() {
-    const [beams, setBeams] = useState<Array<{
-        id: number;
-        type: "primary" | "secondary";
-        style: CSSProperties;
-    }>>([]);
-
-    useEffect(() => {
-        const generated = Array.from({ length: 70 }).map((_, i) => {
-            const dur = Math.random() * 3 + 5;
-            return {
-                id: i,
-                type: (Math.random() < 0.15 ? "secondary" : "primary") as "primary" | "secondary",
-                style: {
-                    left: `${Math.random() * 100}%`,
-                    width: `${Math.floor(Math.random() * 2) + 1}px`,
-                    animationDelay: `${Math.random() * 6}s`,
-                    animationDuration: `${dur}s, ${dur}s`,
-                } as CSSProperties,
-            };
-        });
-        setBeams(generated);
-    }, []);
-
     return (
         <>
             <style>{`
@@ -42,82 +19,28 @@ function CybercoreBackground() {
                 }
                 .cyber-grid {
                     position: absolute;
-                    inset: 0;
+                    inset: -52px;
                     background-image:
-                        linear-gradient(rgba(215,38,56,0.08) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(215,38,56,0.08) 1px, transparent 1px);
-                    background-size: 52px 52px;
+                        linear-gradient(rgba(215,38,56,0.28) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(215,38,56,0.28) 1px, transparent 1px);
+                    background-size: 54px 54px;
                     animation: moveGrid 8s linear infinite;
                 }
-                .cyber-floor {
-                    position: absolute;
-                    bottom: 0;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 160%;
-                    height: 55%;
-                    background: radial-gradient(ellipse at 50% 100%, rgba(215,38,56,0.18) 0%, rgba(0,3,8,0) 65%);
-                    animation: floorGlow 5s ease-in-out infinite alternate;
-                }
-                .cyber-center-glow {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 60%;
-                    height: 80%;
-                    background: radial-gradient(ellipse, rgba(215,38,56,0.1) 0%, transparent 68%);
-                    pointer-events: none;
-                }
-                .cyber-beams {
+                .cyber-grid-fade {
                     position: absolute;
                     inset: 0;
+                    background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,3,8,0.85) 0%, rgba(0,3,8,0.35) 55%, rgba(0,3,8,0) 100%);
                     pointer-events: none;
-                }
-                .cyber-beam {
-                    position: absolute;
-                    bottom: 0;
-                    height: 60%;
-                    border-radius: 2px;
-                    animation: rise var(--rise-dur, 7s) linear infinite,
-                               fade var(--fade-dur, 7s) linear infinite;
-                }
-                .cyber-beam.primary {
-                    background: linear-gradient(to top, rgba(215,38,56,0.9), rgba(215,38,56,0.4) 60%, transparent);
-                    box-shadow: 0 0 8px rgba(215,38,56,0.6);
-                }
-                .cyber-beam.secondary {
-                    background: linear-gradient(to top, rgba(255,255,255,0.6), rgba(255,100,80,0.3) 50%, transparent);
-                    box-shadow: 0 0 12px rgba(255,80,60,0.4);
-                }
-                @keyframes rise {
-                    0%   { transform: translateY(0%); opacity: 0; }
-                    10%  { opacity: 1; }
-                    100% { transform: translateY(-180%); opacity: 0; }
-                }
-                @keyframes fade {
-                    0%, 100% { opacity: 0; }
-                    5%, 85%  { opacity: 0.9; }
-                }
-                @keyframes floorGlow {
-                    0%   { transform: translateX(-50%) scale(0.95); opacity: 0.7; }
-                    100% { transform: translateX(-50%) scale(1.05); opacity: 1; }
                 }
                 @keyframes moveGrid {
                     from { background-position: 0 0; }
-                    to   { background-position: -52px -52px; }
+                    to   { background-position: 54px 54px; }
                 }
             `}</style>
 
             <div className="cyber-scene">
                 <div className="cyber-grid" />
-                <div className="cyber-floor" />
-                <div className="cyber-center-glow" />
-                <div className="cyber-beams">
-                    {beams.map(b => (
-                        <div key={b.id} className={`cyber-beam ${b.type}`} style={b.style} />
-                    ))}
-                </div>
+                <div className="cyber-grid-fade" />
             </div>
         </>
     );
@@ -262,10 +185,6 @@ export default function PageHero({
                     )}
                 </div>{/* end max-w wrapper */}
             </div>{/* end content absolute */}
-
-            {/* Bottom fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-10"
-                style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.05))" }} />
         </section>
     );
 }
