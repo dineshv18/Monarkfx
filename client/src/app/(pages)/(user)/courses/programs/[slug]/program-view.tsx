@@ -26,10 +26,12 @@ import { FaWhatsapp } from "react-icons/fa";
 import type { Program } from "../programs-data";
 
 const WHATSAPP = "https://wa.me/918750475852?text=";
-const enrollUrl = (name: string, mode?: string) =>
+const enrollUrl = (name: string, mode?: "Online" | "Offline", price?: string) =>
     `${WHATSAPP}${encodeURIComponent(
-        `Hi MonarkFX Team,\n\nI want to enroll in the *${name}*${mode ? ` (${mode})` : ""
-        } program. Please share batch details, fees and schedule.\n\nThank you!`
+        `Hi MonarkFX Team,\n\nI want to enroll in the *${name}* program.\n` +
+        (mode ? `*Mode:* ${mode}\n` : "") +
+        (price ? `*Price:* ₹${price} + GST\n` : "") +
+        `\nPlease share batch details, schedule and payment options.\n\nThank you!`
     )}`;
 
 /* ── Section shell ── */
@@ -773,45 +775,80 @@ export default function ProgramView({
                 icon={Wifi}
             >
                 <div className="grid md:grid-cols-2 gap-4">
-                    {program.modes.map((m, i) => (
-                        <div
-                            key={i}
-                            className="rounded-2xl p-6"
-                            style={{
-                                background: "#FAFAFA",
-                                border: "1.5px solid #EEE",
-                            }}
-                        >
-                            <div className="flex items-center gap-2.5 mb-3">
+                    {program.modes.map((m, i) => {
+                        const isOnline = m.name.toLowerCase().includes("online");
+                        const modeKey = isOnline ? "Online" : "Offline";
+                        const selected = mode === modeKey;
+                        const modePrice = isOnline
+                            ? program.priceOnline
+                            : program.priceOffline;
+                        return (
+                            <button
+                                key={i}
+                                type="button"
+                                onClick={() => setMode(modeKey)}
+                                className="text-left rounded-2xl p-6 cursor-pointer transition-all duration-200"
+                                style={{
+                                    background: selected ? "#FFF5F5" : "#FAFAFA",
+                                    border: selected
+                                        ? "1.5px solid rgba(215,38,56,0.4)"
+                                        : "1.5px solid #EEE",
+                                    boxShadow: selected
+                                        ? "0 0 0 4px rgba(215,38,56,0.06)"
+                                        : "none",
+                                }}
+                            >
+                                <div className="flex items-center justify-between gap-2 mb-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <span
+                                            className="w-8 h-8 rounded-lg flex items-center justify-center"
+                                            style={{
+                                                background: "rgba(215,38,56,0.1)",
+                                                border: "1px solid rgba(215,38,56,0.2)",
+                                            }}
+                                        >
+                                            {isOnline ? (
+                                                <Wifi className="w-4 h-4 text-[#D72638]" />
+                                            ) : (
+                                                <MapPin className="w-4 h-4 text-[#D72638]" />
+                                            )}
+                                        </span>
+                                        <h3
+                                            className="text-[16px] font-black text-zinc-900"
+                                            style={{ fontFamily: "var(--font-playfair), serif" }}
+                                        >
+                                            {m.name}
+                                        </h3>
+                                    </div>
+                                    <span
+                                        className="text-[13px] font-black shrink-0"
+                                        style={{
+                                            fontFamily: "var(--font-playfair), serif",
+                                            color: "#D72638",
+                                        }}
+                                    >
+                                        ₹{modePrice}
+                                    </span>
+                                </div>
+                                <p
+                                    className="text-[13px] leading-[1.7] text-zinc-500 font-light mb-4"
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
+                                >
+                                    {m.description}
+                                </p>
+                                <BulletList items={m.points} />
                                 <span
-                                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                                    className="inline-flex items-center gap-1.5 mt-4 text-[11px] font-extrabold uppercase tracking-[0.1em]"
                                     style={{
-                                        background: "rgba(215,38,56,0.1)",
-                                        border: "1px solid rgba(215,38,56,0.2)",
+                                        fontFamily: "var(--font-dm-sans), sans-serif",
+                                        color: selected ? "#D72638" : "#AAA",
                                     }}
                                 >
-                                    {m.name.toLowerCase().includes("online") ? (
-                                        <Wifi className="w-4 h-4 text-[#D72638]" />
-                                    ) : (
-                                        <MapPin className="w-4 h-4 text-[#D72638]" />
-                                    )}
+                                    {selected ? "✓ Selected" : "Tap to select this mode"}
                                 </span>
-                                <h3
-                                    className="text-[16px] font-black text-zinc-900"
-                                    style={{ fontFamily: "var(--font-playfair), serif" }}
-                                >
-                                    {m.name}
-                                </h3>
-                            </div>
-                            <p
-                                className="text-[13px] leading-[1.7] text-zinc-500 font-light mb-4"
-                                style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
-                            >
-                                {m.description}
-                            </p>
-                            <BulletList items={m.points} />
-                        </div>
-                    ))}
+                            </button>
+                        );
+                    })}
                 </div>
             </Section>
 
