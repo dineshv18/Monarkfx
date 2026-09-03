@@ -184,7 +184,7 @@ const CartPage = () => {
                             href="/courses"
                             className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-medium rounded-lg transition-colors"
                             style={{
-                                background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                                background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
                             }}
                         >
                             Browse Courses
@@ -313,7 +313,7 @@ const CartPage = () => {
                                             onClick={handleProceedToCheckout}
                                             className="w-full py-3 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                                             style={{
-                                                background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                                                background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
                                             }}
                                         >
                                             Proceed to Checkout
@@ -325,7 +325,7 @@ const CartPage = () => {
                                                 onClick={handleProceedToCheckout}
                                                 className="w-full py-3 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 mb-3"
                                                 style={{
-                                                    background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                                                    background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
                                                 }}
                                             >
                                                 <LogIn className="w-4 h-4" />

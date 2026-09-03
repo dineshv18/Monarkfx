@@ -44,7 +44,7 @@ export default function InputField<T extends Record<string, unknown>>({
         <input
           id={id}
           type={showPasswordToggle && showPassword ? "text" : type}
-          className={`w-full pl-10 ${showPasswordToggle ? "pr-10" : "pr-4"} py-3 bg-white border border-[var(--color-border-gray)] rounded-[var(--radius-button)] text-[var(--color-dark-gray)] placeholder-[var(--color-text-mid)] focus:outline-none focus:border-[var(--color-primary-red)] focus:ring-2 focus:ring-[rgba(215,38,56,0.18)] transition-all`}
+          className={`w-full pl-10 ${showPasswordToggle ? "pr-10" : "pr-4"} py-3 bg-white border border-[var(--color-border-gray)] rounded-[var(--radius-button)] text-[var(--color-dark-gray)] placeholder-[var(--color-text-mid)] focus:outline-none focus:border-[var(--color-primary-red)] focus:ring-2 focus:ring-[rgba(232,185,35,0.18)] transition-all`}
           {...register(name, validationRules)}
         />
         {showPasswordToggle && (

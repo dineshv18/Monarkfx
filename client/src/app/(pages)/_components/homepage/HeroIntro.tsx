@@ -27,8 +27,8 @@ function AvatarStack() {
                     <Image src={a.src} alt={a.initials} fill className="object-cover object-top" sizes="44px" />
                 </div>
             ))}
-            <div className="relative w-11 h-11 rounded-full border-2 border-white flex items-center justify-center shrink-0 text-[10px] font-bold text-white"
-                style={{ zIndex: 0, background: "#D72638", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>
+            <div className="relative w-11 h-11 rounded-full border-2 border-white flex items-center justify-center shrink-0 text-[10px] font-black text-[#0B1E3F]"
+                style={{ zIndex: 0, backgroundImage: "var(--gold-metallic)", boxShadow: "0 2px 10px rgba(232,185,35,0.5)" }}>
                 1,000+
             </div>
         </div>
@@ -55,7 +55,7 @@ function StatsMarquee() {
             >
                 {[...STATS, ...STATS].map((s, i) => (
                     <div key={i} className="flex items-center gap-2.5 shrink-0">
-                        <span className="font-black text-[#D72638] text-[13px] tracking-wide"
+                        <span className="font-black text-[#E8B923] text-[13px] tracking-wide"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                             {s.value}
                         </span>
@@ -94,7 +94,7 @@ export default function HeroIntro() {
                 <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.55) 0%, transparent 60%)" }} />
                 {/* Red tint bottom */}
                 <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
-                    style={{ background: "linear-gradient(to top, rgba(215,38,56,0.12), transparent)" }} />
+                    style={{ background: "linear-gradient(to top, rgba(232,185,35,0.12), transparent)" }} />
             </div>
 
             {/* Content — pushed to bottom */}
@@ -140,9 +140,9 @@ export default function HeroIntro() {
                             <h1 className="text-white font-black leading-[1.04] tracking-[-0.03em]"
                                 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(36px, 6vw, 72px)", textShadow: "0 2px 20px rgba(0,0,0,0.8)" }}>
                                 We{" "}
-                                <span style={{ color: "#FF4D60" }}>teach</span>
+                                <span className="gold-text" style={{ filter: "drop-shadow(0 0 22px rgba(232,185,35,0.5))" }}>teach</span>
                                 , you{" "}
-                                <span style={{ color: "#FF4D60" }}>trade</span>
+                                <span className="gold-text" style={{ filter: "drop-shadow(0 0 22px rgba(232,185,35,0.5))" }}>trade</span>
                                 <br />
                                 <span className="text-white">— that&apos;s the deal.</span>
                             </h1>

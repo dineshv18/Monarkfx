@@ -53,8 +53,8 @@ const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
-          <div className="p-4 bg-[#FFF0F2] rounded-[12px]">
-            <p className="text-lg font-semibold text-[#D72638] font-mono-data">
+          <div className="p-4 bg-[#FBF6E9] rounded-[12px]">
+            <p className="text-lg font-semibold text-[#E8B923] font-mono-data">
               Course Price: ${coursePrice.toLocaleString("en-IN")}
             </p>
           </div>
@@ -69,7 +69,7 @@ const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
         </div>
 
         <DialogFooter className="mt-6">
-          <Button onClick={handlePurchase} disabled={isLoading} className="bg-[#D72638] hover:bg-[#A01020] text-white rounded-[12px]">
+          <Button onClick={handlePurchase} disabled={isLoading} className="bg-[image:var(--gold-metallic)] hover:brightness-95 text-[#0B1E3F] rounded-[12px]">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

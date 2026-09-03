@@ -53,7 +53,7 @@ const AnimatedNavLink = ({
   >
     {children}
     {active && (
-      <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-[#D72638] rounded-full" />
+      <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-[#E8B923] rounded-full" />
     )}
   </Link>
 );
@@ -105,11 +105,11 @@ const Header = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0">
             <Image
-              src="/logo.png"
+              src="/logo-gold-icon.png"
               alt="MonarkFX"
               width={110}
               height={80}
-              className="h-16 w-auto object-contain "
+              className="h-14 w-auto object-contain rounded-full"
             />
           </Link>
 
@@ -126,7 +126,7 @@ const Header = () => {
                     {link.name}
                     <ChevronDown className="w-3 h-3 transition-transform duration-200 group-hover:rotate-180" />
                     {pathname.startsWith("/courses") && (
-                      <span className="absolute -bottom-0.5 left-0 right-6 h-px bg-[#D72638] rounded-full" />
+                      <span className="absolute -bottom-0.5 left-0 right-6 h-px bg-[#E8B923] rounded-full" />
                     )}
                   </Link>
 
@@ -154,7 +154,7 @@ const Header = () => {
                       ))}
                       <Link
                         href="/courses"
-                        className="flex items-center justify-center gap-1 mt-1 rounded-xl px-3 py-2 text-[12px] font-bold text-[#D72638] hover:bg-[#D72638]/10 transition-colors duration-150"
+                        className="flex items-center justify-center gap-1 mt-1 rounded-xl px-3 py-2 text-[12px] font-bold text-[#E8B923] hover:bg-[#E8B923]/10 transition-colors duration-150"
                       >
                         View All Courses
                       </Link>

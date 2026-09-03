@@ -233,7 +233,7 @@ export const ReviewSection = ({
                 onClick={() => setIsWriteReviewOpen(true)}
                 className="px-5 py-2.5 text-white text-sm font-medium rounded-lg transition-colors"
                 style={{
-                  background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                  background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
                 }}
               >
                 <MessageCircle className="w-4 h-4 mr-2 inline" />
@@ -302,7 +302,7 @@ export const ReviewSection = ({
               disabled={isSubmitting}
               className="w-full py-3 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
               style={{
-                background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
               }}
             >
               {isSubmitting

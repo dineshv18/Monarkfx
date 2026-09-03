@@ -45,7 +45,7 @@ const GrowthSection = () => {
             <div style={{
                 position: "absolute", top: 0, right: 0,
                 width: 500, height: 500,
-                background: "radial-gradient(circle, rgba(215,38,56,0.06) 0%, transparent 70%)",
+                background: "radial-gradient(circle, rgba(232,185,35,0.06) 0%, transparent 70%)",
                 transform: "translate(20%, -20%)",
                 pointerEvents: "none",
             }} />
@@ -61,10 +61,10 @@ const GrowthSection = () => {
                 >
                     {/* Label */}
                     <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-                        <div style={{ width: 32, height: 2, background: "#D72638", borderRadius: 2 }} />
+                        <div style={{ width: 32, height: 2, backgroundImage: "linear-gradient(90deg,#F5D876,#E8B923 50%,#C79A1E)", borderRadius: 2 }} />
                         <span style={{
                             fontFamily: "var(--font-inter), sans-serif", fontSize: 12, fontWeight: 800,
-                            color: "#D72638", letterSpacing: "0.2em", textTransform: "uppercase",
+                            color: "#E8B923", letterSpacing: "0.2em", textTransform: "uppercase",
                         }}>
                             Our Growth
                         </span>
@@ -78,7 +78,7 @@ const GrowthSection = () => {
                         maxWidth: 720, marginBottom: 20,
                     }}>
                         Powering India&apos;s next generation of{" "}
-                        <span style={{ color: "#D72638" }}>elite traders.</span>
+                        <span style={{ color: "#E8B923" }}>elite traders.</span>
                     </h2>
 
                     <p style={{
@@ -109,7 +109,7 @@ const GrowthSection = () => {
                                 padding: "20px 0",
                                 borderTop: "2px solid",
                                 borderImage: i === 0
-                                    ? "linear-gradient(90deg, #D72638, transparent) 1"
+                                    ? "linear-gradient(90deg, #E8B923, transparent) 1"
                                     : "linear-gradient(90deg, #E8E8E8, transparent) 1",
                             }}
                         >
@@ -117,7 +117,7 @@ const GrowthSection = () => {
                                 fontFamily: "var(--font-inter), sans-serif",
                                 fontSize: "clamp(28px, 3.5vw, 42px)",
                                 fontWeight: 900,
-                                color: i === 0 ? "#D72638" : "#0A0A0A",
+                                color: i === 0 ? "#E8B923" : "#0B1E3F",
                                 lineHeight: 1,
                                 letterSpacing: "-0.03em",
                                 marginBottom: 8,
@@ -159,8 +159,8 @@ const GrowthSection = () => {
                         <AreaChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
                             <defs>
                                 <linearGradient id="colorRed" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#D72638" stopOpacity={0.18} />
-                                    <stop offset="95%" stopColor="#D72638" stopOpacity={0} />
+                                    <stop offset="5%" stopColor="#E8B923" stopOpacity={0.18} />
+                                    <stop offset="95%" stopColor="#E8B923" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <Tooltip
@@ -173,17 +173,17 @@ const GrowthSection = () => {
                                     color: "#333",
                                     boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
                                 }}
-                                cursor={{ stroke: "#D72638", strokeWidth: 1, strokeDasharray: "4 4" }}
+                                cursor={{ stroke: "#E8B923", strokeWidth: 1, strokeDasharray: "4 4" }}
                             />
                             <Area
                                 type="monotone"
                                 dataKey="value"
-                                stroke="#D72638"
+                                stroke="#E8B923"
                                 strokeWidth={2.5}
                                 fillOpacity={1}
                                 fill="url(#colorRed)"
                                 dot={false}
-                                activeDot={{ r: 5, fill: "#D72638", stroke: "#fff", strokeWidth: 2 }}
+                                activeDot={{ r: 5, fill: "#E8B923", stroke: "#fff", strokeWidth: 2 }}
                             />
                         </AreaChart>
                     </ResponsiveContainer>

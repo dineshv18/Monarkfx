@@ -84,7 +84,7 @@ export default function FuturisticCard({
           className="absolute inset-0 opacity-70 pointer-events-none z-10"
           style={{
             background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100
-              }%, rgba(220, 38, 38, 0.15), transparent 40%)`,
+              }%, rgba(232,185,35, 0.15), transparent 40%)`,
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.7 }}

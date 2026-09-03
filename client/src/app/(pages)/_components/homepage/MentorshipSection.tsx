@@ -20,7 +20,7 @@ const pillars = [
         icon: MdOutlinePsychology,
         title: "Psychology",
         description: "Mindset & emotional control — trade without fear or greed.",
-        color: "#D72638",
+        color: "#E8B923",
     },
     {
         icon: MdSecurity,
@@ -50,7 +50,7 @@ const pillars = [
         icon: MdGroups,
         title: "Live Mentorship",
         description: "3 sessions/week — direct access to experienced mentors.",
-        color: "#D72638",
+        color: "#E8B923",
     },
 ];
 
@@ -120,7 +120,7 @@ const MentorshipSection = () => {
 
             {/* Dot grid */}
             <div className="absolute inset-0 pointer-events-none"
-                style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.035) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+                style={{ backgroundImage: "radial-gradient(rgba(232,185,35,0.035) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
 
             <div className="relative max-w-[1120px] mx-auto px-5 sm:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-16">
@@ -132,7 +132,7 @@ const MentorshipSection = () => {
                         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
                         className="md:col-span-1 flex flex-col items-start justify-center"
                     >
-                        <span className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-[#D72638]"
+                        <span className="mb-3 text-[11px] font-extrabold uppercase tracking-[0.22em] text-[#E8B923]"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                             Our Framework
                         </span>
@@ -140,7 +140,7 @@ const MentorshipSection = () => {
                         <h2 className="mb-5 font-black leading-[1.05] tracking-[-0.04em] text-zinc-950"
                             style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(30px, 3.5vw, 46px)" }}>
                             The{" "}
-                            <span className="text-[#D72638]">6-Pillar</span>
+                            <span className="text-[#E8B923]">6-Pillar</span>
                             <br />Mentorship
                             <br />Framework
                         </h2>
@@ -171,7 +171,7 @@ const MentorshipSection = () => {
                             ].map((s, i) => (
                                 <div key={i}>
                                     <p className="font-black text-zinc-900 leading-none text-[22px]"
-                                        style={{ fontFamily: "var(--font-playfair), serif", color: i === 0 ? "#D72638" : "#0A0A0A" }}>
+                                        style={{ fontFamily: "var(--font-playfair), serif", color: i === 0 ? "#E8B923" : "#0B1E3F" }}>
                                         {s.v}
                                     </p>
                                     <p className="text-[11px] font-semibold text-zinc-400 mt-1 uppercase tracking-[0.06em]"

@@ -438,9 +438,9 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
 
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-[#D72638]/10 to-[#A01020]/10 blur-3xl animate-pulse" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-gradient-to-r from-[#E8B923]/10 to-[#A07C16]/10 blur-3xl animate-pulse" />
         <div
-          className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-[#D72638]/10 to-[#A01020]/10 blur-2xl animate-pulse"
+          className="absolute bottom-1/3 left-1/4 w-64 h-64 rounded-full bg-gradient-to-r from-[#E8B923]/10 to-[#A07C16]/10 blur-2xl animate-pulse"
           style={{ animationDelay: "1s" }}
         />
       </div>
@@ -496,12 +496,12 @@ const CourseLayout: React.FC<CourseLayoutProps> = ({
             variant="outline"
             size="sm"
             onClick={toggleSidebar}
-            className={`fixed z-50 h-12 px-3 bg-white backdrop-blur-sm border border-[#E8E8E8] hover:border-[#D72638] shadow-[var(--shadow-soft)] transition-all duration-300 ease-in-out group left-0 top-1/2 -translate-y-1/2 rounded-r-xl`}
+            className={`fixed z-50 h-12 px-3 bg-white backdrop-blur-sm border border-[#E8E8E8] hover:border-[#E8B923] shadow-[var(--shadow-soft)] transition-all duration-300 ease-in-out group left-0 top-1/2 -translate-y-1/2 rounded-r-xl`}
           >
             {isSidebarOpen ? (
-              <ChevronLeft className="h-5 w-5 text-[#4A4A4A] group-hover:text-[#D72638] group-hover:scale-110 transition-all duration-200" />
+              <ChevronLeft className="h-5 w-5 text-[#4A4A4A] group-hover:text-[#E8B923] group-hover:scale-110 transition-all duration-200" />
             ) : (
-              <ChevronRight className="h-5 w-5 text-[#4A4A4A] group-hover:text-[#D72638] group-hover:scale-110 transition-all duration-200" />
+              <ChevronRight className="h-5 w-5 text-[#4A4A4A] group-hover:text-[#E8B923] group-hover:scale-110 transition-all duration-200" />
             )}
           </Button>
         </div>

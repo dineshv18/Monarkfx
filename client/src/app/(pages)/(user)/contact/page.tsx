@@ -28,8 +28,8 @@ const SOCIALS = [
 
 const inputCls =
   "w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl text-zinc-900 " +
-  "placeholder-zinc-300 text-[14px] focus:outline-none focus:border-[#D72638] " +
-  "focus:ring-2 focus:ring-[rgba(215,38,56,0.08)] transition-colors duration-200";
+  "placeholder-zinc-300 text-[14px] focus:outline-none focus:border-[#E8B923] " +
+  "focus:ring-2 focus:ring-[rgba(232,185,35,0.08)] transition-colors duration-200";
 
 const Label = ({ children }: { children: React.ReactNode }) => (
   <label className="block text-[11px] font-extrabold text-zinc-400 uppercase tracking-[0.14em] mb-1.5"
@@ -84,7 +84,7 @@ export default function ContactPage() {
           >
             {/* Corner + icons */}
             {["-top-3 -left-3", "-top-3 -right-3", "-bottom-3 -left-3", "-bottom-3 -right-3"].map((pos, i) => (
-              <span key={i} className={`absolute ${pos} text-[#D72638] text-[22px] font-black leading-none select-none`}>+</span>
+              <span key={i} className={`absolute ${pos} text-[#E8B923] text-[22px] font-black leading-none select-none`}>+</span>
             ))}
 
             {/* ── LEFT+MIDDLE: info + map (2 cols on lg) ── */}
@@ -92,13 +92,13 @@ export default function ContactPage() {
 
               {/* Info header */}
               <div className="px-8 sm:px-10 pt-10 pb-6">
-                <span className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.2em] mb-3 block"
+                <span className="text-[11px] font-extrabold text-[#E8B923] uppercase tracking-[0.2em] mb-3 block"
                   style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                   Get In Touch
                 </span>
                 <h2 className="font-black text-zinc-950 leading-[1.04] tracking-[-0.03em] mb-3"
                   style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(24px, 3vw, 38px)" }}>
-                  Contact <span className="text-[#D72638]">MonarkFX</span>
+                  Contact <span className="text-[#E8B923]">MonarkFX</span>
                 </h2>
                 <p className="text-zinc-400 text-[14px] leading-[1.6] max-w-md"
                   style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -111,9 +111,9 @@ export default function ContactPage() {
                 {CONTACT_INFO.map((item, i) => (
                   <a key={i} href={item.href} className="flex items-center gap-3 py-3 no-underline group"
                     style={{ borderBottom: "1px solid #F5F5F5" }}>
-                    <div className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center transition-colors duration-200 group-hover:bg-[#D72638]/10"
-                      style={{ background: "rgba(215,38,56,0.06)", border: "1px solid rgba(215,38,56,0.12)" }}>
-                      <item.icon className="w-4 h-4 text-[#D72638]" strokeWidth={1.8} />
+                    <div className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center transition-colors duration-200 group-hover:bg-[#E8B923]/10"
+                      style={{ background: "rgba(232,185,35,0.06)", border: "1px solid rgba(232,185,35,0.12)" }}>
+                      <item.icon className="w-4 h-4 text-[#E8B923]" strokeWidth={1.8} />
                     </div>
                     <div>
                       <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.1em]"
@@ -132,9 +132,9 @@ export default function ContactPage() {
                 <div className="flex gap-2">
                   {SOCIALS.map(({ Icon, label, href }, i) => (
                     <a key={i} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                      className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 hover:bg-[#D72638]/10"
-                      style={{ background: "rgba(215,38,56,0.06)", border: "1px solid rgba(215,38,56,0.12)" }}>
-                      <Icon className="text-[#D72638]" size={16} />
+                      className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-200 hover:bg-[#E8B923]/10"
+                      style={{ background: "rgba(232,185,35,0.06)", border: "1px solid rgba(232,185,35,0.12)" }}>
+                      <Icon className="text-[#E8B923]" size={16} />
                     </a>
                   ))}
                 </div>
@@ -143,7 +143,7 @@ export default function ContactPage() {
               {/* Map */}
               <div className="relative mt-auto" style={{ height: 220, borderTop: "1px solid #F0F0F0" }}>
                 <div className="absolute left-0 top-0 bottom-0 w-[3px] z-10"
-                  style={{ background: "linear-gradient(to bottom, #D72638, rgba(215,38,56,0.1))" }} />
+                  style={{ background: "linear-gradient(to bottom, #E8B923, rgba(232,185,35,0.1))" }} />
                 <ContactMap />
               </div>
             </div>
@@ -195,10 +195,10 @@ export default function ContactPage() {
                   </div>
 
                   <motion.button type="submit" disabled={busy}
-                    whileHover={!busy ? { y: -2, boxShadow: "0 12px 32px rgba(215,38,56,0.35)" } : {}}
+                    whileHover={!busy ? { y: -2, boxShadow: "0 12px 32px rgba(232,185,35,0.35)" } : {}}
                     whileTap={!busy ? { scale: 0.97 } : {}}
                     className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-white text-[14px] font-bold border-none cursor-pointer transition-all duration-200"
-                    style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: busy ? "#999" : "#D72638", boxShadow: "0 4px 16px rgba(215,38,56,0.25)" }}>
+                    style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: busy ? "#999" : "#E8B923", boxShadow: "0 4px 16px rgba(232,185,35,0.25)" }}>
                     {busy ? (
                       <><motion.div animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
                         className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white" />Sending...</>

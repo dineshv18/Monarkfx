@@ -364,7 +364,7 @@ const Cart: React.FC = () => {
                   <Button
                     className="w-full h-12 text-lg font-bold rounded-lg transition-colors duration-300 text-white"
                     style={{
-                      background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                      background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
                     }}
                     onClick={() => setIsOpen(false)}
                   >
@@ -376,7 +376,7 @@ const Cart: React.FC = () => {
                   <Button
                     className="w-full h-12 text-lg font-bold rounded-lg transition-colors duration-300 text-white flex items-center justify-center gap-2"
                     style={{
-                      background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                      background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
                     }}
                     onClick={() => setIsOpen(false)}
                   >

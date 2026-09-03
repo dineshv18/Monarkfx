@@ -103,7 +103,7 @@ export default async function CoursePage({ params }: Props) {
             <a
               href="/courses"
               className="mt-8 inline-flex items-center px-6 py-3 text-sm font-medium rounded-lg text-white transition-colors"
-              style={{ background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)" }}
+              style={{ background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)" }}
             >
               Browse All Courses
             </a>

@@ -48,7 +48,7 @@ const AboutSection = () => {
             animate={isInView ? fadeUp(0).animate : fadeUp(0).initial}
             className="flex items-center gap-2"
           >
-            <span className="text-[#D72638] animate-spin inline-block">✱</span>
+            <span className="text-[#E8B923] animate-spin inline-block">✱</span>
             <span className="text-xs font-bold text-zinc-500 tracking-[0.2em] uppercase">
               About MonarkFX
             </span>
@@ -87,8 +87,8 @@ const AboutSection = () => {
           <div
             className="absolute top-4 right-4 z-20 bg-white border border-zinc-100 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-md"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#FFF0F2] flex items-center justify-center">
-              <span className="text-[#D72638] font-black text-xs">ISO</span>
+            <div className="w-8 h-8 rounded-lg bg-[#FBF6E9] flex items-center justify-center">
+              <span className="text-[#E8B923] font-black text-xs">ISO</span>
             </div>
             <div>
               <p className="text-xs font-bold text-zinc-900 leading-none">Certified</p>
@@ -121,7 +121,7 @@ const AboutSection = () => {
           {stats.map((s, i) => (
             <React.Fragment key={i}>
               <div className="flex items-center gap-1.5">
-                <span className="text-[#D72638] font-bold">{s.value}</span>
+                <span className="text-[#E8B923] font-bold">{s.value}</span>
                 <span className="text-zinc-500">{s.label}</span>
               </div>
               {i < stats.length - 1 && <span className="text-zinc-200 hidden sm:block">|</span>}
@@ -168,7 +168,7 @@ const AboutSection = () => {
               animate={isInView ? fadeUp(0.6).animate : fadeUp(0.6).initial}
               className="text-right mb-6"
             >
-              <p className="text-[#D72638] text-2xl font-black tracking-widest uppercase">MonarkFX</p>
+              <p className="text-[#E8B923] text-2xl font-black tracking-widest uppercase">MonarkFX</p>
               <p className="text-zinc-500 text-sm mt-1">Financial Market Academy</p>
             </motion.div>
 
@@ -204,8 +204,8 @@ const AboutSection = () => {
               <Link href={WHATSAPP_URL} target="_blank" className="no-underline mt-3 block">
                 <button
                   className="group flex items-center gap-2 hover:gap-4 transition-all duration-300
-                             bg-[#D72638] hover:bg-[#C0202F] text-white text-sm font-bold
-                             px-6 py-3 rounded-xl border border-[#D72638]
+                             bg-[image:var(--gold-metallic)] hover:brightness-95 text-[#0B1E3F] text-sm font-bold
+                             px-6 py-3 rounded-xl border border-[#E8B923]
                              shadow-lg shadow-red-900/20 cursor-pointer w-full justify-center md:w-auto md:justify-start"
                 >
                   Join via WhatsApp

@@ -213,7 +213,7 @@ export default function BillingForm({
         name: "MonarkFX - Global Trading Excellence",
         description: `Purchase: ${courseTitle}`,
         order_id: order.id,
-        image: "/logo-light.png",
+        image: "/logo-gold-icon.png",
 
         handler: async function (response: any) {
           try {

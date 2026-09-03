@@ -43,9 +43,9 @@ export default function ContactMap() {
             const redIcon = L.divIcon({
                 html: `<div style="
                     width:36px;height:36px;border-radius:50% 50% 50% 0;
-                    background:#D72638;border:3px solid #fff;
+                    background:#E8B923;border:3px solid #fff;
                     transform:rotate(-45deg);
-                    box-shadow:0 4px 16px rgba(215,38,56,0.5);
+                    box-shadow:0 4px 16px rgba(232,185,35,0.5);
                 "></div>`,
                 iconSize: [36, 36],
                 iconAnchor: [18, 36],
@@ -57,7 +57,7 @@ export default function ContactMap() {
                 .addTo(map)
                 .bindPopup(`
                     <div style="font-family:sans-serif;padding:6px 2px">
-                        <b style="color:#D72638;font-size:14px">MonarkFX Academy</b><br/>
+                        <b style="color:#E8B923;font-size:14px">MonarkFX Academy</b><br/>
                         <span style="font-size:12px;color:#555">Uttam Nagar, New Delhi — 110059</span>
                     </div>
                 `)

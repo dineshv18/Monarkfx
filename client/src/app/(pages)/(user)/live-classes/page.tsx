@@ -31,7 +31,7 @@ const courses = [
 /* shared input class */
 const inputCls = `w-full px-4 py-3 bg-white border border-[#E8E8E8] rounded-[12px]
   text-[#1A1A1A] placeholder-[#BBB] text-sm
-  focus:outline-none focus:border-[#D72638] focus:ring-2 focus:ring-[rgba(215,38,56,0.1)]
+  focus:outline-none focus:border-[#E8B923] focus:ring-2 focus:ring-[rgba(232,185,35,0.1)]
   transition-colors`;
 
 const LiveClassesPage = () => {
@@ -80,12 +80,12 @@ const LiveClassesPage = () => {
       {/* ══════════ HERO ══════════ */}
       <section
         ref={heroRef}
-        style={{ position: "relative", background: "#0A0A0A", overflow: "hidden", padding: "96px 0 80px" }}
+        style={{ position: "relative", background: "#0B1E3F", overflow: "hidden", padding: "96px 0 80px" }}
       >
         {/* Grid */}
         <div style={{
           position: "absolute", inset: 0, pointerEvents: "none",
-          backgroundImage: "linear-gradient(rgba(215,38,56,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(215,38,56,0.06) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(232,185,35,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(232,185,35,0.06) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }} />
         {/* Red center glow */}
@@ -93,7 +93,7 @@ const LiveClassesPage = () => {
           position: "absolute", top: "50%", left: "50%",
           transform: "translate(-50%,-50%)",
           width: "60%", height: "100%",
-          background: "radial-gradient(ellipse, rgba(215,38,56,0.1) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(232,185,35,0.1) 0%, transparent 70%)",
           pointerEvents: "none",
         }} />
 
@@ -107,7 +107,7 @@ const LiveClassesPage = () => {
             <div style={{ marginBottom: 24 }}>
               <div style={{
                 display: "inline-flex", alignItems: "center", gap: 7,
-                background: "rgba(215,38,56,0.12)", border: "1px solid rgba(215,38,56,0.3)",
+                background: "rgba(232,185,35,0.12)", border: "1px solid rgba(232,185,35,0.3)",
                 borderRadius: 999, padding: "6px 16px",
               }}>
                 <motion.div
@@ -115,7 +115,7 @@ const LiveClassesPage = () => {
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ duration: 1.2, repeat: Infinity }}
                 />
-                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: "#D72638", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: "#E8B923", letterSpacing: "0.12em", textTransform: "uppercase" }}>
                   Online Programs — Live
                 </span>
               </div>
@@ -131,7 +131,7 @@ const LiveClassesPage = () => {
             }}>
               Online Learning,{" "}
               <span style={{
-                backgroundImage: "linear-gradient(135deg, #D72638, #FF6B6B)",
+                backgroundImage: "linear-gradient(135deg, #E8B923, #F5D876)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
               }}>
                 Institutional
@@ -151,7 +151,7 @@ const LiveClassesPage = () => {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               <Link href="/" style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#555", textDecoration: "none" }}>Home</Link>
               <span style={{ color: "#333", fontSize: 12 }}>›</span>
-              <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#D72638" }}>Live Classes</span>
+              <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: "#E8B923" }}>Live Classes</span>
             </div>
           </motion.div>
         </div>
@@ -161,7 +161,7 @@ const LiveClassesPage = () => {
       <section style={{ background: "#F8F8F8", padding: "80px 0", position: "relative", overflow: "hidden" }}>
         <div style={{
           position: "absolute", inset: 0, pointerEvents: "none",
-          backgroundImage: "radial-gradient(circle, rgba(215,38,56,0.03) 1px, transparent 1px)",
+          backgroundImage: "radial-gradient(circle, rgba(232,185,35,0.03) 1px, transparent 1px)",
           backgroundSize: "44px 44px",
         }} />
 
@@ -176,8 +176,8 @@ const LiveClassesPage = () => {
               transition={{ duration: 0.7, delay: 0.2 }}
             >
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-                <div style={{ width: 24, height: 2, background: "#D72638", borderRadius: 2 }} />
-                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: "#D72638", letterSpacing: "0.16em", textTransform: "uppercase" }}>
+                <div style={{ width: 24, height: 2, backgroundImage: "linear-gradient(90deg,#F5D876,#E8B923 50%,#C79A1E)", borderRadius: 2 }} />
+                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: "#E8B923", letterSpacing: "0.16em", textTransform: "uppercase" }}>
                   What to Expect
                 </span>
               </div>
@@ -185,13 +185,13 @@ const LiveClassesPage = () => {
               <h2 style={{
                 fontFamily: "'Syne',sans-serif",
                 fontSize: "clamp(28px, 3.5vw, 46px)",
-                fontWeight: 800, color: "#0A0A0A",
+                fontWeight: 800, color: "#0B1E3F",
                 lineHeight: 1.1, letterSpacing: "-0.02em",
                 marginBottom: 18,
               }}>
                 Everything Online.{" "}
                 <span style={{
-                  backgroundImage: "linear-gradient(135deg, #D72638, #A01020)",
+                  backgroundImage: "linear-gradient(135deg, #E8B923, #A07C16)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}>
                   Nothing Compromised.
@@ -208,14 +208,14 @@ const LiveClassesPage = () => {
               {/* Scroll to form */}
               <a href="#inquiry-form" style={{ textDecoration: "none" }}>
                 <motion.button
-                  whileHover={{ y: -2, boxShadow: "0 14px 40px rgba(215,38,56,0.3)" }}
+                  whileHover={{ y: -2, boxShadow: "0 14px 40px rgba(232,185,35,0.3)" }}
                   whileTap={{ scale: 0.97 }}
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8,
-                    background: "#D72638", color: "#fff",
+                    background: "#E8B923", color: "#0B1E3F",
                     fontFamily: "'DM Sans',sans-serif", fontWeight: 600, fontSize: 14,
                     padding: "12px 26px", borderRadius: 11, border: "none", cursor: "pointer",
-                    boxShadow: "0 4px 16px rgba(215,38,56,0.26)", transition: "all 0.2s",
+                    boxShadow: "0 4px 16px rgba(232,185,35,0.26)", transition: "all 0.2s",
                   }}
                 >
                   Register Interest <ArrowRight style={{ width: 15, height: 15 }} />
@@ -233,7 +233,7 @@ const LiveClassesPage = () => {
                   transition={{ delay: 0.2 + i * 0.08, duration: 0.5 }}
                 >
                   <motion.div
-                    whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(215,38,56,0.08)" }}
+                    whileHover={{ y: -3, boxShadow: "0 12px 32px rgba(232,185,35,0.08)" }}
                     transition={{ duration: 0.2 }}
                     style={{
                       background: "#fff", border: "1.5px solid #EFEFEF",
@@ -244,10 +244,10 @@ const LiveClassesPage = () => {
                   >
                     <div style={{
                       width: 36, height: 36, borderRadius: 9, flexShrink: 0,
-                      background: "#FFF0F2", border: "1px solid rgba(215,38,56,0.1)",
+                      background: "#FBF6E9", border: "1px solid rgba(232,185,35,0.1)",
                       display: "flex", alignItems: "center", justifyContent: "center",
                     }}>
-                      <item.icon style={{ width: 16, height: 16, color: "#D72638" }} strokeWidth={1.6} />
+                      <item.icon style={{ width: 16, height: 16, color: "#E8B923" }} strokeWidth={1.6} />
                     </div>
                     <p style={{
                       fontFamily: "'DM Sans',sans-serif", fontSize: 13,
@@ -275,23 +275,23 @@ const LiveClassesPage = () => {
             {/* Header */}
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                <div style={{ width: 24, height: 2, background: "#D72638", borderRadius: 2 }} />
-                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: "#D72638", letterSpacing: "0.16em", textTransform: "uppercase" }}>
+                <div style={{ width: 24, height: 2, backgroundImage: "linear-gradient(90deg,#F5D876,#E8B923 50%,#C79A1E)", borderRadius: 2 }} />
+                <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 700, color: "#E8B923", letterSpacing: "0.16em", textTransform: "uppercase" }}>
                   Enquire Now
                 </span>
-                <div style={{ width: 24, height: 2, background: "#D72638", borderRadius: 2 }} />
+                <div style={{ width: 24, height: 2, backgroundImage: "linear-gradient(90deg,#F5D876,#E8B923 50%,#C79A1E)", borderRadius: 2 }} />
               </div>
 
               <h2 style={{
                 fontFamily: "'Syne',sans-serif",
                 fontSize: "clamp(26px, 3.5vw, 40px)",
-                fontWeight: 800, color: "#0A0A0A",
+                fontWeight: 800, color: "#0B1E3F",
                 lineHeight: 1.1, letterSpacing: "-0.02em",
                 marginBottom: 12,
               }}>
                 Request{" "}
                 <span style={{
-                  backgroundImage: "linear-gradient(135deg, #D72638, #A01020)",
+                  backgroundImage: "linear-gradient(135deg, #E8B923, #A07C16)",
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
                 }}>
                   Information
@@ -321,7 +321,7 @@ const LiveClassesPage = () => {
                 }}>
                   <CheckCircle2 style={{ width: 28, height: 28, color: "#22c55e" }} />
                 </div>
-                <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 22, fontWeight: 700, color: "#0A0A0A", marginBottom: 8 }}>
+                <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: 22, fontWeight: 700, color: "#0B1E3F", marginBottom: 8 }}>
                   Thank You!
                 </h3>
                 <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 15, color: "#666" }}>
@@ -424,15 +424,15 @@ const LiveClassesPage = () => {
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
-                    whileHover={!isSubmitting ? { y: -2, boxShadow: "0 14px 40px rgba(215,38,56,0.32)" } : {}}
+                    whileHover={!isSubmitting ? { y: -2, boxShadow: "0 14px 40px rgba(232,185,35,0.32)" } : {}}
                     whileTap={!isSubmitting ? { scale: 0.97 } : {}}
                     style={{
                       display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
                       width: "100%", padding: "15px 0",
-                      background: isSubmitting ? "#999" : "#D72638", color: "#fff",
+                      background: isSubmitting ? "#999" : "#E8B923", color: isSubmitting ? "#fff" : "#0B1E3F",
                       fontFamily: "'DM Sans',sans-serif", fontWeight: 600, fontSize: 15,
                       borderRadius: 12, border: "none", cursor: isSubmitting ? "not-allowed" : "pointer",
-                      boxShadow: "0 4px 18px rgba(215,38,56,0.26)", transition: "all 0.2s",
+                      boxShadow: "0 4px 18px rgba(232,185,35,0.26)", transition: "all 0.2s",
                       marginTop: 4,
                     }}
                   >

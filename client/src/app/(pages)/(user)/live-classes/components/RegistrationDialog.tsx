@@ -138,7 +138,7 @@ export default function RegistrationDialog({
         name: "Monark FX",
         description: `Registration for: ${classData.title}`,
         order_id: order.id,
-        image: "/logo-light.png",
+        image: "/logo-gold-icon.png",
         handler: async function (response: any) {
           try {
             setIsProcessing(true);
@@ -309,8 +309,8 @@ export default function RegistrationDialog({
 
           <motion.div
             className={`text-sm p-3 border rounded-lg ${classData?.registrationEnabled === false
-                ? "bg-red-900/20 border-red-500/30 text-red-300"
-                : "bg-green-900/20 border-green-500/30 text-green-300"
+              ? "bg-red-900/20 border-red-500/30 text-red-300"
+              : "bg-green-900/20 border-green-500/30 text-green-300"
               }`}
             variants={item}
           >
@@ -351,8 +351,8 @@ export default function RegistrationDialog({
                 classData?.registrationEnabled === false
               }
               className={`w-full rounded-lg px-6 shadow-lg transition-all duration-200 ${classData?.registrationEnabled === false
-                  ? "bg-gray-600 cursor-not-allowed text-gray-400"
-                  : "bg-green-600 hover:bg-green-700 text-white hover:shadow-xl"
+                ? "bg-gray-600 cursor-not-allowed text-gray-400"
+                : "bg-green-600 hover:bg-green-700 text-white hover:shadow-xl"
                 }`}
             >
               {isLoading ? (

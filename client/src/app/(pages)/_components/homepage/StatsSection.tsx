@@ -41,12 +41,12 @@ const HoverStatCard = ({ stat, index, sectionInView }: { stat: typeof stats[0]; 
 
     const isDark = false;
     const bg = "#FFFFFF";
-    const numColor = "#D72638";
+    const numColor = "#E8B923";
     const labelColor = "#999";
-    const titleColor = "#0A0A0A";
+    const titleColor = "#0B1E3F";
     const subColor = "#AAA";
-    const iconBg = "rgba(215,38,56,0.08)";
-    const iconBorder = "rgba(215,38,56,0.15)";
+    const iconBg = "rgba(232,185,35,0.08)";
+    const iconBorder = "rgba(232,185,35,0.15)";
     const arrowColor = "#10B981";
 
     return (
@@ -64,7 +64,7 @@ const HoverStatCard = ({ stat, index, sectionInView }: { stat: typeof stats[0]; 
                 minHeight: 140,
                 border: isDark ? "1.5px solid #1C1C1C" : "1.5px solid #F0F0F0",
                 boxShadow: hovered
-                    ? isDark ? "0 20px 48px rgba(0,0,0,0.35)" : "0 16px 40px rgba(215,38,56,0.08)"
+                    ? isDark ? "0 20px 48px rgba(0,0,0,0.35)" : "0 16px 40px rgba(232,185,35,0.08)"
                     : isDark ? "0 8px 24px rgba(0,0,0,0.2)" : "0 4px 16px rgba(0,0,0,0.04)",
                 transition: "box-shadow 0.25s",
             }}
@@ -72,7 +72,7 @@ const HoverStatCard = ({ stat, index, sectionInView }: { stat: typeof stats[0]; 
             {/* Red accent top bar */}
             <div style={{
                 position: "absolute", top: 0, left: 0, right: 0, height: 3,
-                background: hovered ? "#D72638" : "transparent",
+                background: hovered ? "#E8B923" : "transparent",
                 transition: "background 0.25s",
                 borderRadius: "20px 20px 0 0",
             }} />
@@ -98,7 +98,7 @@ const HoverStatCard = ({ stat, index, sectionInView }: { stat: typeof stats[0]; 
                 <div className={`transition-all duration-300 ease-out ${hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none absolute inset-0"}`}>
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
                         style={{ background: iconBg, border: `1px solid ${iconBorder}` }}>
-                        <Icon className="w-5 h-5" style={{ color: "#D72638" }} strokeWidth={1.8} />
+                        <Icon className="w-5 h-5" style={{ color: "#E8B923" }} strokeWidth={1.8} />
                     </div>
                     <p className="text-[13px] font-bold uppercase tracking-[0.06em] leading-tight mb-1"
                         style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: titleColor }}>
@@ -122,7 +122,7 @@ const StatsSection = () => {
         <section ref={ref} style={{ position: "relative", background: "#FFFFFF", overflow: "hidden", padding: "60px 0 0", borderTop: "1px solid #F0F0F0" }}>
 
             {/* Red top line */}
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, transparent, #D72638 30%, #D72638 70%, transparent)", opacity: 0.7 }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "linear-gradient(90deg, transparent, #E8B923 30%, #E8B923 70%, transparent)", opacity: 0.7 }} />
 
             {/* Dot grid */}
             <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(0,0,0,0.035) 1px, transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" }} />
@@ -132,15 +132,15 @@ const StatsSection = () => {
                 {/* Heading */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} style={{ marginBottom: 48 }}>
                     <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                        <div style={{ width: 28, height: 2, background: "#D72638", borderRadius: 2 }} />
-                        <span style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 11, fontWeight: 800, color: "#D72638", letterSpacing: "0.22em", textTransform: "uppercase" }}>
+                        <div style={{ width: 28, height: 2, backgroundImage: "linear-gradient(90deg,#F5D876,#E8B923 50%,#C79A1E)", borderRadius: 2 }} />
+                        <span style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 11, fontWeight: 800, color: "#E8B923", letterSpacing: "0.22em", textTransform: "uppercase" }}>
                             By The Numbers
                         </span>
-                        <div style={{ width: 28, height: 2, background: "#D72638", borderRadius: 2 }} />
+                        <div style={{ width: 28, height: 2, backgroundImage: "linear-gradient(90deg,#F5D876,#E8B923 50%,#C79A1E)", borderRadius: 2 }} />
                     </div>
-                    <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 50px)", fontWeight: 800, color: "#0A0A0A", lineHeight: 1.1, letterSpacing: "-0.02em", maxWidth: 640 }}>
+                    <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 50px)", fontWeight: 800, color: "#0B1E3F", lineHeight: 1.1, letterSpacing: "-0.02em", maxWidth: 640 }}>
                         Powering India&apos;s next generation of{" "}
-                        <span style={{ color: "#D72638" }}>elite traders.</span>
+                        <span style={{ color: "#E8B923" }}>elite traders.</span>
                     </h2>
                 </motion.div>
 

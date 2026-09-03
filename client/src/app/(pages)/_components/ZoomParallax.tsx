@@ -43,19 +43,19 @@ export default function ZoomParallax() {
 
     return (
         <div ref={container} className="relative h-[250vh]">
-            <div className="sticky top-0 h-screen overflow-hidden bg-[#0A0A0A]">
+            <div className="sticky top-0 h-screen overflow-hidden bg-[#0B1E3F]">
 
                 {/* Centered overlay text */}
                 <motion.div
                     style={{ opacity: textOpacity, scale: textScale }}
                     className="absolute inset-0 z-30 flex flex-col items-center justify-center pointer-events-none text-center px-6">
-                    <span className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.25em] mb-4 block"
+                    <span className="text-[11px] font-extrabold text-[#E8B923] uppercase tracking-[0.25em] mb-4 block"
                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                         Beyond the Curriculum
                     </span>
                     <h2 className="text-white font-black tracking-[-0.04em] leading-[1.04] mb-4"
                         style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(38px, 5vw, 68px)" }}>
-                        Scale Your <span style={{ color: "#D72638" }}>Edge</span>
+                        Scale Your <span style={{ color: "#E8B923" }}>Edge</span>
                     </h2>
                     <p className="text-white/35 text-[14px]"
                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -76,7 +76,7 @@ export default function ZoomParallax() {
                             <img src={src} alt={alt}
                                 className="h-full w-full object-cover"
                                 style={{ filter: "brightness(0.65)" }} />
-                            <div className="absolute inset-0" style={{ background: "rgba(215,38,56,0.07)" }} />
+                            <div className="absolute inset-0" style={{ background: "rgba(232,185,35,0.07)" }} />
                         </div>
                     </motion.div>
                 ))}

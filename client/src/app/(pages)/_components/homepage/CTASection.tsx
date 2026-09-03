@@ -24,11 +24,11 @@ const CTASection = () => {
 
             {/* Subtle dot grid */}
             <div className="absolute inset-0 pointer-events-none"
-                style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.06) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+                style={{ backgroundImage: "radial-gradient(rgba(232,185,35,0.06) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
 
             {/* Red top glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-48 pointer-events-none"
-                style={{ background: "radial-gradient(ellipse, rgba(215,38,56,0.08) 0%, transparent 70%)" }} />
+                style={{ background: "radial-gradient(ellipse, rgba(232,185,35,0.08) 0%, transparent 70%)" }} />
 
             <div className="relative max-w-[780px] mx-auto px-6 sm:px-8">
 
@@ -43,14 +43,14 @@ const CTASection = () => {
                         borderRadius: 4,
                         aspectRatio: "16 / 10",
                         justifyContent: "center",
-                        background: "radial-gradient(40% 80% at 50% 0%, rgba(215,38,56,0.06), transparent)",
+                        background: "radial-gradient(40% 80% at 50% 0%, rgba(232,185,35,0.06), transparent)",
                     }}
                 >
                     {/* Corner plus icons */}
-                    <Plus className="absolute -top-3 -left-3 w-6 h-6 text-[#D72638]" strokeWidth={1.5} />
-                    <Plus className="absolute -top-3 -right-3 w-6 h-6 text-[#D72638]" strokeWidth={1.5} />
-                    <Plus className="absolute -bottom-3 -left-3 w-6 h-6 text-[#D72638]" strokeWidth={1.5} />
-                    <Plus className="absolute -bottom-3 -right-3 w-6 h-6 text-[#D72638]" strokeWidth={1.5} />
+                    <Plus className="absolute -top-3 -left-3 w-6 h-6 text-[#E8B923]" strokeWidth={1.5} />
+                    <Plus className="absolute -top-3 -right-3 w-6 h-6 text-[#E8B923]" strokeWidth={1.5} />
+                    <Plus className="absolute -bottom-3 -left-3 w-6 h-6 text-[#E8B923]" strokeWidth={1.5} />
+                    <Plus className="absolute -bottom-3 -right-3 w-6 h-6 text-[#E8B923]" strokeWidth={1.5} />
 
                     {/* Side border lines — border already on container, remove duplicates */}
 
@@ -67,7 +67,7 @@ const CTASection = () => {
                             transition={{ duration: 0.45, delay: 0.05 }}
                             className="mb-7"
                         >
-                            <span className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.22em]"
+                            <span className="text-[11px] font-extrabold text-[#E8B923] uppercase tracking-[0.22em]"
                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                 Take the Leap
                             </span>
@@ -94,7 +94,7 @@ const CTASection = () => {
                                 className="flex flex-wrap items-baseline justify-center gap-x-3"
                                 style={{ fontSize: "clamp(30px, 5.5vw, 40px)", lineHeight: 1.05, letterSpacing: "-0.04em" }}
                             >
-                                <h2 className="font-black text-[#D72638]" style={{ fontFamily: "var(--font-playfair), serif" }}>Discipline</h2>
+                                <h2 className="font-black text-[#E8B923]" style={{ fontFamily: "var(--font-playfair), serif" }}>Discipline</h2>
                                 <h2 className="font-light text-zinc-400" style={{ fontFamily: "var(--font-playfair), serif" }}>decides</h2>
                                 <h2 className="font-black text-zinc-950" style={{ fontFamily: "var(--font-playfair), serif" }}>success.</h2>
                             </motion.div>
@@ -132,7 +132,7 @@ const CTASection = () => {
 
                             <a href={ADVISOR_URL} target="_blank" rel="noopener noreferrer" className="no-underline w-full sm:w-auto">
                                 <motion.button
-                                    whileHover={{ y: -2, borderColor: "#D72638", color: "#D72638" }}
+                                    whileHover={{ y: -2, borderColor: "#E8B923", color: "#E8B923" }}
                                     whileTap={{ scale: 0.97 }}
                                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-zinc-700 font-bold text-[15px] px-8 py-4 rounded-2xl cursor-pointer transition-all duration-200 bg-white border-2 border-zinc-200"
                                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>

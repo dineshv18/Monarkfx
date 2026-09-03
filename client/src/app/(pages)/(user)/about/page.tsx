@@ -37,22 +37,22 @@ const PillarRow = ({ p, i, isInView }: { p: typeof pillars[0]; i: number; isInVi
         transition={{ duration: 0.2 }}
         className="flex items-center gap-4 px-5 py-4 rounded-2xl cursor-default"
         style={{
-          border: hov ? "1.5px solid rgba(215,38,56,0.28)" : "1.5px solid #EBEBEB",
+          border: hov ? "1.5px solid rgba(232,185,35,0.28)" : "1.5px solid #EBEBEB",
           background: hov ? "#fff" : "rgba(255,255,255,0.6)",
           boxShadow: hov ? "0 8px 28px rgba(0,0,0,0.055)" : "0 2px 8px rgba(0,0,0,0.015)",
           transition: "border-color 0.22s, background 0.22s, box-shadow 0.22s",
         }}
       >
-        <span className="font-black text-[#D72638] text-[13px] tracking-[0.05em] min-w-[26px]"
+        <span className="font-black text-[#E8B923] text-[13px] tracking-[0.05em] min-w-[26px]"
           style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>0{i + 1}</span>
-        <div className="w-px h-9 shrink-0" style={{ background: hov ? "rgba(215,38,56,0.2)" : "#E8E8E8", transition: "background 0.22s" }} />
+        <div className="w-px h-9 shrink-0" style={{ background: hov ? "rgba(232,185,35,0.2)" : "#E8E8E8", transition: "background 0.22s" }} />
         <div className="w-10 h-10 rounded-[11px] shrink-0 flex items-center justify-center"
           style={{
-            background: hov ? "rgba(215,38,56,0.1)" : "rgba(215,38,56,0.06)",
-            border: hov ? "1px solid rgba(215,38,56,0.22)" : "1px solid rgba(215,38,56,0.1)",
+            background: hov ? "rgba(232,185,35,0.1)" : "rgba(232,185,35,0.06)",
+            border: hov ? "1px solid rgba(232,185,35,0.22)" : "1px solid rgba(232,185,35,0.1)",
             transition: "all 0.22s",
           }}>
-          <Icon className="w-[17px] h-[17px] text-[#D72638]" strokeWidth={2} />
+          <Icon className="w-[17px] h-[17px] text-[#E8B923]" strokeWidth={2} />
         </div>
         <div className="flex-1 min-w-0">
           <h4 className="font-bold text-zinc-900 text-[15px] leading-tight tracking-[-0.02em] mb-0.5"
@@ -61,7 +61,7 @@ const PillarRow = ({ p, i, isInView }: { p: typeof pillars[0]; i: number; isInVi
             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{p.desc}</p>
         </div>
         <ArrowRight className="w-3.5 h-3.5 shrink-0 transition-all duration-200"
-          style={{ color: hov ? "#D72638" : "transparent" }} />
+          style={{ color: hov ? "#E8B923" : "transparent" }} />
       </motion.div>
     </motion.div>
   );
@@ -98,7 +98,7 @@ const AboutPage = () => {
                 <span className="text-zinc-400 text-[11px] font-bold uppercase tracking-[0.22em]"
                   style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{v}</span>
                 {i < arr.length - 1 && (
-                  <span className="hidden sm:block w-px h-3 bg-[#D72638]/30" />
+                  <span className="hidden sm:block w-px h-3 bg-[#E8B923]/30" />
                 )}
               </React.Fragment>
             ))}
@@ -109,24 +109,24 @@ const AboutPage = () => {
       {/* ══ STORY — 3-col prompt layout ═══════════════════════ */}
       <section ref={storyRef} className="bg-[#FAFAFA] py-16 sm:py-20 px-5 sm:px-8 overflow-hidden relative">
         {/* Floating dots */}
-        <motion.div className="absolute top-1/2 left-[8%] w-3 h-3 rounded-full bg-[#D72638]/25 pointer-events-none hidden lg:block"
+        <motion.div className="absolute top-1/2 left-[8%] w-3 h-3 rounded-full bg-[#E8B923]/25 pointer-events-none hidden lg:block"
           animate={{ y: [0, -14, 0], opacity: [0.5, 1, 0.5] }} transition={{ duration: 3, repeat: Infinity }} />
-        <motion.div className="absolute bottom-1/3 right-[8%] w-4 h-4 rounded-full bg-[#D72638]/15 pointer-events-none hidden lg:block"
+        <motion.div className="absolute bottom-1/3 right-[8%] w-4 h-4 rounded-full bg-[#E8B923]/15 pointer-events-none hidden lg:block"
           animate={{ y: [0, 18, 0], opacity: [0.5, 1, 0.5] }} transition={{ duration: 4, repeat: Infinity, delay: 1 }} />
 
         <div className="max-w-[1100px] mx-auto">
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: 18 }} animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }} className="flex flex-col items-center mb-12 text-center gap-3">
-            <span className="text-[#D72638] font-extrabold text-[11px] uppercase tracking-[0.22em] flex items-center gap-2"
+            <span className="text-[#E8B923] font-extrabold text-[11px] uppercase tracking-[0.22em] flex items-center gap-2"
               style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
               <TrendingUp className="w-3.5 h-3.5" /> Our Origin
             </span>
             <h2 className="font-black text-zinc-950 leading-[1.04] tracking-[-0.04em]"
               style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 52px)" }}>
-              About <span className="text-[#D72638]">MonarkFX</span>
+              About <span className="text-[#E8B923]">MonarkFX</span>
             </h2>
-            <motion.div className="w-20 h-[2px] bg-[#D72638] rounded-full"
+            <motion.div className="w-20 h-[2px] bg-[#E8B923] rounded-full"
               initial={{ width: 0 }} animate={isStoryInView ? { width: 80 } : {}} transition={{ duration: 0.8, delay: 0.4 }} />
             <p className="text-zinc-500 max-w-xl text-[15px] leading-[1.75] font-light"
               style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -151,10 +151,10 @@ const AboutPage = () => {
                     transition={{ delay: 0.15 + i * 0.12, duration: 0.55 }}
                     whileHover={{ y: -4, transition: { duration: 0.2 } }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="text-[#D72638] bg-[#D72638]/10 p-2.5 rounded-xl relative transition-colors duration-300 group-hover:bg-[#D72638]/18">
+                      <div className="text-[#E8B923] bg-[#E8B923]/10 p-2.5 rounded-xl relative transition-colors duration-300 group-hover:bg-[#E8B923]/18">
                         <Icon className="w-5 h-5" strokeWidth={1.8} />
                       </div>
-                      <h3 className="font-bold text-zinc-900 text-[15px] group-hover:text-[#D72638] transition-colors duration-300"
+                      <h3 className="font-bold text-zinc-900 text-[15px] group-hover:text-[#E8B923] transition-colors duration-300"
                         style={{ fontFamily: "var(--font-playfair), serif" }}>{s.title}</h3>
                     </div>
                     <p className="text-zinc-500 text-[13px] leading-[1.65] pl-[52px]"
@@ -173,27 +173,27 @@ const AboutPage = () => {
                   whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}>
                   <img src="/team-monarkfx.jpeg" alt="MonarkFX Academy"
                     className="w-full h-[420px] object-cover object-center" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/60 to-transparent flex items-end justify-center p-5">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1E3F]/60 to-transparent flex items-end justify-center p-5">
                     <Link href="/courses" className="no-underline">
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                        className="bg-white text-[#D72638] px-4 py-2 rounded-full flex items-center gap-1.5 text-[13px] font-bold cursor-pointer">
+                        className="bg-white text-[#E8B923] px-4 py-2 rounded-full flex items-center gap-1.5 text-[13px] font-bold cursor-pointer">
                         View Courses <ArrowRight className="w-3.5 h-3.5" />
                       </motion.div>
                     </Link>
                   </div>
                 </motion.div>
                 {/* Border frame */}
-                <motion.div className="absolute inset-0 border-[3px] border-[#D72638]/25 rounded-2xl -m-2 z-[-1]"
+                <motion.div className="absolute inset-0 border-[3px] border-[#E8B923]/25 rounded-2xl -m-2 z-[-1]"
                   initial={{ opacity: 0, scale: 1.1 }} animate={isStoryInView ? { opacity: 1, scale: 1 } : {}}
                   transition={{ duration: 0.8, delay: 0.55 }} />
                 {/* Floating badge */}
-                <motion.div className="absolute -top-4 -right-4 bg-[#D72638] text-white px-3 py-1.5 rounded-xl text-[10px] font-extrabold uppercase tracking-[0.1em] shadow-lg"
+                <motion.div className="absolute -top-4 -right-4 bg-[#E8B923] text-[#0B1E3F] px-3 py-1.5 rounded-xl text-[10px] font-extrabold uppercase tracking-[0.1em] shadow-lg"
                   initial={{ opacity: 0, y: 10 }} animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.8 }}
                   style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                   Est. 2021
                 </motion.div>
-                <motion.div className="absolute -bottom-3 -left-4 bg-[#0A0A0A] text-white px-3 py-1.5 rounded-xl text-[10px] font-extrabold tracking-[0.08em] shadow-lg"
+                <motion.div className="absolute -bottom-3 -left-4 bg-[#0B1E3F] text-white px-3 py-1.5 rounded-xl text-[10px] font-extrabold tracking-[0.08em] shadow-lg"
                   initial={{ opacity: 0, y: -10 }} animate={isStoryInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.9 }}
                   style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -216,10 +216,10 @@ const AboutPage = () => {
                     transition={{ delay: 0.15 + i * 0.12, duration: 0.55 }}
                     whileHover={{ y: -4, transition: { duration: 0.2 } }}>
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="text-[#D72638] bg-[#D72638]/10 p-2.5 rounded-xl relative transition-colors duration-300 group-hover:bg-[#D72638]/18">
+                      <div className="text-[#E8B923] bg-[#E8B923]/10 p-2.5 rounded-xl relative transition-colors duration-300 group-hover:bg-[#E8B923]/18">
                         <Icon className="w-5 h-5" strokeWidth={1.8} />
                       </div>
-                      <h3 className="font-bold text-zinc-900 text-[15px] group-hover:text-[#D72638] transition-colors duration-300"
+                      <h3 className="font-bold text-zinc-900 text-[15px] group-hover:text-[#E8B923] transition-colors duration-300"
                         style={{ fontFamily: "var(--font-playfair), serif" }}>{s.title}</h3>
                     </div>
                     <p className="text-zinc-500 text-[13px] leading-[1.65] pl-[52px]"
@@ -246,8 +246,8 @@ const AboutPage = () => {
                   className="bg-white/70 backdrop-blur-sm p-5 rounded-2xl flex flex-col items-center text-center group hover:bg-white transition-colors duration-300"
                   style={{ border: "1.5px solid #EBEBEB", boxShadow: "0 4px 16px rgba(0,0,0,0.03)" }}>
                   <div className="w-11 h-11 rounded-full flex items-center justify-center mb-3 transition-colors duration-300"
-                    style={{ background: "rgba(215,38,56,0.06)", border: "1px solid rgba(215,38,56,0.12)" }}>
-                    <Icon className="w-4.5 h-4.5 text-[#D72638]" strokeWidth={1.8} />
+                    style={{ background: "rgba(232,185,35,0.06)", border: "1px solid rgba(232,185,35,0.12)" }}>
+                    <Icon className="w-4.5 h-4.5 text-[#E8B923]" strokeWidth={1.8} />
                   </div>
                   <p className="font-black text-zinc-900 leading-none mb-1"
                     style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(22px, 2.5vw, 28px)" }}>
@@ -255,7 +255,7 @@ const AboutPage = () => {
                   </p>
                   <p className="text-zinc-400 text-[10px] uppercase tracking-[0.1em] font-bold"
                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{s.label}</p>
-                  <div className="w-8 h-[2px] bg-[#D72638] mt-2.5 rounded-full group-hover:w-12 transition-all duration-300" />
+                  <div className="w-8 h-[2px] bg-[#E8B923] mt-2.5 rounded-full group-hover:w-12 transition-all duration-300" />
                 </motion.div>
               );
             })}
@@ -273,14 +273,14 @@ const AboutPage = () => {
             animate={isValuesInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
             className="text-center mb-12 space-y-4">
-            <span className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.22em]"
+            <span className="text-[11px] font-extrabold text-[#E8B923] uppercase tracking-[0.22em]"
               style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
               What We Stand For
             </span>
             <h2 className="font-black text-zinc-950 leading-[1.02] tracking-[-0.04em]"
               style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(30px, 4vw, 52px)" }}>
               The Foundation of{" "}
-              <span className="text-[#D72638]">MonarkFX</span>
+              <span className="text-[#E8B923]">MonarkFX</span>
             </h2>
             <p className="text-zinc-500 text-[15px] leading-[1.75] font-light max-w-lg mx-auto"
               style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -312,9 +312,9 @@ const AboutPage = () => {
                   className="group relative p-8 sm:p-10 space-y-3 hover:bg-zinc-50 transition-colors duration-200 cursor-default">
                   {/* Left divider accent on hover */}
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    style={{ background: "#D72638" }} />
+                    style={{ background: "#E8B923" }} />
                   <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4 text-[#D72638] shrink-0" strokeWidth={2} />
+                    <Icon className="w-4 h-4 text-[#E8B923] shrink-0" strokeWidth={2} />
                     <h3 className="font-bold text-zinc-900 text-[14px] sm:text-[15px]"
                       style={{ fontFamily: "var(--font-playfair), serif" }}>
                       {item.title}

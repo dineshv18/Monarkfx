@@ -10,9 +10,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[var(--color-primary-red)] text-[var(--color-white)] shadow-[var(--shadow-soft)] hover:-translate-y-0.5 hover:bg-[var(--color-dark-red)] hover:shadow-[var(--shadow-hover)]",
+          "bg-[var(--color-primary-red)] text-[var(--color-black)] font-semibold shadow-[var(--shadow-soft)] hover:-translate-y-0.5 hover:bg-[var(--color-dark-red)] hover:text-[var(--color-white)] hover:shadow-[var(--shadow-hover)]",
         destructive:
-          "bg-[var(--color-primary-red)] text-[var(--color-white)] shadow-[var(--shadow-soft)] hover:bg-[var(--color-dark-red)]",
+          "bg-[var(--color-primary-red)] text-[var(--color-black)] font-semibold shadow-[var(--shadow-soft)] hover:bg-[var(--color-dark-red)] hover:text-[var(--color-white)]",
         outline:
           "border border-[var(--color-primary-red)] bg-[var(--color-white)] text-[var(--color-primary-red)] hover:-translate-y-0.5 hover:bg-[var(--color-red-tint)]",
         secondary:

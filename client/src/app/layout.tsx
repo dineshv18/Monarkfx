@@ -13,6 +13,21 @@ export const metadata: Metadata = {
   verification: {
     google: "ag1Iza1649hS0a-56hUID2i8REiGVerKmH3ZxRLBhHM",
   },
+  openGraph: {
+    title: "MonarkFX - Global Trading Excellence",
+    description:
+      "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
+    siteName: "MonarkFX",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "MonarkFX" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MonarkFX - Global Trading Excellence",
+    description:
+      "Empower your financial future with expert trading education in stocks, forex, and cryptocurrency.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

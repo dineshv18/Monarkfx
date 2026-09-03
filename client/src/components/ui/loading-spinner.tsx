@@ -82,7 +82,7 @@ export function LoadingSpinner({
                     animate="animate"
                 >
                     <Image
-                        src="/logo-light.png"
+                        src="/logo-gold-icon.png"
                         alt="MonarkFX"
                         width={logoSize}
                         height={logoSize}

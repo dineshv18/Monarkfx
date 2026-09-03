@@ -43,7 +43,7 @@ const HeroSection: React.FC = () => {
         >
           <div className="absolute inset-0 bg-[#0a0a0a]/50 z-10 rounded-full"></div>
           <Image
-            src="/logo-light.png"
+            src="/logo-gold-icon.png"
             alt="Monark FX"
             width={520}
             height={520}

@@ -86,12 +86,12 @@ const faqs = [
 
 const SectionLabel = ({ text }: { text: string }) => (
     <div className="inline-flex items-center gap-3 mb-5">
-        <div className="w-8 h-[2px] rounded-full bg-[#D72638]" />
-        <span className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.22em]"
+        <div className="w-8 h-[2px] rounded-full bg-[image:linear-gradient(90deg,#F5D876,#E8B923_50%,#C79A1E)]" />
+        <span className="text-[11px] font-extrabold text-[#E8B923] uppercase tracking-[0.22em]"
             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
             {text}
         </span>
-        <div className="w-8 h-[2px] rounded-full bg-[#D72638]" />
+        <div className="w-8 h-[2px] rounded-full bg-[image:linear-gradient(90deg,#F5D876,#E8B923_50%,#C79A1E)]" />
     </div>
 );
 
@@ -99,7 +99,6 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
     const [mode, setMode] = useState(1); // offline first
     const opt = batch.options[mode];
     const [hovered, setHovered] = useState(false);
-    const Icon = batch.icon;
     const discountPct = Math.round((1 - parseInt(opt.price.replace(",", "")) / parseInt(opt.originalPrice.replace(",", ""))) * 100);
 
     return (
@@ -116,22 +115,21 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                 transition={{ duration: 0.28 }}
                 className="h-full flex flex-col rounded-2xl bg-white relative overflow-hidden cursor-pointer"
                 style={{
-                    border: hovered ? "1.5px solid rgba(215,38,56,0.32)" : "1.5px solid #EBEBEB",
-                    boxShadow: hovered ? "0 28px 64px rgba(0,0,0,0.07), 0 0 0 4px rgba(215,38,56,0.03)" : "0 8px 28px rgba(0,0,0,0.03)",
+                    border: hovered ? "1.5px solid rgba(232,185,35,0.32)" : "1.5px solid #EBEBEB",
+                    boxShadow: hovered ? "0 28px 64px rgba(0,0,0,0.07), 0 0 0 4px rgba(232,185,35,0.03)" : "0 8px 28px rgba(0,0,0,0.03)",
                     transition: "border-color 0.24s, box-shadow 0.24s",
                 }}
             >
                 {/* Image */}
-                <div className="relative h-44 overflow-hidden shrink-0 bg-[#0A0A0A]">
+                <div className="relative aspect-[16/9] overflow-hidden shrink-0 bg-[#0B1E3F]">
                     <Image src={batch.image} alt={batch.title} fill
-                        className="object-cover transition-transform duration-500"
-                        style={{ transform: hovered ? "scale(1.06)" : "scale(1)" }}
+                        className="object-contain transition-transform duration-500"
+                        style={{ transform: hovered ? "scale(1.04)" : "scale(1)" }}
                         sizes="(max-width: 768px) 100vw, 33vw" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.2) 55%, transparent 100%)" }} />
 
                     {/* Limited offer top-left */}
                     <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                        style={{ background: "rgba(215,38,56,0.9)", backdropFilter: "blur(4px)" }}>
+                        style={{ background: "rgba(232,185,35,0.9)", backdropFilter: "blur(4px)" }}>
                         <Flame className="w-3 h-3 text-white" />
                         <span className="text-white text-[9px] font-extrabold uppercase tracking-[0.1em]"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Limited Offer</span>
@@ -139,30 +137,16 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
 
                     {/* Discount badge top-right */}
                     <div className="absolute top-3 right-3 w-11 h-11 rounded-full flex flex-col items-center justify-center"
-                        style={{ background: "linear-gradient(135deg, #D72638, #A01020)", boxShadow: "0 4px 12px rgba(215,38,56,0.5)" }}>
+                        style={{ background: "linear-gradient(135deg, #E8B923, #A07C16)", boxShadow: "0 4px 12px rgba(232,185,35,0.5)" }}>
                         <span className="text-white text-[7px] font-bold leading-none">SAVE</span>
                         <span className="text-white text-[13px] font-black leading-tight">{discountPct}%</span>
                     </div>
 
-                    {/* Icon + duration bottom */}
-                    <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-                            style={{ background: "rgba(215,38,56,0.85)", backdropFilter: "blur(4px)" }}>
-                            <Icon className="w-4 h-4 text-white" strokeWidth={2} />
-                        </div>
-                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg"
-                            style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
-                            <Clock className="w-3 h-3 text-[#D72638]" />
-                            <span className="text-white text-[9px] font-bold">{opt.duration}</span>
-                        </div>
-                    </div>
-
-                    {/* Title bottom-right */}
-                    <div className="absolute bottom-3 right-3 left-28">
-                        <p className="text-white font-black leading-tight text-right tracking-[-0.02em]"
-                            style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(13px, 1.2vw, 16px)" }}>
-                            {batch.title}
-                        </p>
+                    {/* Duration bottom-left */}
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2 py-1 rounded-lg"
+                        style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+                        <Clock className="w-3 h-3 text-[#E8B923]" />
+                        <span className="text-white text-[9px] font-bold">{opt.duration}</span>
                     </div>
                 </div>
 
@@ -183,12 +167,12 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                                     style={{
                                         fontFamily: "var(--font-dm-sans), sans-serif",
                                         background: mode === actualIdx ? "#fff" : "transparent",
-                                        color: mode === actualIdx ? "#0A0A0A" : "#999",
+                                        color: mode === actualIdx ? "#0B1E3F" : "#999",
                                         boxShadow: mode === actualIdx ? "0 2px 8px rgba(0,0,0,0.07)" : "none",
                                     }}>
                                     {actualIdx === 1
-                                        ? <MapPin className="w-3 h-3" style={{ color: mode === actualIdx ? "#D72638" : "#BBB" }} />
-                                        : <Wifi className="w-3 h-3" style={{ color: mode === actualIdx ? "#D72638" : "#BBB" }} />}
+                                        ? <MapPin className="w-3 h-3" style={{ color: mode === actualIdx ? "#E8B923" : "#BBB" }} />
+                                        : <Wifi className="w-3 h-3" style={{ color: mode === actualIdx ? "#E8B923" : "#BBB" }} />}
                                     {o.label}
                                 </button>
                             );
@@ -202,7 +186,7 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.2 }}
                         className="mb-5 p-4 rounded-2xl"
-                        style={{ background: "linear-gradient(135deg, #FFF5F5, #FFF)", border: "1px solid rgba(215,38,56,0.12)" }}
+                        style={{ background: "linear-gradient(135deg, #FBF6E9, #FFF)", border: "1px solid rgba(232,185,35,0.12)" }}
                     >
                         <div className="flex items-center gap-2 mb-1">
                             <span className="text-zinc-400 text-[13px] line-through">₹{opt.originalPrice}</span>
@@ -218,8 +202,8 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                             <span className="text-zinc-500 text-[13px] font-semibold">+ GST</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <CreditCard className="w-3.5 h-3.5 text-[#D72638] shrink-0" />
-                            <span className="text-[#D72638] text-[12px] font-bold"
+                            <CreditCard className="w-3.5 h-3.5 text-[#E8B923] shrink-0" />
+                            <span className="text-[#E8B923] text-[12px] font-bold"
                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                 EMI: ₹{opt.emi}/mo × {opt.emiMonths} months
                             </span>
@@ -246,7 +230,7 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                         className="w-full py-3.5 rounded-2xl flex items-center justify-center gap-2 font-bold text-[14px] transition-all duration-200"
                         style={{
                             fontFamily: "var(--font-dm-sans), sans-serif",
-                            background: hovered ? "#D72638" : "#0A0A0A",
+                            background: hovered ? "#E8B923" : "#0B1E3F",
                             color: "#fff",
                         }}>
                         View Course Details
@@ -256,7 +240,7 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                     {/* Bottom bar */}
                     <div className="mt-4 h-[3px] rounded-full"
                         style={{
-                            background: "linear-gradient(90deg, #D72638, rgba(215,38,56,0.1))",
+                            background: "linear-gradient(90deg, #E8B923, rgba(232,185,35,0.1))",
                             transform: hovered ? "scaleX(1)" : "scaleX(0.12)",
                             transformOrigin: "left",
                             transition: "transform 0.36s cubic-bezier(0.22, 1, 0.36, 1)",
@@ -279,14 +263,14 @@ const FAQItem = ({ faq, icon, index, inView }: { faq: typeof faqs[0]; icon: Reac
             className="rounded-2xl overflow-hidden transition-all duration-200"
             style={{
                 background: open ? "#fff" : "#fff",
-                border: open ? "1.5px solid rgba(215,38,56,0.25)" : "1.5px solid #F0F0F0",
-                boxShadow: open ? "0 8px 28px rgba(215,38,56,0.06)" : "0 2px 8px rgba(0,0,0,0.03)",
+                border: open ? "1.5px solid rgba(232,185,35,0.25)" : "1.5px solid #F0F0F0",
+                boxShadow: open ? "0 8px 28px rgba(232,185,35,0.06)" : "0 2px 8px rgba(0,0,0,0.03)",
             }}>
             <button onClick={() => setOpen(!open)}
                 className="w-full flex items-center justify-between px-5 py-4 bg-none border-none cursor-pointer text-left gap-3">
                 <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-[16px] transition-colors duration-200"
-                        style={{ background: open ? "rgba(215,38,56,0.1)" : "#F5F5F5", color: open ? "#D72638" : "#888" }}>
+                        style={{ background: open ? "rgba(232,185,35,0.1)" : "#F5F5F5", color: open ? "#E8B923" : "#888" }}>
                         {icon}
                     </div>
                     <span className="text-zinc-900 text-[14px] sm:text-[15px] font-bold leading-snug"
@@ -295,9 +279,9 @@ const FAQItem = ({ faq, icon, index, inView }: { faq: typeof faqs[0]; icon: Reac
                     </span>
                 </div>
                 <div className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center transition-colors duration-200"
-                    style={{ background: open ? "rgba(215,38,56,0.1)" : "#F0F0F0" }}>
+                    style={{ background: open ? "rgba(232,185,35,0.1)" : "#F0F0F0" }}>
                     {open
-                        ? <Minus className="w-3 h-3 text-[#D72638]" />
+                        ? <Minus className="w-3 h-3 text-[#E8B923]" />
                         : <Plus className="w-3 h-3 text-zinc-500" />}
                 </div>
             </button>
@@ -349,12 +333,12 @@ const CoursesPage = () => {
                 <div className="max-w-7xl mx-auto">
                     <div className="rounded overflow-hidden relative flex flex-col lg:flex-row"
                         style={{
-                            background: "#0A0A0A",
+                            background: "#0B1E3F",
                             border: "1.5px solid #1C1C1C",
                             boxShadow: "0 32px 80px rgba(0,0,0,0.22)",
                         }}>
-                        <div className="h-px w-full lg:hidden bg-gradient-to-r from-transparent via-[#D72638]/40 to-transparent absolute top-0" />
-                        <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#D72638]/25 to-transparent" />
+                        <div className="h-px w-full lg:hidden bg-gradient-to-r from-transparent via-[#E8B923]/40 to-transparent absolute top-0" />
+                        <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#E8B923]/25 to-transparent" />
 
                         {/* Content */}
                         <div className="flex-[1.2] px-8 sm:px-12 py-10  relative z-10">
@@ -372,7 +356,7 @@ const CoursesPage = () => {
                                 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 3.5vw, 48px)" }}>
                                 Step One —{" "}
                                 <span style={{
-                                    backgroundImage: "linear-gradient(120deg, #D72638, #FF7A7A)",
+                                    backgroundImage: "linear-gradient(120deg, #E8B923, #F5D876)",
                                     WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text"
                                 }}>
                                     Trading Starter Workshop
@@ -393,8 +377,8 @@ const CoursesPage = () => {
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-3">
                                         <div className="w-6 h-6 rounded-lg shrink-0 flex items-center justify-center mt-0.5"
-                                            style={{ background: "rgba(215,38,56,0.18)", border: "1px solid rgba(215,38,56,0.28)" }}>
-                                            <Check className="w-3 h-3 text-[#D72638]" strokeWidth={3} />
+                                            style={{ background: "rgba(232,185,35,0.18)", border: "1px solid rgba(232,185,35,0.28)" }}>
+                                            <Check className="w-3 h-3 text-[#E8B923]" strokeWidth={3} />
                                         </div>
                                         <div>
                                             <p className="text-white text-[14px] font-bold"
@@ -409,13 +393,13 @@ const CoursesPage = () => {
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 flex-wrap">
                                 <Link href={getEnrollUrl("5-Day Starter Workshop")} target="_blank" className="no-underline w-full sm:w-auto">
                                     <motion.button
-                                        whileHover={{ y: -2, boxShadow: "0 16px 40px rgba(215,38,56,0.45)" }}
+                                        whileHover={{ y: -2, boxShadow: "0 16px 40px rgba(232,185,35,0.45)" }}
                                         whileTap={{ scale: 0.97 }}
                                         className="w-full sm:w-auto inline-flex items-center justify-center gap-2
-                               bg-[#D72638] hover:bg-[#C0202F] text-white
+                               bg-[image:var(--gold-metallic)] hover:brightness-95 text-[#0B1E3F]
                                text-[15px] font-bold px-8 py-4 rounded-2xl
                                border-none cursor-pointer
-                               shadow-[0_8px_24px_rgba(215,38,56,0.32)]
+                               shadow-[0_8px_24px_rgba(232,185,35,0.32)]
                                transition-colors duration-200"
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                         Join for ₹999 + GST
@@ -425,7 +409,7 @@ const CoursesPage = () => {
                                 <div>
                                     <p className="text-white/35 text-[11px] font-bold uppercase tracking-[0.1em]"
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Limited Time Reward</p>
-                                    <p className="text-[#D72638] text-[13px] font-extrabold"
+                                    <p className="text-[#E8B923] text-[13px] font-extrabold"
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>₹999 Credit towards MPTP</p>
                                 </div>
                             </div>
@@ -433,7 +417,7 @@ const CoursesPage = () => {
 
                         {/* Visual — bento pricing grid */}
                         <div className="flex-[0.75] min-h-[320px] lg:min-h-0 flex flex-col justify-center p-6 relative overflow-hidden"
-                            style={{ background: "linear-gradient(140deg, #0D0D0D 0%, #0A0A0A 100%)", borderLeft: "1px solid #1C1C1C" }}>
+                            style={{ background: "linear-gradient(140deg, #0B1E3F 0%, #0B1E3F 100%)", borderLeft: "1px solid #1C1C1C" }}>
                             <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
                                 style={{ backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
 
@@ -456,17 +440,17 @@ const CoursesPage = () => {
                                         transition={{ delay: 0.3 + i * 0.07 }}
                                         className="relative rounded-xl p-3 flex flex-col gap-1 overflow-hidden"
                                         style={{
-                                            background: item.hot ? "rgba(215,38,56,0.1)" : "rgba(255,255,255,0.04)",
-                                            border: item.hot ? "1px solid rgba(215,38,56,0.3)" : "1px solid rgba(255,255,255,0.07)",
+                                            background: item.hot ? "rgba(232,185,35,0.1)" : "rgba(255,255,255,0.04)",
+                                            border: item.hot ? "1px solid rgba(232,185,35,0.3)" : "1px solid rgba(255,255,255,0.07)",
                                         }}>
                                         {item.hot && (
-                                            <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#D72638]"
-                                                style={{ boxShadow: "0 0 6px rgba(215,38,56,0.8)" }} />
+                                            <div className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#E8B923]"
+                                                style={{ boxShadow: "0 0 6px rgba(232,185,35,0.8)" }} />
                                         )}
                                         <div className="flex items-center gap-1.5">
                                             <div className="w-3.5 h-3.5 rounded flex items-center justify-center shrink-0"
-                                                style={{ background: item.hot ? "rgba(215,38,56,0.25)" : "rgba(255,255,255,0.08)" }}>
-                                                <Check className="w-2 h-2" style={{ color: item.hot ? "#D72638" : "#666" }} strokeWidth={3} />
+                                                style={{ background: item.hot ? "rgba(232,185,35,0.25)" : "rgba(255,255,255,0.08)" }}>
+                                                <Check className="w-2 h-2" style={{ color: item.hot ? "#E8B923" : "#666" }} strokeWidth={3} />
                                             </div>
                                             <p className="text-[12px] font-bold leading-tight"
                                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: item.hot ? "#fff" : "rgba(255,255,255,0.7)" }}>
@@ -485,8 +469,8 @@ const CoursesPage = () => {
                             <div className="flex items-center gap-3 mt-4 pt-4 relative z-10"
                                 style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
                                 <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                                    style={{ background: "rgba(215,38,56,0.12)", border: "1px solid rgba(215,38,56,0.25)" }}>
-                                    <Award className="w-4 h-4 text-[#D72638]" />
+                                    style={{ background: "rgba(232,185,35,0.12)", border: "1px solid rgba(232,185,35,0.25)" }}>
+                                    <Award className="w-4 h-4 text-[#E8B923]" />
                                 </div>
                                 <div>
                                     <p className="text-white text-[12px] font-bold leading-tight"
@@ -503,7 +487,7 @@ const CoursesPage = () => {
             {/* ══ 3. CORE MENTORSHIP BATCHES ═══════════════════════ */}
             <section ref={batchRef} className="relative bg-[#F7F7F7] overflow-hidden py-14 sm:py-16 px-5 sm:px-8">
                 <div className="absolute inset-0 pointer-events-none"
-                    style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.04) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+                    style={{ backgroundImage: "radial-gradient(rgba(232,185,35,0.04) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
 
                 <div className="relative max-w-[1120px] mx-auto">
                     <motion.div
@@ -535,10 +519,10 @@ const CoursesPage = () => {
             <section ref={addonsRef} className="relative bg-white overflow-hidden py-20 sm:py-28 px-5 sm:px-8">
                 {/* Subtle grid */}
                 <div className="absolute inset-0 pointer-events-none"
-                    style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.035) 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
+                    style={{ backgroundImage: "radial-gradient(rgba(232,185,35,0.035) 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
                 {/* Radial glow behind featured card */}
                 <div className="absolute right-0 bottom-0 w-[600px] h-[600px] pointer-events-none"
-                    style={{ background: "radial-gradient(ellipse at 80% 80%, rgba(215,38,56,0.07) 0%, transparent 65%)" }} />
+                    style={{ background: "radial-gradient(ellipse at 80% 80%, rgba(232,185,35,0.07) 0%, transparent 65%)" }} />
 
                 <div className="relative max-w-[1120px] mx-auto">
 
@@ -546,13 +530,13 @@ const CoursesPage = () => {
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={isAddonsInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.6 }} className="text-center mb-16">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5"
-                            style={{ background: "rgba(215,38,56,0.06)", border: "1px solid rgba(215,38,56,0.15)" }}>
-                            <span className="text-[10px] font-extrabold text-[#D72638] uppercase tracking-[0.22em]"
+                            style={{ background: "rgba(232,185,35,0.06)", border: "1px solid rgba(232,185,35,0.15)" }}>
+                            <span className="text-[10px] font-extrabold text-[#E8B923] uppercase tracking-[0.22em]"
                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Beyond the Curriculum</span>
                         </div>
                         <h2 className="font-black text-zinc-950 leading-[1.02] tracking-[-0.05em] mb-4"
                             style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(34px, 5vw, 58px)" }}>
-                            Scale Your <span className="text-[#D72638]">Edge</span>
+                            Scale Your <span className="text-[#E8B923]">Edge</span>
                         </h2>
                         <p className="text-zinc-400 max-w-[440px] mx-auto leading-[1.8] font-light"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: "clamp(14px, 1vw, 17px)" }}>
@@ -564,7 +548,7 @@ const CoursesPage = () => {
                     <style>{`
                         .cy-bento-item {
                             position: relative;
-                            background: #0D0D0D;
+                            background: #0B1E3F;
                             border: 1px solid #1C1C1C;
                             border-radius: 16px;
                             overflow: hidden;
@@ -577,12 +561,12 @@ const CoursesPage = () => {
                             inset: 0;
                             border-radius: 16px;
                             opacity: 0;
-                            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(215,38,56,0.12), transparent 60%);
+                            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(232,185,35,0.12), transparent 60%);
                             transition: opacity 0.3s;
                             pointer-events: none;
                         }
                         .cy-bento-item:hover::before { opacity: 1; }
-                        .cy-bento-item:hover { border-color: rgba(215,38,56,0.35); box-shadow: 0 20px 48px rgba(0,0,0,0.35); }
+                        .cy-bento-item:hover { border-color: rgba(232,185,35,0.35); box-shadow: 0 20px 48px rgba(0,0,0,0.35); }
                     `}</style>
 
                     <motion.div initial={{ opacity: 0, y: 20 }} animate={isAddonsInView ? { opacity: 1, y: 0 } : {}}
@@ -613,7 +597,7 @@ const CoursesPage = () => {
                                         <p className="text-[11px] text-zinc-500 leading-[1.55] mb-4 flex-1"
                                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{plan.desc}</p>
                                         <div className="flex items-baseline gap-0.5 mb-3.5">
-                                            <span className="font-black text-[#D72638] leading-none text-[18px]"
+                                            <span className="font-black text-[#E8B923] leading-none text-[18px]"
                                                 style={{ fontFamily: "var(--font-playfair), serif" }}>₹{plan.price}</span>
                                             <span className="text-[10px] font-semibold text-zinc-600 ml-0.5">{plan.dur}</span>
                                         </div>
@@ -650,7 +634,7 @@ const CoursesPage = () => {
                                         </h3>
                                     </div>
                                     <span className="text-[9px] font-extrabold uppercase tracking-[0.12em] px-2.5 py-1 rounded-full mt-1"
-                                        style={{ background: "rgba(215,38,56,0.07)", color: "#D72638", border: "1px solid rgba(215,38,56,0.15)", fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                        style={{ background: "rgba(232,185,35,0.07)", color: "#E8B923", border: "1px solid rgba(232,185,35,0.15)", fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                         Monthly
                                     </span>
                                 </div>
@@ -693,22 +677,22 @@ const CoursesPage = () => {
                             className="relative">
                             {/* Animated border glow */}
                             <div className="absolute -inset-[1px] rounded-3xl pointer-events-none"
-                                style={{ background: "linear-gradient(135deg, rgba(215,38,56,0.5), rgba(215,38,56,0.05) 50%, rgba(215,38,56,0.3))", opacity: 0.6 }} />
+                                style={{ background: "linear-gradient(135deg, rgba(232,185,35,0.5), rgba(232,185,35,0.05) 50%, rgba(232,185,35,0.3))", opacity: 0.6 }} />
 
                             <motion.div whileHover={{ y: -6 }} transition={{ duration: 0.25 }}
                                 className="relative h-full flex flex-col rounded-3xl p-8 sm:p-9 overflow-hidden"
-                                style={{ background: "linear-gradient(150deg, #0D0D0D 0%, #151515 100%)", boxShadow: "0 32px 80px rgba(0,0,0,0.4)" }}>
+                                style={{ background: "linear-gradient(150deg, #0B1E3F 0%, #151515 100%)", boxShadow: "0 32px 80px rgba(0,0,0,0.4)" }}>
 
                                 {/* Radial red glow inside card */}
                                 <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none"
-                                    style={{ background: "radial-gradient(circle at 80% 20%, rgba(215,38,56,0.18) 0%, transparent 65%)" }} />
+                                    style={{ background: "radial-gradient(circle at 80% 20%, rgba(232,185,35,0.18) 0%, transparent 65%)" }} />
                                 <div className="absolute bottom-0 left-0 w-48 h-48 pointer-events-none"
-                                    style={{ background: "radial-gradient(circle at 20% 80%, rgba(215,38,56,0.08) 0%, transparent 65%)" }} />
+                                    style={{ background: "radial-gradient(circle at 20% 80%, rgba(232,185,35,0.08) 0%, transparent 65%)" }} />
 
                                 {/* Best Value badge */}
                                 <div className="absolute top-6 right-6">
                                     <span className="text-[9px] font-extrabold uppercase tracking-[0.14em] px-3 py-1.5 rounded-full"
-                                        style={{ background: "#D72638", color: "#fff", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 4px 12px rgba(215,38,56,0.4)" }}>
+                                        style={{ background: "#E8B923", color: "#0B1E3F", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 4px 12px rgba(232,185,35,0.4)" }}>
                                         Best Value
                                     </span>
                                 </div>
@@ -718,7 +702,7 @@ const CoursesPage = () => {
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Combo Suite</span>
                                     <h3 className="font-black text-white tracking-[-0.03em] mb-4"
                                         style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(24px, 2.5vw, 32px)" }}>
-                                        Mastery <span className="text-[#D72638]">Combo</span>
+                                        Mastery <span className="text-[#E8B923]">Combo</span>
                                     </h3>
 
                                     <div className="flex items-baseline gap-2 mb-1">
@@ -742,8 +726,8 @@ const CoursesPage = () => {
                                         {["Indian + Forex + Crypto", "4 Month Program", "All 3 Market Mentorships", "1 Year Elite Membership", "Lifetime Mentorship Access", "Priority Multi-Market Support", "Lifetime Content Access", "Personal Coaching Call"].map((f, i) => (
                                             <div key={i} className="flex items-center gap-2">
                                                 <div className="w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0"
-                                                    style={{ background: "rgba(215,38,56,0.2)", border: "1px solid rgba(215,38,56,0.35)" }}>
-                                                    <Check className="w-1.5 h-1.5 text-[#D72638]" strokeWidth={3} />
+                                                    style={{ background: "rgba(232,185,35,0.2)", border: "1px solid rgba(232,185,35,0.35)" }}>
+                                                    <Check className="w-1.5 h-1.5 text-[#E8B923]" strokeWidth={3} />
                                                 </div>
                                                 <span className="text-zinc-300 text-[12px]"
                                                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{f}</span>
@@ -796,7 +780,7 @@ const CoursesPage = () => {
             <section ref={faqRef} className="relative bg-white py-16 sm:py-20 px-5 sm:px-8"
                 style={{ borderTop: "1px solid #F0F0F0" }}>
                 <div className="absolute inset-0 pointer-events-none"
-                    style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.03) 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
+                    style={{ backgroundImage: "radial-gradient(rgba(232,185,35,0.03) 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
 
                 <div className="relative max-w-[1000px] mx-auto">
                     <div className="flex flex-col gap-10 md:flex-row md:gap-16">
@@ -807,14 +791,14 @@ const CoursesPage = () => {
                             className="md:w-1/3">
                             <div className="md:sticky md:top-24">
                                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5"
-                                    style={{ background: "rgba(215,38,56,0.07)", border: "1px solid rgba(215,38,56,0.15)" }}>
-                                    <span className="text-[10px] font-extrabold text-[#D72638] uppercase tracking-[0.2em]"
+                                    style={{ background: "rgba(232,185,35,0.07)", border: "1px solid rgba(232,185,35,0.15)" }}>
+                                    <span className="text-[10px] font-extrabold text-[#E8B923] uppercase tracking-[0.2em]"
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Help Center</span>
                                 </div>
                                 <h2 className="font-black text-zinc-950 leading-[1.04] tracking-[-0.04em] mb-4"
                                     style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(26px, 3vw, 38px)" }}>
                                     Frequently<br />Asked<br />
-                                    <span className="text-[#D72638]">Questions</span>
+                                    <span className="text-[#E8B923]">Questions</span>
                                 </h2>
                                 <p className="text-zinc-400 text-[13px] leading-[1.7] mb-6"
                                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -849,17 +833,17 @@ const CoursesPage = () => {
             </section>
 
             {/* ══ 8. FINAL CTA ══════════════════════════════════════ */}
-            <section className="relative py-24 sm:py-32 px-5 sm:px-8 text-center overflow-hidden bg-[#0A0A0A]">
+            <section className="relative py-24 sm:py-32 px-5 sm:px-8 text-center overflow-hidden bg-[#0B1E3F]">
                 <div className="absolute inset-0 pointer-events-none"
                     style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)", backgroundSize: "52px 52px" }} />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-48 pointer-events-none"
-                    style={{ background: "radial-gradient(ellipse, rgba(215,38,56,0.14) 0%, transparent 70%)" }} />
+                    style={{ background: "radial-gradient(ellipse, rgba(232,185,35,0.14) 0%, transparent 70%)" }} />
 
                 <div className="relative max-w-[680px] mx-auto">
                     <h2 className="font-black text-white leading-[1.02] tracking-[-0.04em] mb-5"
                         style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(34px, 5.5vw, 64px)" }}>
                         Ready to define your{" "}
-                        <span className="text-[#D72638]">Legacy?</span>
+                        <span className="text-[#E8B923]">Legacy?</span>
                     </h2>
                     <p className="text-white/50 leading-[1.75] font-light mb-10"
                         style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: "clamp(16px, 1.2vw, 20px)" }}>
@@ -867,13 +851,13 @@ const CoursesPage = () => {
                     </p>
                     <Link href={getEnrollUrl("5-Day Starter Workshop")} target="_blank" className="no-underline inline-block w-full sm:w-auto">
                         <motion.button
-                            whileHover={{ y: -3, boxShadow: "0 20px 56px rgba(215,38,56,0.48)" }}
+                            whileHover={{ y: -3, boxShadow: "0 20px 56px rgba(232,185,35,0.48)" }}
                             whileTap={{ scale: 0.97 }}
                             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5
-                         bg-[#D72638] hover:bg-[#C0202F] text-white
+                         bg-[image:var(--gold-metallic)] hover:brightness-95 text-[#0B1E3F]
                          text-[16px] font-bold px-10 py-5 rounded-2xl
                          border-none cursor-pointer
-                         shadow-[0_10px_36px_rgba(215,38,56,0.32)]
+                         shadow-[0_10px_36px_rgba(232,185,35,0.32)]
                          transition-colors duration-200"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                             Begin Step One Now

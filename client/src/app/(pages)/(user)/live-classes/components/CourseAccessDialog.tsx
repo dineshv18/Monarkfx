@@ -124,7 +124,7 @@ export default function CourseAccessDialog({
         name: "Monark FX",
         description: `Course Access for: ${classData.title}`,
         order_id: order.id,
-        image: "/logo-light.png",
+        image: "/logo-gold-icon.png",
         handler: async function (response: any) {
           try {
             setIsProcessing(true);

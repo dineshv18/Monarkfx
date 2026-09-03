@@ -177,7 +177,7 @@ export default function PurchaseDialog({
         description: `Purchase: ${zoomLiveClass.title}${selectedModuleId ? ` - Module` : ""
           }`,
         order_id: order.id,
-        image: "/logo-light.png",
+        image: "/logo-gold-icon.png",
         handler: async function (response: any) {
           try {
             console.log("Payment successful, verifying:", response);
@@ -499,8 +499,8 @@ export default function PurchaseDialog({
               onClick={initiatePayment}
               disabled={isLoading}
               className={`${isSelectedModuleFree()
-                  ? "bg-green-600 hover:bg-green-700"
-                  : "bg-green-600 hover:bg-green-700"
+                ? "bg-green-600 hover:bg-green-700"
+                : "bg-green-600 hover:bg-green-700"
                 } text-white rounded-full px-6 shadow-md`}
             >
               {isLoading ? (

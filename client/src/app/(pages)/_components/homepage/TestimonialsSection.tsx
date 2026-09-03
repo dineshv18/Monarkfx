@@ -138,9 +138,9 @@ export default function TestimonialsSection() {
                 aria-hidden
                 className="absolute inset-0 isolate z-0 overflow-hidden pointer-events-none"
             >
-                <div className="absolute top-0 left-0 h-[1280px] w-[560px] -translate-y-[350px] -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(215,38,56,0.07)_0,rgba(215,38,56,0.02)_50%,rgba(215,38,56,0.01)_80%)]" />
-                <div className="absolute top-0 left-0 h-[1280px] w-[240px] [translate:5%_-50%] -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(215,38,56,0.05)_0,rgba(215,38,56,0.01)_80%,transparent_100%)]" />
-                <div className="absolute top-0 right-0 h-[1280px] w-[240px] -translate-y-[350px] rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(215,38,56,0.05)_0,rgba(215,38,56,0.01)_80%,transparent_100%)]" />
+                <div className="absolute top-0 left-0 h-[1280px] w-[560px] -translate-y-[350px] -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,rgba(232,185,35,0.07)_0,rgba(232,185,35,0.02)_50%,rgba(232,185,35,0.01)_80%)]" />
+                <div className="absolute top-0 left-0 h-[1280px] w-[240px] [translate:5%_-50%] -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(232,185,35,0.05)_0,rgba(232,185,35,0.01)_80%,transparent_100%)]" />
+                <div className="absolute top-0 right-0 h-[1280px] w-[240px] -translate-y-[350px] rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,rgba(232,185,35,0.05)_0,rgba(232,185,35,0.01)_80%,transparent_100%)]" />
             </div>
 
             <div className="relative mx-auto max-w-6xl">
@@ -153,9 +153,9 @@ export default function TestimonialsSection() {
                     className="mb-12 sm:mb-16"
                 >
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="w-8 h-[2px] rounded-full bg-[#D72638]" />
+                        <div className="w-8 h-[2px] rounded-full bg-[image:linear-gradient(90deg,#F5D876,#E8B923_50%,#C79A1E)]" />
                         <span
-                            className="text-[11px] font-extrabold text-[#D72638] uppercase tracking-[0.22em]"
+                            className="text-[11px] font-extrabold text-[#E8B923] uppercase tracking-[0.22em]"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
                         >
                             Student Reviews
@@ -169,7 +169,7 @@ export default function TestimonialsSection() {
                         }}
                     >
                         Real Traders,{" "}
-                        <span style={{ color: "#D72638" }}>Real Results</span>
+                        <span style={{ color: "#E8B923" }}>Real Results</span>
                     </h2>
                     <p
                         className="mt-3 text-zinc-500 leading-[1.7] font-light max-w-xl"
@@ -196,18 +196,18 @@ export default function TestimonialsSection() {
                                 duration: 0.55,
                                 ease: [0.22, 1, 0.36, 1],
                             }}
-                            className="group relative grid grid-cols-[auto_1fr] gap-4 sm:gap-5 overflow-hidden rounded-2xl border border-dashed border-[#D72638]/30 bg-white p-4 sm:p-5 transition-colors duration-300 hover:border-[#D72638]/60"
+                            className="group relative grid grid-cols-[auto_1fr] gap-4 sm:gap-5 overflow-hidden rounded-2xl border border-dashed border-[#E8B923]/30 bg-white p-4 sm:p-5 transition-colors duration-300 hover:border-[#E8B923]/60"
                         >
                             {/* per-card grid pattern, masked fade from top-left */}
                             <div className="pointer-events-none absolute top-0 left-1/2 -mt-2 -ml-20 h-full w-full [mask-image:linear-gradient(white,transparent)]">
-                                <div className="absolute inset-0 bg-gradient-to-r from-[#D72638]/[0.06] to-[#D72638]/[0.02] [mask-image:radial-gradient(farthest-side_at_top,white,transparent)]">
+                                <div className="absolute inset-0 bg-gradient-to-r from-[#E8B923]/[0.06] to-[#E8B923]/[0.02] [mask-image:radial-gradient(farthest-side_at_top,white,transparent)]">
                                     <GridPattern
                                         width={25}
                                         height={25}
                                         x={-12}
                                         y={4}
                                         strokeDasharray="3"
-                                        className="absolute inset-0 h-full w-full stroke-[#D72638]/25 mix-blend-multiply"
+                                        className="absolute inset-0 h-full w-full stroke-[#E8B923]/25 mix-blend-multiply"
                                     />
                                 </div>
                             </div>
@@ -216,7 +216,7 @@ export default function TestimonialsSection() {
                             <span
                                 aria-hidden
                                 className="absolute left-0 top-5 bottom-5 w-[3px] rounded-full origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-300"
-                                style={{ background: "#D72638" }}
+                                style={{ background: "#E8B923" }}
                             />
 
                             {/* LEFT — image */}
@@ -240,7 +240,7 @@ export default function TestimonialsSection() {
                                         className="absolute inset-0"
                                         style={{
                                             background:
-                                                "linear-gradient(to top, rgba(215,38,56,0.38) 0%, transparent 55%)",
+                                                "linear-gradient(to top, rgba(232,185,35,0.38) 0%, transparent 55%)",
                                         }}
                                     />
                                 </div>
@@ -264,7 +264,7 @@ export default function TestimonialsSection() {
                                             rel="noopener noreferrer"
                                             className="mt-0.5 inline-flex items-center gap-1.5 text-[11px] font-semibold no-underline"
                                             style={{
-                                                color: "#D72638",
+                                                color: "#E8B923",
                                                 fontFamily: "var(--font-dm-sans), sans-serif",
                                             }}
                                         >
@@ -276,7 +276,7 @@ export default function TestimonialsSection() {
                                         </a>
                                     </div>
                                     <Quote
-                                        className="w-5 h-5 shrink-0 text-[#D72638]/25"
+                                        className="w-5 h-5 shrink-0 text-[#E8B923]/25"
                                         strokeWidth={2.5}
                                     />
                                 </div>

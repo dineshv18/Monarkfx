@@ -35,12 +35,12 @@ interface OrbitalItem {
 }
 
 const orbitalItems: OrbitalItem[] = [
-    { id: 1, title: "Psychology",        desc: "Trade without fear or greed",            icon: MdOutlinePsychology, color: "#D72638" },
-    { id: 2, title: "Risk Management",   desc: "Protect your capital first",             icon: MdSecurity,          color: "#0EA5E9" },
-    { id: 3, title: "Strategic Planning",desc: "Every entry has a clear reason",         icon: MdEventNote,         color: "#F59E0B" },
-    { id: 4, title: "Performance",       desc: "Review, refine, and repeat",             icon: MdTrendingUp,        color: "#10B981" },
-    { id: 5, title: "Discipline",        desc: "The edge lives in the process",          icon: MdLoop,              color: "#8B5CF6" },
-    { id: 6, title: "Live Mentorship",   desc: "3 sessions/week with mentors",           icon: MdGroups,            color: "#D72638" },
+    { id: 1, title: "Psychology", desc: "Trade without fear or greed", icon: MdOutlinePsychology, color: "#E8B923" },
+    { id: 2, title: "Risk Management", desc: "Protect your capital first", icon: MdSecurity, color: "#0EA5E9" },
+    { id: 3, title: "Strategic Planning", desc: "Every entry has a clear reason", icon: MdEventNote, color: "#F59E0B" },
+    { id: 4, title: "Performance", desc: "Review, refine, and repeat", icon: MdTrendingUp, color: "#10B981" },
+    { id: 5, title: "Discipline", desc: "The edge lives in the process", icon: MdLoop, color: "#8B5CF6" },
+    { id: 6, title: "Live Mentorship", desc: "3 sessions/week with mentors", icon: MdGroups, color: "#E8B923" },
 ];
 
 function OrbitalTimeline() {
@@ -71,13 +71,13 @@ function OrbitalTimeline() {
                     animate={{ scale: [1, 1.06, 1] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                     className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden"
-                    style={{ background: "#fff", boxShadow: "0 0 40px rgba(215,38,56,0.35), 0 0 0 3px rgba(215,38,56,0.2)" }}
+                    style={{ background: "#fff", boxShadow: "0 0 40px rgba(232,185,35,0.35), 0 0 0 3px rgba(232,185,35,0.2)" }}
                 >
-                    <Image src="/logo.png" alt="MonarkFX" width={56} height={56} className="object-contain w-full h-full" />
+                    <Image src="/logo-gold-icon.png" alt="MonarkFX" width={56} height={56} className="object-contain w-full h-full" />
                 </motion.div>
                 {/* Orbit ring */}
-                <div className="absolute w-[280px] h-[280px] rounded-full border border-[#D72638]/15 pointer-events-none" />
-                <div className="absolute w-[220px] h-[220px] rounded-full border border-dashed border-[#D72638]/10 pointer-events-none" />
+                <div className="absolute w-[280px] h-[280px] rounded-full border border-[#E8B923]/15 pointer-events-none" />
+                <div className="absolute w-[220px] h-[220px] rounded-full border border-dashed border-[#E8B923]/10 pointer-events-none" />
             </div>
 
             {/* Nodes */}
@@ -134,10 +134,10 @@ function OrbitalTimeline() {
 }
 
 const included = [
-    { icon: <TrendingUp className="w-4 h-4" />, title: "Live Forex Sessions",        desc: "Daily live market analysis with mentors",    tag: "Daily" },
-    { icon: <Zap className="w-4 h-4" />,        title: "Crypto Strategy Masterclass", desc: "Full DeFi + altcoin cycle playbook",          tag: "Lifetime" },
-    { icon: <CheckCircle2 className="w-4 h-4"/>, title: "Risk Management Framework",  desc: "Institutional SL/TP & position sizing",      tag: "Pro" },
-    { icon: <Users className="w-4 h-4" />,       title: "Mentor-led Trade Reviews",   desc: "Weekly 1-on-1 feedback sessions",            tag: "1-on-1" },
+    { icon: <TrendingUp className="w-4 h-4" />, title: "Live Forex Sessions", desc: "Daily live market analysis with mentors", tag: "Daily" },
+    { icon: <Zap className="w-4 h-4" />, title: "Crypto Strategy Masterclass", desc: "Full DeFi + altcoin cycle playbook", tag: "Lifetime" },
+    { icon: <CheckCircle2 className="w-4 h-4" />, title: "Risk Management Framework", desc: "Institutional SL/TP & position sizing", tag: "Pro" },
+    { icon: <Users className="w-4 h-4" />, title: "Mentor-led Trade Reviews", desc: "Weekly 1-on-1 feedback sessions", tag: "1-on-1" },
 ];
 
 const BundleOffer = () => {
@@ -149,7 +149,7 @@ const BundleOffer = () => {
             style={{ borderTop: "1px solid #F0F0F0" }}>
 
             {/* Red top line */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D72638] to-transparent opacity-50" />
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#E8B923] to-transparent opacity-50" />
 
             <div className="relative max-w-[1120px] mx-auto px-5 sm:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
@@ -161,26 +161,26 @@ const BundleOffer = () => {
                         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     >
                         {/* Quote-style bordered box with dot pattern */}
-                        <div className="relative border border-[#D72638]/25 rounded-2xl overflow-hidden mb-8">
-                            <DotPattern className="text-[#D72638]/08" />
+                        <div className="relative border border-[#E8B923]/25 rounded-2xl overflow-hidden mb-8">
+                            <DotPattern className="text-[#E8B923]/08" />
 
                             {/* Corner squares */}
-                            <div className="absolute -left-1.5 -top-1.5 w-3 h-3 bg-[#D72638]" />
-                            <div className="absolute -right-1.5 -top-1.5 w-3 h-3 bg-[#D72638]" />
-                            <div className="absolute -left-1.5 -bottom-1.5 w-3 h-3 bg-[#D72638]" />
-                            <div className="absolute -right-1.5 -bottom-1.5 w-3 h-3 bg-[#D72638]" />
+                            <div className="absolute -left-1.5 -top-1.5 w-3 h-3 bg-[#E8B923]" />
+                            <div className="absolute -right-1.5 -top-1.5 w-3 h-3 bg-[#E8B923]" />
+                            <div className="absolute -left-1.5 -bottom-1.5 w-3 h-3 bg-[#E8B923]" />
+                            <div className="absolute -right-1.5 -bottom-1.5 w-3 h-3 bg-[#E8B923]" />
 
                             <div className="relative z-10 p-8 sm:p-10">
                                 <div className="inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full"
-                                    style={{ background: "rgba(215,38,56,0.06)", border: "1px solid rgba(215,38,56,0.2)" }}>
-                                    <Flame className="w-3.5 h-3.5 text-[#D72638]" />
-                                    <span className="text-[10px] font-extrabold text-[#D72638] uppercase tracking-[0.18em]"
+                                    style={{ background: "rgba(232,185,35,0.06)", border: "1px solid rgba(232,185,35,0.2)" }}>
+                                    <Flame className="w-3.5 h-3.5 text-[#E8B923]" />
+                                    <span className="text-[10px] font-extrabold text-[#E8B923] uppercase tracking-[0.18em]"
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                         Limited Offer
                                     </span>
                                 </div>
 
-                                <p className="text-[12px] text-[#D72638] font-bold uppercase tracking-[0.2em] mb-3"
+                                <p className="text-[12px] text-[#E8B923] font-bold uppercase tracking-[0.2em] mb-3"
                                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                     The Ultimate
                                 </p>
@@ -193,7 +193,7 @@ const BundleOffer = () => {
                                     <div className="flex flex-wrap items-baseline gap-x-3">
                                         <h2 className="font-black text-zinc-950" style={{ fontFamily: "var(--font-playfair), serif" }}>Program</h2>
                                     </div>
-                                    <h2 className="font-light text-[#D72638]" style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(18px, 2vw, 26px)" }}>
+                                    <h2 className="font-light text-[#E8B923]" style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(18px, 2vw, 26px)" }}>
                                         Indian + Forex + Crypto — All 3 Markets.
                                     </h2>
                                 </div>
@@ -207,7 +207,7 @@ const BundleOffer = () => {
 
                         {/* Price block */}
                         <div className="flex items-end gap-4 mb-2 flex-wrap">
-                            <span className="text-[#D72638] font-black leading-none"
+                            <span className="text-[#E8B923] font-black leading-none"
                                 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(44px, 5.5vw, 62px)" }}>
                                 ₹29,999
                             </span>
@@ -236,7 +236,7 @@ const BundleOffer = () => {
                         <div className="flex flex-wrap gap-x-5 gap-y-2 mb-8">
                             {["No hidden fees", "EMI available", "Online & Offline"].map((t, i) => (
                                 <div key={i} className="flex items-center gap-1.5">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#D72638] shrink-0" />
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-[#E8B923] shrink-0" />
                                     <span className="text-zinc-500 text-[13px]" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{t}</span>
                                 </div>
                             ))}
@@ -266,11 +266,11 @@ const BundleOffer = () => {
                         {/* Orbital */}
                         <div className="relative rounded-2xl overflow-visible"
                             style={{ background: "#FAFAFA", border: "1.5px solid #F0F0F0" }}>
-                            <DotPattern className="text-[#D72638]/06 rounded-2xl" />
-                            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D72638]/30 to-transparent rounded-t-2xl" />
+                            <DotPattern className="text-[#E8B923]/06 rounded-2xl" />
+                            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#E8B923]/30 to-transparent rounded-t-2xl" />
 
                             <div className="relative z-10 px-4 pt-6 pb-2 text-center">
-                                <span className="text-[10px] font-extrabold text-[#D72638] uppercase tracking-[0.2em]"
+                                <span className="text-[10px] font-extrabold text-[#E8B923] uppercase tracking-[0.2em]"
                                     style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                     6-Pillar Framework
                                 </span>
@@ -303,8 +303,8 @@ const BundleOffer = () => {
                                     transition={{ delay: 0.4 + i * 0.08, duration: 0.4 }}
                                     className="flex items-center gap-3 px-5 py-3.5 hover:bg-zinc-50 transition-colors duration-150 group"
                                     style={{ borderBottom: i < included.length - 1 ? "1px solid #F5F5F5" : "none" }}>
-                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[#D72638] transition-all duration-200 group-hover:bg-[#D72638]/10"
-                                        style={{ background: "rgba(215,38,56,0.07)", border: "1px solid rgba(215,38,56,0.15)" }}>
+                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-[#E8B923] transition-all duration-200 group-hover:bg-[#E8B923]/10"
+                                        style={{ background: "rgba(232,185,35,0.07)", border: "1px solid rgba(232,185,35,0.15)" }}>
                                         {item.icon}
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -326,10 +326,10 @@ const BundleOffer = () => {
                             <div className="flex items-center justify-between px-5 py-3.5 bg-zinc-50 border-t border-zinc-100">
                                 <div className="flex items-center gap-2">
                                     <span className="text-zinc-400 text-[12px] line-through" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>₹42,000</span>
-                                    <span className="text-[#D72638] text-[14px] font-extrabold" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>₹29,999</span>
+                                    <span className="text-[#E8B923] text-[14px] font-extrabold" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>₹29,999</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
-                                    <motion.div className="w-1.5 h-1.5 rounded-full bg-[#D72638]"
+                                    <motion.div className="w-1.5 h-1.5 rounded-full bg-[#E8B923]"
                                         animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity }} />
                                     <span className="text-zinc-400 text-[11px]" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>Seats filling fast</span>
                                 </div>

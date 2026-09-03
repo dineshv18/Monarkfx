@@ -49,25 +49,39 @@ h1, h2, h3, h4, h5, h6 {
     backdrop-filter: blur(40px);
   }
 
-  /* Text gradient - Red theme */
+  /* Text gradient - metallic gold */
   .text-gradient-red {
-    background: linear-gradient(to right, #DC2626, #EF4444);
+    background: linear-gradient(135deg, #F7E7A8 0%, #E8B923 45%, #C79A1E 75%, #F5D876 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
+  /* Metallic gold — solid fill (buttons, badges, bars) */
+  .gold-fill {
+    background: linear-gradient(135deg, #F7E7A8 0%, #E8B923 45%, #C79A1E 75%, #F5D876 100%);
+    color: #0B1E3F;
+  }
+  /* Metallic gold — text (accent words, kickers) */
+  .gold-text {
+    background: linear-gradient(135deg, #F7E7A8 0%, #E8B923 40%, #C79A1E 70%, #F5D876 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #E8B923;
+  }
+
   /* Red glow effects */
   .glow-red {
-    box-shadow: 0 0 20px -3px rgba(220, 38, 38, 0.5);
+    box-shadow: 0 0 20px -3px rgba(232,185,35, 0.5);
   }
 
   .glow-red-lg {
-    box-shadow: 0 0 40px -5px rgba(220, 38, 38, 0.4);
+    box-shadow: 0 0 40px -5px rgba(232,185,35, 0.4);
   }
 
   .text-glow-red {
-    text-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
+    text-shadow: 0 0 8px rgba(232,185,35, 0.6);
   }
 
   /* Border red glow on hover */
@@ -76,20 +90,23 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .hover-glow-red:hover {
-    box-shadow: 0 0 25px -5px rgba(220, 38, 38, 0.5);
-    border-color: rgba(220, 38, 38, 0.5);
+    box-shadow: 0 0 25px -5px rgba(232,185,35, 0.5);
+    border-color: rgba(232,185,35, 0.5);
   }
 }
 
 @layer base {
   :root {
-    --red: #D72638;
-    --dark-red: #A01020;
-    --black: #0A0A0A;
+    --red: #E8B923;
+    --dark-red: #A07C16;
+    --black: #0B1E3F;
+    /* metallic gold gradient — champagne highlight → rich gold → deep amber */
+    --gold-metallic: linear-gradient(135deg, #F7E7A8 0%, #E8B923 45%, #C79A1E 75%, #F5D876 100%);
+    --gold-metallic-soft: linear-gradient(135deg, #F5D876 0%, #E8B923 55%, #C79A1E 100%);
     --dark-gray: #1A1A1A;
     --mid-gray: #4A4A4A;
     --light-gray: #F5F5F5;
-    --red-tint: #FFF0F2;
+    --red-tint: #FBF6E9;
     --border: #E8E8E8;
     --white: #FFFFFF;
     --radius-sm: 8px;
@@ -98,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
     --radius-xl: 24px;
     --radius-pill: 999px;
     --shadow-soft: 0 4px 24px rgba(0,0,0,0.06);
-    --shadow-red: 0 8px 40px rgba(215,38,56,0.14);
+    --shadow-red: 0 8px 40px rgba(232,185,35,0.14);
     --shadow-strong: 0 16px 60px rgba(0,0,0,0.12);
     --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
 
@@ -153,9 +170,9 @@ h1, h2, h3, h4, h5, h6 {
     --sidebar-ring: 354 70% 50%;
     
     /* Monark FX Brand Colors */
-    --monark-red: #DC2626;
-    --monark-red-light: #EF4444;
-    --monark-red-dark: #B91C1C;
+    --monark-red: #E8B923;
+    --monark-red-light: #F5D876;
+    --monark-red-dark: #C79A1E;
     --monark-black: #0f0f0f;
     --monark-dark: #1a1a1a;
     --monark-gray: #2d2d2d;
@@ -224,7 +241,7 @@ h1, h2, h3, h4, h5, h6 {
 .font-mono { font-family: 'JetBrains Mono', monospace; }
 
 .btn-primary {
-  background: #D72638;
+  background: #E8B923;
   color: #fff;
   padding: 14px 32px;
   border-radius: 12px;
@@ -232,32 +249,32 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   font-size: 15px;
   transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(215, 38, 56, 0.25);
+  box-shadow: 0 4px 20px rgba(232,185,35, 0.25);
   border: none;
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  background: #A01020;
+  background: #A07C16;
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(215, 38, 56, 0.35);
+  box-shadow: 0 8px 30px rgba(232,185,35, 0.35);
 }
 
 .btn-secondary {
   background: transparent;
-  color: #D72638;
+  color: #E8B923;
   padding: 12px 32px;
   border-radius: 12px;
   font-family: var(--font-dm-sans), sans-serif;
   font-weight: 600;
   font-size: 15px;
-  border: 2px solid #D72638;
+  border: 2px solid #E8B923;
   transition: all 0.2s;
   cursor: pointer;
 }
 
 .btn-secondary:hover {
-  background: #FFF0F2;
+  background: #FBF6E9;
   transform: translateY(-2px);
 }
 
@@ -267,7 +284,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 800;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #D72638;
+  color: #E8B923;
 }
 
 .feature-card-hover:hover .feature-bar {
@@ -284,7 +301,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .card-base:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(215, 38, 56, 0.1);
+  box-shadow: 0 12px 40px rgba(232,185,35, 0.1);
 }
 
 .section-wrapper {
@@ -709,12 +726,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .dark .jodit-ui-dialog__button--primary {
-  background-color: #DC2626 !important;
-  border-color: #EF4444 !important;
+  background-color: #E8B923 !important;
+  border-color: #F5D876 !important;
 }
 
 .dark .jodit-ui-dialog__button--primary:hover {
-  background-color: #EF4444 !important;
+  background-color: #F5D876 !important;
 }
 
 /* Border animation */
@@ -767,9 +784,9 @@ h1, h2, h3, h4, h5, h6 {
 .animated-gradient-bg {
   background: linear-gradient(
     -45deg,
-    rgba(220, 38, 38, 0.1),
+    rgba(232,185,35, 0.1),
     rgba(0, 0, 0, 0),
-    rgba(220, 38, 38, 0.2),
+    rgba(232,185,35, 0.2),
     rgba(0, 0, 0, 0)
   );
   background-size: 400% 400%;
@@ -819,7 +836,7 @@ h1, h2, h3, h4, h5, h6 {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(220, 38, 38, 0.1),
+    rgba(232,185,35, 0.1),
     transparent
   );
   background-size: 200% 100%;
@@ -833,7 +850,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -15px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 20px 40px -15px rgba(232,185,35, 0.3);
 }
 
 /* Button hover scale */
@@ -863,7 +880,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Red gradient text */
 .text-gradient {
-  background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #DC2626 100%);
+  background: linear-gradient(135deg, #E8B923 0%, #F5D876 50%, #E8B923 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -877,8 +894,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .premium-card:hover {
-  border-color: rgba(220, 38, 38, 0.5);
-  box-shadow: 0 0 30px -10px rgba(220, 38, 38, 0.4);
+  border-color: rgba(232,185,35, 0.5);
+  box-shadow: 0 0 30px -10px rgba(232,185,35, 0.4);
 }
 
 /* SEO Plugin styles */
@@ -957,7 +974,7 @@ button[class*="plugin"],
 
 [data-seo="true"] button[class*="close"],
 [data-seo="true"] [class*="close"] {
-  background: #DC2626 !important;
+  background: #E8B923 !important;
   color: white !important;
   border-radius: 50% !important;
   width: 30px !important;
@@ -974,6 +991,6 @@ button[class*="plugin"],
 }
 
 [data-seo="true"] a {
-  color: #DC2626 !important;
+  color: #E8B923 !important;
   text-decoration: underline !important;
 }

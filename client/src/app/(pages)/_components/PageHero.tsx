@@ -14,22 +14,22 @@ function CybercoreBackground() {
                 .cyber-scene {
                     position: absolute;
                     inset: 0;
-                    background: #000308;
+                    background: #0B1E3F;
                     overflow: hidden;
                 }
                 .cyber-grid {
                     position: absolute;
                     inset: -52px;
                     background-image:
-                        linear-gradient(rgba(215,38,56,0.28) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(215,38,56,0.28) 1px, transparent 1px);
+                        linear-gradient(rgba(232,185,35,0.28) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(232,185,35,0.28) 1px, transparent 1px);
                     background-size: 54px 54px;
                     animation: moveGrid 8s linear infinite;
                 }
                 .cyber-grid-fade {
                     position: absolute;
                     inset: 0;
-                    background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,3,8,0.85) 0%, rgba(0,3,8,0.35) 55%, rgba(0,3,8,0) 100%);
+                    background: radial-gradient(ellipse 70% 60% at 50% 45%, rgba(11,30,63,0.85) 0%, rgba(11,30,63,0.35) 55%, rgba(11,30,63,0) 100%);
                     pointer-events: none;
                 }
                 @keyframes moveGrid {
@@ -72,9 +72,9 @@ export default function PageHero({
             {/* Animated cybercore background */}
             <CybercoreBackground />
 
-            {/* Top red accent line */}
+            {/* Top gold accent line */}
             <div className="absolute top-0 left-0 right-0 h-[2px] z-10"
-                style={{ background: "linear-gradient(90deg, transparent, #D72638 30%, #D72638 70%, transparent)" }} />
+                style={{ background: "linear-gradient(90deg, transparent, #F5D876 20%, #E8B923 50%, #F5D876 80%, transparent)" }} />
 
             {/* Ring overlay */}
             <div className="pointer-events-none absolute inset-0 ring-1 ring-white/5 z-10" />
@@ -90,10 +90,10 @@ export default function PageHero({
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
                             className="mb-6 inline-flex items-center gap-3 rounded-full px-3 py-2"
-                            style={{ background: "rgba(215,38,56,0.12)", border: "1px solid rgba(215,38,56,0.3)", backdropFilter: "blur(8px)" }}
+                            style={{ background: "rgba(232,185,35,0.12)", border: "1px solid rgba(232,185,35,0.3)", backdropFilter: "blur(8px)" }}
                         >
                             <span className="inline-flex items-center text-[11px] font-extrabold uppercase tracking-[0.12em] rounded-full py-0.5 px-2.5"
-                                style={{ background: "#D72638", color: "#fff", fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                style={{ background: "linear-gradient(135deg, #F7E7A8 0%, #E8B923 45%, #C79A1E 75%, #F5D876 100%)", color: "#0B1E3F", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 2px 12px rgba(232,185,35,0.45)" }}>
                                 {badge}
                             </span>
                             <span className="text-[13px] font-medium text-white/75 pr-1"
@@ -112,13 +112,21 @@ export default function PageHero({
                         style={{
                             fontFamily: "var(--font-playfair), serif",
                             fontSize: "clamp(40px, 7vw, 52px)",
-                            textShadow: "0 0 40px rgba(215,38,56,0.25), 0 2px 20px rgba(0,0,0,0.8)",
+                            textShadow: "0 0 40px rgba(232,185,35,0.25), 0 2px 20px rgba(0,0,0,0.8)",
                         }}
                     >
                         {titleAccent ? (
                             <>
                                 {title}{" "}
-                                <span style={{ color: "#FF4D60", textShadow: "0 0 32px rgba(215,38,56,0.6)" }}>
+                                <span
+                                    style={{
+                                        backgroundImage: "linear-gradient(135deg, #F7E7A8 0%, #E8B923 40%, #C79A1E 68%, #F5D876 100%)",
+                                        WebkitBackgroundClip: "text",
+                                        backgroundClip: "text",
+                                        WebkitTextFillColor: "transparent",
+                                        filter: "drop-shadow(0 0 28px rgba(232,185,35,0.55))",
+                                    }}
+                                >
                                     {titleAccent}
                                 </span>
                             </>
@@ -173,7 +181,7 @@ export default function PageHero({
                             {secondaryBtn && (
                                 <Link href={secondaryBtn.href} className="no-underline w-full sm:w-auto">
                                     <motion.button
-                                        whileHover={{ y: -2, borderColor: "rgba(215,38,56,0.6)", color: "#fff" }}
+                                        whileHover={{ y: -2, borderColor: "rgba(232,185,35,0.6)", color: "#fff" }}
                                         whileTap={{ scale: 0.97 }}
                                         className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-white/80 font-bold text-[15px] px-5 py-2.5 rounded-xl cursor-pointer transition-all duration-200 border-none"
                                         style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "rgba(255,255,255,0.06)", border: "1.5px solid rgba(255,255,255,0.15)", backdropFilter: "blur(8px)" }}>

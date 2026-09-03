@@ -287,7 +287,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
           <button
             className="w-full py-3 text-white font-medium rounded-lg transition-colors"
             style={{
-              background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+              background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
             }}
           >
             Continue Learning
@@ -302,7 +302,7 @@ const CourseClient: React.FC<CourseClientProps> = ({
         disabled={!hasSections}
         className="w-full py-3 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
         style={{
-          background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+          background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
         }}
       >
         {course.paid ? (

@@ -66,8 +66,8 @@ const PricingPreview = () => {
                 <motion.div initial={{ opacity: 0, y: 14 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}
                     className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5 bg-white border border-zinc-200 shadow-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D72638]" />
-                        <span className="text-[10px] font-black text-[#D72638] uppercase tracking-[0.16em]"
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#E8B923]" />
+                        <span className="text-[10px] font-black text-[#E8B923] uppercase tracking-[0.16em]"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                             Start Small. Scale Big.
                         </span>
@@ -75,7 +75,7 @@ const PricingPreview = () => {
                     <h2 className="font-black text-zinc-950 leading-[1.05] tracking-[-0.03em] mb-3"
                         style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 5vw, 54px)" }}>
                         Simple,{" "}
-                        <span className="text-[#D72638]">Transparent</span> Pricing
+                        <span className="text-[#E8B923]">Transparent</span> Pricing
                     </h2>
                     <p className="text-zinc-500 max-w-lg mx-auto text-[15px] leading-[1.7] font-light"
                         style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
@@ -94,15 +94,15 @@ const PricingPreview = () => {
                         <div className="md:col-span-2 flex flex-col justify-between p-7 sm:p-8">
                             <div className="space-y-5">
                                 <div>
-                                    <span className="inline-block text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#D72638] bg-[#D72638]/07 border border-[#D72638]/20 px-3 py-1 rounded-full mb-3"
-                                        style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "rgba(215,38,56,0.06)" }}>
+                                    <span className="inline-block text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#E8B923] bg-[#E8B923]/07 border border-[#E8B923]/20 px-3 py-1 rounded-full mb-3"
+                                        style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "rgba(232,185,35,0.06)" }}>
                                         Start Here
                                     </span>
                                     <h3 className="font-black text-zinc-900 mb-1 leading-tight"
                                         style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(18px, 1.5vw, 22px)" }}>
                                         5-Day Starter Workshop
                                     </h3>
-                                    <p className="text-[#D72638] font-black leading-none mt-3"
+                                    <p className="text-[#E8B923] font-black leading-none mt-3"
                                         style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(36px, 4vw, 46px)" }}>
                                         ₹999
                                     </p>
@@ -128,7 +128,7 @@ const PricingPreview = () => {
                                 <ul className="space-y-2.5">
                                     {starterFeatures.map((f, i) => (
                                         <li key={i} className="flex items-start gap-2.5">
-                                            <Check className="w-4 h-4 text-[#D72638] shrink-0 mt-[1px]" strokeWidth={2.5} />
+                                            <Check className="w-4 h-4 text-[#E8B923] shrink-0 mt-[1px]" strokeWidth={2.5} />
                                             <span className="text-zinc-600 text-[13px]"
                                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                                 {f}
@@ -150,7 +150,7 @@ const PricingPreview = () => {
                                         90-Day Mentorship
                                     </h3>
                                     <div className="flex items-baseline gap-2 mt-3">
-                                        <span className="text-[#D72638] font-black leading-none"
+                                        <span className="text-[#E8B923] font-black leading-none"
                                             style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 3.5vw, 42px)" }}>
                                             ₹17,999
                                         </span>
@@ -173,8 +173,8 @@ const PricingPreview = () => {
                                             <AreaChart data={chartData} margin={{ left: 0, right: 0, top: 4, bottom: 0 }}>
                                                 <defs>
                                                     <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor="#D72638" stopOpacity={0.18} />
-                                                        <stop offset="95%" stopColor="#D72638" stopOpacity={0} />
+                                                        <stop offset="5%" stopColor="#E8B923" stopOpacity={0.18} />
+                                                        <stop offset="95%" stopColor="#E8B923" stopOpacity={0} />
                                                     </linearGradient>
                                                 </defs>
                                                 <CartesianGrid vertical={false} stroke="#F0F0F0" />
@@ -182,10 +182,10 @@ const PricingPreview = () => {
                                                     tick={{ fontSize: 9, fill: "#AAA", fontFamily: "var(--font-dm-sans), sans-serif" }} />
                                                 <Tooltip
                                                     contentStyle={{ background: "#fff", border: "1px solid #EEE", borderRadius: 8, fontSize: 11, boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}
-                                                    cursor={{ stroke: "#D72638", strokeDasharray: "4 4", strokeWidth: 1 }} />
-                                                <Area type="monotone" dataKey="students" stroke="#D72638" strokeWidth={2}
+                                                    cursor={{ stroke: "#E8B923", strokeDasharray: "4 4", strokeWidth: 1 }} />
+                                                <Area type="monotone" dataKey="students" stroke="#E8B923" strokeWidth={2}
                                                     fill="url(#redGrad)" dot={false}
-                                                    activeDot={{ r: 4, fill: "#D72638", stroke: "#fff", strokeWidth: 2 }} />
+                                                    activeDot={{ r: 4, fill: "#E8B923", stroke: "#fff", strokeWidth: 2 }} />
                                             </AreaChart>
                                         </ResponsiveContainer>
                                     </div>
@@ -201,7 +201,7 @@ const PricingPreview = () => {
                                 <ul className="space-y-2.5 flex-1">
                                     {mentorshipFeatures.map((f, i) => (
                                         <li key={i} className="flex items-start gap-2.5">
-                                            <Check className="w-3.5 h-3.5 text-[#D72638] shrink-0 mt-[2px]" strokeWidth={2.5} />
+                                            <Check className="w-3.5 h-3.5 text-[#E8B923] shrink-0 mt-[2px]" strokeWidth={2.5} />
                                             <span className="text-zinc-600 text-[12px] sm:text-[13px]"
                                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                                 {f}
@@ -226,7 +226,7 @@ const PricingPreview = () => {
                                             whileHover={{ y: -2 }}
                                             whileTap={{ scale: 0.97 }}
                                             className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl font-bold text-[13px] cursor-pointer border transition-colors duration-200"
-                                            style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "transparent", color: "#0A0A0A", borderColor: "#E0E0E0" }}>
+                                            style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: "transparent", color: "#0B1E3F", borderColor: "#E0E0E0" }}>
                                             View All Plans
                                             <ArrowRight className="w-3.5 h-3.5" />
                                         </motion.button>

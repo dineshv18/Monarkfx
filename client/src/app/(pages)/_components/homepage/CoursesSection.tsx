@@ -1,8 +1,8 @@
-﻿"use client";
+"use client";
 
 import React, { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { ArrowRight, Clock, Layout, Globe, Coins, Check } from "lucide-react";
+import { ArrowRight, Clock, Check } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,33 +11,36 @@ const WA = "https://wa.me/918750475852?text=";
 
 const COURSES = [
     {
-        id: "indian", slug: "indian-market-mastery", code: "IMM", name: "Indian Market Mastery",
+        id: "indian", slug: "indian-market-mastery", name: "Indian Market Mastery",
         level: "Nifty · BankNifty · F&O · Equity",
-        icon: Layout, tag: "Most Popular", tagColor: "#D72638", image: "/courses/indian.png",
+        tag: "Most Popular", tagColor: "#E8B923", image: "/courses/indian.png",
         desc: "Dominate Nifty, Bank Nifty, F&O and Equity Stocks using Smart Money & ICT frameworks.",
         features: ["2 Month Intensive Program", "3 Sessions/Week with Mentor", "Nifty/BankNifty Strategies", "Risk Management Framework", "1 Month Free Trading Room"],
     },
     {
-        id: "forex", slug: "forex-gold-specialist", code: "FGS", name: "Forex & Gold Specialist",
+        id: "forex", slug: "forex-gold-specialist", name: "Forex & Gold Specialist",
         level: "EUR/USD · GBP/JPY · XAUUSD",
-        icon: Globe, tag: "Trending", tagColor: "#F59E0B", image: "/courses/forex.png",
+        tag: "Trending", tagColor: "#0EA5E9", image: "/courses/forex.png",
         desc: "Master currency pairs and Gold with institutional order flow, session timing and macro setups.",
         features: ["2 Month Intensive Program", "3 Sessions/Week with Mentor", "Forex Pairs & Gold Strategies", "Global Session Timing Mastery", "1 Month Free Trading Room"],
     },
     {
-        id: "crypto", slug: "crypto-institutional-edge", code: "CIE", name: "Crypto Institutional Edge",
+        id: "crypto", slug: "crypto-institutional-edge", name: "Crypto Institutional Edge",
         level: "BTC · ETH · Altcoins · Futures",
-        icon: Coins, tag: "Advanced", tagColor: "#8B5CF6", image: "/courses/crypto.png",
+        tag: "Advanced", tagColor: "#8B5CF6", image: "/courses/crypto.png",
         desc: "Dominate Spot & Futures across BTC, ETH and high-alpha altcoins with on-chain analysis.",
         features: ["2 Month Intensive Program", "3 Sessions/Week with Mentor", "Spot & Futures Execution", "On-Chain & Exchange Analysis", "1 Month Free Trading Room"],
     },
 ];
 
 const PRICING = [
-    { count: 1, label: "Any 1 Course",  months: "2 Months", online: "14,999", offline: "17,999", emiOnline: "5,000", emiOffline: "6,000", emiMonths: "3", highlight: false },
-    { count: 2, label: "Any 2 Courses", months: "3 Months", online: "21,999", offline: "24,999", emiOnline: "3,700", emiOffline: "4,200", emiMonths: "6", highlight: false },
-    { count: 3, label: "All 3 — Combo", months: "4 Months", online: "26,999", offline: "29,999", emiOnline: "4,500", emiOffline: "5,000", emiMonths: "6", highlight: true  },
+    { count: 1, label: "Any 1 Course", months: "2 Months", online: "14,999", offline: "17,999", emiOnline: "5,000", emiOffline: "6,000", emiMonths: "3" },
+    { count: 2, label: "Any 2 Courses", months: "3 Months", online: "21,999", offline: "24,999", emiOnline: "3,700", emiOffline: "4,200", emiMonths: "6" },
+    { count: 3, label: "All 3 — Combo", months: "4 Months", online: "26,999", offline: "29,999", emiOnline: "4,500", emiOffline: "5,000", emiMonths: "6" },
 ];
+
+const GOLD_GRADIENT = "linear-gradient(135deg, #F7E7A8 0%, #E8B923 45%, #C79A1E 75%, #F5D876 100%)";
+const NAVY = "#0B1E3F";
 
 function getWAMsg(selected: string[], mode: string, price: string) {
     const names = selected.map(id => COURSES.find(c => c.id === id)?.name).join(", ");
@@ -54,7 +57,7 @@ const CoursesSection = () => {
         setSelected(prev =>
             prev.includes(id)
                 ? prev.filter(x => x !== id)
-                : prev.length < 3 ? [...prev, id] : prev
+                : [...prev, id]
         );
     };
 
@@ -62,55 +65,60 @@ const CoursesSection = () => {
     const price = pricing ? (mode === "Online" ? pricing.online : pricing.offline) : null;
 
     return (
-        <section ref={ref} className="relative overflow-hidden" style={{ background: "#F8F8F8", padding: "100px 0 120px" }}>
-            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(215,38,56,0.03) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
+        <section ref={ref} className="relative overflow-hidden" style={{ background: "#F7F8FA", padding: "96px 0 112px" }}>
+            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(232,185,35,0.04) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
+            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[560px] h-[360px] pointer-events-none"
+                style={{ background: "radial-gradient(ellipse, rgba(232,185,35,0.08) 0%, transparent 70%)" }} />
 
-            <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px", position: "relative" }}>
+            <div style={{ maxWidth: 1160, margin: "0 auto", padding: "0 24px", position: "relative" }}>
 
                 {/* Header */}
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-center" style={{ marginBottom: 16 }}>
-                    <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                        <div style={{ width: 28, height: 2, background: "#D72638", borderRadius: 2 }} />
-                        <span style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 11, fontWeight: 800, color: "#D72638", letterSpacing: "0.22em", textTransform: "uppercase" }}>
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="text-center" style={{ marginBottom: 14 }}>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+                        <div style={{ width: 28, height: 2, backgroundImage: "linear-gradient(90deg,#F5D876,#E8B923 50%,#C79A1E)", borderRadius: 2 }} />
+                        <span style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 11, fontWeight: 800, color: "#C79A1E", letterSpacing: "0.24em", textTransform: "uppercase" }}>
                             Choose Your Market
                         </span>
-                        <div style={{ width: 28, height: 2, background: "#D72638", borderRadius: 2 }} />
+                        <div style={{ width: 28, height: 2, backgroundImage: "linear-gradient(90deg,#C79A1E,#E8B923 50%,#F5D876)", borderRadius: 2 }} />
                     </div>
-                    <h2 className="font-heading" style={{ fontSize: "clamp(34px, 5vw, 58px)", fontWeight: 800, color: "#0A0A0A", lineHeight: 1.0, letterSpacing: "-0.04em", marginBottom: 12 }}>
+                    <h2 className="font-heading" style={{ fontSize: "clamp(32px, 5vw, 54px)", fontWeight: 800, color: NAVY, lineHeight: 1.05, letterSpacing: "-0.04em", marginBottom: 14 }}>
                         Select Your{" "}
-                        <span style={{ backgroundImage: "linear-gradient(135deg, #D72638, #A01020)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+                        <span style={{ backgroundImage: GOLD_GRADIENT, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                             Course(s)
                         </span>
                     </h2>
-                    <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: "clamp(13px, 1vw, 16px)", color: "#888", maxWidth: 460, margin: "0 auto 0", lineHeight: 1.6 }}>
-                        Pick 1, 2, or all 3 — price updates automatically.
+                    <p style={{ fontFamily: "var(--font-inter), sans-serif", fontSize: "clamp(13px, 1vw, 15px)", color: "#7A8699", maxWidth: 440, margin: "0 auto", lineHeight: 1.6 }}>
+                        Pick 1, 2, or all 3 — the price below updates automatically.
                     </p>
                 </motion.div>
 
                 {/* Online/Offline toggle */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.1 }}
-                    className="flex justify-center" style={{ marginBottom: 40 }}>
-                    <div className="flex bg-white rounded-xl p-1 border border-zinc-200 shadow-sm">
-                        {(["Offline", "Online"] as const).map(m => (
-                            <button key={m} onClick={() => setMode(m)}
-                                className="px-6 py-2 rounded-[10px] text-[13px] font-bold cursor-pointer transition-all duration-200 border-none"
-                                style={{
-                                    fontFamily: "var(--font-dm-sans), sans-serif",
-                                    background: mode === m ? "#D72638" : "transparent",
-                                    color: mode === m ? "#fff" : "#999",
-                                    boxShadow: mode === m ? "0 2px 8px rgba(215,38,56,0.25)" : "none",
-                                }}>
-                                {m}
-                            </button>
-                        ))}
+                    className="flex justify-center" style={{ marginBottom: 44 }}>
+                    <div className="inline-flex bg-white rounded-full p-1 border border-zinc-200/80 shadow-sm">
+                        {(["Offline", "Online"] as const).map(m => {
+                            const on = mode === m;
+                            return (
+                                <button key={m} onClick={() => setMode(m)}
+                                    className="px-7 py-2 rounded-full text-[13px] font-bold cursor-pointer transition-all duration-200 border-none"
+                                    style={{
+                                        fontFamily: "var(--font-dm-sans), sans-serif",
+                                        backgroundImage: on ? GOLD_GRADIENT : "none",
+                                        background: on ? undefined : "transparent",
+                                        color: on ? NAVY : "#98A2B3",
+                                        boxShadow: on ? "0 2px 10px rgba(232,185,35,0.4)" : "none",
+                                    }}>
+                                    {m}
+                                </button>
+                            );
+                        })}
                     </div>
                 </motion.div>
 
                 {/* Course Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch" style={{ marginBottom: 32 }}>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch" style={{ marginBottom: 40 }}>
                     {COURSES.map((course, i) => {
                         const isSelected = selected.includes(course.id);
-                        const Icon = course.icon;
                         return (
                             <motion.div
                                 key={course.id}
@@ -119,120 +127,111 @@ const CoursesSection = () => {
                                 transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                                 className="h-full"
                             >
-                                <motion.div
-                                    whileHover={{ y: -5 }}
-                                    transition={{ duration: 0.22 }}
-                                    className="rounded-2xl overflow-hidden relative h-full flex flex-col"
+                                <div
+                                    className="rounded-2xl overflow-hidden relative h-full flex flex-col bg-white hover:-translate-y-1.5"
                                     style={{
-                                        border: isSelected ? "2px solid #D72638" : "1.5px solid #E8E8E8",
+                                        border: isSelected ? "1.5px solid rgba(232,185,35,0.9)" : "1.5px solid #EAECEF",
                                         boxShadow: isSelected
-                                            ? "0 0 0 4px rgba(215,38,56,0.1), 0 24px 56px rgba(215,38,56,0.12)"
-                                            : "0 4px 20px rgba(0,0,0,0.05)",
-                                        background: "#fff",
-                                        transition: "border-color 0.2s, box-shadow 0.2s",
+                                            ? "0 0 0 4px rgba(232,185,35,0.14), 0 24px 56px -12px rgba(232,185,35,0.28)"
+                                            : "0 6px 24px -6px rgba(11,30,63,0.10)",
+                                        transition: "border-color 0.2s, box-shadow 0.2s, transform 0.2s",
                                     }}
                                 >
                                     {/* Image */}
-                                    <div className="relative h-44 overflow-hidden bg-[#0A0A0A]">
-                                        <Image src={course.image} alt={course.name} fill className="object-cover transition-transform duration-500"
-                                            style={{ transform: isSelected ? "scale(1.04)" : "scale(1)" }} sizes="33vw" />
-                                        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.2) 55%, transparent 100%)" }} />
+                                    <div className="relative aspect-[16/9] overflow-hidden" style={{ background: NAVY }}>
+                                        <Image src={course.image} alt={course.name} fill className="object-contain transition-transform duration-500"
+                                            style={{ transform: isSelected ? "scale(1.03)" : "scale(1)" }} sizes="(max-width: 768px) 100vw, 380px" />
 
-                                        {/* Select indicator */}
+                                        {/* Select check */}
                                         <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
                                             style={{
-                                                background: isSelected ? "#D72638" : "rgba(0,0,0,0.4)",
-                                                border: isSelected ? "none" : "1.5px solid rgba(255,255,255,0.4)",
+                                                backgroundImage: isSelected ? GOLD_GRADIENT : "none",
+                                                background: isSelected ? undefined : "rgba(0,0,0,0.45)",
+                                                border: isSelected ? "none" : "1.5px solid rgba(255,255,255,0.45)",
                                                 backdropFilter: "blur(4px)",
                                             }}>
-                                            {isSelected && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                                            {isSelected && <Check className="w-3.5 h-3.5" strokeWidth={3.5} style={{ color: NAVY }} />}
                                         </div>
 
-                                        {/* Tag top-left */}
-                                        <div className="absolute top-3 left-3 flex items-center gap-2">
-                                            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(215,38,56,0.88)", backdropFilter: "blur(4px)" }}>
-                                                <Icon className="w-3.5 h-3.5 text-white" strokeWidth={2} />
-                                            </div>
-                                        </div>
-
-                                        {/* Name bottom */}
-                                        <div className="absolute bottom-3 left-4 right-10">
-                                            <p className="text-white/50 text-[9px] font-bold uppercase tracking-[0.1em] mb-0.5" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>{course.level}</p>
-                                            <h3 className="text-white font-black leading-tight" style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(15px, 1.3vw, 18px)", letterSpacing: "-0.02em" }}>{course.name}</h3>
-                                        </div>
-
-                                        {/* Duration bottom-right */}
-                                        <div className="absolute bottom-3 right-3 flex items-center gap-1" style={{ background: "rgba(0,0,0,0.6)", padding: "2px 7px", borderRadius: 999, backdropFilter: "blur(4px)" }}>
-                                            <Clock className="w-2.5 h-2.5 text-zinc-400" />
-                                            <span className="text-[9px] font-semibold text-zinc-300">2 Mo</span>
+                                        {/* Duration */}
+                                        <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-[3px] rounded-full"
+                                            style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}>
+                                            <Clock className="w-2.5 h-2.5 text-[#E8B923]" />
+                                            <span className="text-[9px] font-bold text-white/90">2 Months</span>
                                         </div>
                                     </div>
 
-                                    {/* Content below image */}
-                                    <div className="px-4 pt-3 pb-4 flex flex-col flex-1">
-                                        {/* tag row */}
+                                    {/* Content */}
+                                    <div className="px-5 pt-4 pb-5 flex flex-col flex-1">
+                                        {/* status + tag row */}
                                         <div className="flex items-center justify-between mb-3">
-                                            <span className="text-[11px] font-bold uppercase tracking-[0.08em]"
-                                                style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: isSelected ? "#D72638" : "#AAA" }}>
-                                                {isSelected ? "✓ Selected" : "Not selected"}
+                                            <span className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-[0.1em]"
+                                                style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: isSelected ? "#C79A1E" : "#B0B7C3" }}>
+                                                {isSelected && <Check className="w-3 h-3" strokeWidth={3.5} />}
+                                                {isSelected ? "Selected" : "Not selected"}
                                             </span>
-                                            <span className="text-[9px] font-extrabold uppercase tracking-[0.06em] px-2 py-0.5 rounded-full"
-                                                style={{ color: course.tagColor, background: `${course.tagColor}18`, border: `1px solid ${course.tagColor}40` }}>
+                                            <span className="text-[9px] font-extrabold uppercase tracking-[0.08em] px-2.5 py-1 rounded-full"
+                                                style={{ color: course.tagColor, background: `${course.tagColor}14`, border: `1px solid ${course.tagColor}33` }}>
                                                 {course.tag}
                                             </span>
                                         </div>
 
+                                        {/* Name + level */}
+                                        <h3 className="font-black leading-tight mb-1" style={{ fontFamily: "var(--font-playfair), serif", fontSize: 18, color: NAVY, letterSpacing: "-0.02em" }}>
+                                            {course.name}
+                                        </h3>
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.1em] mb-3" style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: "#9AA4B2" }}>
+                                            {course.level}
+                                        </p>
+
                                         {/* Description */}
-                                        <p className="text-zinc-500 text-[12px] leading-[1.6] mb-3"
-                                            style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                        <p className="text-[12.5px] leading-[1.6] mb-4" style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: "#5C6675" }}>
                                             {course.desc}
                                         </p>
 
                                         {/* Features */}
-                                        <div className="flex flex-col gap-1.5 mb-4">
+                                        <div className="flex flex-col gap-2 mb-5">
                                             {course.features.map((f, fi) => (
-                                                <div key={fi} className="flex items-center gap-2">
-                                                    <div className="w-3.5 h-3.5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
-                                                        <Check className="w-2 h-2 text-emerald-500" strokeWidth={3.5} />
-                                                    </div>
-                                                    <span className="text-zinc-600 text-[11px] leading-snug"
-                                                        style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                                <div key={fi} className="flex items-center gap-2.5">
+                                                    <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                                                        style={{ background: "rgba(232,185,35,0.14)", border: "1px solid rgba(232,185,35,0.35)" }}>
+                                                        <Check className="w-2 h-2 text-[#C79A1E]" strokeWidth={4} />
+                                                    </span>
+                                                    <span className="text-[11.5px] leading-snug" style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: "#525C6B" }}>
                                                         {f}
                                                     </span>
                                                 </div>
                                             ))}
                                         </div>
 
-                                        {/* Action buttons */}
-                                        <div className="flex gap-2 mt-auto pt-1">
+                                        {/* Buttons */}
+                                        <div className="flex gap-2.5 mt-auto pt-1 relative z-10">
                                             <button
                                                 type="button"
-                                                onClick={() => toggle(course.id)}
-                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-bold border cursor-pointer transition-all duration-200"
+                                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(course.id); }}
+                                                aria-pressed={isSelected}
+                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-extrabold cursor-pointer transition-all duration-200 select-none active:scale-95"
                                                 style={{
                                                     fontFamily: "var(--font-dm-sans), sans-serif",
-                                                    background: isSelected ? "#D72638" : "#fff",
-                                                    color: isSelected ? "#fff" : "#0A0A0A",
-                                                    borderColor: isSelected ? "#D72638" : "#E0E0E0",
+                                                    backgroundImage: isSelected ? GOLD_GRADIENT : "none",
+                                                    background: isSelected ? undefined : "#fff",
+                                                    color: NAVY,
+                                                    border: isSelected ? "1.5px solid transparent" : "1.5px solid #DDE1E6",
                                                 }}
                                             >
-                                                {isSelected ? <><Check className="w-3.5 h-3.5" strokeWidth={3} /> Selected</> : "Select"}
+                                                {isSelected ? <><Check className="w-3.5 h-3.5" strokeWidth={3.5} /> Selected</> : "Select"}
                                             </button>
                                             <Link
                                                 href={`/courses/programs/${course.slug}`}
-                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-bold no-underline transition-all duration-200"
-                                                style={{
-                                                    fontFamily: "var(--font-dm-sans), sans-serif",
-                                                    background: "#0A0A0A",
-                                                    color: "#fff",
-                                                }}
+                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-extrabold no-underline transition-all duration-200 hover:opacity-90"
+                                                style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: NAVY, color: "#fff" }}
                                             >
                                                 View Course
                                                 <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
                                             </Link>
                                         </div>
                                     </div>
-                                </motion.div>
+                                </div>
                             </motion.div>
                         );
                     })}
@@ -240,26 +239,27 @@ const CoursesSection = () => {
 
                 {/* Pricing tier pills */}
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.3 }}
-                    className="flex flex-wrap justify-center gap-3" style={{ marginBottom: 32 }}>
+                    className="flex flex-wrap justify-center gap-3" style={{ marginBottom: 28 }}>
                     {PRICING.map(p => {
                         const active = selected.length === p.count;
                         const pr = mode === "Online" ? p.online : p.offline;
                         return (
-                            <div key={p.count} className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl transition-all duration-200"
+                            <div key={p.count} className="flex items-center gap-2.5 px-4 py-2.5 rounded-full transition-all duration-200"
                                 style={{
-                                    background: active ? "#D72638" : "#fff",
-                                    border: active ? "1.5px solid #D72638" : "1.5px solid #E8E8E8",
-                                    boxShadow: active ? "0 4px 16px rgba(215,38,56,0.25)" : "none",
+                                    backgroundImage: active ? GOLD_GRADIENT : "none",
+                                    background: active ? undefined : "#fff",
+                                    border: active ? "1.5px solid transparent" : "1.5px solid #EAECEF",
+                                    boxShadow: active ? "0 6px 18px rgba(232,185,35,0.3)" : "none",
                                 }}>
-                                <span className="text-[11px] font-extrabold uppercase tracking-[0.08em]"
-                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: active ? "#fff" : "#888" }}>
+                                <span className="text-[11px] font-extrabold uppercase tracking-[0.06em]"
+                                    style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: active ? NAVY : "#7A8699" }}>
                                     {p.label}
                                 </span>
-                                <span className="w-px h-3" style={{ background: active ? "rgba(255,255,255,0.3)" : "#E0E0E0" }} />
-                                <span className="text-[11px] font-black" style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: active ? "rgba(255,255,255,0.9)" : "#AAA" }}>
+                                <span className="w-px h-3" style={{ background: active ? "rgba(11,30,63,0.25)" : "#E0E0E0" }} />
+                                <span className="text-[11px] font-black" style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: active ? NAVY : "#98A2B3" }}>
                                     ₹{pr}
                                 </span>
-                                <span className="text-[9px] font-semibold" style={{ color: active ? "rgba(255,255,255,0.6)" : "#CCC" }}>
+                                <span className="text-[9px] font-bold" style={{ color: active ? "rgba(11,30,63,0.55)" : "#C4CBD4" }}>
                                     · {p.months}
                                 </span>
                             </div>
@@ -267,7 +267,7 @@ const CoursesSection = () => {
                     })}
                 </motion.div>
 
-                {/* CTA — shows when selection made */}
+                {/* CTA */}
                 <AnimatePresence>
                     {selected.length > 0 && price && (
                         <motion.div
@@ -275,44 +275,45 @@ const CoursesSection = () => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 10, scale: 0.97 }}
                             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                            className="flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl p-5 sm:p-6"
-                            style={{ background: "#0A0A0A", border: "1px solid #1C1C1C", boxShadow: "0 20px 48px rgba(0,0,0,0.2)" }}
+                            className="flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl p-6 sm:p-7 relative overflow-hidden"
+                            style={{ background: NAVY, border: "1px solid rgba(232,185,35,0.22)", boxShadow: "0 24px 56px -16px rgba(11,30,63,0.4)" }}
                         >
-                            <div>
+                            <div className="absolute -top-16 -right-10 w-64 h-64 pointer-events-none"
+                                style={{ background: "radial-gradient(circle, rgba(232,185,35,0.16) 0%, transparent 70%)" }} />
+                            <div className="relative">
                                 {(() => {
                                     const p = PRICING.find(x => x.count === selected.length)!;
                                     const emi = mode === "Online" ? p.emiOnline : p.emiOffline;
                                     return (
                                         <>
-                                            <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.12em] mb-1.5" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                            <p className="text-white/45 text-[10px] font-bold uppercase tracking-[0.14em] mb-2" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                                 {selected.length} Course{selected.length > 1 ? "s" : ""} · {mode} · {p.months}
                                             </p>
-                                            <div className="flex items-baseline gap-2 mb-1">
-                                                <span className="text-white font-black leading-none" style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 3.5vw, 42px)" }}>
+                                            <div className="flex items-baseline gap-2 mb-1.5">
+                                                <span className="font-black leading-none" style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 3.5vw, 44px)", backgroundImage: GOLD_GRADIENT, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                                                     ₹{price}
                                                 </span>
-                                                <span className="text-white/40 text-[13px] font-semibold">+ GST</span>
+                                                <span className="text-white/45 text-[13px] font-semibold">+ GST</span>
                                             </div>
-                                            <p className="text-[#D72638] text-[12px] font-bold mb-1" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                            <p className="text-[#E8B923] text-[12px] font-bold mb-1.5" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
                                                 EMI: ₹{emi}/mo × {p.emiMonths} months
                                             </p>
-                                            <p className="text-white/25 text-[11px]" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
-                                                {selected.map(id => COURSES.find(c => c.id === id)?.name).join(" + ")}
+                                            <p className="text-white/35 text-[11px]" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                                                {selected.map(id => COURSES.find(c => c.id === id)?.name).join("  +  ")}
                                             </p>
                                         </>
                                     );
                                 })()}
                             </div>
 
-                            <a href={getWAMsg(selected, mode, price)} target="_blank" rel="noopener noreferrer" className="no-underline w-full sm:w-auto">
+                            <a href={getWAMsg(selected, mode, price)} target="_blank" rel="noopener noreferrer" className="no-underline w-full sm:w-auto relative">
                                 <motion.button
                                     whileHover={{ y: -3, boxShadow: "0 16px 40px rgba(37,211,102,0.45)" }}
                                     whileTap={{ scale: 0.97 }}
-                                    className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-extrabold text-[15px] border-none cursor-pointer"
+                                    className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-xl font-extrabold text-[15px] border-none cursor-pointer text-white"
                                     style={{
                                         fontFamily: "var(--font-dm-sans), sans-serif",
                                         background: "#25D366",
-                                        color: "#fff",
                                         boxShadow: "0 8px 24px rgba(37,211,102,0.35)",
                                         whiteSpace: "nowrap",
                                     }}>
@@ -325,10 +326,9 @@ const CoursesSection = () => {
                     )}
                 </AnimatePresence>
 
-                {/* No selection state hint */}
                 {selected.length === 0 && (
                     <motion.p initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.5 }}
-                        className="text-center text-zinc-400 text-[12px] font-medium" style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                        className="text-center text-[12px] font-medium" style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: "#98A2B3" }}>
                         ↑ Select course(s) above to see pricing & enroll
                     </motion.p>
                 )}
@@ -338,4 +338,3 @@ const CoursesSection = () => {
 };
 
 export default CoursesSection;
-

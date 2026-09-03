@@ -230,7 +230,7 @@ export default function BuyPage() {
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/user-profile">
-              <button className="px-6 py-3 text-white text-sm font-medium rounded-lg" style={{ background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)" }}>
+              <button className="px-6 py-3 text-white text-sm font-medium rounded-lg" style={{ background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)" }}>
                 View My Courses
               </button>
             </Link>
@@ -259,7 +259,7 @@ export default function BuyPage() {
             Add some courses to proceed with checkout.
           </p>
           <Link href="/courses">
-            <button className="px-6 py-3 text-white text-sm font-medium rounded-lg" style={{ background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)" }}>
+            <button className="px-6 py-3 text-white text-sm font-medium rounded-lg" style={{ background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)" }}>
               Browse Courses
             </button>
           </Link>
@@ -448,7 +448,7 @@ export default function BuyPage() {
                   disabled={isProcessing}
                   className="w-full py-4 mt-6 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                   style={{
-                    background: "linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%)",
+                    background: "linear-gradient(135deg, #C79A1E 0%, #A07C16 100%)",
                   }}
                 >
                   {isProcessing ? (

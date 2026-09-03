@@ -57,7 +57,7 @@ function Section({
             id={id}
             className="px-5 sm:px-8 py-10 sm:py-14"
             style={{
-                background: dark ? "#0A0A0A" : "#fff",
+                background: dark ? "#0B1E3F" : "#fff",
                 borderTop: dark ? "none" : "1px solid #F0F0F0",
             }}
         >
@@ -73,14 +73,14 @@ function Section({
                         <div
                             className="w-9 h-9 rounded-xl flex items-center justify-center"
                             style={{
-                                background: "rgba(215,38,56,0.1)",
-                                border: "1px solid rgba(215,38,56,0.2)",
+                                background: "rgba(232,185,35,0.1)",
+                                border: "1px solid rgba(232,185,35,0.2)",
                             }}
                         >
-                            <Icon className="w-4 h-4 text-[#D72638]" />
+                            <Icon className="w-4 h-4 text-[#E8B923]" />
                         </div>
                         <span
-                            className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#D72638]"
+                            className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#E8B923]"
                             style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
                         >
                             {kicker}
@@ -91,7 +91,7 @@ function Section({
                         style={{
                             fontFamily: "var(--font-playfair), serif",
                             fontSize: "clamp(24px, 3vw, 36px)",
-                            color: dark ? "#fff" : "#0A0A0A",
+                            color: dark ? "#fff" : "#0B1E3F",
                         }}
                     >
                         {title}
@@ -136,14 +136,14 @@ function BulletList({
                     <span
                         className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-[1px]"
                         style={{
-                            background: dark ? "rgba(215,38,56,0.18)" : "#ECFDF5",
+                            background: dark ? "rgba(232,185,35,0.18)" : "#ECFDF5",
                             border: dark
-                                ? "1px solid rgba(215,38,56,0.3)"
+                                ? "1px solid rgba(232,185,35,0.3)"
                                 : "1px solid #A7F3D0",
                         }}
                     >
                         <Check
-                            className={`w-2.5 h-2.5 ${dark ? "text-[#D72638]" : "text-emerald-500"
+                            className={`w-2.5 h-2.5 ${dark ? "text-[#E8B923]" : "text-emerald-500"
                                 }`}
                             strokeWidth={3.5}
                         />
@@ -177,10 +177,10 @@ function ModuleAccordion({ program }: { program: Program }) {
                         style={{
                             background: "#fff",
                             border: isOpen
-                                ? "1.5px solid rgba(215,38,56,0.25)"
+                                ? "1.5px solid rgba(232,185,35,0.25)"
                                 : "1.5px solid #EEE",
                             boxShadow: isOpen
-                                ? "0 8px 28px rgba(215,38,56,0.06)"
+                                ? "0 8px 28px rgba(232,185,35,0.06)"
                                 : "0 2px 8px rgba(0,0,0,0.03)",
                         }}
                     >
@@ -197,11 +197,11 @@ function ModuleAccordion({ program }: { program: Program }) {
                             <span
                                 className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center"
                                 style={{
-                                    background: isOpen ? "rgba(215,38,56,0.1)" : "#F0F0F0",
+                                    background: isOpen ? "rgba(232,185,35,0.1)" : "#F0F0F0",
                                 }}
                             >
                                 {isOpen ? (
-                                    <Minus className="w-3 h-3 text-[#D72638]" />
+                                    <Minus className="w-3 h-3 text-[#E8B923]" />
                                 ) : (
                                     <Plus className="w-3 h-3 text-zinc-500" />
                                 )}
@@ -225,7 +225,7 @@ function ModuleAccordion({ program }: { program: Program }) {
                                                     fontFamily: "var(--font-dm-sans), sans-serif",
                                                 }}
                                             >
-                                                <span className="w-1.5 h-1.5 rounded-full bg-[#D72638] shrink-0 mt-[7px]" />
+                                                <span className="w-1.5 h-1.5 rounded-full bg-[#E8B923] shrink-0 mt-[7px]" />
                                                 {l}
                                             </li>
                                         ))}
@@ -254,7 +254,7 @@ function FaqAccordion({ program }: { program: Program }) {
                         style={{
                             background: "#fff",
                             border: isOpen
-                                ? "1.5px solid rgba(215,38,56,0.25)"
+                                ? "1.5px solid rgba(232,185,35,0.25)"
                                 : "1.5px solid #F0F0F0",
                         }}
                     >
@@ -271,11 +271,11 @@ function FaqAccordion({ program }: { program: Program }) {
                             <span
                                 className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center"
                                 style={{
-                                    background: isOpen ? "rgba(215,38,56,0.1)" : "#F0F0F0",
+                                    background: isOpen ? "rgba(232,185,35,0.1)" : "#F0F0F0",
                                 }}
                             >
                                 {isOpen ? (
-                                    <Minus className="w-3 h-3 text-[#D72638]" />
+                                    <Minus className="w-3 h-3 text-[#E8B923]" />
                                 ) : (
                                     <Plus className="w-3 h-3 text-zinc-500" />
                                 )}
@@ -341,7 +341,7 @@ function StickyEnrollBar({
                         <div
                             className="flex items-center gap-3 rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5"
                             style={{
-                                background: "#0A0A0A",
+                                background: "#0B1E3F",
                                 border: "1px solid #262626",
                                 boxShadow: "0 -6px 32px rgba(0,0,0,0.28)",
                             }}
@@ -400,7 +400,7 @@ export default function ProgramView({
     return (
         <main className="bg-white pb-20 sm:pb-0">
             {/* ═══ HERO ═══ */}
-            <section className="relative overflow-hidden bg-[#0A0A0A] px-5 sm:px-8 pt-28 pb-16 sm:pt-32 sm:pb-20">
+            <section className="relative overflow-hidden bg-[#0B1E3F] px-5 sm:px-8 pt-28 pb-16 sm:pt-32 sm:pb-20">
                 <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -413,7 +413,7 @@ export default function ProgramView({
                     className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-56 pointer-events-none"
                     style={{
                         background:
-                            "radial-gradient(ellipse, rgba(215,38,56,0.16) 0%, transparent 70%)",
+                            "radial-gradient(ellipse, rgba(232,185,35,0.16) 0%, transparent 70%)",
                     }}
                 />
 
@@ -429,7 +429,7 @@ export default function ProgramView({
                     <div className="grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
                         <div>
                             <span
-                                className="inline-block text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#D72638] mb-4"
+                                className="inline-block text-[10px] font-extrabold uppercase tracking-[0.18em] text-[#E8B923] mb-4"
                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
                             >
                                 {program.market}
@@ -454,7 +454,7 @@ export default function ProgramView({
                             </p>
 
                             <div className="flex items-center gap-2 text-white/70 text-[13px] font-semibold mb-5">
-                                <Clock className="w-4 h-4 text-[#D72638]" />
+                                <Clock className="w-4 h-4 text-[#E8B923]" />
                                 {program.duration} intensive program
                             </div>
 
@@ -476,7 +476,7 @@ export default function ProgramView({
                                             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-bold cursor-pointer border-none transition-all duration-200"
                                             style={{
                                                 fontFamily: "var(--font-dm-sans), sans-serif",
-                                                background: activeMode ? "#D72638" : "transparent",
+                                                background: activeMode ? "#E8B923" : "transparent",
                                                 color: activeMode ? "#fff" : "rgba(255,255,255,0.55)",
                                             }}
                                         >
@@ -553,23 +553,16 @@ export default function ProgramView({
                             initial={{ opacity: 0, scale: 0.96 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.6 }}
-                            className="relative rounded-3xl overflow-hidden aspect-[4/3] hidden lg:block"
-                            style={{ border: "1.5px solid #1C1C1C" }}
+                            className="relative rounded-3xl overflow-hidden aspect-[16/9] hidden lg:block bg-[#0B1E3F]"
+                            style={{ border: "1.5px solid rgba(232,185,35,0.25)" }}
                         >
                             <Image
                                 src={program.image}
                                 alt={program.name}
                                 fill
-                                className="object-cover"
-                                sizes="400px"
+                                className="object-contain"
+                                sizes="(max-width: 1024px) 0px, 460px"
                                 priority
-                            />
-                            <div
-                                className="absolute inset-0"
-                                style={{
-                                    background:
-                                        "linear-gradient(to top, rgba(10,10,10,0.6), transparent 60%)",
-                                }}
                             />
                         </motion.div>
                     </div>
@@ -699,7 +692,7 @@ export default function ProgramView({
                             className="flex items-start gap-3 py-2.5"
                             style={{ borderBottom: "1px solid #F2F2F2" }}
                         >
-                            <span className="text-[#D72638] font-black text-[13px] shrink-0 mt-[1px]">
+                            <span className="text-[#E8B923] font-black text-[13px] shrink-0 mt-[1px]">
                                 {String(i + 1).padStart(2, "0")}
                             </span>
                             <span
@@ -738,11 +731,11 @@ export default function ProgramView({
                             <span
                                 className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                                 style={{
-                                    background: "rgba(215,38,56,0.15)",
-                                    border: "1px solid rgba(215,38,56,0.28)",
+                                    background: "rgba(232,185,35,0.15)",
+                                    border: "1px solid rgba(232,185,35,0.28)",
                                 }}
                             >
-                                <Wrench className="w-3.5 h-3.5 text-[#D72638]" />
+                                <Wrench className="w-3.5 h-3.5 text-[#E8B923]" />
                             </span>
                             <span
                                 className="text-[13px] font-semibold text-white/85"
@@ -789,12 +782,12 @@ export default function ProgramView({
                                 onClick={() => setMode(modeKey)}
                                 className="text-left rounded-2xl p-6 cursor-pointer transition-all duration-200"
                                 style={{
-                                    background: selected ? "#FFF5F5" : "#FAFAFA",
+                                    background: selected ? "#FBF6E9" : "#FAFAFA",
                                     border: selected
-                                        ? "1.5px solid rgba(215,38,56,0.4)"
+                                        ? "1.5px solid rgba(232,185,35,0.4)"
                                         : "1.5px solid #EEE",
                                     boxShadow: selected
-                                        ? "0 0 0 4px rgba(215,38,56,0.06)"
+                                        ? "0 0 0 4px rgba(232,185,35,0.06)"
                                         : "none",
                                 }}
                             >
@@ -803,14 +796,14 @@ export default function ProgramView({
                                         <span
                                             className="w-8 h-8 rounded-lg flex items-center justify-center"
                                             style={{
-                                                background: "rgba(215,38,56,0.1)",
-                                                border: "1px solid rgba(215,38,56,0.2)",
+                                                background: "rgba(232,185,35,0.1)",
+                                                border: "1px solid rgba(232,185,35,0.2)",
                                             }}
                                         >
                                             {isOnline ? (
-                                                <Wifi className="w-4 h-4 text-[#D72638]" />
+                                                <Wifi className="w-4 h-4 text-[#E8B923]" />
                                             ) : (
-                                                <MapPin className="w-4 h-4 text-[#D72638]" />
+                                                <MapPin className="w-4 h-4 text-[#E8B923]" />
                                             )}
                                         </span>
                                         <h3
@@ -824,7 +817,7 @@ export default function ProgramView({
                                         className="text-[13px] font-black shrink-0"
                                         style={{
                                             fontFamily: "var(--font-playfair), serif",
-                                            color: "#D72638",
+                                            color: "#E8B923",
                                         }}
                                     >
                                         ₹{modePrice}
@@ -841,7 +834,7 @@ export default function ProgramView({
                                     className="inline-flex items-center gap-1.5 mt-4 text-[11px] font-extrabold uppercase tracking-[0.1em]"
                                     style={{
                                         fontFamily: "var(--font-dm-sans), sans-serif",
-                                        color: selected ? "#D72638" : "#AAA",
+                                        color: selected ? "#E8B923" : "#AAA",
                                     }}
                                 >
                                     {selected ? "✓ Selected" : "Tap to select this mode"}
@@ -871,7 +864,7 @@ export default function ProgramView({
                                 border: "1px solid rgba(255,255,255,0.08)",
                             }}
                         >
-                            <Briefcase className="w-4 h-4 text-[#D72638] shrink-0" />
+                            <Briefcase className="w-4 h-4 text-[#E8B923] shrink-0" />
                             <span
                                 className="text-[13px] font-semibold text-white/85"
                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif" }}
@@ -922,30 +915,14 @@ export default function ProgramView({
                                         boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
                                     }}
                                 >
-                                    <div className="relative h-36 bg-[#0A0A0A]">
+                                    <div className="relative aspect-[16/9] bg-[#0B1E3F]">
                                         <Image
                                             src={p.image}
                                             alt={p.name}
                                             fill
-                                            className="object-cover"
+                                            className="object-contain"
                                             sizes="500px"
                                         />
-                                        <div
-                                            className="absolute inset-0"
-                                            style={{
-                                                background:
-                                                    "linear-gradient(to top, rgba(10,10,10,0.85), transparent 60%)",
-                                            }}
-                                        />
-                                        <p
-                                            className="absolute bottom-3 left-4 right-4 text-white font-black leading-tight"
-                                            style={{
-                                                fontFamily: "var(--font-playfair), serif",
-                                                fontSize: "15px",
-                                            }}
-                                        >
-                                            {p.name}
-                                        </p>
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
                                         <span
@@ -954,7 +931,7 @@ export default function ProgramView({
                                         >
                                             {p.duration} · from ₹{p.priceOnline}
                                         </span>
-                                        <span className="inline-flex items-center gap-1 text-[12px] font-bold text-[#D72638]">
+                                        <span className="inline-flex items-center gap-1 text-[12px] font-bold text-[#E8B923]">
                                             View <ArrowRight className="w-3.5 h-3.5" />
                                         </span>
                                     </div>
@@ -966,12 +943,12 @@ export default function ProgramView({
             </section>
 
             {/* ═══ FINAL CTA ═══ */}
-            <section className="relative px-5 sm:px-8 py-20 sm:py-28 text-center overflow-hidden bg-[#0A0A0A]">
+            <section className="relative px-5 sm:px-8 py-20 sm:py-28 text-center overflow-hidden bg-[#0B1E3F]">
                 <div
                     className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-48 pointer-events-none"
                     style={{
                         background:
-                            "radial-gradient(ellipse, rgba(215,38,56,0.14) 0%, transparent 70%)",
+                            "radial-gradient(ellipse, rgba(232,185,35,0.14) 0%, transparent 70%)",
                     }}
                 />
                 <div className="relative max-w-[640px] mx-auto">
@@ -1013,7 +990,7 @@ export default function ProgramView({
                                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-bold cursor-pointer border-none transition-all duration-200"
                                     style={{
                                         fontFamily: "var(--font-dm-sans), sans-serif",
-                                        background: activeMode ? "#D72638" : "transparent",
+                                        background: activeMode ? "#E8B923" : "transparent",
                                         color: activeMode ? "#fff" : "rgba(255,255,255,0.55)",
                                     }}
                                 >
