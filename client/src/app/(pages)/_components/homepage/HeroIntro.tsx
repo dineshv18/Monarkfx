@@ -138,11 +138,11 @@ export default function HeroIntro() {
                             className="w-full sm:w-1/2 space-y-5"
                         >
                             <h1 className="text-white font-black leading-[1.04] tracking-[-0.03em]"
-                                style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(36px, 6vw, 72px)", textShadow: "0 2px 20px rgba(0,0,0,0.8)" }}>
+                                style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(36px, 6vw, 72px)", textShadow: "0 2px 24px rgba(0,0,0,0.9)" }}>
                                 We{" "}
-                                <span className="gold-text" style={{ filter: "drop-shadow(0 0 22px rgba(232,185,35,0.5))" }}>teach</span>
+                                <span className="metal-gold">teach</span>
                                 , you{" "}
-                                <span className="gold-text" style={{ filter: "drop-shadow(0 0 22px rgba(232,185,35,0.5))" }}>trade</span>
+                                <span className="metal-gold">trade</span>
                                 <br />
                                 <span className="text-white">— that&apos;s the deal.</span>
                             </h1>

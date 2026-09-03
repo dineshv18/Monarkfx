@@ -71,6 +71,17 @@ h1, h2, h3, h4, h5, h6 {
     color: #E8B923;
   }
 
+  /* Headline accent words on dark imagery — one solid rich gold,
+     dark outline + glow so every letter stays crisp over the photo. */
+  .metal-gold {
+    color: #F4C430;
+    -webkit-text-fill-color: #F4C430;
+    -webkit-text-stroke: 1px rgba(90, 55, 5, 0.55);
+    text-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.85),
+      0 0 22px rgba(244, 196, 48, 0.5);
+  }
+
   /* Red glow effects */
   .glow-red {
     box-shadow: 0 0 20px -3px rgba(232,185,35, 0.5);

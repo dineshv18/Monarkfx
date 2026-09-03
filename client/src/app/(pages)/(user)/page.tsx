@@ -31,6 +31,9 @@ export default function Home() {
       {/* 5. Pricing straight after — no hunting for cost */}
       <PricingPreview />
 
+      {/* 9. Social proof — real student reviews close the doubt */}
+      <TestimonialsSection />
+
       {/* 6. Best-value combo — the upsell right where price is on their mind */}
       <BundleOffer />
 
@@ -39,8 +42,7 @@ export default function Home() {
       {/* 8. Who runs it — brand story */}
       <AboutSection />
 
-      {/* 9. Social proof — real student reviews close the doubt */}
-      <TestimonialsSection />
+
 
       {/* 7. Why us over any other institute — differentiators, ISO badge */}
       <WhyChooseUs />
