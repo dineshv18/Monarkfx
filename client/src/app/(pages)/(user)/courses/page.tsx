@@ -162,17 +162,18 @@ const PriceCard = ({ batch, index, isInView }: { batch: typeof mentorshipBatches
                         {[batch.options[1], batch.options[0]].map((o, i) => {
                             const actualIdx = i === 0 ? 1 : 0;
                             return (
-                                <button key={o.label} onClick={(e) => { e.preventDefault(); setMode(actualIdx); }}
-                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] text-[12px] font-bold cursor-pointer transition-all duration-200 border-none"
+                                <button key={o.label} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMode(actualIdx); }}
+                                    className="outline-none focus:outline-none flex-1 flex items-center justify-center gap-1.5 py-2 rounded-[10px] text-[12px] font-bold cursor-pointer transition-all duration-200 border-none"
                                     style={{
                                         fontFamily: "var(--font-dm-sans), sans-serif",
-                                        background: mode === actualIdx ? "#fff" : "transparent",
+                                        backgroundImage: mode === actualIdx ? "linear-gradient(135deg, #F7E7A8 0%, #E8B923 45%, #C79A1E 75%, #F5D876 100%)" : "none",
+                                        backgroundColor: mode === actualIdx ? "#E8B923" : "transparent",
                                         color: mode === actualIdx ? "#0B1E3F" : "#999",
-                                        boxShadow: mode === actualIdx ? "0 2px 8px rgba(0,0,0,0.07)" : "none",
+                                        boxShadow: mode === actualIdx ? "0 2px 10px rgba(232,185,35,0.4)" : "none",
                                     }}>
                                     {actualIdx === 1
-                                        ? <MapPin className="w-3 h-3" style={{ color: mode === actualIdx ? "#E8B923" : "#BBB" }} />
-                                        : <Wifi className="w-3 h-3" style={{ color: mode === actualIdx ? "#E8B923" : "#BBB" }} />}
+                                        ? <MapPin className="w-3 h-3" style={{ color: mode === actualIdx ? "#0B1E3F" : "#BBB" }} />
+                                        : <Wifi className="w-3 h-3" style={{ color: mode === actualIdx ? "#0B1E3F" : "#BBB" }} />}
                                     {o.label}
                                 </button>
                             );

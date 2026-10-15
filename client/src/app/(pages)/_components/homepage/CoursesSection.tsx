@@ -100,11 +100,10 @@ const CoursesSection = () => {
                             const on = mode === m;
                             return (
                                 <button key={m} onClick={() => setMode(m)}
-                                    className="px-7 py-2 rounded-full text-[13px] font-bold cursor-pointer transition-all duration-200 border-none"
+                                    className="outline-none focus:outline-none focus-visible:outline-none px-7 py-2 rounded-full text-[13px] font-bold cursor-pointer transition-all duration-200 border-none"
                                     style={{
                                         fontFamily: "var(--font-dm-sans), sans-serif",
-                                        backgroundImage: on ? GOLD_GRADIENT : "none",
-                                        background: on ? undefined : "transparent",
+                                        backgroundImage: on ? GOLD_GRADIENT : "none", backgroundColor: on ? "#E8B923" : "transparent",
                                         color: on ? NAVY : "#98A2B3",
                                         boxShadow: on ? "0 2px 10px rgba(232,185,35,0.4)" : "none",
                                     }}>
@@ -128,7 +127,8 @@ const CoursesSection = () => {
                                 className="h-full"
                             >
                                 <div
-                                    className="rounded-2xl overflow-hidden relative h-full flex flex-col bg-white hover:-translate-y-1.5"
+                                    className="rounded-2xl overflow-hidden relative h-full flex flex-col bg-white hover:-translate-y-1.5 cursor-pointer"
+                                    onClick={() => toggle(course.id)}
                                     style={{
                                         border: isSelected ? "1.5px solid rgba(232,185,35,0.9)" : "1.5px solid #EAECEF",
                                         boxShadow: isSelected
@@ -145,8 +145,7 @@ const CoursesSection = () => {
                                         {/* Select check */}
                                         <div className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200"
                                             style={{
-                                                backgroundImage: isSelected ? GOLD_GRADIENT : "none",
-                                                background: isSelected ? undefined : "rgba(0,0,0,0.45)",
+                                                backgroundImage: isSelected ? GOLD_GRADIENT : "none", backgroundColor: isSelected ? "#E8B923" : "rgba(0,0,0,0.45)",
                                                 border: isSelected ? "none" : "1.5px solid rgba(255,255,255,0.45)",
                                                 backdropFilter: "blur(4px)",
                                             }}>
@@ -210,11 +209,10 @@ const CoursesSection = () => {
                                                 type="button"
                                                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(course.id); }}
                                                 aria-pressed={isSelected}
-                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-extrabold cursor-pointer transition-all duration-200 select-none active:scale-95"
+                                                className="outline-none focus:outline-none flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-extrabold cursor-pointer transition-all duration-200 select-none active:scale-95"
                                                 style={{
                                                     fontFamily: "var(--font-dm-sans), sans-serif",
-                                                    backgroundImage: isSelected ? GOLD_GRADIENT : "none",
-                                                    background: isSelected ? undefined : "#fff",
+                                                    backgroundImage: isSelected ? GOLD_GRADIENT : "none", backgroundColor: isSelected ? "#E8B923" : "#fff",
                                                     color: NAVY,
                                                     border: isSelected ? "1.5px solid transparent" : "1.5px solid #DDE1E6",
                                                 }}
@@ -223,6 +221,7 @@ const CoursesSection = () => {
                                             </button>
                                             <Link
                                                 href={`/courses/programs/${course.slug}`}
+                                                onClick={(e) => e.stopPropagation()}
                                                 className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[12px] font-extrabold no-underline transition-all duration-200 hover:opacity-90"
                                                 style={{ fontFamily: "var(--font-dm-sans), sans-serif", background: NAVY, color: "#fff" }}
                                             >
@@ -246,8 +245,7 @@ const CoursesSection = () => {
                         return (
                             <div key={p.count} className="flex items-center gap-2.5 px-4 py-2.5 rounded-full transition-all duration-200"
                                 style={{
-                                    backgroundImage: active ? GOLD_GRADIENT : "none",
-                                    background: active ? undefined : "#fff",
+                                    backgroundImage: active ? GOLD_GRADIENT : "none", backgroundColor: active ? "#E8B923" : "#fff",
                                     border: active ? "1.5px solid transparent" : "1.5px solid #EAECEF",
                                     boxShadow: active ? "0 6px 18px rgba(232,185,35,0.3)" : "none",
                                 }}>

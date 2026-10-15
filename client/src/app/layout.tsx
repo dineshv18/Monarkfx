@@ -43,15 +43,25 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-17830556034"
-          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18404389530"
+          strategy="lazyOnload"
         />
-        <Script id="google-ads" strategy="afterInteractive">
+        <Script id="google-ads" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'AW-17830556034');
+            gtag('config', 'AW-18404389530');
+            document.addEventListener('click', function(e){
+              var a = e.target.closest && e.target.closest('a'); if(!a) return;
+              var h = a.getAttribute('href') || '';
+              if (h.indexOf('wa.me') > -1 || h.indexOf('whatsapp.com') > -1) {
+                gtag('event', 'conversion', {'send_to': 'AW-18404389530/jTpkCJ7k_PIcEJrl8sdE'});
+              }
+              if (h.indexOf('tel:') === 0) {
+                gtag('event', 'conversion', {'send_to': 'AW-18404389530/T2dpCLOSvZUdEJrl8sdE'});
+              }
+            });
           `}
         </Script>
         <Script id="google-tag-manager" strategy="afterInteractive">

@@ -130,7 +130,7 @@ const NAVY = "#0B1E3F";
 const GOLD = "#E8B923";
 const GOLD_GRADIENT =
     "linear-gradient(135deg, #F7E7A8 0%, #E8B923 45%, #C79A1E 75%, #F5D876 100%)";
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 3500;
 
 const imageVariants = {
     enter: (dir: "left" | "right") => ({
@@ -153,7 +153,6 @@ const textVariants = {
 export default function TestimonialsSection() {
     const [index, setIndex] = useState(0);
     const [dir, setDir] = useState<"left" | "right">("right");
-    const [paused, setPaused] = useState(false);
 
     const active = REVIEWS[index];
 
@@ -167,13 +166,12 @@ export default function TestimonialsSection() {
 
     // auto-advance
     useEffect(() => {
-        if (paused) return;
         const t = setInterval(() => {
             setDir("right");
             setIndex((p) => (p + 1) % REVIEWS.length);
         }, AUTOPLAY_MS);
         return () => clearInterval(t);
-    }, [paused, index]);
+    }, [index]);
 
     // next 3 thumbnails after current
     const thumbs = Array.from({ length: 3 }, (_, k) => REVIEWS[(index + k + 1) % REVIEWS.length]);
@@ -182,8 +180,6 @@ export default function TestimonialsSection() {
         <section
             className="relative w-full overflow-hidden px-5 sm:px-8 py-20 sm:py-28"
             style={{ background: NAVY }}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
         >
             {/* bg texture + glow */}
             <div
@@ -297,7 +293,7 @@ export default function TestimonialsSection() {
                                     initial="enter"
                                     animate="center"
                                     exit="exit"
-                                    transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                                    transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
                                     className="absolute inset-0"
                                 >
                                     <Image
@@ -331,7 +327,7 @@ export default function TestimonialsSection() {
                                     initial="enter"
                                     animate="center"
                                     exit="exit"
-                                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                                    transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
                                 >
                                     <a
                                         href={active.instaUrl}
